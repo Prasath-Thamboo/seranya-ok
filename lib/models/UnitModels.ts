@@ -1,0 +1,57 @@
+// Types pour les images
+export type FileType = File | string;
+
+// Enum pour le type d'unité (réplique du type utilisé dans Prisma)
+export enum UnitType {
+  UNIT = 'UNIT',
+  CHAMPION = 'CHAMPION',
+}
+
+// Interface pour le modèle d'unité (données complètes)
+export interface UnitModel {
+  id: number;
+  title: string;
+  intro: string;
+  subtitle?: string;
+  story?: string;
+  bio?: string;
+  isPublished: boolean;
+  type: UnitType;
+  createdAt: Date;
+  updatedAt: Date;
+  profileImage?: string;
+  headerImage?: string;
+  footerImage?: string;
+  gallery: string[];
+}
+
+// Interface pour le modèle de création d'unité
+export interface CreateUnitModel {
+  title: string;
+  intro: string;
+  subtitle?: string;
+  story?: string;
+  bio?: string;
+  isPublished?: boolean;
+  type: UnitType;
+  profileImage?: FileType;
+  headerImage?: FileType;
+  footerImage?: FileType;
+  gallery?: FileType[];
+}
+
+// Interface pour le modèle de mise à jour d'une unité
+export interface UpdateUnitModel {
+  title?: string;
+  intro?: string;
+  subtitle?: string;
+  story?: string;
+  bio?: string;
+  isPublished?: boolean;
+  type?: UnitType;
+  profileImage?: FileType;
+  headerImage?: FileType;
+  footerImage?: FileType;
+  gallery?: FileType[];
+  galleryImagesToDelete?: string[];
+}
