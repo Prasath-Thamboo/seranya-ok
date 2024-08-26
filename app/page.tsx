@@ -1,30 +1,280 @@
-import Image from "next/image";
+"use client";  // Ensure this component is a client component
+
+import React from 'react';
+import { Progress } from 'antd';
+import { AiOutlineInfoCircle, AiOutlineCheckCircle, AiOutlineWarning, AiOutlineCloseCircle } from 'react-icons/ai';
+import Image from 'next/image';
+
+// Styles based on notification types
+const typeStyles = {
+  information: {
+    container: 'text-white bg-blue-700/50 border-blue-200 shadow-blue-500/50',
+    primaryButton: 'bg-blue-700 hover:bg-blue-800 focus:ring-blue-500',
+    secondaryButton: 'bg-blue-200 hover:bg-blue-300 focus:ring-blue-400',
+    iconColor: 'text-blue-600',
+    flashBg: 'text-white bg-blue-700/50 border-blue-200 shadow-blue-500/50',
+    progressColor: '#1545C7', // Darker blue
+    shadow: 'shadow-blue-500/50',
+    flashIconBg: 'bg-blue-600 text-white', // Icon background for flash notifications
+  },
+  success: {
+    container: 'text-white bg-green-700/50 border-green-200 shadow-green-500/50',
+    primaryButton: 'bg-green-700 hover:bg-green-800 focus:ring-green-500',
+    secondaryButton: 'bg-green-200 hover:bg-green-300 focus:ring-green-400',
+    iconColor: 'text-green-600',
+    flashBg: 'text-white bg-green-700/50 border-green-200 shadow-green-500/50',
+    progressColor: '#11B462', // Darker green
+    shadow: 'shadow-green-500/50',
+    flashIconBg: 'bg-green-600 text-white', // Icon background for flash notifications
+  },
+  warning: {
+    container: 'text-white bg-yellow-700/50 border-yellow-200 shadow-yellow-500/50',
+    primaryButton: 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-500',
+    secondaryButton: 'bg-yellow-200 hover:bg-yellow-300 focus:ring-yellow-400',
+    iconColor: 'text-yellow-600',
+    flashBg: 'text-white bg-yellow-700/50 border-yellow-200 shadow-yellow-500/50',
+    progressColor: '#FFE604', // Darker yellow
+    shadow: 'shadow-yellow-500/50',
+    flashIconBg: 'bg-yellow-600 text-white', // Icon background for flash notifications
+  },
+  critical: {
+    container: 'text-white bg-red-700/50 border-red-200 shadow-red-500/50',
+    primaryButton: 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
+    secondaryButton: 'bg-red-200 hover:bg-red-300 focus:ring-red-400',
+    iconColor: 'text-red-600',
+    flashBg: 'text-white bg-red-700/50 border-red-200 shadow-red-500/50',
+    progressColor: '#E70E0E', // Darker red
+    shadow: 'shadow-red-500/50',
+    flashIconBg: 'bg-red-600 text-white', // Icon background for flash notifications
+  },
+};
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 font-kanit">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+        {/* Existing content */}
+      </div>
+
+      {/* Hardcoded NotificationsWithButton */}
+      <div className="w-full max-w-4xl mx-auto space-y-4">
+        {/* Information NotificationWithButton */}
+        <div className={`p-4 ${typeStyles.information.container} border rounded-md shadow-lg ${typeStyles.information.shadow}`}>
+          <Progress percent={100} showInfo={false} strokeColor={typeStyles.information.progressColor} className="shadow-blue-500/50" />
+          <div className="flex justify-between flex-wrap mt-2">
+            <div className="w-0 flex-1 flex">
+              <div className="mr-3 pt-1">
+                <AiOutlineInfoCircle size={24} className={typeStyles.information.iconColor} />
+              </div>
+              <div>
+                <h4 className="text-md leading-6 font-medium">Information Notification</h4>
+                <p className="text-sm">This is an example of an information notification.</p>
+                <div className="flex mt-3">
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ${typeStyles.information.primaryButton} text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Primary Button
+                  </button>
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ml-2 ${typeStyles.information.secondaryButton} text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Secondary Button
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="rounded-md focus:outline-none focus:ring-2"
+              >
+                <AiOutlineCloseCircle size={24} className={typeStyles.information.iconColor} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Success NotificationWithButton */}
+        <div className={`p-4 ${typeStyles.success.container} border rounded-md shadow-lg ${typeStyles.success.shadow}`}>
+          <Progress percent={100} showInfo={false} strokeColor={typeStyles.success.progressColor} className="shadow-green-500/50" />
+          <div className="flex justify-between flex-wrap mt-2">
+            <div className="w-0 flex-1 flex">
+              <div className="mr-3 pt-1">
+                <AiOutlineCheckCircle size={24} className={typeStyles.success.iconColor} />
+              </div>
+              <div>
+                <h4 className="text-md leading-6 font-medium">Success Notification</h4>
+                <p className="text-sm">This is an example of a success notification.</p>
+                <div className="flex mt-3">
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ${typeStyles.success.primaryButton} text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Primary Button
+                  </button>
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ml-2 ${typeStyles.success.secondaryButton} text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Secondary Button
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="rounded-md focus:outline-none focus:ring-2"
+              >
+                <AiOutlineCloseCircle size={24} className={typeStyles.success.iconColor} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Warning NotificationWithButton */}
+        <div className={`p-4 ${typeStyles.warning.container} border rounded-md shadow-lg ${typeStyles.warning.shadow}`}>
+          <Progress percent={100} showInfo={false} strokeColor={typeStyles.warning.progressColor} className="shadow-yellow-500/50" />
+          <div className="flex justify-between flex-wrap mt-2">
+            <div className="w-0 flex-1 flex">
+              <div className="mr-3 pt-1">
+                <AiOutlineWarning size={24} className={typeStyles.warning.iconColor} />
+              </div>
+              <div>
+                <h4 className="text-md leading-6 font-medium">Warning Notification</h4>
+                <p className="text-sm">This is an example of a warning notification.</p>
+                <div className="flex mt-3">
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ${typeStyles.warning.primaryButton} text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Primary Button
+                  </button>
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ml-2 ${typeStyles.warning.secondaryButton} text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Secondary Button
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="rounded-md focus:outline-none focus:ring-2"
+              >
+                <AiOutlineCloseCircle size={24} className={typeStyles.warning.iconColor} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Critical NotificationWithButton */}
+        <div className={`p-4 ${typeStyles.critical.container} border rounded-md shadow-lg ${typeStyles.critical.shadow}`}>
+          <Progress percent={100} showInfo={false} strokeColor={typeStyles.critical.progressColor} className="shadow-red-500/50" />
+          <div className="flex justify-between flex-wrap mt-2">
+            <div className="w-0 flex-1 flex">
+              <div className="mr-3 pt-1">
+                <AiOutlineCloseCircle size={24} className={typeStyles.critical.iconColor} />
+              </div>
+              <div>
+                <h4 className="text-md leading-6 font-medium">Critical Notification</h4>
+                <p className="text-sm">This is an example of a critical notification.</p>
+                <div className="flex mt-3">
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ${typeStyles.critical.primaryButton} text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Primary Button
+                  </button>
+                  <button
+                    type="button"
+                    className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 ml-2 ${typeStyles.critical.secondaryButton} text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
+                  >
+                    Secondary Button
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="rounded-md focus:outline-none focus:ring-2"
+              >
+                <AiOutlineCloseCircle size={24} className={typeStyles.critical.iconColor} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hardcoded NotificationFlash */}
+      <div className="w-full max-w-4xl mx-auto space-y-4 mt-8">
+        {/* Information NotificationFlash */}
+        <div className={`p-4 ${typeStyles.information.flashBg} border rounded-md shadow-lg ${typeStyles.information.shadow}`}>
+          <div className="flex items-center">
+            <div className={`p-2 rounded-full ${typeStyles.information.flashIconBg}`}>
+              <AiOutlineInfoCircle size={24} className="text-white" />
+            </div>
+            <div className="w-full ml-4">
+              <Progress percent={100} showInfo={false} strokeColor={typeStyles.information.progressColor} className="shadow-blue-500/50" />
+              <div className="mt-2">Information Flash Notification</div>
+            </div>
+            <button>
+              <AiOutlineCloseCircle size={24} className="text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Success NotificationFlash */}
+        <div className={`p-4 ${typeStyles.success.flashBg} border rounded-md shadow-lg ${typeStyles.success.shadow}`}>
+          <div className="flex items-center">
+            <div className={`p-2 rounded-full ${typeStyles.success.flashIconBg}`}>
+              <AiOutlineCheckCircle size={24} className="text-white" />
+            </div>
+            <div className="w-full ml-4">
+              <Progress percent={100} showInfo={false} strokeColor={typeStyles.success.progressColor} className="shadow-green-500/50" />
+              <div className="mt-2">Success Flash Notification</div>
+            </div>
+            <button>
+              <AiOutlineCloseCircle size={24} className="text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Warning NotificationFlash */}
+        <div className={`p-4 ${typeStyles.warning.flashBg} border rounded-md shadow-lg ${typeStyles.warning.shadow}`}>
+          <div className="flex items-center">
+            <div className={`p-2 rounded-full ${typeStyles.warning.flashIconBg}`}>
+              <AiOutlineWarning size={24} className="text-white" />
+            </div>
+            <div className="w-full ml-4">
+              <Progress percent={100} showInfo={false} strokeColor={typeStyles.warning.progressColor} className="shadow-yellow-500/50" />
+              <div className="mt-2">Warning Flash Notification</div>
+            </div>
+            <button>
+              <AiOutlineCloseCircle size={24} className="text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Critical NotificationFlash */}
+        <div className={`p-4 ${typeStyles.critical.flashBg} border rounded-md shadow-lg ${typeStyles.critical.shadow}`}>
+          <div className="flex items-center">
+            <div className={`p-2 rounded-full ${typeStyles.critical.flashIconBg}`}>
+              <AiOutlineCloseCircle size={24} className="text-white" />
+            </div>
+            <div className="w-full ml-4">
+              <Progress percent={100} showInfo={false} strokeColor={typeStyles.critical.progressColor} className="shadow-red-500/50" />
+              <div className="mt-2">Critical Flash Notification</div>
+            </div>
+            <button>
+              <AiOutlineCloseCircle size={24} className="text-white" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -37,95 +287,6 @@ export default function Home() {
           height={37}
           priority
         />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-          <div className="font-oxanium">
-  <h1 className="font-bold text-4xl">Spectral</h1>
-  <p className="font-light text-xl">Spectral</p>
-</div>
-
-<div className="font-kanit">
-  <h1 className="font-bold text-4xl">Spectral</h1>
-  <p className="font-light text-xl">Spectral</p>
-</div>
-
-<div className="font-optimus">
-  <h1 className="text-4xl">Spectral</h1>
-</div>
-
-<div className="font-poppins">
-  <h1 className="font-bold text-4xl">Spectral</h1>
-  <p className="font-light text-xl">Spectral</p>
-</div>
-
-        </a>
       </div>
     </main>
   );

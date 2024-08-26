@@ -59,7 +59,7 @@ export interface LoginResponse {
     password: string;
   }
   
-  export async function loginUser(loginUserDto: LoginUserDto): Promise<void> {
+  export async function loginUser(loginUserDto: LoginUserDto): Promise<LoginResponse> {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
     
     try {
@@ -77,16 +77,19 @@ export interface LoginResponse {
   
       const data: LoginResponse = await response.json();
   
-      // Assuming you want to store the JWT token in local storage
-      localStorage.setItem('access_token', data.token.access_token);
+      // Log the token for debugging purposes
+      console.log('Login successful:', data.token.access_token);
   
-      console.log('Login successful:', data.message);
+      // Return the data so it can be used in the calling function
+      return data;
   
     } catch (error) {
       console.error('Error during login:', error);
       throw error;
     }
   }
+  
+  
   
   // Function to retrieve the access token from localStorage or cookies
   export function getAccessToken(): string | null {
@@ -143,7 +146,7 @@ export const deleteUserAccount = async (email: string, token: string): Promise<A
 
 // Function to fetch the currently logged-in user's data
 export const fetchCurrentUser = async (): Promise<RegisterUserModel> => {
-  const token = getToken();
+  const token = getToken(); // Retrieve the token from local storage
 
   console.log("Token from local storage (before request):", token);
 
@@ -154,7 +157,7 @@ export const fetchCurrentUser = async (): Promise<RegisterUserModel> => {
   try {
     const response = await axios.get<RegisterUserModel>(`${BASE_URL}/auth/me`, {
       headers: {
-        Authorization: `Bearer ${token}`,  // Add "Bearer " before the token
+        Authorization: `Bearer ${token}`,  // Correctly format the Authorization header
       },
     });
 
@@ -165,3 +168,4 @@ export const fetchCurrentUser = async (): Promise<RegisterUserModel> => {
     throw error;
   }
 };
+
