@@ -69,14 +69,15 @@ export default function RegisterPage() {
             </div>
 
             <Form.Item className="flex justify-center mt-4 lg:mt-6">
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="bg-black text-white font-kanit text-lg py-4 lg:py-6 px-4 lg:px-6 flex items-center justify-center border border-white transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-white-glow"
-                icon={<CgUserAdd className="mr-2 w-6 h-6" />} // Icône pour le bouton d'inscription
-              >
-                S'inscrire
-              </Button>
+            <Button
+  type="primary"
+  htmlType="submit"
+  className="bg-black text-white font-kanit text-lg py-4 lg:py-6 px-4 lg:px-6 flex items-center justify-center border border-white transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-white-glow"
+  icon={<CgUserAdd className="mr-2 w-6 h-6" />} // Icône pour le bouton d'inscription
+>
+  S&#39;inscrire {/* Remplacez l'apostrophe par &#39; */}
+</Button>
+
             </Form.Item>
 
             {/* Divider avec sous-titre */}
@@ -98,12 +99,13 @@ export default function RegisterPage() {
 
             {/* Texte de connexion en bas */}
             <div className="mt-4 lg:mt-8 text-center">
-              <span className="text-white font-kanit">
-                Déjà inscrit?{' '}
-                <Link href="/login" className="text-blue-500 hover:text-blue-300">
-                  Connectez-vous ici
-                </Link>
-              </span>
+            <span className="text-white font-kanit">
+  Déjà inscrit?{' '}
+  <Link href="/login" className="text-blue-500 hover:text-blue-300">
+    Connectez-vous ici
+  </Link>
+</span>
+
             </div>
           </Form>
         </div>

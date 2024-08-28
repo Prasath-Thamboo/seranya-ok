@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout"; // Importer le nouveau composant client
+import { NotificationProvider } from "@/components/notifications/NotificationProvider"; 
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <NotificationProvider>
+
         {/* Utilisez le ClientLayout pour gérer la logique de la Navbar */}
         <ClientLayout>{children}</ClientLayout>
+        </NotificationProvider>
       </body>
     </html>
   );
