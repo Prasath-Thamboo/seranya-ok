@@ -40,7 +40,11 @@ export default function RegisterPage() {
                 name="pseudo"
                 rules={[{ required: true, message: 'Veuillez entrer votre pseudo!' }]}
               >
-                <Input placeholder="Votre pseudo" className="custom-input bg-white text-black font-kanit" />
+                <Input 
+                  placeholder="Votre pseudo" 
+                  className="custom-input bg-white text-black font-kanit"
+                  style={{ height: "3rem" }}
+                />
               </Form.Item>
 
               <Form.Item
@@ -48,7 +52,11 @@ export default function RegisterPage() {
                 name="phone"
                 rules={[{ required: true, message: 'Veuillez entrer votre numéro de téléphone!' }]}
               >
-                <Input placeholder="Votre téléphone" className="custom-input bg-white text-black font-kanit" />
+                <Input 
+                  placeholder="Votre téléphone" 
+                  className="custom-input bg-white text-black font-kanit"
+                  style={{ height: "3rem" }}
+                />
               </Form.Item>
 
               <Form.Item
@@ -56,7 +64,12 @@ export default function RegisterPage() {
                 name="email"
                 rules={[{ required: true, message: 'Veuillez entrer votre email!' }]}
               >
-                <Input type="email" placeholder="Votre email" className="custom-input bg-white text-black font-kanit" />
+                <Input 
+                  type="email" 
+                  placeholder="Votre email" 
+                  className="custom-input bg-white text-black font-kanit"
+                  style={{ height: "3rem" }}
+                />
               </Form.Item>
 
               <Form.Item
@@ -64,20 +77,23 @@ export default function RegisterPage() {
                 name="password"
                 rules={[{ required: true, message: 'Veuillez entrer votre mot de passe!' }]}
               >
-                <Input.Password placeholder="Votre mot de passe" className="custom-input bg-white text-black font-kanit" />
+                <Input.Password 
+                  placeholder="Votre mot de passe" 
+                  className="custom-input bg-white text-black font-kanit"
+                  style={{ height: "3rem" }}
+                />
               </Form.Item>
             </div>
 
             <Form.Item className="flex justify-center mt-4 lg:mt-6">
-            <Button
-  type="primary"
-  htmlType="submit"
-  className="bg-black text-white font-kanit text-lg py-4 lg:py-6 px-4 lg:px-6 flex items-center justify-center border border-white transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-white-glow"
-  icon={<CgUserAdd className="mr-2 w-6 h-6" />} // Icône pour le bouton d'inscription
->
-  S&#39;inscrire {/* Remplacez l'apostrophe par &#39; */}
-</Button>
-
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="bg-black text-white font-kanit text-lg py-4 lg:py-6 px-4 lg:px-6 flex items-center justify-center border border-white transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-white-glow"
+                icon={<CgUserAdd className="mr-2 w-6 h-6" />}
+              >
+                S&#39;inscrire
+              </Button>
             </Form.Item>
 
             {/* Divider avec sous-titre */}
@@ -99,13 +115,12 @@ export default function RegisterPage() {
 
             {/* Texte de connexion en bas */}
             <div className="mt-4 lg:mt-8 text-center">
-            <span className="text-white font-kanit">
-  Déjà inscrit?{' '}
-  <Link href="/login" className="text-blue-500 hover:text-blue-300">
-    Connectez-vous ici
-  </Link>
-</span>
-
+              <span className="text-white font-kanit">
+                Déjà inscrit?{' '}
+                <Link href="/login" className="text-blue-500 hover:text-blue-300">
+                  Connectez-vous ici
+                </Link>
+              </span>
             </div>
           </Form>
         </div>

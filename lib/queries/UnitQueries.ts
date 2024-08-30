@@ -8,22 +8,26 @@ const BASE_URL =
     : process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
 // Fonction pour récupérer toutes les unités
-export const fetchUnits = async (token: string): Promise<UnitModel[]> => {
-  const response = await axios.get<UnitModel[]>(`${BASE_URL}/units`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const fetchUnits = async (): Promise<UnitModel[]> => {
+  const response = await axios.get<UnitModel[]>(`${BASE_URL}/units`);
   return response.data;
 };
 
 // Fonction pour récupérer une unité par ID
-export const fetchUnitById = async (id: number, token: string): Promise<UnitModel> => {
-  const response = await axios.get<UnitModel>(`${BASE_URL}/units/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const fetchUnitById = async (id: number): Promise<UnitModel> => {
+  const response = await axios.get<UnitModel>(`${BASE_URL}/units/${id}`);
+  return response.data;
+};
+
+// Fonction pour récupérer les unités associées à un utilisateur
+export const fetchUnitsByUser = async (userId: number): Promise<UnitModel[]> => {
+  const response = await axios.get<UnitModel[]>(`${BASE_URL}/units/user/${userId}`);
+  return response.data;
+};
+
+// Fonction pour récupérer les unités associées à une classe
+export const fetchUnitsByClass = async (classId: number): Promise<UnitModel[]> => {
+  const response = await axios.get<UnitModel[]>(`${BASE_URL}/units/class/${classId}`);
   return response.data;
 };
 

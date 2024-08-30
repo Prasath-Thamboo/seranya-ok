@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout"; // Importer le nouveau composant client
 import { NotificationProvider } from "@/components/notifications/NotificationProvider"; 
+import { ConfigProvider } from "antd";
+import frFR from "antd/lib/locale/fr_FR";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+       <ConfigProvider locale={frFR}>
       <body className={inter.className}>
       <NotificationProvider>
 
@@ -25,6 +28,7 @@ export default function RootLayout({
         <ClientLayout>{children}</ClientLayout>
         </NotificationProvider>
       </body>
+      </ConfigProvider>
     </html>
   );
 }

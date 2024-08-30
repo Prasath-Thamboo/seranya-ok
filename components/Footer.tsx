@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <div className="mb-8 mt-8 border-b border-gray-500 w-48"></div>
-          <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3">
+          <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3 items-start">
             <a href="#" className="mx-auto flex-col flex items-center text-white">
               <FaGithub size={32} />
             </a>

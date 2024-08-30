@@ -12,7 +12,7 @@ import { useNotification } from "@/components/notifications/NotificationProvider
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<RegisterUserModel | null>(null);
-  const [navbarBackground, setNavbarBackground] = useState("transparent");
+  const [navbarBackground, setNavbarBackground] = useState("bg-transparent");
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { addNotification } = useNotification();
@@ -37,9 +37,12 @@ export default function Navbar() {
       if (window.scrollY > 0) {
         setNavbarBackground("bg-black");
       } else {
-        setNavbarBackground("transparent");
+        setNavbarBackground("bg-opacity-50 bg-black");
       }
     };
+
+    // Appeler handleScroll pour définir l'état initial lors du chargement de la page
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
     return () => {

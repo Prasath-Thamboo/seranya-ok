@@ -1,10 +1,14 @@
 import React from 'react';
 import { SidebarContent } from './SidebarContent';
 
-export default function Sidebar() {
+export default function Sidebar({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   return (
-    <aside className="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
-      <SidebarContent />
+    <aside
+      className={`z-20 overflow-y-auto bg-black flex-shrink-0 transition-all duration-300 ${
+        collapsed ? 'w-20' : 'w-80'
+      }`}
+    >
+      <SidebarContent collapsed={collapsed} toggleSidebar={toggleSidebar} />
     </aside>
   );
 }

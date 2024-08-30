@@ -26,6 +26,7 @@
 }
 
 body {
+  font-family: 'Kanit', sans-serif;
   color: rgb(var(--foreground-rgb));
   overflow-x: hidden;
   background: linear-gradient(
@@ -98,43 +99,6 @@ button.ant-btn-primary:hover {
   border-color: black;
 }
 
-/* Social button hover effect */
-.social-btn-container {
-  position: relative;
-  width: 6rem; /* Largeur ajustée */
-  height: 6rem; /* Hauteur ajustée */
-  background-color: white;
-  border-radius: 0.5rem; /* Arrondir seulement les coins supérieurs gauche et inférieurs droits */
-  border: 1px solid #ccc;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-}
-
-.social-btn-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.4);
-  transform: skewX(-25deg);
-  transition: 0.5s;
-}
-
-.social-btn-container:hover::before {
-  left: 125%;
-  transition: 0.5s;
-}
-
-.social-btn-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
 /* Custom styles for Ant Design components */
 .ant-checkbox-inner {
   border-color: white !important;
@@ -178,5 +142,87 @@ button.ant-btn-primary:hover {
   border-color: white !important; /* Changement de la bordure à blanc */
 }
 
+/* Texte et icônes avec ombre néon blanche */
+.text-shadow-white {
+  text-shadow: 0 0 8px #FFFFFF;
+}
 
+/* Styles spécifiques pour les éléments de menu */
+.menu-item,
+.submenu-item {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+/* Par défaut, texte blanc avec ombre néon blanche */
+.menu-item span,
+.submenu-item span,
+.ant-menu-submenu-title span {
+  color: white !important;
+}
+
+/* Par défaut, icônes blanches avec ombre néon blanche */
+.menu-item svg,
+.submenu-item svg,
+.ant-menu-submenu-title svg {
+  color: white !important;
+  text-shadow: 0 0 8px #FFFFFF;
+}
+
+/* Hover, Focus, et Active : texte noir et fond blanc */
+.menu-item:hover,
+.submenu-item:hover,
+.menu-item:focus,
+.submenu-item:focus,
+.menu-item.ant-menu-item-selected,
+.submenu-item.ant-menu-item-selected,
+.ant-menu-submenu-title:hover,
+.ant-menu-submenu-title:focus,
+.ant-menu-submenu-title.ant-menu-submenu-active,
+.ant-menu-submenu-title.ant-menu-submenu-selected {
+  background-color: white !important;
+  color: black !important;
+}
+
+.menu-item:hover span,
+.submenu-item:hover span,
+.menu-item:focus span,
+.submenu-item:focus span,
+.menu-item.ant-menu-item-selected span,
+.submenu-item.ant-menu-item-selected span,
+.ant-menu-submenu-title:hover span,
+.ant-menu-submenu-title:focus span,
+.ant-menu-submenu-title.ant-menu-submenu-active span,
+.ant-menu-submenu-title.ant-menu-submenu-selected span {
+  color: black !important;
+}
+
+.menu-item:hover svg,
+.submenu-item:hover svg,
+.menu-item:focus svg,
+.submenu-item:focus svg,
+.menu-item.ant-menu-item-selected svg,
+.submenu-item.ant-menu-item-selected svg,
+.ant-menu-submenu-title:hover svg,
+.ant-menu-submenu-title:focus svg,
+.ant-menu-submenu-title.ant-menu-submenu-active svg,
+.ant-menu-submenu-title.ant-menu-submenu-selected svg {
+  color: black !important;
+}
+
+/* Garantir que les sous-menus restent avec le texte noir lorsqu'ils sont ouverts */
+.ant-menu-submenu-open > .ant-menu-submenu-title,
+.ant-menu-submenu-open > .ant-menu-submenu-title .anticon,
+.ant-menu-submenu-open > .ant-menu-item {
+  background-color: white !important;
+  color: black !important;
+}
+
+.ant-menu-submenu-open > .ant-menu-submenu-title svg,
+.ant-menu-submenu-open > .ant-menu-item svg {
+  color: black !important;
+}
+
+/* Style des bordures noires pour les sous-menus déployés */
+.submenu-item {
+  border-left: 4px solid black !important;
+}

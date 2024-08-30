@@ -66,11 +66,11 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 font-kanit">
+    <main className="flex flex-col items-center justify-start min-h-screen w-full font-kanit">
       {/* Carousel */}
-      <Carousel items={carouselItems} height="60vh" width="100vw" />
+      <Carousel items={carouselItems} height="85vh" width="100vw" />
 
-      <div className="space-y-4 mt-12">
+      <div className="space-y-4 mt-12 p-8">
         <button
           className="px-4 py-2 bg-blue-600 text-white rounded-md"
           onClick={() => addNotification("information")}
