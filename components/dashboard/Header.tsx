@@ -65,7 +65,7 @@ export default function Header() {
         </ul>
         {/* Ajout du séparateur vertical */}
         <div className="h-8 w-px bg-gray-300 mx-6"></div>
-        <div className="flex justify-center flex-1">
+        <div className="flex flex-1">
           <div className="relative w-full max-w-xl mr-6">
             <div className="absolute inset-y-0 flex items-center pl-2">
               <svg

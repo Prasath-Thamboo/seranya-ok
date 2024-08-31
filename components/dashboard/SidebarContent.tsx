@@ -2,16 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { AiFillHome } from 'react-icons/ai';
-import { FaUsers, FaComments, FaUsersCog, FaCubes } from 'react-icons/fa'; // Importation de l'icône FaCubes pour Units
+import { FaUsers, FaComments, FaUsersCog, FaCubes, FaUserCircle } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import Image from 'next/image';
-import { getAccessToken, fetchCurrentUser } from "@/lib/queries/AuthQueries";
+import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
 import Badge from "@/components/Badge";
-import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels"; // Assurez-vous d'importer le bon modèle
+import CustomModal from "@/components/CustomModal";
+import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
+import { useRouter } from 'next/navigation';
 
 export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const token = getAccessToken();
@@ -21,7 +26,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           setUser({
             ...userData,
             profileImage: userData.profileImage || '/images/backgrounds/placeholder.jpg',
-            role: userData.role || UserRole.USER, // Défaut à 'USER' si role est undefined
+            role: userData.role || UserRole.USER,
           });
         })
         .catch(() => {
@@ -29,6 +34,26 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         });
     }
   }, []);
+
+  const handleLogout = async () => {
+    const token = getAccessToken();
+    if (token) {
+      try {
+        await logoutUser(token);
+        setUser(null);
+        router.push('/auth/login');
+      } catch (error) {
+        console.error('Erreur lors de la déconnexion:', error);
+      }
+    }
+  };
+
+  const showLogoutModal = () => setIsLogoutModalVisible(true);
+  const hideLogoutModal = () => setIsLogoutModalVisible(false);
+
+  const handleProfileClick = () => {
+    router.push('/admin/me'); // Redirection vers la page du profil utilisateur
+  };
 
   return (
     <div
@@ -108,6 +133,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
             key="general-users"
             className="submenu-item"
             style={{ borderLeft: '4px solid black' }}
+            onClick={() => router.push('/admin/users')} // Ajout du lien ici
           >
             <span className="uppercase">Général</span>
           </Menu.Item>
@@ -151,42 +177,72 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         </Menu.Item>
       </Menu>
 
-      {/* Space Used Info Section */}
-      {!collapsed && (
-        <div className="flex flex-col w-full p-4 space-y-2 text-gray-400 bg-gray-700 bg-opacity-20 rounded-lg my-4">
-          <h3 className="text-sm font-semibold">Used Space</h3>
-          <p className="text-sm">Admin is updated and I am not</p>
-        </div>
-      )}
-
-      {/* User Info Section */}
-      <div className="mt-auto w-full">
-        <div className="flex items-center py-6 text-gray-400 border-t border-gray-700 px-6 font-kanit transition-all duration-300">
-          {user ? (
-            <div className="flex items-center">
-              <Image
-                src={typeof user.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
-                alt="User Avatar"
-                width={48}
-                height={48}
-                className="rounded-full object-cover"
-              />
-              {!collapsed && (
-                <div className="ml-4 flex items-center">
-                  <span className="text-lg font-semibold text-white">{user.pseudo}</span>
-                  <div className="ml-2">
-                    <Badge role={user.role || UserRole.USER} /> {/* Assurez-vous que role est une chaîne */}
+      {/* Fixed Bottom Section */}
+      <div className="mt-auto">
+        {/* User Info Section with Hover Effect */}
+        <div
+          className={`flex flex-col items-center justify-center mb-2 relative transition-all duration-300 p-4 rounded-lg w-full cursor-pointer ${isHovered ? 'bg-gray-700 text-white' : 'bg-gray-900'}`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={handleProfileClick}
+        >
+          <div className={`transition-all duration-300 flex flex-col items-center justify-center w-full`}>
+            {isHovered ? (
+              <>
+                <FaUserCircle className="w-6 h-6 mb-2" />
+                <span className="font-oxanium uppercase">Aller à mon profil</span>
+              </>
+            ) : (
+              <div className="flex flex-col items-center">
+                <Image
+                  src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
+                  alt="User Avatar"
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover mb-2"
+                />
+                {!collapsed && (
+                  <div className="flex items-center">
+                    <span className="text-lg font-semibold mr-2">{user?.pseudo}</span>
+                    <Badge role={user?.role || UserRole.USER} />
                   </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-full h-full">
-              <span className="text-sm">Non connecté</span>
-            </div>
-          )}
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Logout Button Section */}
+        <div className={`flex justify-center items-center mb-4 ${collapsed ? 'p-2' : 'p-4'}`}>
+          <button
+            className={`bg-transparent text-white font-kanit font-bold flex items-center ${collapsed ? '' : 'w-full justify-center'}`}
+            onClick={showLogoutModal}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5 mr-2"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M16 13v-2H7.414l2.293-2.293-1.414-1.414L3.586 12l4.707 4.707 1.414-1.414L7.414 13H16z" />
+              <path d="M20 3h-6v2h6v14h-6v2h6a2 2 0 002-2V5a2 2 0 00-2-2z" />
+            </svg>
+            {!collapsed && <span>Déconnexion</span>}
+          </button>
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <CustomModal
+        visible={isLogoutModalVisible}
+        onCancel={hideLogoutModal}
+        onConfirm={handleLogout}
+        title="Déconnexion"
+        subtitle="Êtes-vous sûr de vouloir vous déconnecter ?"
+        confirmText="Déconnexion"
+        cancelText="Annuler"
+        iconType="warning"
+      />
     </div>
   );
 }

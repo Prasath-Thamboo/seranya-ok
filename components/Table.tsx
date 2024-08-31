@@ -1,8 +1,15 @@
+import axios from 'axios';
 import { useTable, useGlobalFilter, useSortBy, usePagination, Column } from 'react-table';
 import { useMemo, useCallback, useState } from 'react';
-import { FaSearch, FaChevronDown, FaCheck, FaChevronLeft, FaChevronRight, FaSortUp, FaSortDown, FaEdit, FaEye, FaTrash, FaPlus } from 'react-icons/fa';
-import Badge from './Badge';
+import { FaSearch, FaChevronDown, FaCheck, FaChevronLeft, FaChevronRight, FaSortUp, FaSortDown, FaEdit, FaEye, FaTrash, FaPlus, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { Image } from 'antd';
+import Badge from './Badge';
+import CustomModal from './CustomModal';
+
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 interface AvatarProps {
   src: string;
@@ -12,12 +19,12 @@ interface AvatarProps {
 function Avatar({ src, alt = 'avatar' }: AvatarProps) {
   return (
     <Image
-      width={120}  // Largeur de l'image de profil en mode paysage
-      height={80}  // Hauteur de l'image
+      width={120}  
+      height={80}  
       src={src}
       alt={alt}
-      style={{ borderRadius: '8px', objectFit: 'cover' }}  // Arrondir les bords et ajuster le contenu
-      preview={true}  // La prévisualisation s'active uniquement au clic
+      style={{ borderRadius: '8px', objectFit: 'cover' }} 
+      preview={true}  
     />
   );
 }
@@ -48,7 +55,7 @@ function InputGroup7({
   disabled = false,
 }: InputGroup7Props) {
   return (
-    <div className={`flex flex-row-reverse items-stretch w-full rounded-xl overflow-hidden bg-white shadow-[0_4px_10px_rgba(0,0,0,0.03)] font-kanit ${className}`}>
+    <div className={`flex flex-row-reverse items-stretch w-full rounded-xl overflow-hidden bg-white shadow-sm ${className}`}>
       <input
         id={name}
         name={name}
@@ -104,9 +111,9 @@ function SelectMenu1({ value, setValue, options, className = '', disabled = fals
   const selectedOption = useMemo(() => options.find((o) => o.id === value), [options, value]);
 
   return (
-    <div className={`relative w-full ${className} font-kanit`}>
+    <div className={`relative w-full ${className}`}>
       <button
-        className={`relative w-full rounded-xl py-4 pl-4 pr-10 text-base text-gray-700 text-left shadow-[0_4px_10px_rgba(0,0,0,0.03)] focus:outline-none ${disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-white cursor-default'}`}
+        className={`relative w-full rounded-xl py-4 pl-4 pr-10 text-base text-gray-700 text-left shadow-sm focus:outline-none ${disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-white cursor-default'}`}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
@@ -116,7 +123,7 @@ function SelectMenu1({ value, setValue, options, className = '', disabled = fals
         </span>
       </button>
       {isOpen && (
-        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white text-base shadow-[0_4px_10px_rgba(0,0,0,0.03)] focus:outline-none">
+        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white text-base shadow-sm focus:outline-none">
           {options.map((option) => (
             <div
               key={option.id}
@@ -152,7 +159,7 @@ interface Button2Props {
 function Button2({ content, onClick, active, disabled }: Button2Props) {
   return (
     <button
-      className={`flex cursor-pointer items-center justify-center w-10 h-10 rounded-full text-base text-gray-700 shadow-[0_4px_10px_rgba(0,0,0,0.03)] focus:outline-none hover:bg-black hover:text-white ${active ? 'bg-black text-white' : 'bg-white text-black'}`}
+      className={`flex cursor-pointer items-center justify-center w-10 h-10 rounded-full text-base text-gray-700 shadow-sm focus:outline-none hover:bg-black hover:text-white ${active ? 'bg-black text-white' : 'bg-white text-black'}`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -193,15 +200,58 @@ function PaginationNav1({ gotoPage, canPreviousPage, canNextPage, pageCount, pag
   }, [pageCount, pageIndex, gotoPage]);
 
   return (
-    <ul className="flex gap-2 font-kanit">
+    <ul className="flex gap-2 items-center">
       <li>
-        <Button2 content={<FaChevronLeft size="0.75rem" />} onClick={() => gotoPage(0)} disabled={!canPreviousPage} active={false} />
+        <Button2 content={<FaAngleDoubleLeft />} onClick={() => gotoPage(0)} disabled={!canPreviousPage} active={false} />
+      </li>
+      <li>
+        <Button2 content={<FaChevronLeft />} onClick={() => gotoPage(pageIndex - 1)} disabled={!canPreviousPage} active={false} />
       </li>
       {renderPageLinks()}
       <li>
-        <Button2 content={<FaChevronRight size="0.75rem" />} onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} active={false} />
+        <Button2 content={<FaChevronRight />} onClick={() => gotoPage(pageIndex + 1)} disabled={!canNextPage} active={false} />
+      </li>
+      <li>
+        <Button2 content={<FaAngleDoubleRight />} onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} active={false} />
       </li>
     </ul>
+  );
+}
+
+interface ActionButtonProps {
+  viewUrl?: string;
+  editUrl?: string;
+  onDelete?: () => void;
+}
+
+function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
+  return (
+    <div className="flex gap-2 justify-center">
+      {viewUrl && (
+        <button
+          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+          onClick={() => window.location.href = viewUrl}
+        >
+          <FaEye className='h-5 w-5' />
+        </button>
+      )}
+      {editUrl && (
+        <button
+          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+          onClick={() => window.location.href = editUrl}
+        >
+          <FaEdit className='h-4 w-4' />
+        </button>
+      )}
+      {onDelete && (
+        <button
+          className="bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red"
+          onClick={onDelete}
+        >
+          <FaTrash className='h-4 w-4' />
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -211,66 +261,104 @@ interface TableComponentProps {
   getTableBodyProps: () => any;
   rows: any[];
   prepareRow: (row: any) => void;
+  onDelete: (unit: any) => void;
 }
 
-function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, prepareRow }: TableComponentProps) {
+function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, prepareRow, onDelete }: TableComponentProps) {
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [unitToDelete, setUnitToDelete] = useState<any>(null);
+
+  const handleDelete = (row: any) => {
+    setUnitToDelete(row.original);
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDelete = async () => {
+    if (unitToDelete) {
+      try {
+        const token = localStorage.getItem("access_token");  // Récupération du token depuis localStorage
+        if (!token) {
+          throw new Error("Token not found");
+        }
+        await axios.delete(`${BASE_URL}/units/${unitToDelete.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Envoi du token dans l'en-tête
+          },
+        });
+        onDelete(unitToDelete);
+      } catch (error) {
+        console.error('Error deleting unit:', error);
+      } finally {
+        setDeleteModalVisible(false);
+      }
+    }
+  };
+
   return (
-    <div className="w-full min-w-[30rem] p-4 bg-white rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.03)] font-kanit overflow-x-auto text-base"> {/* Taille de police légèrement augmentée */}
-      <table {...getTableProps()} className="w-full">
-        <thead>
-          {headerGroups.map((headerGroup: any) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-              {headerGroup.headers.map((column: any) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())} className="px-3 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap" style={{ width: column.width }} key={column.id}>
-                  <div className="flex gap-2 items-center">
-                    <div className="text-gray-600">{column.render('Header')}</div>
-                    <div className="flex flex-col">
-                      <FaSortUp className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-black' : 'text-gray-300'}`} />
-                      <FaSortDown className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-black' : 'text-gray-300'}`} />
-                    </div>
-                  </div>
-                </th>
-              ))}
-              <th className="sticky right-0 bg-white px-3 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-left">
-                Actions
-              </th>
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row: any) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-100">
-                {row.cells.map((cell: any) => (
-                  <td {...cell.getCellProps()} key={cell.id} className="p-2 text-sm font-normal text-gray-700 first:rounded-l-lg last:rounded-r-lg whitespace-nowrap">
-                    {cell.column.id === 'story' || cell.column.id === 'bio' ? (
-                      <div title={cell.value}>
-                        {cell.value.length > 50 ? `${cell.value.slice(0, 50)}...` : cell.value}
+    <div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm max-w-full">
+      <div className="relative inline-block min-w-full">
+        <table {...getTableProps()} className="min-w-full table-auto">
+          <thead>
+            {headerGroups.map((headerGroup: any) => (
+              <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+                {headerGroup.headers.map((column: any) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())} className="px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap" style={{ width: column.width }} key={column.id}>
+                    <div className="flex gap-2 items-center">
+                      <div className="text-gray-600">{column.render('Header')}</div>
+                      <div className="flex flex-col">
+                        <FaSortUp className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-black' : 'text-gray-300'}`} />
+                        <FaSortDown className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-black' : 'text-gray-300'}`} />
                       </div>
-                    ) : cell.column.id === 'type' ? (
-                      <Badge type={cell.value} />
-                    ) : (
-                      cell.render('Cell')
-                    )}
-                  </td>
+                    </div>
+                  </th>
                 ))}
-                <td className="sticky right-0 bg-white p-12 text-sm font-normal text-gray-700 whitespace-nowrap flex gap-2 justify-center shadow-left h-full"> {/* Alignement horizontal */}
-                  <button className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border">
-                    <FaEye className='h-5 w-5'/>
-                  </button>
-                  <button className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border">
-                    <FaEdit className='h-4 w-4'/>
-                  </button>
-                  <button className="bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red">
-                    <FaTrash className='h-4 w-4'/>
-                  </button>
-                </td>
+                <th className="sticky right-0 bg-white px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-left">
+                  Actions
+                </th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row: any) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-100">
+                  {row.cells.map((cell: any) => (
+                    <td {...cell.getCellProps()} key={cell.id} className="px-3 py-2 text-sm font-normal text-gray-700 first:rounded-l-lg last:rounded-r-lg whitespace-nowrap max-w-xs overflow-hidden text-ellipsis">
+                      {cell.column.id === 'story' || cell.column.id === 'bio' ? (
+                        <div title={cell.value}>
+                          {cell.value.length > 30 ? `${cell.value.slice(0, 30)}...` : cell.value}
+                        </div>
+                      ) : cell.column.id === 'type' ? (
+                        <Badge type={cell.value} />
+                      ) : (
+                        cell.render('Cell')
+                      )}
+                    </td>
+                  ))}
+                  <td className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex gap-2 justify-center shadow-left h-full">
+                    <ActionButtons 
+                      viewUrl={`/admin/units/${row.original.id}`} 
+                      editUrl={`/admin/units/update?id=${row.original.id}`}
+                      onDelete={() => handleDelete(row)}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <CustomModal
+        visible={isDeleteModalVisible}
+        onCancel={() => setDeleteModalVisible(false)}
+        onConfirm={confirmDelete}
+        title="Supprimer l'unité"
+        subtitle="Vous êtes sur le point de supprimer une unité et tout son contenu. Cette action est irréversible."
+        confirmText="Supprimer"
+        cancelText="Annuler"
+        iconType="delete"
+      />
     </div>
   );
 }
@@ -278,11 +366,12 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
 interface TableProps {
   data: any[];
   columns: Column<any>[];
-  createButtonText?: string;  // Texte du bouton de création
-  createUrl?: string;  // URL de création
+  createButtonText?: string;
+  createUrl?: string;
+  onDelete: (unit: any) => void;
 }
 
-function Table({ data, columns, createButtonText, createUrl }: TableProps) {
+function Table({ data, columns, createButtonText, createUrl, onDelete }: TableProps) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -315,7 +404,7 @@ function Table({ data, columns, createButtonText, createUrl }: TableProps) {
         <div className="flex gap-2 items-center sm:w-auto">
           {createUrl && (
             <button
-              className="flex items-center justify-center rounded-xl py-3 px-5 text-lg text-gray-700 shadow-[0_4px_10px_rgba(0,0,0,0.03)] focus:outline-none hover:bg-black hover:text-white bg-white text-black sm:w-auto min-w-[240px]"  // Largeur minimale ajustée
+              className="flex items-center justify-center rounded-xl py-3 px-5 text-lg text-gray-700 shadow-sm focus:outline-none hover:bg-black hover:text-white bg-white text-black sm:w-auto min-w-[240px]"
               onClick={() => window.location.href = createUrl}
             >
               <FaPlus className="mr-2" />
@@ -329,7 +418,7 @@ function Table({ data, columns, createButtonText, createUrl }: TableProps) {
           ]} />
         </div>
       </div>
-      <TableComponent getTableProps={getTableProps} headerGroups={headerGroups} getTableBodyProps={getTableBodyProps} rows={rows} prepareRow={prepareRow} />
+      <TableComponent getTableProps={getTableProps} headerGroups={headerGroups} getTableBodyProps={getTableBodyProps} rows={rows} prepareRow={prepareRow} onDelete={onDelete} />
       <div className="flex justify-center">
         <PaginationNav1 gotoPage={gotoPage} canPreviousPage={canPreviousPage} canNextPage={canNextPage} pageCount={pageCount} pageIndex={pageIndex} />
       </div>

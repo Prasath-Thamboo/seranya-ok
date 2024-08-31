@@ -59,55 +59,34 @@ export interface LoginResponse {
     password: string;
   }
   
-  export async function loginUser(loginUserDto: LoginUserDto): Promise<LoginResponse> {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
-    
-    try {
-      const response = await fetch(`${apiUrl}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginUserDto),
+
+  export const loginUser = async (data: { email: string; password: string }) => {
+    const response = await axios.post(`${BASE_URL}/auth/login`, data);
+  
+    if (response.data && response.data.token) {
+      // Stocker le token JWT dans le localStorage
+      localStorage.setItem('access_token', response.data.token);
+      return response.data;
+    }
+  
+    throw new Error('Login failed: Invalid response from server');
+  };
+  
+  
+  export async function logoutUser(): Promise<void> {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      await axios.post(`${BASE_URL}/auth/logout`, null, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to login. Please check your credentials and try again.');
-      }
-  
-      const data: LoginResponse = await response.json();
-  
-      // Log the token for debugging purposes
-      console.log('Login successful:', data.token.access_token);
-  
-      // Return the data so it can be used in the calling function
-      return data;
-  
-    } catch (error) {
-      console.error('Error during login:', error);
-      throw error;
+      // Supprimer le token du localStorage lors de la déconnexion
+      localStorage.removeItem('access_token');
     }
   }
   
-  
-  
-  // Function to retrieve the access token from localStorage or cookies
   export function getAccessToken(): string | null {
     return localStorage.getItem('access_token');
   }
-  
-
-// Function to log out a user
-export const logoutUser = async (token: string): Promise<AuthResponse> => {
-  const response = await axios.post<AuthResponse>(`${BASE_URL}/auth/logout`, null, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
-
-  return response.data;
-};
 
 // Function to generate a password reset token
 export const generateResetToken = async (email: string): Promise<AuthResponse> => {

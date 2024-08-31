@@ -1,9 +1,9 @@
 "use client";
 
-import { Form, Input, Button, Checkbox } from "antd"; // Garde les composants Ant Design sauf les notifications
-import Image from "next/image";
-import { CgLogIn } from "react-icons/cg";
-import Link from "next/link";
+import { Form, Input, Button, Checkbox } from "antd"; // Ant Design components
+import Image from "next/image"; // Next.js Image component for optimized images
+import { CgLogIn } from "react-icons/cg"; // Login icon
+import Link from "next/link"; // Link component for navigation
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/queries/AuthQueries";
 import { useState } from "react";
@@ -19,8 +19,8 @@ export default function LoginPage() {
     try {
       const response = await loginUser(values);
 
-      if (response && response.token && response.token.access_token) {
-        localStorage.setItem("access_token", response.token.access_token);
+      if (response && response.token) {
+        localStorage.setItem("access_token", response.token);
 
         addNotification("success", "Connexion réussie!");
 
@@ -46,6 +46,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row w-full">
+      {/* Background image section */}
       <div className="relative w-full lg:w-2/3 h-64 lg:h-screen">
         <Image
           src="/images/backgrounds/THEDarkSlayer.png"
@@ -57,6 +58,7 @@ export default function LoginPage() {
         <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-black/90 to-transparent"></div>
       </div>
 
+      {/* Login form section */}
       <div className="flex w-full lg:w-1/3 h-auto lg:h-screen justify-center items-center bg-black">
         <div className="max-w-md w-full text-white p-8">
           <h1 className="text-4xl font-bold mb-8 text-center font-oxanium uppercase text-white">

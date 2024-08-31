@@ -12,10 +12,18 @@ const UnitsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedUnits = await fetchUnits();
-      setUnits(fetchedUnits);
+      const unitsWithImages = fetchedUnits.map(unit => ({
+        ...unit,
+        profileImage: `${process.env.NEXT_PUBLIC_API_URL_LOCAL}/uploads/units/${unit.id}/ProfileImage.png`,
+      }));
+      setUnits(unitsWithImages);
     };
     fetchData();
   }, []);
+
+  const handleDelete = (deletedUnit: UnitModel) => {
+    setUnits(units.filter(unit => unit.id !== deletedUnit.id));
+  };
 
   const columns = useMemo(
     () => [
@@ -27,10 +35,10 @@ const UnitsPage = () => {
             <Image 
               src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'} 
               alt={`${value}'s Avatar`}
-              width={120}  // Largeur de l'image de profil en mode paysage
-              height={80}  // Hauteur de l'image
-              style={{ borderRadius: '8px', objectFit: 'cover' }}  // Arrondir les bords et ajuster le contenu
-              preview={true}  // La prévisualisation s'active uniquement au clic
+              width={80}
+              height={80}
+              style={{ borderRadius: '8px', objectFit: 'cover' }}
+              preview={true}
             />
             <div>{value}</div>
           </div>
@@ -61,9 +69,15 @@ const UnitsPage = () => {
   );
 
   return (
-    <div className="p-6">
+    <div className="p-6 font-kanit">
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Units</h1>
-      <Table data={units} columns={columns} createButtonText="Créer une unité" createUrl="/admin/units/create" />
+      <Table 
+        data={units} 
+        columns={columns} 
+        createButtonText="Créer une unité" 
+        createUrl="/admin/units/create"
+        onDelete={handleDelete}
+      />
     </div>
   );
 };
