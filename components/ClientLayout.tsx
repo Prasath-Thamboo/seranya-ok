@@ -23,7 +23,12 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
     <>
       {/* Affichez la Navbar si shouldShowNavbar est vrai */}
       {shouldShowNavbar && <Navbar />}
-      {children}
+      
+      {/* Ajout de la marge si la Navbar est présente */}
+      <div className={shouldShowNavbar ? "" : ""}>
+        {children}
+      </div>
+      
       {/* Affichez le Footer si shouldShowFooter est vrai */}
       {shouldShowFooter && <Footer />}
     </>

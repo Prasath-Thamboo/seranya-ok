@@ -41,7 +41,6 @@ export default function Navbar() {
       }
     };
 
-    // Appeler handleScroll pour définir l'état initial lors du chargement de la page
     handleScroll();
 
     window.addEventListener("scroll", handleScroll);
@@ -51,16 +50,13 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = async () => {
-    const token = getAccessToken();
-    if (token) {
-      try {
-        await logoutUser(token);
-        setIsLoggedIn(false);
-        setUser(null);
-        addNotification("success", "Vous êtes déconnecté.");
-      } catch (error) {
-        addNotification("critical", "Une erreur s'est produite lors de la déconnexion.");
-      }
+    try {
+      await logoutUser();
+      setIsLoggedIn(false);
+      setUser(null);
+      addNotification("success", "Vous êtes déconnecté.");
+    } catch (error) {
+      addNotification("critical", "Une erreur s'est produite lors de la déconnexion.");
     }
   };
 
@@ -84,7 +80,7 @@ export default function Navbar() {
   );
 
   return (
-    <nav className={`fixed top-0 w-full z-10 transition-colors duration-300 p-5 ${navbarBackground}`}>
+    <nav className={`fixed top-0 w-full z-100000000 transition-colors duration-300 p-5 ${navbarBackground}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div className="flex-shrink-0">
           <Link href="/">

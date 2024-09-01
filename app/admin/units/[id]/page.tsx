@@ -17,8 +17,9 @@ const backendUrl = process.env.NODE_ENV === 'production'
   : process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
 const UnitViewPage = () => {
-  const { id: paramId } = useParams();
-  const id = paramId ? parseInt(paramId as string, 10) : null;
+  const params = useParams();
+  const paramId = params?.id as string | undefined; // Assurez-vous que l'id est une chaîne de caractères
+  const id = paramId ? parseInt(paramId, 10) : null;
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const router = useRouter();
 
@@ -47,6 +48,9 @@ const UnitViewPage = () => {
   if (!unit) {
     return <div>Loading...</div>;
   }
+
+  // Assuming `unit.users` is an array and you want the pseudo of the first user
+  const creatorPseudo = unit.users?.[0]?.user?.pseudo || 'Inconnu';
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 sm:p-8">
@@ -116,6 +120,7 @@ const UnitViewPage = () => {
             <div className="text-sm text-gray-500 italic mt-8">
               <p className="mb-2">Créé le: {new Date(unit.createdAt).toLocaleDateString()}</p>
               <p className="mb-2">Mis à jour le: {new Date(unit.updatedAt).toLocaleDateString()}</p>
+              <p className="mb-2">Créé/modifié par: {creatorPseudo}</p>
             </div>
 
             <div className="text-right mt-4">

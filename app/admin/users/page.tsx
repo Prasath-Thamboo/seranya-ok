@@ -2,21 +2,25 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Table from '@/components/Table';
-import { fetchUsers } from '@/lib/queries/UserQueries'; // Importez la fonction pour récupérer les utilisateurs
+import { fetchUsers } from '@/lib/queries/UserQueries';
 import { RegisterUserModel } from '@/lib/models/AuthModels';
 import { Image } from 'antd';
+import { getAccessToken } from '@/lib/queries/AuthQueries'; // Assurez-vous d'importer cette fonction pour obtenir le token
 
 const UsersPage = () => {
   const [users, setUsers] = useState<RegisterUserModel[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedUsers = await fetchUsers(); // Appel de la fonction pour récupérer les utilisateurs
-      const usersWithImages = fetchedUsers.map(user => ({
-        ...user,
-        profileImage: user.profileImage || '/images/backgrounds/placeholder.jpg',
-      }));
-      setUsers(usersWithImages);
+      const token = getAccessToken(); // Obtenir le token d'accès
+      if (token) {
+        const fetchedUsers = await fetchUsers(token);
+        const usersWithImages = fetchedUsers.map(user => ({
+          ...user,
+          profileImage: typeof user.profileImage === 'string' ? user.profileImage : '/images/backgrounds/placeholder.jpg',
+        }));
+        setUsers(usersWithImages as RegisterUserModel[]); // Assurez-vous que le type correspond
+      }
     };
     fetchData();
   }, []);

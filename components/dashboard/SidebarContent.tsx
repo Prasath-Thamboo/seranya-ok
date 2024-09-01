@@ -36,15 +36,12 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
   }, []);
 
   const handleLogout = async () => {
-    const token = getAccessToken();
-    if (token) {
-      try {
-        await logoutUser(token);
-        setUser(null);
-        router.push('/auth/login');
-      } catch (error) {
-        console.error('Erreur lors de la déconnexion:', error);
-      }
+    try {
+      await logoutUser();  // Notez qu'il n'y a pas de token passé ici
+      setUser(null);
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
     }
   };
 

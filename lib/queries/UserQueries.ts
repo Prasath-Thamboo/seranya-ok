@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { UserModel, CreateUserModel, UpdateUserModel } from '../models/UserModels';
+import { RegisterUserModel } from '../models/AuthModels';
 
 // Utilisation des variables d'environnement pour définir la base URL
 const BASE_URL =
@@ -8,8 +9,8 @@ const BASE_URL =
     : process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
 // Fonction pour récupérer tous les utilisateurs
-export const fetchUsers = async (token: string): Promise<UserModel[]> => {
-  const response = await axios.get<UserModel[]>(`${BASE_URL}/users`, {
+export const fetchUsers = async (token: string): Promise<RegisterUserModel[]> => {
+  const response = await axios.get<RegisterUserModel[]>(`${BASE_URL}/users`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
