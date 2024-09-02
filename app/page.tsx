@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import Carousel from "@/components/Carousel";
 import Accordion from "@/components/Accordion";
 
@@ -23,7 +24,7 @@ const Home = () => {
         setCarouselItems(
           data.slice(0, 5).map((item, index) => ({
             image: item.imagePath,
-            title: `Plongez dans l'Univers ${index + 1}`,
+            title: `Plongez dans l&apos;Univers ${index + 1}`,
             subtitle: "Découvrez les mystères de Spectral",
           }))
         );
@@ -38,26 +39,38 @@ const Home = () => {
     loadImages();
   }, []);
 
+  if (!backgroundImage) {
+    // Avoid rendering the entire page until the images are loaded
+    return null; 
+  }
+
   return (
-    <main
-      className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
-      }}
-    >
+    <main className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src={backgroundImage}
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+          objectPosition="center"
+          priority={true}
+          quality={100}
+        />
+        <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
+      </div>
+
       {/* Carousel */}
       <Carousel items={carouselItems} height="100vh" width="100vw" />
 
       {/* Hero Section */}
       <section
-        className="relative pt-16 pb-32 flex content-center items-center justify-center w-full bg-transparent"
+        className="relative pt-16 pb-32 flex content-center items-center justify-center w-full bg-transparent z-10"
         style={{ minHeight: "75vh" }}
       >
         {sectionImages[0] && (
           <div
-            className="absolute top-0 w-full h-full bg-center bg-cover"
+            className="absolute top-0 w-full h-full bg-center bg-cover z-0"
             style={{
               backgroundImage: `url(${sectionImages[0]})`,
               backgroundSize: "cover",
@@ -68,7 +81,7 @@ const Home = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
           </div>
         )}
-        <div className="container relative mx-auto">
+        <div className="container relative mx-auto z-10">
           <div className="items-center flex flex-wrap">
             <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
               <div className="pr-12">
@@ -84,7 +97,7 @@ const Home = () => {
           </div>
         </div>
         <div
-          className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
+          className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden z-10"
           style={{ height: "70px" }}
         >
           <svg
@@ -163,7 +176,7 @@ const Home = () => {
                   <p className="mt-2 mb-4 text-gray-300">
                     Nous offrons une protection robuste pour vos données et
                     celles de vos utilisateurs, assurant une tranquillité
-                    d'esprit totale.
+                    d&apos;esprit totale.
                   </p>
                 </div>
               </div>
@@ -179,8 +192,8 @@ const Home = () => {
                 Une Expérience de Travail Collaborative
               </h3>
               <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-300">
-                Travailler avec nous, c'est collaborer avec une équipe qui
-                valorise la transparence, la communication et l'excellence.
+                Travailler avec nous, c&apos;est collaborer avec une équipe qui
+                valorise la transparence, la communication et l&apos;excellence.
               </p>
               <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-gray-300">
                 Nous nous assurons que chaque projet reflète la vision unique de
@@ -194,10 +207,13 @@ const Home = () => {
             <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
               <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-transparent">
                 {sectionImages[2] && (
-                  <img
+                  <Image
                     alt="Service qualité"
                     src={sectionImages[2]}
                     className="w-full align-middle rounded-t-lg"
+                    layout="responsive"
+                    width={700}
+                    height={475}
                   />
                 )}
                 <blockquote className="relative p-8 mb-4">
@@ -249,105 +265,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Section */}
-      <section className="relative py-20 w-full bg-transparent">
-        {sectionImages[3] && (
-          <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage: `url(${sectionImages[3]})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(70%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-          </div>
-        )}
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="items-center flex flex-wrap">
-            <div className="w-full md:w-4/12 ml-auto mr-auto px-4">
-              <img
-                alt="Feature"
-                className="max-w-full rounded-lg shadow-lg"
-                src={sectionImages[3]}
-              />
-            </div>
-            <div className="w-full md:w-5/12 ml-auto mr-auto px-4">
-              <div className="md:pr-12">
-                <div className="text-pink-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-pink-300">
-                  <i className="fas fa-rocket text-xl"></i>
-                </div>
-                <h3 className="text-3xl font-semibold text-white">
-                  Une Croissance Continue
-                </h3>
-                <p className="mt-4 text-lg leading-relaxed text-gray-300">
-                  Nous grandissons avec chaque projet que nous entreprenons, en
-                  ajoutant des innovations et des solutions uniques.
-                </p>
-                <ul className="list-none mt-6">
-                  <li className="py-2">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 mr-3">
-                          <i className="fas fa-fingerprint"></i>
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-gray-300">Composants sur Mesure</h4>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="py-2">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 mr-3">
-                          <i className="fab fa-html5"></i>
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-gray-300">Pages Uniques</h4>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="py-2">
-                    <div className="flex items-center">
-                      <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-pink-600 bg-pink-200 mr-3">
-                          <i className="far fa-paper-plane"></i>
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-gray-300">Expérience Dynamique</h4>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
-          style={{ height: "70px" }}
-        >
-          <svg
-            className="absolute bottom-0 overflow-hidden"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            version="1.1"
-            viewBox="0 0 2560 100"
-            x="0"
-            y="0"
-          >
-            <polygon
-              className="text-gray-900 fill-current"
-              points="2560 0 2560 100 0 100"
-            ></polygon>
-          </svg>
-        </div>
-      </section>
-
       {/* Team Section */}
       <section className="pt-20 pb-48 w-full bg-transparent">
         {sectionImages[4] && (
@@ -370,19 +287,22 @@ const Home = () => {
                 Découvrez notre équipe
               </h2>
               <p className="text-lg leading-relaxed m-4 text-gray-300">
-                Notre équipe est composée d'experts passionnés, chacun apportant
-                une contribution unique à nos projets.
+                Notre équipe est composée d&apos;experts passionnés, chacun
+                apportant une contribution unique à nos projets.
               </p>
             </div>
           </div>
           <div className="flex flex-wrap">
             <div className="w-full md:w-6/12 lg:w-3/12 lg:mb-0 mb-12 px-4">
               <div className="px-6">
-                <img
+                <Image
                   alt="Team Member"
                   src="/images/team-1.jpg"
                   className="shadow-lg rounded-full max-w-full mx-auto"
                   style={{ maxWidth: "120px" }}
+                  layout="responsive"
+                  width={120}
+                  height={120}
                 />
                 <div className="pt-6 text-center">
                   <h5 className="text-xl font-bold text-white">Ryan Tompson</h5>
@@ -439,7 +359,7 @@ const Home = () => {
                 Construisons Ensemble
               </h2>
               <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-300">
-                Nous offrons des services d'excellence pour vous aider à
+                Nous offrons des services d&apos;excellence pour vous aider à
                 concrétiser vos projets.
               </p>
             </div>
@@ -465,19 +385,21 @@ const Home = () => {
           style={{ height: "70px" }}
         >
           <svg
-            className="absolute bottom-0 overflow-hidden"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            version="1.1"
-            viewBox="0 0 2560 100"
-            x="0"
-            y="0"
-          >
-            <polygon
-              className="text-gray-900 fill-current"
-              points="2560 0 2560 100 0 100"
-            ></polygon>
-          </svg>
+  className="absolute bottom-0 overflow-hidden"
+  xmlns="http://www.w3.org/2000/svg"
+  preserveAspectRatio="none"
+  version="1.1"
+  viewBox="0 0 2560 100"
+  x="0"
+  y="0"
+>
+  <polygon
+    className="fill-current text-transparent"
+    points="2560 0 2560 100 0 100"
+    style={{ fill: 'rgba(0, 0, 0, 0)' }} // Remplissage transparent
+  ></polygon>
+</svg>
+
         </div>
       </section>
 

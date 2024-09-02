@@ -38,7 +38,7 @@ const Carousel: React.FC<CarouselProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden fixed top-0 left-0 z-50" style={{ width, height }}>
+    <div className="relative overflow-hidden fixed top-0 left-0 z-40" style={{ width, height }}>
       {/* Carousel Wrapper */}
       <div className="relative overflow-hidden w-full h-full z-40">
         {items.map((item, index) => (

@@ -35,9 +35,9 @@ export default function Navbar() {
 
     const handleScroll = () => {
       if (window.scrollY > 0) {
-        setNavbarBackground("bg-black");
+        setNavbarBackground("bg-black bg-opacity-75 backdrop-blur-md");
       } else {
-        setNavbarBackground("bg-opacity-50 bg-black");
+        setNavbarBackground("bg-transparent");
       }
     };
 
@@ -80,22 +80,24 @@ export default function Navbar() {
   );
 
   return (
-    <nav className={`fixed top-0 w-full z-100000000 transition-colors duration-300 p-5 ${navbarBackground}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div className="flex-shrink-0">
           <Link href="/">
-            <span className="text-2xl font-oxanium font-bold text-white">Spectral</span>
+            <span className="text-2xl font-oxanium font-bold text-white hover:text-gray-200 transition-colors duration-300">
+              Spectral
+            </span>
           </Link>
         </div>
 
-        <div className="hidden md:flex space-x-4 font-kanit">
-          <Link href="/about" className="text-white hover:text-gray-300">
+        <div className="hidden md:flex space-x-8 font-kanit text-white">
+          <Link href="/about" className="hover:text-gray-300 transition-colors duration-300">
             À propos
           </Link>
-          <Link href="/services" className="text-white hover:text-gray-300">
+          <Link href="/services" className="hover:text-gray-300 transition-colors duration-300">
             Services
           </Link>
-          <Link href="/contact" className="text-white hover:text-gray-300">
+          <Link href="/contact" className="hover:text-gray-300 transition-colors duration-300">
             Contact
           </Link>
         </div>
@@ -107,8 +109,8 @@ export default function Navbar() {
                 <Image
                   src={typeof user.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
                   alt="User Avatar"
-                  width={48}
-                  height={48}
+                  width={40}
+                  height={40}
                   className="rounded-full border-2 border-gray-300 object-cover"
                 />
                 <span className="ml-2 text-white">{user.pseudo}</span>
@@ -122,12 +124,12 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="bg-transparent border border-white text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-white-glow">
+                <button className="bg-transparent border border-white text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-lg">
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button className="bg-white text-black font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-gray-800 hover:text-white hover:border-white hover:shadow-white-glow">
+                <button className="bg-white text-black font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-gray-800 hover:text-white hover:border-white hover:shadow-lg">
                   Inscription
                 </button>
               </Link>
