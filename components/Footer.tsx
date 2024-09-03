@@ -40,10 +40,12 @@ const Footer: React.FC = () => {
       <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
         <div className="flex-col flex items-center">
           <a href="#" className="mb-8 inline-block max-w-full">
-            <img
+            <Image
               src="https://assets.website-files.com/6458c625291a94a195e6cf3a/6458c625291a94d6f4e6cf96_Group%2047874-3.png"
               alt="Logo"
-              className="inline-block max-h-10"
+              width={160} // Remplace cette valeur par la largeur réelle de l'image
+              height={40} // Remplace cette valeur par la hauteur réelle de l'image
+              className="inline-block"
             />
           </a>
           <div className="text-center font-semibold">
