@@ -22,7 +22,7 @@ const ContactPage: React.FC = () => {
           Contactez-nous
         </h2>
         <p className="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">
-          Un problème technique? Une question sur l'univers? Contactez-nous!
+          Un problème technique? Une question sur l&apos;univers? Contactez-nous!
         </p>
         <Form
           name="contact"
