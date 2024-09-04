@@ -1,9 +1,9 @@
 "use client";
 
-import { Form, Input, Button, Checkbox } from "antd"; // Ant Design components
-import Image from "next/image"; // Next.js Image component for optimized images
-import { CgLogIn } from "react-icons/cg"; // Login icon
-import Link from "next/link"; // Link component for navigation
+import { Form, Input, Button, Checkbox } from "antd";
+import Image from "next/image";
+import { CgLogIn } from "react-icons/cg";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/queries/AuthQueries";
 import { useState } from "react";
@@ -21,16 +21,13 @@ export default function LoginPage() {
 
       if (response && response.token) {
         localStorage.setItem("access_token", response.token);
-
         addNotification("success", "Connexion réussie!");
-
         router.push("/");
       } else {
         throw new Error("Token non fourni ou réponse incorrecte");
       }
     } catch (error) {
       console.error("Error during login:", error);
-
       addNotification(
         "critical",
         "Erreur lors de la connexion. Veuillez vérifier vos identifiants."
@@ -55,7 +52,7 @@ export default function LoginPage() {
           style={{ objectFit: "cover" }}
           className="lg:block"
         />
-        <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-black/90 to-transparent"></div>
+        <div className="absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-black/90 to-transparent"></div>
       </div>
 
       {/* Login form section */}
@@ -73,6 +70,7 @@ export default function LoginPage() {
             layout="vertical"
           >
             <Form.Item
+              label={<span className="text-white font-kanit">Email</span>}
               name="email"
               rules={[{ required: true, message: "Veuillez entrer votre email!" }]}
             >
@@ -85,6 +83,7 @@ export default function LoginPage() {
             </Form.Item>
 
             <Form.Item
+              label={<span className="text-white font-kanit">Mot de passe</span>}
               name="password"
               rules={[{ required: true, message: "Veuillez entrer votre mot de passe!" }]}
             >
