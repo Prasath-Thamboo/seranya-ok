@@ -7,6 +7,12 @@ export enum UnitType {
   CHAMPION = 'CHAMPION',
 }
 
+// Interface pour l'utilisateur associé à une unité
+export interface User {
+  id: number;
+  pseudo: string;
+}
+
 // Interface pour le modèle d'unité (données complètes)
 export interface UnitModel {
   id: number;
@@ -23,6 +29,7 @@ export interface UnitModel {
   headerImage?: string;
   footerImage?: string;
   gallery: string[];
+  users: { user: User }[];  // Ajout de la propriété users avec le type approprié
 }
 
 // Interface pour le modèle de création d'unité

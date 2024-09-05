@@ -63,6 +63,7 @@ export const createUnit = async (data: CreateUnitModel, token: string): Promise<
 };
 
 // Fonction pour mettre à jour une unité
+// Fonction pour mettre à jour une unité existante
 export const updateUnit = async (
   id: number,
   data: UpdateUnitModel,
@@ -78,14 +79,19 @@ export const updateUnit = async (
   if (data.isPublished !== undefined) formData.append('isPublished', String(data.isPublished));
   if (data.type) formData.append('type', data.type);
 
+  // Ajout des fichiers uploadés pour la mise à jour
   if (data.profileImage) formData.append('profileImage', data.profileImage as File);
   if (data.headerImage) formData.append('headerImage', data.headerImage as File);
   if (data.footerImage) formData.append('footerImage', data.footerImage as File);
+
+  // Gestion des images de galerie ajoutées
   if (data.gallery && data.gallery.length > 0) {
     data.gallery.forEach((image, index) => {
       formData.append(`gallery[${index}]`, image as File);
     });
   }
+
+  // Gestion des images de galerie supprimées
   if (data.galleryImagesToDelete && data.galleryImagesToDelete.length > 0) {
     data.galleryImagesToDelete.forEach((imageId, index) => {
       formData.append(`galleryImagesToDelete[${index}]`, imageId);

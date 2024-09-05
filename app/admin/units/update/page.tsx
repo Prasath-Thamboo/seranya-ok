@@ -1,13 +1,14 @@
 "use client";
 
-import { Form, Input, Button, Upload, Select, Image, Row, Col } from "antd"; 
-import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Upload, Select, Image, Row, Col, Card } from "antd"; 
+import { UploadOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { UnitModel, UnitType } from "@/lib/models/UnitModels";
 import type { UploadFile } from 'antd/es/upload/interface';
+import { fetchUnitById } from "@/lib/queries/UnitQueries";
 
 const { Option } = Select;
 
@@ -16,11 +17,16 @@ const UpdateUnit = () => {
   const [loading, setLoading] = useState(false);
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
+  const [visibleGallery, setVisibleGallery] = useState<string[]>([]); // Gérer l'affichage de la galerie visible
   const router = useRouter();
   const searchParams = useSearchParams(); 
   const id = searchParams?.get("id"); 
 
   const { addNotification } = useNotification();
+
+  const backendUrl = process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
   useEffect(() => {
     if (id) {
@@ -29,17 +35,14 @@ const UpdateUnit = () => {
           const data = await fetchUnitById(Number(id));
 
           if (data) {
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL_LOCAL || '';
-
-            // Utilisez les URLs réelles pour les images
-            data.profileImage = data.profileImage ? `${baseUrl}/uploads/units/${data.id}/ProfileImage.png` : '';
-            data.headerImage = data.headerImage ? `${baseUrl}/uploads/units/${data.id}/HeaderImage.png` : '';
-            data.footerImage = data.footerImage ? `${baseUrl}/uploads/units/${data.id}/FooterImage.png` : '';
-
-            // Pour les images de la galerie, utilisez les noms de fichiers directement sans ajouter `baseUrl` une seconde fois
-            data.gallery = data.gallery ? data.gallery.map((url) => url) : [];
+            // Utilisation des URLs réelles pour les images
+            data.profileImage = `${backendUrl}/uploads/units/${id}/ProfileImage.png`;
+            data.headerImage = `${backendUrl}/uploads/units/${id}/HeaderImage.png`;
+            data.footerImage = `${backendUrl}/uploads/units/${id}/FooterImage.png`;
 
             setUnit(data);
+            setVisibleGallery(data.gallery); // Initialiser la galerie visible
+
             form.setFieldsValue({
               title: data.title,
               intro: data.intro,
@@ -58,25 +61,7 @@ const UpdateUnit = () => {
     }
   }, [id]);
 
-  const updateUnit = async (id: number, formData: FormData, token: string) => {
-    try {
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL_LOCAL}/units/${id}`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error('Error updating unit:', error);
-      throw new Error('Failed to update unit');
-    }
-  };
-
+  // Nouvelle fonction pour appeler directement le backend avec axios
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
@@ -85,10 +70,9 @@ const UpdateUnit = () => {
         throw new Error("Token not found");
       }
 
-      // Créer un objet FormData
       const formData = new FormData();
 
-      // Ajouter les valeurs du formulaire
+      // Ajout des champs du formulaire à formData
       formData.append('title', values.title);
       formData.append('intro', values.intro);
       formData.append('subtitle', values.subtitle);
@@ -96,7 +80,7 @@ const UpdateUnit = () => {
       formData.append('bio', values.bio);
       formData.append('type', values.type);
 
-      // Ajouter les fichiers uploadés, en vérifiant qu'ils existent
+      // Ajout des fichiers uploadés à formData
       if (values.profileImage && values.profileImage[0]?.originFileObj) {
         formData.append('profileImage', values.profileImage[0].originFileObj as Blob);
       }
@@ -109,21 +93,34 @@ const UpdateUnit = () => {
       if (values.gallery && values.gallery.length > 0) {
         values.gallery.forEach((file: UploadFile) => {
           if (file.originFileObj) {
-            formData.append('galleryImages', file.originFileObj as Blob);
+            formData.append('gallery', file.originFileObj as Blob);
           }
         });
       }
 
-      // Ajouter les images de galerie à supprimer si elles existent
+      // Ajout des images à supprimer
       if (galleryImagesToDelete.length > 0) {
-        formData.append('galleryImagesToDelete', JSON.stringify(galleryImagesToDelete));
+        galleryImagesToDelete.forEach((imageId, index) => {
+          formData.append(`galleryImagesToDelete[${index}]`, imageId);
+        });
       }
 
-      // Envoyer les données à l'API
-      await updateUnit(Number(id), formData, token);
+      // Appel direct à l'API via axios
+      const response = await axios.patch(`${backendUrl}/units/${id}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
-      addNotification("success", "Unité mise à jour avec succès!");
-      router.push("/admin/units");
+      // Vérification de la réponse
+      if (response.data) {
+        console.log("Updated Unit Response: ", response.data);
+        addNotification("success", "Unité mise à jour avec succès!");
+        router.push("/admin/units");
+      } else {
+        throw new Error("Mise à jour échouée");
+      }
     } catch (error) {
       console.error("Error during unit update:", error);
       addNotification("critical", "Erreur lors de la mise à jour de l'unité.");
@@ -143,6 +140,12 @@ const UpdateUnit = () => {
     if (file.uid && typeof file.uid === 'string') {
       setGalleryImagesToDelete(prev => [...prev, file.uid]);
     }
+  };
+
+  // Suppression d'une image de la galerie
+  const handleDeleteImage = (imageId: string) => {
+    setGalleryImagesToDelete(prev => [...prev, imageId]);
+    setVisibleGallery(visibleGallery.filter(url => url !== imageId)); // Supprime l'image visuellement
   };
 
   return (
@@ -262,10 +265,8 @@ const UpdateUnit = () => {
                 <Image
                   src={unit.profileImage}
                   alt="Image de profil actuelle"
-                  width={200}
-                  height={200}
-                  className="rounded-lg"
-                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg w-full h-auto"
+                  style={{ objectFit: 'cover', maxHeight: '240px' }}
                 />
               )}
             </Col>
@@ -296,10 +297,8 @@ const UpdateUnit = () => {
                 <Image
                   src={unit.headerImage}
                   alt="Image Header actuelle"
-                  width={400}
-                  height={200}
-                  className="rounded-lg"
-                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg w-full h-auto"
+                  style={{ objectFit: 'cover', maxHeight: '240px' }}
                 />
               )}
             </Col>
@@ -330,10 +329,8 @@ const UpdateUnit = () => {
                 <Image
                   src={unit.footerImage}
                   alt="Image de pied de page actuelle"
-                  width={400}
-                  height={200}
-                  className="rounded-lg"
-                  style={{ objectFit: 'cover' }}
+                  className="rounded-lg w-full h-auto"
+                  style={{ objectFit: 'cover', maxHeight: '240px' }}
                 />
               )}
             </Col>
@@ -342,17 +339,29 @@ const UpdateUnit = () => {
           {/* Galerie */}
           <div className="bg-gray-200 p-4 rounded-lg mb-4">
             <h2 className="font-kanit text-black mb-2">Galerie</h2>
-            {unit && unit.gallery && unit.gallery.length > 0 && (
+            {unit && visibleGallery.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
-                {unit.gallery.map((url, index) => (
-                  <Image
+                {visibleGallery.map((url, index) => (
+                  <Card
                     key={index}
-                    src={url}
-                    alt={`Galerie Image ${index + 1}`}
-                    width={150}
-                    height={150}
-                    className="rounded-lg"
-                    style={{ objectFit: 'cover' }}
+                    hoverable
+                    cover={
+                      <div className="relative">
+                        <Image
+                          src={url}
+                          alt={`Galerie Image ${index + 1}`}
+                          className="rounded-lg w-full h-auto"
+                          style={{ objectFit: 'cover', maxHeight: '150px' }}
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
+                          <DeleteOutlined
+                            key="delete"
+                            onClick={() => handleDeleteImage(url)}
+                            style={{ color: "white", fontSize: "24px" }}
+                          />
+                        </div>
+                      </div>
+                    }
                   />
                 ))}
               </div>
