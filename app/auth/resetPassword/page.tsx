@@ -4,29 +4,35 @@ import { Form, Input, Button } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 
 const backendUrl = process.env.NODE_ENV === 'production'
   ? process.env.NEXT_PUBLIC_API_URL_PROD
   : process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
-
 export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const { addNotification } = useNotification();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [resetToken, setResetToken] = useState<string | null>(null);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (searchParams) {
-      const token = searchParams.get("token");
-      setResetToken(token);
-    }
+  // Utiliser Suspense pour gérer le rendu de `useSearchParams`
+  const SearchParamsComponent = () => {
+    const searchParams = useSearchParams();
+    useEffect(() => {
+      if (searchParams) {
+        const token = searchParams.get("token");
+        setResetToken(token);
+      }
+    }, [searchParams]);
 
+    return null; // Ce composant n'affiche rien, il sert uniquement à récupérer les params
+  };
+
+  useEffect(() => {
     const fetchRandomImage = async () => {
       try {
         const response = await axios.get("/api/getRandomImage");
@@ -37,7 +43,7 @@ export default function ResetPasswordPage() {
     };
 
     fetchRandomImage();
-  }, [searchParams]);
+  }, []);
 
   const onFinish = async (values: any) => {
     if (!resetToken) {
@@ -71,7 +77,6 @@ export default function ResetPasswordPage() {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row w-full">
@@ -158,6 +163,11 @@ export default function ResetPasswordPage() {
           </Form>
         </div>
       </div>
+
+      {/* Ajout de Suspense pour encapsuler le composant qui utilise `useSearchParams` */}
+      <Suspense fallback={<div>Loading params...</div>}>
+        <SearchParamsComponent />
+      </Suspense>
     </div>
   );
 }
