@@ -258,7 +258,7 @@ const Home = () => {
             y="0"
           >
             <polygon
-              className="text-gray-900 fill-current"
+              className="transparent fill-current"
               points="2560 0 2560 100 0 100"
             ></polygon>
           </svg>

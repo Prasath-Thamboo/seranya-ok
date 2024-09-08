@@ -40,21 +40,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
         <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
-          <h1 className={`text-3xl font-extrabold sm:text-5xl`} style={{ color: titleColor }}>
+          <h1 className={`text-3xl font-extrabold sm:text-5xl`} style={{ color: titleColor, textShadow: "2px 2px 5px black" }}>
             {title}
-            <strong className={`block font-extrabold`} style={{ color: strongTitleColor }}>
+            <strong className={`block font-extrabold`} style={{ color: strongTitleColor, textShadow: "2px 2px 5px black" }}>
               {strongTitle}
             </strong>
           </h1>
 
-          <p className={`mt-4 max-w-lg sm:text-xl/relaxed`} style={{ color: contentColor }}>
+          <p className={`mt-4 max-w-lg sm:text-xl/relaxed`} style={{ color: contentColor, textShadow: "1px 1px 3px black" }}>
             {content}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4 text-center">
             <a
               href={button1Url}
-              className={`block w-full rounded px-12 py-3 text-sm font-medium text-white shadow hover:opacity-90 focus:outline-none focus:ring sm:w-auto`}
+              className={`block w-full rounded px-12 py-3 text-sm font-medium text-white shadow-lg focus:outline-none focus:ring sm:w-auto transform transition-all duration-300 hover:scale-105`}
               style={{ backgroundColor: button1BgColor }}
             >
               {button1Text}
@@ -62,7 +62,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
             <a
               href={button2Url}
-              className={`block w-full rounded px-12 py-3 text-sm font-medium shadow hover:opacity-90 focus:outline-none focus:ring sm:w-auto`}
+              className={`block w-full rounded px-12 py-3 text-sm font-medium text-white shadow-lg focus:outline-none focus:ring sm:w-auto transform transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-neon`}
               style={{ backgroundColor: button2BgColor }}
             >
               {button2Text}
@@ -73,5 +73,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     </section>
   );
 };
+
 
 export default HeroSection;

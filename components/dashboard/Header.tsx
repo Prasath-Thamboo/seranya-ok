@@ -50,7 +50,7 @@ export default function Header() {
               />
             </Link>
             <div className="flex items-center space-x-2">
-              <h1 className="text-lg font-bold text-gray-900">
+              <h1 className="text-lg font-iceberg font-bold text-gray-900">
                 {user.pseudo}
               </h1>
               <Badge role={user.role || UserRole.USER} />

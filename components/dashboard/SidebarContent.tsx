@@ -37,7 +37,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
 
   const handleLogout = async () => {
     try {
-      await logoutUser();  // Notez qu'il n'y a pas de token passé ici
+      await logoutUser();
       setUser(null);
       router.push('/auth/login');
     } catch (error) {
@@ -49,7 +49,11 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
   const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
   const handleProfileClick = () => {
-    router.push('/admin/me'); // Redirection vers la page du profil utilisateur
+    router.push('/admin/me'); 
+  };
+
+  const handleLogoClick = () => {
+    router.push('/');
   };
 
   return (
@@ -77,39 +81,24 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         )}
       </div>
 
-      {/* Header Section */}
+      {/* Logo Section */}
       <div
-        className={`flex items-center justify-start h-24 px-6 mb-4 transition-all duration-300 ${
-          collapsed ? 'justify-center' : ''
-        }`}
+        className={`flex items-center justify-center my-10 cursor-pointer ${collapsed ? 'justify-center' : ''}`}
+        onClick={handleLogoClick} // Redirection au clic sur le logo
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`w-6 h-6 text-shadow-white transition-all duration-300 ${
-            collapsed ? 'mr-0' : 'mr-2'
-          }`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-          />
-        </svg>
-        {!collapsed && (
-          <span className="text-xl font-medium font-kanit text-shadow-white">
-            Spectral Dashboard
-          </span>
-        )}
+        <Image
+          src="/logos/spectral-high-resolution-logo-white-transparent.png" // Logo Spectral
+          alt="Spectral Logo"
+          width={collapsed ? 35 : 180} // Ajuster la taille du logo en fonction du statut collapsed
+          height={50}
+          className="mx-auto"
+        />
       </div>
 
       {/* Navigation Section */}
       <Menu
         mode="inline"
-        className="font-kanit"
+        className="font-iceberg" // Police Iceberg pour toute la barre de navigation
         style={{ background: 'black', borderRight: 'none' }}
       >
         <Menu.Item
@@ -130,7 +119,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
             key="general-users"
             className="submenu-item"
             style={{ borderLeft: '4px solid black' }}
-            onClick={() => router.push('/admin/users')} // Ajout du lien ici
+            onClick={() => router.push('/admin/users')}
           >
             <span className="uppercase">Général</span>
           </Menu.Item>
@@ -176,34 +165,24 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
 
       {/* Fixed Bottom Section */}
       <div className="mt-auto">
-        {/* User Info Section with Hover Effect */}
         <div
           className={`flex flex-col items-center justify-center mb-2 relative transition-all duration-300 p-4 rounded-lg w-full cursor-pointer ${isHovered ? 'bg-gray-700 text-white' : 'bg-gray-900'}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={handleProfileClick}
         >
-          <div className={`transition-all duration-300 flex flex-col items-center justify-center w-full`}>
-            {isHovered ? (
-              <>
-                <FaUserCircle className="w-6 h-6 mb-2" />
-                <span className="font-oxanium uppercase">Aller à mon profil</span>
-              </>
-            ) : (
-              <div className="flex flex-col items-center">
-                <Image
-                  src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
-                  alt="User Avatar"
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover mb-2"
-                />
-                {!collapsed && (
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-2">{user?.pseudo}</span>
-                    <Badge role={user?.role || UserRole.USER} />
-                  </div>
-                )}
+          <div className="flex flex-col items-center justify-center">
+            <Image
+              src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
+              alt="User Avatar"
+              width={48}
+              height={48}
+              className="rounded-full object-cover mb-2"
+            />
+            {!collapsed && (
+              <div className="flex items-center">
+                <span className="text-lg font-iceberg font-semibold mr-2">{user?.pseudo}</span>
+                <Badge role={user?.role || UserRole.USER} />
               </div>
             )}
           </div>
@@ -212,7 +191,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         {/* Logout Button Section */}
         <div className={`flex justify-center items-center mb-4 ${collapsed ? 'p-2' : 'p-4'}`}>
           <button
-            className={`bg-transparent text-white font-kanit font-bold flex items-center ${collapsed ? '' : 'w-full justify-center'}`}
+            className={`bg-transparent text-white font-iceberg font-bold flex items-center ${collapsed ? '' : 'w-full justify-center'}`}
             onClick={showLogoutModal}
           >
             <svg

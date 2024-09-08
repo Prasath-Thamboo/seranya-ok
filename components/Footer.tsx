@@ -2,31 +2,39 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 
-const Footer: React.FC = () => {
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+interface FooterProps {
+  backgroundImage?: string; // Prop optionnelle pour l'image de fond
+}
+
+const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
+  const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fonction pour charger une image aléatoire du serveur
+    // Charger une image aléatoire si aucune image n'est fournie en props
     const loadRandomBackgroundImage = async () => {
-      try {
-        const response = await fetch('/api/getRandomImage');
-        const data = await response.json();
-        setBackgroundImage(data.imagePath);
-      } catch (error) {
-        console.error("Failed to load random background image:", error);
+      if (!backgroundImage) {
+        try {
+          const response = await fetch('/api/getRandomImage');
+          const data = await response.json();
+          setRandomBackgroundImage(data.imagePath);
+        } catch (error) {
+          console.error("Failed to load random background image:", error);
+        }
       }
     };
 
     loadRandomBackgroundImage();
-  }, []);
+  }, [backgroundImage]);
+
+  const finalBackgroundImage = backgroundImage || randomBackgroundImage;
 
   return (
-    <footer className="relative block text-white font-kanit">
+    <footer className="relative block text-white font-iceberg uppercase">
       {/* Image de fond avec filtre opaque */}
       <div className="absolute inset-0 z-0">
-        {backgroundImage && (
+        {finalBackgroundImage && (
           <Image
-            src={backgroundImage}
+            src={finalBackgroundImage}
             alt="Image de fond du footer"
             layout="fill"
             objectFit="cover"
@@ -39,59 +47,54 @@ const Footer: React.FC = () => {
       {/* Contenu */}
       <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
         <div className="flex-col flex items-center">
+          {/* Logo */}
           <a href="#" className="mb-8 inline-block max-w-full">
             <Image
-              src="https://assets.website-files.com/6458c625291a94a195e6cf3a/6458c625291a94d6f4e6cf96_Group%2047874-3.png"
-              alt="Logo"
-              width={160} // Remplace cette valeur par la largeur réelle de l'image
-              height={40} // Remplace cette valeur par la hauteur réelle de l'image
-              className="inline-block"
+              src="/logos/spectral-high-resolution-logo-white-transparent.png"
+              alt="Logo Spectral"
+              width={160}
+              height={40}
+              className="inline-block object-contain"
             />
           </a>
+
+          {/* Menu */}
           <div className="text-center font-semibold">
             <a
-              href="#"
+              href="/about"
               className="inline-block px-6 py-2 font-normal transition hover:text-blue-400"
             >
               À propos
             </a>
             <a
-              href="#"
+              href="/mentions-legales"
               className="inline-block px-6 py-2 font-normal transition hover:text-blue-400"
             >
-              Fonctionnalités
+              Mentions légales
             </a>
             <a
               href="#"
               className="inline-block px-6 py-2 font-normal transition hover:text-blue-400"
             >
-              Projets
-            </a>
-            <a
-              href="#"
-              className="inline-block px-6 py-2 font-normal transition hover:text-blue-400"
-            >
-              Support
-            </a>
-            <a
-              href="#"
-              className="inline-block px-6 py-2 font-normal transition hover:text-blue-400"
-            >
-              Aide
+              © Copyright
             </a>
           </div>
+
           <div className="mb-8 mt-8 border-b border-gray-500 w-48"></div>
+
+          {/* Réseaux sociaux */}
           <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3 items-start">
-            <a href="#" className="mx-auto flex-col flex items-center text-white">
+            <a href="https://github.com" className="mx-auto flex-col flex items-center text-white">
               <FaGithub size={32} />
             </a>
-            <a href="#" className="mx-auto flex-col flex items-center text-white">
+            <a href="https://twitter.com" className="mx-auto flex-col flex items-center text-white">
               <FaTwitter size={32} />
             </a>
-            <a href="#" className="mx-auto flex-col flex items-center text-white">
+            <a href="https://instagram.com" className="mx-auto flex-col flex items-center text-white">
               <FaInstagram size={32} />
             </a>
           </div>
+
           <p className="text-sm sm:text-base">© Copyright 2021. Tous droits réservés.</p>
         </div>
       </div>

@@ -1,29 +1,97 @@
 "use client";
 
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Result } from 'antd';
 import Image from 'next/image';
-import { FcGoogle } from 'react-icons/fc';
-import { FaXTwitter } from 'react-icons/fa6';
-import { CgUserAdd } from 'react-icons/cg'; // Icône pour le bouton d'inscription
 import Link from 'next/link';
-import DividersWithHeading from '@/components/DividersWhithHeading'; // Import du composant
+import { CgUserAdd } from 'react-icons/cg'; // Icon for the button
+import { useState } from 'react';
+import { registerUser } from '@/lib/queries/AuthQueries'; // Import your API function
+import { getAccessToken } from '@/lib/queries/AuthQueries'; // Import token function if needed
+import { RegisterUserModel } from '@/lib/models/AuthModels'; // Import the correct interface
 
 export default function RegisterPage() {
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const onFinish = async (values: any) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const token = getAccessToken(); // Fetch token if required
+
+      if (!token) {
+        setError('Token not found. Please login again.');
+        return;
+      }
+
+      // Only sending necessary fields using RegisterUserModel
+      await registerUser({
+        pseudo: values.pseudo,
+        email: values.email,
+        password: values.password,
+        phone: values.phone,
+      } as RegisterUserModel, token); // Ensure token is provided
+
+      // Show success modal
+      setIsModalVisible(true);
+    } catch (error) {
+      setError('Registration failed. Please try again.');
+      console.error('Failed to register:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+  const handleOk = () => {
+    setIsModalVisible(false);
+    window.location.href = '/auth/login'; // Redirect to login page after modal is closed
   };
 
   return (
-    <div className="h-screen flex flex-col lg:flex-row w-full">
-      {/* Section de gauche avec le formulaire */}
-      <div className="flex w-full lg:w-1/3 h-full justify-center items-center bg-black">
-        <div className="max-w-3xl w-full text-white p-6 lg:p-8">
-          {/* Titre principal avec la police Oxanium et l'effet d'ombre néon */}
-          <h1 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center font-oxanium uppercase text-white text-shadow-neon-white">
+    <div className="h-screen flex flex-col lg:flex-row w-full font-kanit">
+      {/* Modal for success message */}
+      {isModalVisible && (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-md shadow-lg w-1/2 max-w-lg">
+            <Result
+              status="success"
+              title={<span className="font-kanit text-2xl">Inscription réussie!</span>}
+              subTitle={<span className="font-kanit">Votre inscription a été réussie. Cliquez sur OK pour être redirigé vers la page de connexion.</span>}
+              extra={[
+                <Button
+                  key="ok"
+                  onClick={handleOk}
+                  className="bg-gray-900 text-white active:bg-gray-700 text-lg font-iceberg uppercase px-8 py-4 rounded shadow hover:shadow-lg outline-none focus:outline-none"
+                  style={{ transition: 'all .15s ease' }}
+                >
+                  OK
+                </Button>,
+              ]}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Left section with form */}
+      <div
+        className="flex flex-col w-full lg:w-1/2 h-full justify-center items-center bg-white shadow-xl"
+        style={{ boxShadow: 'inset -10px 0 30px rgba(0, 0, 0, 0.2)' }}
+      >
+        {/* Enlarged logo at the top */}
+        <div className="mb-6 lg:mb-10">
+          <Image
+            src="/logos/spectral-high-resolution-logo-black-transparent (1).png"
+            alt="Spectral Logo"
+            width={300} // Adjust logo size
+            height={100}
+            className="mx-auto"
+          />
+        </div>
+
+        <div className="w-full max-w-lg">
+          <h1 className="text-3xl lg:text-4xl font-bold mb-10 text-center font-iceberg uppercase text-black">
             Inscription
           </h1>
 
@@ -31,112 +99,95 @@ export default function RegisterPage() {
             name="register"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             layout="vertical"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Pseudo */}
               <Form.Item
-                label={<span className="text-white font-kanit text-shadow-neon-white-light">Pseudo</span>}
+                label={<span className="text-black font-kanit">Pseudo</span>}
                 name="pseudo"
                 rules={[{ required: true, message: 'Veuillez entrer votre pseudo!' }]}
               >
-                <Input 
-                  placeholder="Votre pseudo" 
-                  className="custom-input bg-white text-black font-kanit"
-                  style={{ height: "3rem" }}
+                <Input
+                  placeholder="Pseudo"
+                  className="bg-white text-black h-14 border border-black shadow-md focus:border-black w-full"
                 />
               </Form.Item>
 
+              {/* Password */}
               <Form.Item
-                label={<span className="text-white font-kanit text-shadow-neon-white-light">Téléphone</span>}
-                name="phone"
-                rules={[{ required: true, message: 'Veuillez entrer votre numéro de téléphone!' }]}
-              >
-                <Input 
-                  placeholder="Votre téléphone" 
-                  className="custom-input bg-white text-black font-kanit"
-                  style={{ height: "3rem" }}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label={<span className="text-white font-kanit text-shadow-neon-white-light">Email</span>}
-                name="email"
-                rules={[{ required: true, message: 'Veuillez entrer votre email!' }]}
-              >
-                <Input 
-                  type="email" 
-                  placeholder="Votre email" 
-                  className="custom-input bg-white text-black font-kanit"
-                  style={{ height: "3rem" }}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label={<span className="text-white font-kanit text-shadow-neon-white-light">Mot de passe</span>}
+                label={<span className="text-black font-kanit">Mot de passe</span>}
                 name="password"
                 rules={[{ required: true, message: 'Veuillez entrer votre mot de passe!' }]}
               >
-                <Input.Password 
-                  placeholder="Votre mot de passe" 
-                  className="custom-input bg-white text-black font-kanit"
-                  style={{ height: "3rem" }}
+                <Input.Password
+                  placeholder="Mot de passe"
+                  className="bg-white text-black h-14 border border-black shadow-md focus:border-black w-full"
+                />
+              </Form.Item>
+
+              {/* Email */}
+              <Form.Item
+                label={<span className="text-black font-kanit">Email</span>}
+                name="email"
+                rules={[{ required: true, message: 'Veuillez entrer votre email!' }]}
+              >
+                <Input
+                  placeholder="Email"
+                  type="email"
+                  className="bg-white text-black h-14 border border-black shadow-md focus:border-black w-full"
+                />
+              </Form.Item>
+
+              {/* Phone */}
+              <Form.Item
+                label={<span className="text-black font-kanit">Téléphone</span>}
+                name="phone"
+                rules={[{ required: true, message: 'Veuillez entrer votre numéro de téléphone!' }]}
+              >
+                <Input
+                  placeholder="Téléphone"
+                  className="bg-white text-black h-14 border border-black shadow-md focus:border-black w-full"
                 />
               </Form.Item>
             </div>
 
-            <Form.Item className="flex justify-center mt-4 lg:mt-6">
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+
+            {/* Single Button Centered */}
+            <Form.Item className="flex justify-center mt-8">
               <Button
                 type="primary"
                 htmlType="submit"
-                className="bg-black text-white font-kanit text-lg py-4 lg:py-6 px-4 lg:px-6 flex items-center justify-center border border-white transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-white-glow"
-                icon={<CgUserAdd className="mr-2 w-6 h-6" />}
+                loading={loading}
+                className="bg-black text-white w-full h-16 text-xl font-bold flex items-center justify-center border border-black transition-all hover:bg-gray-800 hover:scale-105 uppercase font-iceberg"
+                icon={<CgUserAdd className="mr-2 w-8 h-8" />} // Icon added to the button
               >
-                S&#39;inscrire
+                INSCRIPTION
               </Button>
             </Form.Item>
-
-            {/* Divider avec sous-titre */}
-            <DividersWithHeading text="Ou inscrivez-vous via" />
-
-            {/* Boutons pour s'inscrire avec Google et X */}
-            <div className="flex justify-center mt-4 lg:mt-8">
-              <div className="social-btn-container mx-2 lg:mx-3">
-                <div className="social-btn-content">
-                  <FcGoogle className="w-8 h-8" />
-                </div>
-              </div>
-              <div className="social-btn-container mx-2 lg:mx-3">
-                <div className="social-btn-content">
-                  <FaXTwitter className="w-8 h-8 text-black" />
-                </div>
-              </div>
-            </div>
-
-            {/* Texte de connexion en bas */}
-            <div className="mt-4 lg:mt-8 text-center">
-              <span className="text-white font-kanit">
-                Déjà inscrit?{' '}
-                <Link href="/login" className="text-blue-500 hover:text-blue-300">
-                  Connectez-vous ici
-                </Link>
-              </span>
-            </div>
           </Form>
+
+          <div className="mt-8 text-center">
+            <span className="text-black">
+              Déjà inscrit?{' '}
+              <Link href="/login" className="text-blue-600 hover:text-blue-400">
+                Connectez-vous ici
+              </Link>
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Section de droite avec l'image et l'effet d'ombre */}
-      <div className="relative w-full lg:w-2/3 h-64 lg:h-screen">
+      {/* Right section with the background image */}
+      <div className="hidden lg:block relative w-1/2 h-full">
         <Image
-          src="/images/backgrounds/BllodbathDiablos.png"
-          alt="Background"
+          src="/images/backgrounds/a.knight_httpss.mj.runoTkVu9yakdo_An_angelic_female_knight_wi_0a74cee9-5949-4fac-bf6c-5346ac9cda3f_2.png"
+          alt="Background Image"
           fill
           style={{ objectFit: 'cover' }}
           className="lg:block"
         />
-        {/* Ombre noire gradient intensifiée */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-transparent w-1/3"></div>
       </div>
     </div>
   );

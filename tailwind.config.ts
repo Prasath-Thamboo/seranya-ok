@@ -13,6 +13,7 @@ const config: Config = {
         kanit: ['Kanit', 'sans-serif'],
         optimus: ['Optimus Princeps', 'serif'],
         poppins: ['Poppins', 'sans-serif'],
+        iceberg: ['Iceberg', 'sans-serif'],
       },
       textShadow: {
         'neon-white': '0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5)',

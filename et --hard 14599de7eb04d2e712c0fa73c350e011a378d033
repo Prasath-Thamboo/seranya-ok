@@ -1,0 +1,77 @@
+[33mcommit 572dc3aa1a0f47531bdca958aa3eb89bfdbb2ec1[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: khalilelghoul01 <khalilelghoul01@gmail.com>
+Date:   Fri Sep 6 18:08:06 2024 +0200
+
+    jest
+
+[33mcommit 14599de7eb04d2e712c0fa73c350e011a378d033[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Thu Sep 5 23:42:53 2024 +0200
+
+    CRUD Unit
+
+[33mcommit 3090e830813816a4c51ff9329e375e3a860c0b9f[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Thu Sep 5 23:39:05 2024 +0200
+
+    CRUD Unit
+
+[33mcommit 173f4931e92db10a49faf324dd0ebf9942920622[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Wed Sep 4 23:28:47 2024 +0200
+
+    Reset mot de passe
+
+[33mcommit 9e51f0baff58ed10665ce2de2bb0b39b75ffb9c9[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Tue Sep 3 23:11:38 2024 +0200
+
+    Amzon SES
+
+[33mcommit e06ed2529cc3d60c5f79f2958d970b8a8803c906[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Tue Sep 3 23:06:37 2024 +0200
+
+    Amzon SES
+
+[33mcommit 192e9b21f25bce48495461e304e1494d43244a1f[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Mon Sep 2 23:29:04 2024 +0200
+
+    Update
+
+[33mcommit 1087b19843b36343c4daa5e605e92b88b31dfabd[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Sun Sep 1 23:42:12 2024 +0200
+
+    Update
+
+[33mcommit 47de9a4af49506eebd4ab95eb18604db2a1c7045[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Sun Sep 1 00:05:20 2024 +0200
+
+    Update
+
+[33mcommit 154a9e78b5b46c22f0a723884e00eac51470fa8c[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Fri Aug 30 23:19:46 2024 +0200
+
+    Dashboard
+
+[33mcommit 353b58f4ec85414efcf94e4b63166cdcac998fb0[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Wed Aug 28 19:05:53 2024 +0200
+
+    Dashboard Admin
+
+[33mcommit f695754e3594d72047a56de3991c3af6bdf35dc1[m
+Author: khalilelghoul01 <khalilelghoul01@gmail.com>
+Date:   Mon Aug 26 17:37:33 2024 +0200
+
+    Notif
+
+[33mcommit bf36fcb59e2887150538bee9f646bd2a1cf6c8dc[m
+Author: Amine KASSI <amine.kassi@goons.fr>
+Date:   Sun Aug 25 18:27:20 2024 +0200
+
+    Initial commit of frontend project

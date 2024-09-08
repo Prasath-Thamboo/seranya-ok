@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.spectralunivers.com
+
+# Sitemaps
+Sitemap: https://www.spectralunivers.com/sitemap.xml

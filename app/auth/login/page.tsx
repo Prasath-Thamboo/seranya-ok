@@ -14,6 +14,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { addNotification } = useNotification();
 
+  const [form] = Form.useForm(); // Hook pour gérer le formulaire
+
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
@@ -58,11 +60,24 @@ export default function LoginPage() {
       {/* Login form section */}
       <div className="flex w-full lg:w-1/3 h-auto lg:h-screen justify-center items-center bg-black">
         <div className="max-w-md w-full text-white p-8">
-          <h1 className="text-4xl font-bold mb-8 text-center font-oxanium uppercase text-white">
+          {/* Logo centré en haut */}
+          <div className="mb-6 lg:mb-10">
+            <Image
+              src="/logos/spectral-high-resolution-logo-white-transparent (1).png"
+              alt="Spectral Logo"
+              width={300} // Ajuster la taille du logo
+              height={100}
+              className="mx-auto"
+            />
+          </div>
+
+          {/* Titre "CONNEXION" en police Iceberg */}
+          <h1 className="text-4xl font-bold mb-8 text-center font-iceberg uppercase text-white">
             Connexion
           </h1>
 
           <Form
+            form={form} // Associer le formulaire avec le hook
             name="login"
             initialValues={{ remember: true }}
             onFinish={onFinish}
@@ -101,15 +116,15 @@ export default function LoginPage() {
             </div>
 
             <Form.Item className="flex justify-center mt-6">
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="bg-white text-black font-kanit text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold"
-                icon={<CgLogIn className="mr-2 w-6 h-6" />}
-                loading={loading}
+              {/* Bouton Connexion avec style personnalisé */}
+              <button
+                className="bg-black text-white w-full h-16 text-xl font-bold flex items-center justify-center border border-black transition-all hover:bg-white hover:text-black border-md p-5 hover:scale-105 uppercase font-iceberg"
+                style={{ transition: "all .15s ease" }}
+                type="submit" // Utilisation de type "submit" pour exécuter le onFinish du formulaire
               >
+                <CgLogIn className="mr-2 w-6 h-6" />
                 Connexion
-              </Button>
+              </button>
             </Form.Item>
 
             <div className="mt-8 text-center">
@@ -118,7 +133,7 @@ export default function LoginPage() {
                   Créer un compte
                 </Link>
                 {" | "}
-                <Link href="/forgot-password" className="text-white hover:text-gray-300">
+                <Link href="/auth/resetPassword" className="text-white hover:text-gray-300">
                   Mot de passe oublié?
                 </Link>
               </span>

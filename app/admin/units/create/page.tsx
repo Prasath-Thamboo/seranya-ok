@@ -6,12 +6,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
-import { UnitType } from "@/lib/models/UnitModels";
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; // Import Quill's CSS
 
 const { Option } = Select;
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const CreateUnit = () => {
   const [loading, setLoading] = useState(false);
+  const [bioValue, setBioValue] = useState('');
+  const [storyValue, setStoryValue] = useState('');
   const router = useRouter();
   const { addNotification } = useNotification();
 
@@ -30,8 +34,8 @@ const CreateUnit = () => {
       formData.append('title', values.title);
       formData.append('intro', values.intro);
       if (values.subtitle) formData.append('subtitle', values.subtitle);
-      if (values.story) formData.append('story', values.story);
-      if (values.bio) formData.append('bio', values.bio);
+      formData.append('story', storyValue); // Utilisation de l'éditeur Quill pour story
+      formData.append('bio', bioValue); // Utilisation de l'éditeur Quill pour bio
       formData.append('type', values.type);
   
       // Ajout des fichiers au formulaire avec vérification
@@ -80,7 +84,7 @@ const CreateUnit = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black font-bold">
+        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
           Créer une Unité
         </h1>
 
@@ -130,22 +134,14 @@ const CreateUnit = () => {
             name="story"
             label={<span className="font-kanit text-black">Histoire</span>}
           >
-            <Input.TextArea
-              placeholder="Histoire"
-              className="bg-white text-black font-kanit"
-              style={{ height: "6rem" }}
-            />
+            <ReactQuill value={storyValue} onChange={setStoryValue} />
           </Form.Item>
 
           <Form.Item
             name="bio"
             label={<span className="font-kanit text-black">Biographie</span>}
           >
-            <Input.TextArea
-              placeholder="Biographie"
-              className="bg-white text-black font-kanit"
-              style={{ height: "6rem" }}
-            />
+            <ReactQuill value={bioValue} onChange={setBioValue} />
           </Form.Item>
 
           <Form.Item

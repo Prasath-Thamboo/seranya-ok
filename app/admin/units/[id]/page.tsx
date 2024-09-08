@@ -49,7 +49,6 @@ const UnitViewPage = () => {
     return <div>Loading...</div>;
   }
 
-  // Assuming `unit.users` is an array and you want the pseudo of the first user
   const creatorPseudo = unit.users?.[0]?.user?.pseudo || 'Inconnu';
 
   return (
