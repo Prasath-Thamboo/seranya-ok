@@ -31,6 +31,12 @@ const UnitDetailPage = () => {
         // Mettre à jour les URLs des images
         fetchedUnit.profileImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/ProfileImage.png`;
         fetchedUnit.headerImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/HeaderImage.png`;
+
+        // Mettre à jour les URLs des images de la galerie
+        if (fetchedUnit.gallery) {
+          fetchedUnit.gallery = fetchedUnit.gallery.map(img => `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`);
+        }
+
         setUnit(fetchedUnit);
       }
     };
