@@ -47,9 +47,8 @@ const UnitDetailPage = () => {
         // Mettre à jour les URLs des images de la galerie
         if (fetchedUnit.gallery) {
           fetchedUnit.gallery = fetchedUnit.gallery.map((img) => {
-            // If the img already contains a full URL (starting with 'http'), return it as is, else prepend the backendUrl.
             return img.startsWith('http') ? img : `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`;
-          });
+          });          
         }
         
 
