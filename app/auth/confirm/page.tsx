@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
+import { Suspense } from 'react';
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -11,13 +12,15 @@ const fetchRandomImage = async () => {
   return data.imagePath;
 };
 
-export default function ConfirmationPage() {
+// Composant pour gérer la confirmation avec Suspense
+function ConfirmationContent() {
   const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Utilisation de useSearchParams côté client uniquement
   const searchParams = useSearchParams();
-  const token = searchParams ? searchParams.get('token') : null; // Récupère le token ou null si searchParams est null
+  const token = searchParams ? searchParams.get('token') : null;
 
   useEffect(() => {
     const confirmEmail = async () => {
@@ -57,7 +60,7 @@ export default function ConfirmationPage() {
             className="absolute inset-0 w-full h-full bg-cover bg-center"
             style={{
               backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: 'cover',  // Assure que l'image couvre toute la surface
+              backgroundSize: 'cover', 
               backgroundPosition: 'center',
               filter: "brightness(70%)",
               backgroundAttachment: "fixed",
@@ -92,5 +95,14 @@ export default function ConfirmationPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+// Composant parent avec Suspense pour gérer le rendu côté client
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <ConfirmationContent />
+    </Suspense>
   );
 }
