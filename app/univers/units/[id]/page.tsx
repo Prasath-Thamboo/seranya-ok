@@ -11,7 +11,11 @@ import Badge from "@/components/Badge"; // Importation du composant Badge
 
 const UnitDetailPage = () => {
   const params = useParams();
-  const id = params?.id ? (Array.isArray(params.id) ? params.id[0] : params.id) : null;
+  const id = params?.id
+    ? Array.isArray(params.id)
+      ? params.id[0]
+      : params.id
+    : null;
 
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [activeSection, setActiveSection] = useState("biographie");
@@ -30,13 +34,20 @@ const UnitDetailPage = () => {
 
         // Vérifier si backendUrl est défini, sinon afficher une erreur
         if (!backendUrl) {
-          console.error("L'URL du backend n'est pas définie. Veuillez vérifier vos variables d'environnement.");
+          console.error(
+            "L'URL du backend n'est pas définie. Veuillez vérifier vos variables d'environnement."
+          );
           return;
         }
 
         // Valider que l'URL de production n'inclut pas 'localhost'
-        if (process.env.NODE_ENV === "production" && backendUrl.includes("localhost")) {
-          console.error("L'URL du backend en production ne doit pas inclure 'localhost'.");
+        if (
+          process.env.NODE_ENV === "production" &&
+          backendUrl.includes("localhost")
+        ) {
+          console.error(
+            "L'URL du backend en production ne doit pas inclure 'localhost'."
+          );
           return;
         }
 
@@ -46,11 +57,15 @@ const UnitDetailPage = () => {
 
         // Mettre à jour les URLs des images de la galerie
         if (fetchedUnit.gallery) {
-          fetchedUnit.gallery = fetchedUnit.gallery.map((img) => {
-            return img.startsWith('http') ? img : `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`;
-          });          
+          fetchedUnit.gallery = fetchedUnit.gallery
+            .map((img) => {
+              // Check if img is valid and construct the URL
+              return img && img.startsWith("http")
+                ? img
+                : `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`;
+            })
+            .filter((img) => img !== null && img !== undefined); // Filter out any null or undefined values
         }
-        
 
         setUnit(fetchedUnit);
       }
@@ -77,7 +92,9 @@ const UnitDetailPage = () => {
       <div
         className="fixed inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+          backgroundImage: `url(${
+            unit.headerImage || "/images/backgrounds/placeholder.jpg"
+          })`,
           backgroundAttachment: "fixed",
           filter: "brightness(25%)",
         }}
@@ -89,7 +106,9 @@ const UnitDetailPage = () => {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+              backgroundImage: `url(${
+                unit.headerImage || "/images/backgrounds/placeholder.jpg"
+              })`,
             }}
           />
           <div className="absolute bottom-0 w-full h-[60vh] bg-gradient-to-t from-black/95 to-transparent"></div>
@@ -104,10 +123,8 @@ const UnitDetailPage = () => {
             <h1 className="text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               {unit.title}
             </h1>
-
             {/* Badge pour le rôle */}
             <Badge role={unit.type} /> {/* Ajout du badge sous le titre */}
-
             {unit.subtitle && (
               <p className="mt-4 text-xl font-kanit text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                 {unit.subtitle}
@@ -141,13 +158,17 @@ const UnitDetailPage = () => {
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
               <div className="flex items-center space-x-4 ">
                 <Image
-                  src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                  src={
+                    unit.profileImage || "/images/backgrounds/placeholder.jpg"
+                  }
                   alt={`${unit.title} Profile`}
                   width={80}
                   height={80}
                   className="w-20 h-20 object-cover rounded-full shadow-lg neon-effect neon-avatar"
                 />
-                <h2 className="text-2xl font-oxanium text-white">{unit.title}</h2>
+                <h2 className="text-2xl font-oxanium text-white">
+                  {unit.title}
+                </h2>
                 <Badge role={unit.type} /> {/* Badge dans la sidebar aussi */}
               </div>
 
@@ -207,10 +228,15 @@ const UnitDetailPage = () => {
             {activeSection === "biographie" && (
               <div className="relative z-10">
                 <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
-                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8">Biographie</h2>
+                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
+                    Biographie
+                  </h2>
                   <div
                     className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto"
-                    dangerouslySetInnerHTML={{ __html: unit.bio || "<p>Aucune biographie disponible.</p>" }}
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        unit.bio || "<p>Aucune biographie disponible.</p>",
+                    }}
                   />
                 </div>
               </div>
@@ -219,7 +245,9 @@ const UnitDetailPage = () => {
             {activeSection === "galerie" && (
               <div className="relative z-10">
                 <div className="mt-12 px-4 sm:px-8 lg:px-16">
-                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8 text-left">Galerie</h2>
+                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8 text-left">
+                    Galerie
+                  </h2>
                   <Masonry
                     breakpointCols={{ default: 3, 1100: 2, 700: 1 }}
                     className="flex -ml-4 w-auto"
@@ -237,7 +265,9 @@ const UnitDetailPage = () => {
                         />
                       ))
                     ) : (
-                      <p className="text-gray-500">Aucune image disponible dans la galerie.</p>
+                      <p className="text-gray-500">
+                        Aucune image disponible dans la galerie.
+                      </p>
                     )}
                   </Masonry>
                 </div>
@@ -247,8 +277,12 @@ const UnitDetailPage = () => {
             {activeSection === "nouvelles" && (
               <div className="relative z-10">
                 <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
-                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8">Nouvelles</h2>
-                  <p className="text-gray-300 text-lg">Pas de nouvelles pour le moment.</p>
+                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
+                    Nouvelles
+                  </h2>
+                  <p className="text-gray-300 text-lg">
+                    Pas de nouvelles pour le moment.
+                  </p>
                 </div>
               </div>
             )}
