@@ -56,15 +56,21 @@ const UnitDetailPage = () => {
         fetchedUnit.headerImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/HeaderImage.png`;
 
         // Mettre à jour les URLs des images de la galerie
+        // Ensure the gallery URLs are correctly constructed
         if (fetchedUnit.gallery) {
           fetchedUnit.gallery = fetchedUnit.gallery
             .map((img) => {
-              // Check if img is valid and construct the URL
-              return img && img.startsWith("http")
-                ? img
-                : `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`;
+              if (img) {
+                // If the image already contains the backend URL, return it as is
+                if (img.startsWith("http")) {
+                  return img;
+                }
+                // Else, construct the URL properly
+                return `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`;
+              }
+              return ""; // Return an empty string if the image is not defined
             })
-            .filter((img) => img !== null && img !== undefined); // Filter out any null or undefined values
+            .filter((img) => img !== ""); // Filter out empty strings
         }
 
         setUnit(fetchedUnit);
