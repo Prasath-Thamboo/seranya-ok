@@ -66,7 +66,7 @@ const UnitDetailPage = () => {
                   return img;
                 }
                 // Else, construct the URL properly
-                return `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`;
+                return `https://api.spectralunivers.com/uploads/units/${fetchedUnit.id}/gallery/${img}`;
               }
               return ""; // Return an empty string if the image is not defined
             })
