@@ -23,10 +23,22 @@ const UnitDetailPage = () => {
         const fetchedUnit = await fetchUnitById(parseInt(id, 10));
 
         // Sélectionner l'URL du backend en fonction de l'environnement
-        const backendUrl =
-          process.env.NODE_ENV === 'production'
+        const backendUrl: string | undefined =
+          process.env.NODE_ENV === "production"
             ? process.env.NEXT_PUBLIC_API_URL_PROD
             : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+
+        // Vérifier si backendUrl est défini, sinon afficher une erreur
+        if (!backendUrl) {
+          console.error("L'URL du backend n'est pas définie. Veuillez vérifier vos variables d'environnement.");
+          return;
+        }
+
+        // Valider que l'URL de production n'inclut pas 'localhost'
+        if (process.env.NODE_ENV === "production" && backendUrl.includes("localhost")) {
+          console.error("L'URL du backend en production ne doit pas inclure 'localhost'.");
+          return;
+        }
 
         // Mettre à jour les URLs des images
         fetchedUnit.profileImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/ProfileImage.png`;
@@ -34,7 +46,9 @@ const UnitDetailPage = () => {
 
         // Mettre à jour les URLs des images de la galerie
         if (fetchedUnit.gallery) {
-          fetchedUnit.gallery = fetchedUnit.gallery.map(img => `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`);
+          fetchedUnit.gallery = fetchedUnit.gallery.map(
+            (img) => `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${img}`
+          );
         }
 
         setUnit(fetchedUnit);
