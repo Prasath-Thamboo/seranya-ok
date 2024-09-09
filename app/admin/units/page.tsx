@@ -6,6 +6,12 @@ import { fetchUnits } from '@/lib/queries/UnitQueries';
 import { UnitModel } from '@/lib/models/UnitModels';
 import { Image } from 'antd';
 
+// Utiliser l'URL du backend en fonction de l'environnement
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
 const UnitsPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
 
@@ -14,7 +20,7 @@ const UnitsPage = () => {
       const fetchedUnits = await fetchUnits();
       const unitsWithImages = fetchedUnits.map(unit => ({
         ...unit,
-        profileImage: `${process.env.NEXT_PUBLIC_API_URL_LOCAL}/uploads/units/${unit.id}/ProfileImage.png`,
+        profileImage: `${BASE_URL}/uploads/units/${unit.id}/ProfileImage.png`,
       }));
       setUnits(unitsWithImages);
     };
