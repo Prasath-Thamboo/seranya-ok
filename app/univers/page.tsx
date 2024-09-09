@@ -29,8 +29,8 @@ const UniversPage = () => {
 
       const unitsWithImages = fetchedUnits.map((unit) => ({
         ...unit,
-        profileImage: `${process.env.NEXT_PUBLIC_API_URL_LOCAL}/uploads/units/${unit.id}/ProfileImage.png`,
-        headerImage: `${process.env.NEXT_PUBLIC_API_URL_LOCAL}/uploads/units/${unit.id}/HeaderImage.png`,
+        profileImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/ProfileImage.png`,
+        headerImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/HeaderImage.png`,
       }));
 
       setUnits(unitsWithImages);
