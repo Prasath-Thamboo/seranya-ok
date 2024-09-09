@@ -80,7 +80,7 @@ const UnitDetailPage = () => {
               boxShadow: "0px 60vh 60vh -60vh rgba(0, 0, 0, 0.95)",
             }}
           >
-            <h1 className="text-5xl font-iceberg text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+            <h1 className="text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               {unit.title}
             </h1>
 

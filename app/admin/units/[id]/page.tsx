@@ -12,6 +12,7 @@ import { FaEdit } from 'react-icons/fa';
 
 const { TabPane } = Tabs;
 
+// Définir l'URL de base en fonction de l'environnement
 const backendUrl = process.env.NODE_ENV === 'production'
   ? process.env.NEXT_PUBLIC_API_URL_PROD
   : process.env.NEXT_PUBLIC_API_URL_LOCAL;
@@ -30,11 +31,18 @@ const UnitViewPage = () => {
           const fetchedUnit = await fetchUnitById(id);
 
           if (fetchedUnit) {
+            // Mise à jour des URL d'images pour correspondre à l'environnement
             fetchedUnit.profileImage = `${backendUrl}/uploads/units/${id}/ProfileImage.png`;
             fetchedUnit.headerImage = `${backendUrl}/uploads/units/${id}/HeaderImage.png`;
             fetchedUnit.footerImage = `${backendUrl}/uploads/units/${id}/FooterImage.png`;
 
-            // Les images de la galerie sont maintenant directement dans la propriété 'gallery'
+            // Assurez-vous que les images de la galerie utilisent également le bon URL
+            if (fetchedUnit.gallery) {
+              fetchedUnit.gallery = fetchedUnit.gallery.map(
+                (imgUrl) => `${backendUrl}/${imgUrl}`
+              );
+            }
+
             setUnit(fetchedUnit);
           }
         } catch (error) {
@@ -43,7 +51,7 @@ const UnitViewPage = () => {
       }
     };
     fetchUnitData();
-  }, [id, backendUrl]);
+  }, [id]);
 
   if (!unit) {
     return <div>Loading...</div>;
