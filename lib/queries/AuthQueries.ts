@@ -20,9 +20,9 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 const LOGIN_ENDPOINT = 'http://localhost:5000/auth/login';
 
 // Function to register a new user
+// Function to register a new user
 export const registerUser = async (
-  data: RegisterUserModel,
-  token: string,
+  data: RegisterUserModel
 ): Promise<AuthResponse> => {
   const formData = new FormData();
 
@@ -39,13 +39,13 @@ export const registerUser = async (
 
   const response = await axios.post<AuthResponse>(`${BASE_URL}/auth/register`, formData, {
     headers: {
-      Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data',
     },
   });
 
   return response.data;
 };
+
 
 export interface LoginResponse {
     message: string;

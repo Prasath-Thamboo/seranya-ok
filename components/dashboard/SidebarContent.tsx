@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { AiFillHome } from 'react-icons/ai';
-import { FaUsers, FaComments, FaUsersCog, FaCubes, FaUserCircle } from 'react-icons/fa';
+import { FaUsers, FaComments, FaUsersCog, FaCubes } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
-import Image from 'next/image';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
 import Badge from "@/components/Badge";
 import CustomModal from "@/components/CustomModal";
 import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'; // Import du composant Image
 
 export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
@@ -23,9 +23,11 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
     if (token) {
       fetchCurrentUser()
         .then((userData) => {
+          // Assure que l'URL de l'image est complète et servie par le backend
+          const profileImageUrl = `${process.env.NEXT_PUBLIC_API_URL_LOCAL || process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/users/${userData.id}/ProfileImage.png`;
           setUser({
             ...userData,
-            profileImage: userData.profileImage || '/images/backgrounds/placeholder.jpg',
+            profileImage: profileImageUrl,
             role: userData.role || UserRole.USER,
           });
         })
@@ -49,7 +51,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
   const hideLogoutModal = () => setIsLogoutModalVisible(false);
 
   const handleProfileClick = () => {
-    router.push('/admin/me'); 
+    router.push('/admin/me');
   };
 
   const handleLogoClick = () => {
@@ -86,8 +88,8 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         className={`flex items-center justify-center my-10 cursor-pointer ${collapsed ? 'justify-center' : ''}`}
         onClick={handleLogoClick} // Redirection au clic sur le logo
       >
-        <Image
-          src="/logos/spectral-high-resolution-logo-white-transparent.png" // Logo Spectral
+        <img
+          src="/logos/spectral-high-resolution-logo-white-transparent.png"
           alt="Spectral Logo"
           width={collapsed ? 35 : 180} // Ajuster la taille du logo en fonction du statut collapsed
           height={50}
@@ -123,13 +125,6 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           >
             <span className="uppercase">Général</span>
           </Menu.Item>
-          <Menu.Item
-            key="manage-users"
-            className="submenu-item"
-            style={{ borderLeft: '4px solid black' }}
-          >
-            <span className="uppercase">Gérer</span>
-          </Menu.Item>
         </Menu.SubMenu>
 
         <Menu.SubMenu
@@ -154,13 +149,6 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         >
           {!collapsed && <span className="uppercase text-shadow-white">Discussion</span>}
         </Menu.Item>
-        <Menu.Item
-          key="team"
-          icon={<FaUsersCog className="w-5 h-5 text-shadow-white" />}
-          className="menu-item"
-        >
-          {!collapsed && <span className="uppercase text-shadow-white">Équipe</span>}
-        </Menu.Item>
       </Menu>
 
       {/* Fixed Bottom Section */}
@@ -172,13 +160,14 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           onClick={handleProfileClick}
         >
           <div className="flex flex-col items-center justify-center">
-            <Image
-              src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
-              alt="User Avatar"
-              width={48}
-              height={48}
-              className="rounded-full object-cover mb-2"
-            />
+          <Image
+  src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
+  alt="User Avatar"
+  width={48}
+  height={48}
+  className="rounded-full object-cover mb-2"
+/>
+
             {!collapsed && (
               <div className="flex items-center">
                 <span className="text-lg font-iceberg font-semibold mr-2">{user?.pseudo}</span>

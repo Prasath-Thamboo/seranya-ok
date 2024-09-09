@@ -2,14 +2,23 @@
 
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button } from 'antd';
+import axios from 'axios';
+import { useNotification } from '@/components/notifications/NotificationProvider'; // Notification system
 
 const { TextArea } = Input;
 
+// Définir le base URL en fonction de l'environnement
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
 const ContactPage: React.FC = () => {
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const { addNotification } = useNotification(); // Notification system
 
-  // Charger une image de fond aléatoire
   useEffect(() => {
+    // Charger une image de fond aléatoire
     const loadRandomBackgroundImage = async () => {
       try {
         const response = await fetch('/api/getRandomImage');
@@ -23,8 +32,15 @@ const ContactPage: React.FC = () => {
     loadRandomBackgroundImage();
   }, []);
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish = async (values: any) => {
+    try {
+      // Appel au backend pour envoyer le message via BASE_URL
+      await axios.post(`${BASE_URL}/mailer/contact`, values); 
+      addNotification('success', 'Votre message a été envoyé avec succès!');
+    } catch (error) {
+      console.error('Error sending message:', error);
+      addNotification('critical', 'Erreur lors de l\'envoi du message.');
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -41,11 +57,9 @@ const ContactPage: React.FC = () => {
         backgroundPosition: 'center',
       }}
     >
-      {/* Filtre pour rendre l'image de fond plus sombre */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md w-full relative z-10">
-        {/* Texte avec Iceberg et Uppercase */}
         <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-white uppercase font-iceberg">
           Contact
         </h2>
@@ -53,7 +67,6 @@ const ContactPage: React.FC = () => {
           Un problème technique? Une question sur l&apos;univers? Contactez-nous!
         </p>
 
-        {/* Formulaire de contact */}
         <Form
           name="contact"
           layout="vertical"
@@ -64,8 +77,8 @@ const ContactPage: React.FC = () => {
           <Form.Item
             label="Votre email"
             name="email"
-            className="font-kanit text-white"
-            rules={[{ required: true, message: 'Veuillez entrer votre email!' }]}
+            className="font-kanit text-black"
+            rules={[{ required: true, message: 'Veuillez entrer votre email!' }, { type: 'email', message: 'Email invalide' }]}
           >
             <Input
               placeholder="name@domain.com"
@@ -77,7 +90,7 @@ const ContactPage: React.FC = () => {
           <Form.Item
             label="Sujet"
             name="subject"
-            className="font-kanit text-white"
+            className="font-kanit text-black"
             rules={[{ required: true, message: 'Veuillez entrer le sujet!' }]}
           >
             <Input
@@ -90,7 +103,7 @@ const ContactPage: React.FC = () => {
           <Form.Item
             label="Votre message"
             name="message"
-            className="font-kanit text-white"
+            className="font-kanit text-black"
             rules={[{ required: true, message: 'Veuillez entrer votre message!' }]}
           >
             <TextArea

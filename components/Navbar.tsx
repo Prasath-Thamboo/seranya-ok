@@ -24,7 +24,11 @@ export default function Navbar() {
     if (token) {
       fetchCurrentUser()
         .then((userData) => {
-          setUser(userData);
+          const profileImageUrl = `${process.env.NEXT_PUBLIC_API_URL_LOCAL || process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/users/${userData.id}/ProfileImage.png`;
+          setUser({
+            ...userData,
+            profileImage: profileImageUrl,
+          });
           setIsLoggedIn(true);
         })
         .catch(() => {
@@ -64,7 +68,7 @@ export default function Navbar() {
   const menuItems = (
     <Menu className="font-kanit">
       <Menu.Item key="1">
-        <Link href="/profile">Profile</Link>
+        <Link href="/admin/me">Profile</Link>
       </Menu.Item>
       {user?.role === "ADMIN" && (
         <Menu.Item key="2">
@@ -80,11 +84,16 @@ export default function Navbar() {
     </Menu>
   );
 
+  const profileImageUrl =
+    typeof user?.profileImage === "string" && user.profileImage
+      ? user.profileImage
+      : "/images/backgrounds/placeholder.jpg"; // Fallback image
+
   return (
     <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        {/* Logo */}
         <div className="flex-shrink-0">
-          {/* Utilisation des logos selon la taille de l'écran */}
           <Link href="/">
             <div className="hidden md:block">
               <Image
@@ -107,21 +116,17 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Menu pour grand écran */}
-        <div className="hidden md:flex space-x-8 text-white">
-          <Link
-            href="/univers"
-            className="hover:text-gray-300 transition-colors duration-300 font-iceberg uppercase text-lg"
-            style={{ textShadow: "1px 1px 2px black" }}
-          >
-            Univers
+        {/* Menus de navigation (Univers, Contact) */}
+        <div className="hidden md:flex space-x-8 items-center">
+          <Link href="/univers" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200">
+          
+              Univers
+
           </Link>
-          <Link
-            href="/contact"
-            className="hover:text-gray-300 transition-colors duration-300 font-iceberg uppercase text-lg"
-            style={{ textShadow: "1px 1px 2px black" }}
-          >
-            Contact
+          <Link href="/contact" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200">
+          
+              Contact
+
           </Link>
         </div>
 
@@ -130,13 +135,15 @@ export default function Navbar() {
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer">
-                <Image
-                  src={typeof user.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
-                  alt="User Avatar"
-                  width={40}
-                  height={40}
-                  className="rounded-full border-2 border-gray-300 object-cover"
-                />
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
+                  <Image
+                    src={profileImageUrl}
+                    alt="User Avatar"
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-full"
+                  />
+                </div>
                 <span className="ml-2 text-white font-iceberg">{user.pseudo}</span>
                 {user.role && (
                   <div className="ml-2">
@@ -172,61 +179,54 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Menu déroulant pour mobile */}
+      {/* Menu mobile */}
       {isMenuOpen && (
-        <div className="md:hidden mt-2 transition-all duration-300 ease-in-out">
-          <div className="bg-black bg-opacity-75 p-4 rounded-lg shadow-lg">
-            <Link
-              href="/univers"
-              className="block text-white py-2 px-4 hover:text-gray-300 transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
+        <div className="md:hidden mt-4 space-y-4 text-center">
+          <Link href="/univers">
+            <a className="text-white font-iceberg text-lg hover:text-gray-300">
               Univers
-            </Link>
-            <Link
-              href="/contact"
-              className="block text-white py-2 px-4 hover:text-gray-300 transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            </a>
+          </Link>
+          <Link href="/contact">
+            <a className="text-white font-iceberg text-lg hover:text-gray-300">
               Contact
-            </Link>
-
-            {/* Affichage du menu utilisateur sur mobile */}
-            {isLoggedIn && user ? (
-              <div className="mt-4">
-                <Dropdown overlay={menuItems} trigger={["click"]}>
-                  <div className="flex items-center cursor-pointer">
-                    <Image
-                      src={typeof user.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
-                      alt="User Avatar"
-                      width={40}
-                      height={40}
-                      className="rounded-full border-2 border-gray-300 object-cover"
-                    />
-                    <span className="ml-2 text-white font-iceberg">{user.pseudo}</span>
-                    {user.role && (
-                      <div className="ml-2">
-                        <Badge role={user.role} />
-                      </div>
-                    )}
-                  </div>
-                </Dropdown>
-              </div>
-            ) : (
-              <div className="mt-4 space-y-2">
-                <Link href="/auth/login">
-                  <button className="w-full bg-transparent border border-white text-white font-semibold py-2 px-4 rounded transition-all hover:bg-white hover:text-black hover:border-black hover:shadow-lg">
-                    Connexion
-                  </button>
+            </a>
+          </Link>
+          {isLoggedIn && user ? (
+            <>
+              <Link href="/admin/me">
+                <a className="text-white font-iceberg text-lg hover:text-gray-300">
+                  Mon Profil
+                </a>
+              </Link>
+              {user.role === "ADMIN" && (
+                <Link href="/admin">
+                  <a className="text-white font-iceberg text-lg hover:text-gray-300">
+                    Administration
+                  </a>
                 </Link>
-                <Link href="/auth/register">
-                  <button className="w-full bg-white text-black font-semibold py-2 px-4 rounded transition-all hover:bg-gray-800 hover:text-white hover:border-white hover:shadow-lg">
-                    Inscription
-                  </button>
-                </Link>
-              </div>
-            )}
-          </div>
+              )}
+              <button
+                onClick={handleLogout}
+                className="text-red-500 font-iceberg text-lg hover:text-red-700"
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/login">
+                <a className="text-white font-iceberg text-lg hover:text-gray-300">
+                  Connexion
+                </a>
+              </Link>
+              <Link href="/auth/register">
+                <a className="text-white font-iceberg text-lg hover:text-gray-300">
+                  Inscription
+                </a>
+              </Link>
+            </>
+          )}
         </div>
       )}
     </nav>

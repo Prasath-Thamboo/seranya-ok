@@ -17,24 +17,17 @@ export default function RegisterPage() {
   const onFinish = async (values: any) => {
     setLoading(true);
     setError(null);
-
+  
     try {
-      const token = getAccessToken(); // Fetch token if required
-
-      if (!token) {
-        setError('Token not found. Please login again.');
-        return;
-      }
-
-      // Only sending necessary fields using RegisterUserModel
+      // Appel de la fonction d'inscription sans passer de token
       await registerUser({
         pseudo: values.pseudo,
         email: values.email,
         password: values.password,
         phone: values.phone,
-      } as RegisterUserModel, token); // Ensure token is provided
-
-      // Show success modal
+      } as RegisterUserModel);
+  
+      // Afficher la modal de succès
       setIsModalVisible(true);
     } catch (error) {
       setError('Registration failed. Please try again.');
@@ -43,6 +36,8 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+  
+  
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -55,21 +50,26 @@ export default function RegisterPage() {
       {isModalVisible && (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
           <div className="bg-white p-8 rounded-md shadow-lg w-1/2 max-w-lg">
-            <Result
-              status="success"
-              title={<span className="font-kanit text-2xl">Inscription réussie!</span>}
-              subTitle={<span className="font-kanit">Votre inscription a été réussie. Cliquez sur OK pour être redirigé vers la page de connexion.</span>}
-              extra={[
-                <Button
-                  key="ok"
-                  onClick={handleOk}
-                  className="bg-gray-900 text-white active:bg-gray-700 text-lg font-iceberg uppercase px-8 py-4 rounded shadow hover:shadow-lg outline-none focus:outline-none"
-                  style={{ transition: 'all .15s ease' }}
-                >
-                  OK
-                </Button>,
-              ]}
-            />
+          <Result
+  status="success"
+  title={<span className="font-kanit text-2xl">Inscription réussie !</span>}
+  subTitle={
+    <span className="font-kanit">
+      Un email de confirmation vous a été envoyé. Veuillez cliquer sur le lien dans votre email pour confirmer votre compte avant de vous connecter.
+    </span>
+  }
+  extra={[
+    <Button
+      key="ok"
+      onClick={handleOk}
+      className="bg-gray-900 text-white active:bg-gray-700 text-lg font-iceberg uppercase px-8 py-4 rounded shadow hover:shadow-lg outline-none focus:outline-none"
+      style={{ transition: 'all .15s ease' }}
+    >
+      OK
+    </Button>,
+  ]}
+/>
+
           </div>
         </div>
       )}
