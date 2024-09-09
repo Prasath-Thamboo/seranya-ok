@@ -21,7 +21,14 @@ const UnitDetailPage = () => {
     const fetchUnit = async () => {
       if (id) {
         const fetchedUnit = await fetchUnitById(parseInt(id, 10));
-        const backendUrl = process.env.NEXT_PUBLIC_API_URL_LOCAL;
+
+        // Sélectionner l'URL du backend en fonction de l'environnement
+        const backendUrl =
+          process.env.NODE_ENV === 'production'
+            ? process.env.NEXT_PUBLIC_API_URL_PROD
+            : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+
+        // Mettre à jour les URLs des images
         fetchedUnit.profileImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/ProfileImage.png`;
         fetchedUnit.headerImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/HeaderImage.png`;
         setUnit(fetchedUnit);
