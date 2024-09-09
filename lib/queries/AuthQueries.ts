@@ -14,12 +14,12 @@ const BASE_URL =
     ? process.env.NEXT_PUBLIC_API_URL_PROD
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
-    // Define the API endpoint for login (adjust the URL as needed)
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
-// Define the correct API endpoint for login
-const LOGIN_ENDPOINT = 'http://localhost:5000/auth/login';
+// Define the correct API endpoint for login based on environment
+const LOGIN_ENDPOINT = `${BASE_URL}/auth/login`;
 
-// Function to register a new user
+// Define the correct API endpoint for reset password based on environment
+const RESET_PASSWORD_ENDPOINT = `${BASE_URL}/auth/reset-password`;
+
 // Function to register a new user
 export const registerUser = async (
   data: RegisterUserModel
