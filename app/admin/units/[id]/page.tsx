@@ -38,9 +38,20 @@ const UnitViewPage = () => {
 
             // Assurez-vous que les images de la galerie utilisent également le bon URL
             if (fetchedUnit.gallery) {
-              fetchedUnit.gallery = fetchedUnit.gallery.map(
-                (imgUrl) => `${backendUrl}/${imgUrl}`
-              );
+              fetchedUnit.gallery = fetchedUnit.gallery
+              .map((imgUrl) => {
+                if (imgUrl) {
+                  // If the image already contains the backend URL, return it as is
+                  if (imgUrl.startsWith("http")) {
+                    return imgUrl;
+                  }
+                  // Else, construct the URL properly
+                  return `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${imgUrl}`;
+                }
+                return ""; // Return an empty string if the image is not defined
+              })
+              .filter((imgUrl) => imgUrl !== ""); // Filter out empty strings
+            
             }
 
             setUnit(fetchedUnit);
