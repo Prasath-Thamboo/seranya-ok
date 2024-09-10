@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         {/* Favicon */}
-        <link rel="icon" href="/logos/spectral-favicon-color (1).png" type="image/png" />
+        <link rel="icon" href="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).pngg" type="image/png" />
 
         {/* Meta tags pour SEO */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,27 +52,33 @@ export default function RootLayout({
         {/* Open Graph pour les réseaux sociaux */}
         <meta
           property="og:title"
-          content={String(metadata.title) ?? "SpectralNext"} // Conversion en chaîne
+          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
         />
         <meta
           property="og:description"
           content={String(metadata.description) ?? "Plongez dans le monde fascinant de Spectral."} // Conversion en chaîne
         />
-        <meta property="og:image" content="/logos/spectral-favicon-color (1).png" />
+        <meta property="og:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.spectralunivers.com/" />
+
+        <meta name="geo.region" content="FR" /> 
+        <meta name="geo.placename" content="Paris" />
+        <meta name="geo.position" content="48.8566;2.3522" /> 
+        <meta name="ICBM" content="48.8566, 2.3522" />
+
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content={String(metadata.title) ?? "SpectralNext"} // Conversion en chaîne
+          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
         />
         <meta
           name="twitter:description"
           content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
         />
-        <meta name="twitter:image" content="/logos/spectral-favicon-color (1).png" />
+        <meta name="twitter:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
       </head>
       <ConfigProvider locale={frFR}>
         <body className={inter.className}>
