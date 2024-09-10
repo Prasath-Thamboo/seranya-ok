@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "SpectralNext - Découvrez un Univers Fascinant",
-  description: "Plongez dans le monde fascinant de Spectral, où chaque choix peut transformer votre destinée.",
+  title: "Spectral - Découvrez un Univers Fascinant",
+  description: "Plongez dans le monde fascinant de Spectral",
   keywords: ["Spectral", "Fantasy", "Immersive Experience", "Aventure", "Découverte", "Univers interactif"],
   robots: "index, follow",
   // Open Graph metadata for social media sharing
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   // Twitter Card metadata
   twitter: {
     card: "summary_large_image",
-    title: "SpectralNext - Découvrez un Univers Fascinant",
+    title: "Spectral - Découvrez un Univers Fascinant",
     description: "Votre aventure commence ici avec des expériences immersives fascinantes.",
     images: ["https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png"],
   },

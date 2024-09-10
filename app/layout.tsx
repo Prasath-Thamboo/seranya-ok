@@ -35,7 +35,10 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         {/* Favicon */}
-        <link rel="icon" href="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" type="image/png" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        <link rel="manifest" href="/manifest.json" />
+
 
         {/* Meta tags pour SEO */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -79,6 +82,10 @@ export default function RootLayout({
           content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
         />
         <meta name="twitter:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
+
+      
+
+
       </head>
       <ConfigProvider locale={frFR}>
         <body className={inter.className}>

@@ -1,0 +1,20 @@
+{
+    "name": "SpectralNext",
+    "short_name": "Spectral",
+    "icons": [
+      {
+        "src": "/logos/spectral-favicon-color-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/logos/spectral-favicon-color-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "display": "standalone"
+  }
+  
