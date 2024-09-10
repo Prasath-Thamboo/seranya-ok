@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         {/* Favicon */}
-        <link rel="icon" href="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).pngg" type="image/png" />
+        <link rel="icon" href="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" type="image/png" />
 
         {/* Meta tags pour SEO */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
