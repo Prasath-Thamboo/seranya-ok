@@ -8,6 +8,12 @@ import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/queries/AuthQueries";
 import { useState } from "react";
 import { useNotification } from "@/components/notifications/NotificationProvider";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Spectral - Connexion",
+  description: "Connectez-vous à votre compte Spectral et commencez votre aventure.",
+};
 
 export default function LoginPage() {
   const router = useRouter();
