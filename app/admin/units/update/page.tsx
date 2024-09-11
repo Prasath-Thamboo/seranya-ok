@@ -28,6 +28,8 @@ const UpdateUnit = () => {
   const router = useRouter();
   const searchParams = useSearchParams(); 
   const id = searchParams?.get("id");
+  const numericId = id ? parseInt(id, 10) : null;
+  
 
   const { addNotification } = useNotification();
 
@@ -36,11 +38,13 @@ const UpdateUnit = () => {
   : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 
+
+  
   useEffect(() => {
-    if (id) {
+    if (numericId !== null) { // Utilisation de l'ID numérique
       const loadUnit = async () => {
         try {
-          const data = await fetchUnitById(id);  // ID traité comme string
+          const data = await fetchUnitById(numericId);  // ID traité comme number
   
           if (data) {
             setUnit(data);
@@ -76,7 +80,8 @@ const UpdateUnit = () => {
       loadUnit();
       loadClasses();
     }
-  }, [id, form, addNotification, backendUrl]);
+  }, [numericId, form, addNotification, backendUrl]); // Utilisation de numericId ici
+
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
