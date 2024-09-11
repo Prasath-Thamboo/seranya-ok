@@ -9,6 +9,12 @@ import Image from "next/image"; // Utilisation du composant Image de Next.js
 import { FaBook, FaImage, FaNewspaper } from "react-icons/fa"; // Importation des icônes
 import Badge from "@/components/Badge"; // Importation du composant Badge
 
+interface ClassModel {
+  id: string;
+  title: string;
+  profileImage: string;
+}
+
 const UnitDetailPage = () => {
   const params = useParams();
   const id = params?.id
@@ -20,33 +26,20 @@ const UnitDetailPage = () => {
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [activeSection, setActiveSection] = useState("biographie");
   const [showContent, setShowContent] = useState(true); // Transition smooth
+  const [relatedClasses, setRelatedClasses] = useState<ClassModel[]>([]); // Liste des classes liées
 
   useEffect(() => {
     const fetchUnit = async () => {
       if (id) {
         const fetchedUnit = await fetchUnitById(parseInt(id, 10));
 
-        // Sélectionner l'URL du backend en fonction de l'environnement
-        const backendUrl: string | undefined =
-          process.env.NODE_ENV === "production"
-            ? process.env.NEXT_PUBLIC_API_URL_PROD
-            : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+        // Récupérer l'URL du backend
+        const backendUrl =
+          process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
-        // Vérifier si backendUrl est défini, sinon afficher une erreur
         if (!backendUrl) {
           console.error(
             "L'URL du backend n'est pas définie. Veuillez vérifier vos variables d'environnement."
-          );
-          return;
-        }
-
-        // Valider que l'URL de production n'inclut pas 'localhost'
-        if (
-          process.env.NODE_ENV === "production" &&
-          backendUrl.includes("localhost")
-        ) {
-          console.error(
-            "L'URL du backend en production ne doit pas inclure 'localhost'."
           );
           return;
         }
@@ -56,21 +49,23 @@ const UnitDetailPage = () => {
         fetchedUnit.headerImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/HeaderImage.png`;
 
         // Mettre à jour les URLs des images de la galerie
-        // Ensure the gallery URLs are correctly constructed
-        if (fetchedUnit.gallery) {
-          fetchedUnit.gallery = fetchedUnit.gallery
-            .map((img) => {
-              if (img) {
-                // If the image already contains the backend URL, return it as is
-                if (img.startsWith("http")) {
-                  return img;
-                }
-                // Else, construct the URL properly
-                return `https://api.spectralunivers.com/uploads/units/${fetchedUnit.id}/gallery/${img}`;
-              }
-              return ""; // Return an empty string if the image is not defined
-            })
-            .filter((img) => img !== ""); // Filter out empty strings
+        if (fetchedUnit.gallery && Array.isArray(fetchedUnit.gallery)) {
+          fetchedUnit.gallery = fetchedUnit.gallery.map((imgUrl) =>
+            imgUrl.startsWith("http") || imgUrl.startsWith("/uploads")
+              ? `${backendUrl}/${imgUrl}`.replace(`${backendUrl}/${backendUrl}/`, `${backendUrl}/`) // Eviter les doublons dans l'URL
+              : `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${imgUrl}`
+          );
+        }
+
+        // Récupérer les informations des classes liées
+        if (fetchedUnit.classes && fetchedUnit.classes.length > 0) {
+          const classesWithImages = fetchedUnit.classes.map((cls) => ({
+            id: cls.id,
+            title: cls.title,
+            profileImage: `${backendUrl}/uploads/class/${cls.id}/PROFILEIMAGE.png`,
+          }));
+
+          setRelatedClasses(classesWithImages);
         }
 
         setUnit(fetchedUnit);
@@ -141,12 +136,12 @@ const UnitDetailPage = () => {
 
         {/* Image de profil circulaire avec effet néon */}
         <div className="relative flex justify-center -mt-24 z-10">
-          <div className="relative w-60 h-60 neon-avatar">
+          <div className="relative w-72 h-72 neon-avatar"> {/* Taille de l'image agrandie */}
             <Image
               src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
               alt={`${unit.title} Profile`}
-              width={240}
-              height={240}
+              width={288}
+              height={288}
               className="w-full h-full object-cover rounded-full shadow-lg"
             />
           </div>
@@ -162,7 +157,7 @@ const UnitDetailPage = () => {
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12">
           <div className="lg:w-1/4 p-4 lg:fixed top-0 w-full lg:max-w-sm lg:max-h-screen lg:h-auto flex justify-center z-10 lg:sticky lg:top-24">
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
-              <div className="flex items-center space-x-4 ">
+              <div className="flex items-center space-x-4">
                 <Image
                   src={
                     unit.profileImage || "/images/backgrounds/placeholder.jpg"
@@ -222,6 +217,26 @@ const UnitDetailPage = () => {
                   </li>
                 </ul>
               </nav>
+
+              {/* Affichage des classes liées en bas du menu */}
+              {relatedClasses.length > 0 && (
+                <div className="mt-8">
+                  {relatedClasses.map((relatedClass) => (
+                    <div key={relatedClass.id} className="text-center mb-4">
+                      <Image
+                        src={relatedClass.profileImage}
+                        alt={`Classe ${relatedClass.title} Profile`}
+                        width={200}
+                        height={200} // Taille agrandie de l'image des classes
+                        className="w-64 h-64 object-cover rounded-full mx-auto mb-4"
+                      />
+                      <h3 className="text-xl font-iceberg uppercase text-white">
+                        {relatedClass.title}
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

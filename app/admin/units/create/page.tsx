@@ -2,12 +2,18 @@
 
 import { Form, Input, Button, Upload, Select } from "antd";
 import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Import Quill's CSS
+
+// Définir le type pour une classe
+interface ClassModel {
+  id: number;
+  title: string;
+}
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -16,11 +22,24 @@ const CreateUnit = () => {
   const [loading, setLoading] = useState(false);
   const [bioValue, setBioValue] = useState('');
   const [storyValue, setStoryValue] = useState('');
+  const [classes, setClasses] = useState<ClassModel[]>([]); // Utiliser un type explicite pour les classes
   const router = useRouter();
   const { addNotification } = useNotification();
 
+  useEffect(() => {
+    // Charger les classes disponibles
+    const loadClasses = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL_LOCAL}/classes`);
+        setClasses(response.data); // Assurez-vous que response.data correspond bien à un tableau d'objets ClassModel
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+    loadClasses();
+  }, []);
+
   const handleSubmit = async (values: any) => {
-    console.log("Form values:", values);
     setLoading(true);
     try {
       const token = localStorage.getItem("access_token");
@@ -34,9 +53,14 @@ const CreateUnit = () => {
       formData.append('title', values.title);
       formData.append('intro', values.intro);
       if (values.subtitle) formData.append('subtitle', values.subtitle);
-      formData.append('story', storyValue); // Utilisation de l'éditeur Quill pour story
-      formData.append('bio', bioValue); // Utilisation de l'éditeur Quill pour bio
+      formData.append('story', storyValue);
+      formData.append('bio', bioValue);
       formData.append('type', values.type);
+  
+      // Ajout des classes associées
+      if (values.classIds) {
+        formData.append('classIds', JSON.stringify(values.classIds));
+      }
   
       // Ajout des fichiers au formulaire avec vérification
       if (values.profileImage && values.profileImage.length > 0) {
@@ -49,8 +73,8 @@ const CreateUnit = () => {
         formData.append('footerImage', values.footerImage[0].originFileObj);
       }
       if (values.gallery && values.gallery.length > 0) {
-        values.gallery.forEach((file: any, index: number) => {
-          formData.append(`gallery`, file.originFileObj);
+        values.gallery.forEach((file: any) => {
+          formData.append('gallery', file.originFileObj);
         });
       }
   
@@ -71,7 +95,6 @@ const CreateUnit = () => {
       setLoading(false);
     }
   };
-  
 
   // Convertir l'événement en fileList pour les Uploads
   const normFile = (e: any) => {
@@ -155,6 +178,25 @@ const CreateUnit = () => {
             >
               <Option value="UNIT">UNIT</Option>
               <Option value="CHAMPION">CHAMPION</Option>
+            </Select>
+          </Form.Item>
+
+          {/* Sélection des classes associées */}
+          <Form.Item
+            name="classIds"
+            label={<span className="font-kanit text-black">Classes associées</span>}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Sélectionnez des classes"
+              showSearch
+              optionFilterProp="children"
+            >
+              {classes.map((classItem: ClassModel) => (
+                <Option key={classItem.id} value={classItem.id}>
+                  {classItem.title}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 

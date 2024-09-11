@@ -118,15 +118,11 @@ export default function Navbar() {
 
         {/* Menus de navigation (Univers, Contact) */}
         <div className="hidden md:flex space-x-8 items-center">
-          <Link href="/univers" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200">
-          
-              Univers
-
+          <Link href="/univers" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
+            Univers
           </Link>
-          <Link href="/contact" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200">
-          
-              Contact
-
+          <Link href="/contact" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
+            Contact
           </Link>
         </div>
 
@@ -181,7 +177,7 @@ export default function Navbar() {
 
       {/* Menu mobile */}
       {isMenuOpen && (
-        <div className="md:hidden mt-4 space-y-4 text-center">
+        <div className="md:hidden flex flex-col items-center mt-4 space-y-4 text-center">
           <Link href="/univers">
             <a className="text-white font-iceberg text-lg hover:text-gray-300">
               Univers

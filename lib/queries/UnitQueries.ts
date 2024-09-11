@@ -2,10 +2,12 @@ import axios from 'axios';
 import { UnitModel, CreateUnitModel, UpdateUnitModel } from '../models/UnitModels';
 
 // Utilisation des variables d'environnement pour définir la base URL
+// Utilisation des variables d'environnement pour définir la base URL
 const BASE_URL =
   process.env.NODE_ENV === 'production'
     ? process.env.NEXT_PUBLIC_API_URL_PROD
-    : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000'; // Fallback vers localhost en mode dev
+
 
 // Fonction pour récupérer toutes les unités
 export const fetchUnits = async (): Promise<UnitModel[]> => {

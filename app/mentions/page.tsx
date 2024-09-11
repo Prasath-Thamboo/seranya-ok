@@ -43,12 +43,7 @@ const MentionsLegalesPage = () => {
 
         <div className="max-w-4xl mx-auto bg-black/50 p-6 md:p-12 rounded-lg shadow-lg">
           <p className="mb-6 leading-relaxed">
-            Conformément aux dispositions des articles 6-III et 19 de la Loi n°2004-575 du 21 juin 2004 pour la Confiance dans l&apos;Économie Numérique, dite L.C.E.N., il est porté à la connaissance des utilisateurs et visiteurs du site <strong>Nom du site</strong> les présentes mentions légales.
-          </p>
-
-          <h2 className="text-2xl font-bold mb-4">Éditeur du site</h2>
-          <p className="mb-6 leading-relaxed">
-            Le site <strong>Nom du site</strong> est édité par <strong>Nom de la société</strong>, ayant son siège social à <strong>Adresse de l&apos;entreprise</strong>.
+            Conformément aux dispositions des articles 6-III et 19 de la Loi n°2004-575 du 21 juin 2004 pour la Confiance dans l&apos;Économie Numérique, dite L.C.E.N., il est porté à la connaissance des utilisateurs et visiteurs du site <strong>Spectral</strong> les présentes mentions légales.
           </p>
 
           <h2 className="text-2xl font-bold mb-4">Données personnelles</h2>
