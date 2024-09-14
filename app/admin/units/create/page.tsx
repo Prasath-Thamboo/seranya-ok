@@ -30,7 +30,7 @@ const CreateUnit = () => {
     // Charger les classes disponibles
     const loadClasses = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL_LOCAL}/classes`);
+        const response = await axios.get(`https://api.spectralunivers.com/classes`);
         setClasses(response.data); // Assurez-vous que response.data correspond bien à un tableau d'objets ClassModel
       } catch (error) {
         console.error("Error fetching classes:", error);
@@ -79,12 +79,13 @@ const CreateUnit = () => {
       }
   
       // Envoi du formulaire au backend avec Axios
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL_LOCAL}/units`, formData, {
+      const response = await axios.post(`https://api.spectralunivers.com/units`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
+     
   
       addNotification("success", "Unité créée avec succès!");
       router.push("/admin/units");
