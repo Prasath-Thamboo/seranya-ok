@@ -320,7 +320,7 @@ const UnitDetailPage = () => {
 
       {/* Loading state while fetching user */}
       {loadingUser ? (
-        <p className="text-gray-400">Chargement des informations d'abonnement...</p>
+        <p className="text-gray-400">Chargement des informations d&#39abonnement...</p>
       ) : (
         <>
           {/* If the user is not subscribed */}
