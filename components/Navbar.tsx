@@ -87,7 +87,7 @@ export default function Navbar() {
   const profileImageUrl =
     typeof user?.profileImage === "string" && user.profileImage
       ? user.profileImage
-      : "/images/backgrounds/placeholder.jpg"; // Fallback image
+      : null;
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}>
@@ -116,13 +116,17 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Menus de navigation (Univers, Contact) */}
+        {/* Menus de navigation (Univers, Contact, Pricing) */}
         <div className="hidden md:flex space-x-8 items-center">
           <Link href="/univers" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
-            Univers
+            <span className="stroke-text">Univers</span>
           </Link>
           <Link href="/contact" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
-            Contact
+            <span className="stroke-text">Contact</span>
+          </Link>
+          {/* Ajout du lien vers Pricing */}
+          <Link href="/pricing" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
+            <span className="stroke-text">Abonnement</span>
           </Link>
         </div>
 
@@ -131,15 +135,23 @@ export default function Navbar() {
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
-                  <Image
-                    src={profileImageUrl}
-                    alt="User Avatar"
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
-                  />
-                </div>
+                {profileImageUrl ? (
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
+                    <Image
+                      src={profileImageUrl}
+                      alt="User Avatar"
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-black flex items-center justify-center">
+                    <span className="text-white text-lg font-iceberg">
+                      {user.pseudo.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
                 <span className="ml-2 text-white font-iceberg">{user.pseudo}</span>
                 {user.role && (
                   <div className="ml-2">
@@ -178,28 +190,24 @@ export default function Navbar() {
       {/* Menu mobile */}
       {isMenuOpen && (
         <div className="md:hidden flex flex-col items-center mt-4 space-y-4 text-center">
-          <Link href="/univers">
-            <a className="text-white font-iceberg text-lg hover:text-gray-300">
-              Univers
-            </a>
+          <Link href="/univers" className="text-white font-iceberg text-lg hover:text-gray-300">
+            Univers
           </Link>
-          <Link href="/contact">
-            <a className="text-white font-iceberg text-lg hover:text-gray-300">
-              Contact
-            </a>
+          <Link href="/contact" className="text-white font-iceberg text-lg hover:text-gray-300">
+            Contact
+          </Link>
+          {/* Ajout du lien vers Pricing dans le menu mobile */}
+          <Link href="/pricing" className="text-white font-iceberg text-lg hover:text-gray-300">
+            Abonnement
           </Link>
           {isLoggedIn && user ? (
             <>
-              <Link href="/admin/me">
-                <a className="text-white font-iceberg text-lg hover:text-gray-300">
-                  Mon Profil
-                </a>
+              <Link href="/admin/me" className="text-white font-iceberg text-lg hover:text-gray-300">
+                Mon Profil
               </Link>
               {user.role === "ADMIN" && (
-                <Link href="/admin">
-                  <a className="text-white font-iceberg text-lg hover:text-gray-300">
-                    Administration
-                  </a>
+                <Link href="/admin" className="text-white font-iceberg text-lg hover:text-gray-300">
+                  Administration
                 </Link>
               )}
               <button
@@ -211,15 +219,11 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/auth/login">
-                <a className="text-white font-iceberg text-lg hover:text-gray-300">
-                  Connexion
-                </a>
+              <Link href="/auth/login" className="text-white font-iceberg text-lg hover:text-gray-300">
+                Connexion
               </Link>
-              <Link href="/auth/register">
-                <a className="text-white font-iceberg text-lg hover:text-gray-300">
-                  Inscription
-                </a>
+              <Link href="/auth/register" className="text-white font-iceberg text-lg hover:text-gray-300">
+                Inscription
               </Link>
             </>
           )}

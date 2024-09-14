@@ -2,48 +2,144 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Carousel from "@/components/Carousel";
+import Link from "next/link";
+import { Badge } from "antd"; // Importation du Badge d'Ant Design
+import { fetchUnits } from "@/lib/queries/UnitQueries"; // Utilisez la même fonction que dans univers
+import { UnitModel } from "@/lib/models/UnitModels";
+import HeroSection from "@/components/HeroSection";
 import Accordion from "@/components/Accordion";
+import Carousel from "@/components/Carousel";
+import { FaCheck } from "react-icons/fa";
+import Loader from "@/components/Loader";
+
+const includedFeatures = [
+  "Accès aux nouvelles de chaque personnage",
+  "Ressources des membres",
+  "Inscription à la newsletter",
+  "T-shirt officiel des membres",
+];
 
 const Home = () => {
-  const [carouselItems, setCarouselItems] = useState<
-    Array<{ image: string; title: string; subtitle: string }>
-  >([]);
+  const [carouselItems, setCarouselItems] = useState<Array<{ image: string; title: string; subtitle: string }>>([]);
   const [sectionImages, setSectionImages] = useState<string[]>([]);
+  const [units, setUnits] = useState<UnitModel[]>([]);
   const [backgroundImage, setBackgroundImage] = useState<string>("");
 
+  
+
+  const [isLoading, setIsLoading] = useState(true);  
+  const [loadedImagesCount, setLoadedImagesCount] = useState(0); 
+  const totalImagesCount = 15;  // Nombre exact d'images à charger
+
+  // Masquer le loader après 2 secondes, même si les images ne sont pas encore prêtes
   useEffect(() => {
-    const loadImages = async () => {
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // Incrémenter le compteur d'images chargées
+  const handleImageLoad = () => {
+    setLoadedImagesCount((prevCount) => {
+      const newCount = prevCount + 1;
+      if (newCount >= totalImagesCount) {
+        setIsLoading(false); // Toutes les images sont chargées
+      }
+      return newCount;
+    });
+  };
+
+
+  useEffect(() => {
+    const loadUnits = async () => {
       try {
-        const promises = Array.from({ length: 7 }).map(() =>
-          fetch("/api/getRandomImage").then((res) => res.json())
-        );
+        const fetchedUnits = await fetchUnits();
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-        const data = await Promise.all(promises);
+        const sortedUnits = fetchedUnits
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          ) // Trier par ordre de création (récents d'abord)
+          .slice(0, 3); // Prendre les 3 unités récentes
 
-        setCarouselItems(
-          data.slice(0, 5).map((item, index) => ({
-            image: item.imagePath,
-            title: `Plongez dans l&apos;Univers ${index + 1}`,
-            subtitle: "Découvrez les mystères de Spectral",
-          }))
-        );
+        const unitsWithImages = sortedUnits.map((unit) => ({
+          ...unit,
+          isNew: new Date(unit.createdAt) > oneWeekAgo, // Calculer si l'unité a moins d'une semaine
+          profileImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/ProfileImage.png`,
+          headerImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/HeaderImage.png`,
+        }));
 
-        setSectionImages(data.slice(0, 6).map((item) => item.imagePath));
-        setBackgroundImage(data[6].imagePath);
+        setUnits(unitsWithImages);
       } catch (error) {
-        console.error("Failed to load images:", error);
+        console.error("Failed to load units:", error);
       }
     };
 
-    loadImages();
+    const fetchBackgroundImage = async () => {
+      try {
+        const res = await fetch("/api/getRandomImage");
+        const data = await res.json();
+        setBackgroundImage(data.imagePath);
+      } catch (error) {
+        console.error("Failed to load background image:", error);
+      }
+    };
+
+    loadUnits();
+    fetchBackgroundImage();
+  }, []);
+
+  useEffect(() => {
+    const loadCarouselImages = async () => {
+      try {
+        const promises = Array.from({ length: 5 }).map(() =>
+          fetch("/api/getRandomImage").then((res) => res.json())
+        );
+        const data = await Promise.all(promises);
+  
+        setCarouselItems(
+          data.map((item, index) => ({
+            image: item.imagePath,
+            title: `Image ${index + 1}`,
+            subtitle: "Sous-titre du carrousel",
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to load carousel images:", error);
+      }
+    };
+  
+    loadCarouselImages();
+  }, []);
+
+  useEffect(() => {
+    const loadSectionImages = async () => {
+      try {
+        const promises = Array.from({ length: 6 }).map(() =>
+          fetch("/api/getRandomImage").then((res) => res.json())
+        );
+        const data = await Promise.all(promises);
+        setSectionImages(data.map((item) => item.imagePath));
+      } catch (error) {
+        console.error("Failed to load section images:", error);
+      }
+    };
+  
+    loadSectionImages();
   }, []);
 
   if (!backgroundImage) {
-    // Avoid rendering the entire page until the images are loaded
-    return null; 
+    return null; // Ne pas rendre la page tant que les images ne sont pas chargées
   }
 
+  if (isLoading) {
+    return <Loader />;  // Affiche le loader tant que le chargement est en cours
+  }
+  
   return (
     <main className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white">
       {/* Background Image */}
@@ -56,6 +152,7 @@ const Home = () => {
           objectPosition="center"
           priority={true}
           quality={100}
+          onLoad={handleImageLoad}
         />
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
       </div>
@@ -68,19 +165,6 @@ const Home = () => {
         className="relative pt-16 pb-32 flex content-center items-center justify-center w-full bg-transparent z-10"
         style={{ minHeight: "75vh" }}
       >
-        {sectionImages[0] && (
-          <div
-            className="absolute top-0 w-full h-full bg-center bg-cover z-0"
-            style={{
-              backgroundImage: `url(${sectionImages[0]})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(60%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-          </div>
-        )}
         <div className="container relative mx-auto z-10">
           <div className="items-center flex flex-wrap">
             <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
@@ -96,246 +180,112 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div
-          className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden z-10"
-          style={{ height: "70px" }}
-        >
-          <svg
-            className="absolute bottom-0 overflow-hidden"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            version="1.1"
-            viewBox="0 0 2560 100"
-            x="0"
-            y="0"
-          >
-            <polygon
-              className="text-gray-900 fill-current"
-              points="2560 0 2560 100 0 100"
-            ></polygon>
-          </svg>
-        </div>
       </section>
 
-      {/* Services Section */}
-      <section className="relative py-20 w-full bg-transparent">
-        {sectionImages[1] && (
-          <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage: `url(${sectionImages[1]})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(70%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-          </div>
-        )}
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-wrap">
-            <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
-              <div className="relative flex flex-col min-w-0 break-words bg-transparent w-full mb-8 shadow-lg rounded-lg">
-                <div className="px-4 py-5 flex-auto">
-                  <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
-                    <i className="fas fa-award"></i>
-                  </div>
-                  <h6 className="text-xl font-semibold">Expertise Reconnue</h6>
-                  <p className="mt-2 mb-4 text-gray-300">
-                    Notre équipe a remporté de nombreux prix grâce à son travail
-                    innovant dans le domaine du développement web.
-                  </p>
-                </div>
-              </div>
-            </div>
+{/* Section des Unités récentes */}
+<section className="relative py-16 px-8 w-full z-20">
+  {/* Image de fond de la section */}
+  {sectionImages[1] && (
+    <div
+      className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
+      style={{
+        backgroundImage: `url(${sectionImages[1]})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        filter: "brightness(70%)",
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+    </div>
+  )}
 
-            <div className="w-full md:w-4/12 px-4 text-center">
-              <div className="relative flex flex-col min-w-0 break-words bg-transparent w-full mb-8 shadow-lg rounded-lg">
-                <div className="px-4 py-5 flex-auto">
-                  <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-blue-400">
-                    <i className="fas fa-retweet"></i>
-                  </div>
-                  <h6 className="text-xl font-semibold">Révisions Flexibles</h6>
-                  <p className="mt-2 mb-4 text-gray-300">
-                    Nous garantissons des révisions illimitées pour que votre
-                    projet soit exactement comme vous le souhaitez.
-                  </p>
-                </div>
-              </div>
-            </div>
+  {/* Contenu de la section */}
+  <div className="relative z-10 container mx-auto">
+    <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
+      Découvrez les Unités Récentes
+    </h2>
+    <p className="text-lg text-gray-300 mb-12 text-center">
+      Plongez dans les aventures captivantes de nos dernières unités.
+    </p>
 
-            <div className="pt-6 w-full md:w-4/12 px-4 text-center">
-              <div className="relative flex flex-col min-w-0 break-words bg-transparent w-full mb-8 shadow-lg rounded-lg">
-                <div className="px-4 py-5 flex-auto">
-                  <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-green-400">
-                    <i className="fas fa-fingerprint"></i>
-                  </div>
-                  <h6 className="text-xl font-semibold">
-                    Sécurité de Haut Niveau
-                  </h6>
-                  <p className="mt-2 mb-4 text-gray-300">
-                    Nous offrons une protection robuste pour vos données et
-                    celles de vos utilisateurs, assurant une tranquillité
-                    d&apos;esprit totale.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center mt-32">
-            <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
-              <div className="text-white p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-gray-800">
-                <i className="fas fa-user-friends text-xl"></i>
-              </div>
-              <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                Une Expérience de Travail Collaborative
-              </h3>
-              <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-300">
-                Travailler avec nous, c&apos;est collaborer avec une équipe qui
-                valorise la transparence, la communication et l&apos;excellence.
-              </p>
-              <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-gray-300">
-                Nous nous assurons que chaque projet reflète la vision unique de
-                nos clients.
-              </p>
-              <a href="#" className="font-bold text-white mt-8">
-                Découvrir notre processus
-              </a>
-            </div>
-
-            <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
-              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-transparent">
-                {sectionImages[2] && (
-                  <Image
-                    alt="Service qualité"
-                    src={sectionImages[2]}
-                    className="w-full align-middle rounded-t-lg"
-                    layout="responsive"
-                    width={700}
-                    height={475}
-                  />
-                )}
-                <blockquote className="relative p-8 mb-4">
-                  <svg
-                    preserveAspectRatio="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 583 95"
-                    className="absolute left-0 w-full block"
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Grande carte à gauche */}
+      {units[0] && (
+        <div className="lg:col-span-1">
+          <Link href={`/univers/units/${units[0].id}`}>
+            {new Date(units[0].createdAt) > new Date(new Date().setDate(new Date().getDate() - 7)) && (
+              <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+                <div className="relative group overflow-hidden rounded-lg shadow-lg">
+                  <div
+                    className="relative w-full h-[30rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                     style={{
-                      height: "95px",
-                      top: "-94px",
+                      backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
                     }}
-                  >
-                    <polygon
-                      points="-30,95 583,95 583,65"
-                      className="text-gray-800 fill-current"
-                    ></polygon>
-                  </svg>
-                  <h4 className="text-xl font-bold text-white">
-                    Services de Qualité
-                  </h4>
-                  <p className="text-md font-light mt-2 text-white">
-                    Chaque projet est conçu pour offrir une immersion totale
-                    dans un monde où le danger rôde à chaque coin.
-                  </p>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
-          style={{ height: "70px" }}
-        >
-          <svg
-            className="absolute bottom-0 overflow-hidden"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            version="1.1"
-            viewBox="0 0 2560 100"
-            x="0"
-            y="0"
-          >
-            <polygon
-              className="transparent fill-current"
-              points="2560 0 2560 100 0 100"
-            ></polygon>
-          </svg>
-        </div>
-      </section>
+                  />
+                  <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+                  <div className="flex justify-center">
+  <div className="relative">
+    <Image
+      src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
+      alt="Profile Image"
+      width={100}
+      height={100}
+      className="rounded-full border border-gray-600 object-cover shadow-lg"
+      onLoad={handleImageLoad}
+    />
+  </div>
+</div>
 
-      {/* Team Section */}
-      <section className="pt-20 pb-48 w-full bg-transparent">
-        {sectionImages[4] && (
-          <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage: `url(${sectionImages[4]})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(70%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-          </div>
-        )}
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-wrap justify-center text-center mb-24">
-            <div className="w-full lg:w-6/12 px-4">
-              <h2 className="text-4xl font-semibold text-white">
-                Découvrez notre équipe
-              </h2>
-              <p className="text-lg leading-relaxed m-4 text-gray-300">
-                Notre équipe est composée d&apos;experts passionnés, chacun
-                apportant une contribution unique à nos projets.
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap">
-            <div className="w-full md:w-6/12 lg:w-3/12 lg:mb-0 mb-12 px-4">
-              <div className="px-6">
-                <Image
-                  alt="Team Member"
-                  src="/images/team-1.jpg"
-                  className="shadow-lg rounded-full max-w-full mx-auto"
-                  style={{ maxWidth: "120px" }}
-                  layout="responsive"
-                  width={120}
-                  height={120}
-                />
-                <div className="pt-6 text-center">
-                  <h5 className="text-xl font-bold text-white">Ryan Tompson</h5>
-                  <p className="mt-1 text-sm text-gray-400 uppercase font-semibold">
-                    Développeur Web
-                  </p>
-                  <div className="mt-6">
-                    <button
-                      className="bg-blue-400 text-white w-8 h-8 rounded-full outline-none focus:outline-none mr-1 mb-1"
-                      type="button"
-                    >
-                      <i className="fab fa-twitter"></i>
-                    </button>
-                    <button
-                      className="bg-blue-600 text-white w-8 h-8 rounded-full outline-none focus:outline-none mr-1 mb-1"
-                      type="button"
-                    >
-                      <i className="fab fa-facebook-f"></i>
-                    </button>
-                    <button
-                      className="bg-pink-500 text-white w-8 h-8 rounded-full outline-none focus:outline-none mr-1 mb-1"
-                      type="button"
-                    >
-                      <i className="fab fa-dribbble"></i>
-                    </button>
+                    <div className="flex flex-col justify-center items-center text-center mt-4">
+                      <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
+                        {units[0].title}
+                      </h3>
+                      <p className="text-lg text-gray-300">
+                        {units[0].subtitle || "Aucune description"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* Répétez pour d'autres membres de l'équipe */}
+              </Badge.Ribbon>
+            )}
+          </Link>
+        </div>
+      )}
+
+      {/* Deux petites cartes à droite */}
+      <div className="lg:col-span-1 grid grid-rows-2 gap-4">
+      {units.slice(1, 3).map((unit, index) => (
+  unit && unit.headerImage && ( // Ensure there's data
+    <Link href={`/univers/units/${unit.id}`} key={unit.id}>
+      <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+        <div className="relative group overflow-hidden rounded-lg shadow-lg">
+          <div
+            className="relative w-full h-64 bg-cover bg-[center_top] transition-transform duration-500 group-hover:scale-110"
+            style={{
+              backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+            }}
+          />
+          <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+            <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
+              {unit.title || "No Title"}
+            </h3>
+            <p className="text-sm text-gray-300">
+              {unit.subtitle || "No Description"}
+            </p>
           </div>
         </div>
-      </section>
+      </Badge.Ribbon>
+    </Link>
+  )
+))}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 
       {/* Finisher Section */}
       <section className="pb-20 relative block w-full bg-transparent">
@@ -402,13 +352,78 @@ const Home = () => {
 
         </div>
       </section>
+       {/* Pricing Section */}
+       <section className="relative z-20 bg-transparent py-24 sm:py-32 w-full">
+  {/* Image de fond de la section */}
+  {sectionImages[4] && (
+    <div
+      className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0" // z-0 pour l'image de fond
+      style={{
+        backgroundImage: `url(${sectionImages[4]})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        filter: "brightness(60%)",
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+    </div>
+  )}
+
+  {/* Contenu de la section */}
+  <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 mb-40"> {/* z-10 pour le contenu */}
+    <div className="mx-auto max-w-2xl sm:text-center">
+      <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-iceberg">
+        Une tarification simple, sans surprise
+      </h2>
+      <p className="mt-6 text-lg leading-8 text-gray-300 font-kanit">
+        Découvrez notre offre transparente et adaptée à vos besoins, que vous soyez une personne ou une équipe.
+      </p>
+    </div>
+
+    <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+      <div className="p-8 sm:p-10 lg:flex-auto">
+        <h3 className="text-2xl font-bold tracking-tight text-white font-iceberg">Abonnement à vie</h3>
+        <p className="mt-6 text-base leading-7 text-gray-300 font-kanit">
+          Profitez d&#39;un accès illimité à tous nos services pour une seule et unique fois.
+        </p>
+        <div className="mt-10 flex items-center gap-x-4">
+          <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">Ce qui est inclus</h4>
+          <div className="h-px flex-auto bg-gray-100" />
+        </div>
+        <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
+          {includedFeatures.map((feature) => (
+            <li key={feature} className="flex gap-x-3">
+              <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />
+              {feature}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+        <div className="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
+          <div className="mx-auto max-w-xs px-8">
+            <p className="text-base font-semibold text-gray-600">Un paiement unique, pour un accès à vie</p>
+            <p className="mt-6 flex items-baseline justify-center gap-x-2">
+              <span className="text-5xl font-bold tracking-tight text-gray-900">5.00€</span>
+              <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">EUR</span>
+            </p>
+            <Link href="/subscription" className="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" passHref>
+                Obtenez l&#39;accès
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Contact Section */}
       <section className="relative block py-24 lg:pt-0 w-full bg-transparent">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center lg:-mt-64 -mt-48">
             <div className="w-full lg:w-6/12 px-4">
-              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300">
+              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 z-20">
                 <div className="flex-auto p-5 lg:p-10">
                   <h4 className="text-2xl font-semibold">Travaillons Ensemble</h4>
                   <p className="leading-relaxed mt-1 mb-4 text-gray-600">

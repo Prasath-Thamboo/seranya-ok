@@ -4,7 +4,17 @@ import React, { createContext, useContext, useState } from "react";
 import { NotificationList } from "@/components/notifications/Notification";
 
 interface NotificationContextType {
-  addNotification: (type: "information" | "success" | "warning" | "critical", message: string) => void;
+  addNotification: (
+    type: "information" | "success" | "warning" | "critical", 
+    message: string,
+    options?: {
+      description?: string;
+      primaryButtonLabel?: string;
+      secondaryButtonLabel?: string;
+      onPrimaryButtonClick?: () => void;
+      onSecondaryButtonClick?: () => void;
+    }
+  ) => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -23,13 +33,28 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       id: string;
       type: "information" | "success" | "warning" | "critical";
       message: string;
+      description?: string;
+      primaryButtonLabel?: string;
+      secondaryButtonLabel?: string;
+      onPrimaryButtonClick?: () => void;
+      onSecondaryButtonClick?: () => void;
     }>
   >([]);
 
-  const addNotification = (type: "information" | "success" | "warning" | "critical", message: string) => {
+  const addNotification = (
+    type: "information" | "success" | "warning" | "critical", 
+    message: string,
+    options?: {
+      description?: string;
+      primaryButtonLabel?: string;
+      secondaryButtonLabel?: string;
+      onPrimaryButtonClick?: () => void;
+      onSecondaryButtonClick?: () => void;
+    }
+  ) => {
     setNotifications((prev) => [
       ...prev,
-      { id: `${Date.now()}`, type, message },
+      { id: `${Date.now()}`, type, message, ...options },
     ]);
   };
 

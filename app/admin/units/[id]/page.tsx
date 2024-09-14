@@ -29,31 +29,25 @@ const UnitViewPage = () => {
       if (id) {
         try {
           const fetchedUnit = await fetchUnitById(id);
-
+  
           if (fetchedUnit) {
+            const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL;
+  
             // Mise à jour des URL d'images pour correspondre à l'environnement
             fetchedUnit.profileImage = `${backendUrl}/uploads/units/${id}/ProfileImage.png`;
             fetchedUnit.headerImage = `${backendUrl}/uploads/units/${id}/HeaderImage.png`;
             fetchedUnit.footerImage = `${backendUrl}/uploads/units/${id}/FooterImage.png`;
-
-            // Assurez-vous que les images de la galerie utilisent également le bon URL
+  
+            // Mise à jour des URLs des images de la galerie
             if (fetchedUnit.gallery) {
-              fetchedUnit.gallery = fetchedUnit.gallery
-              .map((imgUrl) => {
-                if (imgUrl) {
-                  // If the image already contains the backend URL, return it as is
-                  if (imgUrl.startsWith("http")) {
-                    return imgUrl;
-                  }
-                  // Else, construct the URL properly
-                  return `${backendUrl}/uploads/units/${fetchedUnit.id}/gallery/${imgUrl}`;
+              fetchedUnit.gallery = fetchedUnit.gallery.map((imgUrl) => {
+                if (imgUrl.startsWith("http")) {
+                  return imgUrl;
                 }
-                return ""; // Return an empty string if the image is not defined
-              })
-              .filter((imgUrl) => imgUrl !== ""); // Filter out empty strings
-            
+                return `${backendUrl}${imgUrl}`;
+              });
             }
-
+  
             setUnit(fetchedUnit);
           }
         } catch (error) {
@@ -63,6 +57,7 @@ const UnitViewPage = () => {
     };
     fetchUnitData();
   }, [id]);
+  
 
   if (!unit) {
     return <div>Loading...</div>;

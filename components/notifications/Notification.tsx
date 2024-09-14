@@ -33,16 +33,16 @@ interface NotificationFlashProps {
 
 const typeStyles = {
   information: {
-    container: "text-white bg-blue-700/50 border-blue-200 shadow-blue-500/50",
+    container: "text-white bg-blue-700/50 border-blue-200 shadow-blue-500/50 text-kanit",
     primaryButton:
-      "bg-blue-700 hover:bg-white hover:text-blue-700 focus:ring-blue-500 transition-all transform hover:scale-105",
+      "bg-blue-700 hover:bg-white hover:text-blue-700 focus:ring-blue-500 transition-all transform hover:scale-105 text-kanit",
     secondaryButton:
-      "bg-blue-700/50 border-blue-500 hover:bg-white hover:text-blue-600 focus:ring-blue-400 transition-all transform hover:scale-105",
+      "bg-blue-700/50 border-blue-500 hover:bg-white hover:text-blue-600 focus:ring-blue-400 transition-all transform hover:scale-105 text-kanit",
     icon: <AiOutlineInfoCircle size={24} className="text-white" />,
     progressColor: "#1545C7",
   },
   success: {
-    container: "text-white bg-green-700/50 border-green-200 shadow-green-500/50",
+    container: "text-white bg-green-700/50 border-green-200 shadow-green-500/50 text-kanit",
     primaryButton:
       "bg-green-700 hover:bg-white hover:text-green-700 focus:ring-green-500 transition-all transform hover:scale-105",
     secondaryButton:

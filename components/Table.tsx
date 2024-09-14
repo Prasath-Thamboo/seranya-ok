@@ -296,71 +296,83 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
   };
 
   return (
-    <div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm max-w-full">
-      <div className="relative inline-block min-w-full">
-        <table {...getTableProps()} className="min-w-full table-auto">
-          <thead>
-            {headerGroups.map((headerGroup: any) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-                {headerGroup.headers.map((column: any) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())} className="px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap" style={{ width: column.width }} key={column.id}>
-                    <div className="flex gap-2 items-center">
-                      <div className="text-gray-600">{column.render('Header')}</div>
-                      <div className="flex flex-col">
-                        <FaSortUp className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-black' : 'text-gray-300'}`} />
-                        <FaSortDown className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-black' : 'text-gray-300'}`} />
-                      </div>
-                    </div>
-                  </th>
-                ))}
-                <th className="sticky right-0 bg-white px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-left">
-                  Actions
-                </th>
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row: any) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-100">
-                  {row.cells.map((cell: any) => (
-                    <td {...cell.getCellProps()} key={cell.id} className="px-3 py-2 text-sm font-normal text-gray-700 first:rounded-l-lg last:rounded-r-lg whitespace-nowrap max-w-xs overflow-hidden text-ellipsis">
-                      {cell.column.id === 'story' || cell.column.id === 'bio' ? (
-                        <div title={cell.value}>
-                          {cell.value.length > 30 ? `${cell.value.slice(0, 30)}...` : cell.value}
-                        </div>
-                      ) : cell.column.id === 'type' ? (
-                        <Badge type={cell.value} />
-                      ) : (
-                        cell.render('Cell')
-                      )}
-                    </td>
-                  ))}
-                  <td className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex gap-2 justify-center shadow-left h-full">
-                    <ActionButtons 
-                      viewUrl={`/admin/units/${row.original.id}`} 
-                      editUrl={`/admin/units/update?id=${row.original.id}`}
-                      onDelete={() => handleDelete(row)}
+<div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm max-w-full px-4">
+  <div className="relative inline-block min-w-full">
+    <table {...getTableProps()} className="min-w-full table-auto">
+      <thead>
+        {headerGroups.map((headerGroup: any) => (
+          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+            {headerGroup.headers.map((column: any) => (
+              <th
+                {...column.getHeaderProps(column.getSortByToggleProps())}
+                className="px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap"
+                style={{ width: column.width }}
+                key={column.id}
+              >
+                <div className="flex gap-2 items-center">
+                  <div className="text-gray-600">{column.render('Header')}</div>
+                  <div className="flex flex-col">
+                    <FaSortUp
+                      className={`text-base translate-y-1/2 ${
+                        column.isSorted && !column.isSortedDesc
+                          ? 'text-black'
+                          : 'text-gray-300'
+                      }`}
                     />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <CustomModal
-        visible={isDeleteModalVisible}
-        onCancel={() => setDeleteModalVisible(false)}
-        onConfirm={confirmDelete}
-        title="Supprimer l'unité"
-        subtitle="Vous êtes sur le point de supprimer une unité et tout son contenu. Cette action est irréversible."
-        confirmText="Supprimer"
-        cancelText="Annuler"
-        iconType="delete"
-      />
-    </div>
+                    <FaSortDown
+                      className={`text-base -translate-y-1/2 ${
+                        column.isSortedDesc ? 'text-black' : 'text-gray-300'
+                      }`}
+                    />
+                  </div>
+                </div>
+              </th>
+            ))}
+            <th className="sticky right-0 bg-white px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-left">
+              Actions
+            </th>
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row: any) => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-100">
+              {row.cells.map((cell: any) => (
+                <td
+                  {...cell.getCellProps()}
+                  key={cell.id}
+                  className="px-3 py-2 text-sm font-normal text-gray-700 first:rounded-l-lg last:rounded-r-lg whitespace-nowrap max-w-xs overflow-hidden text-ellipsis"
+                >
+                  {cell.column.id === 'story' || cell.column.id === 'bio' ? (
+                    <div title={cell.value}>
+                      {cell.value.length > 30
+                        ? `${cell.value.slice(0, 30)}...`
+                        : cell.value}
+                    </div>
+                  ) : cell.column.id === 'type' ? (
+                    <Badge type={cell.value} />
+                  ) : (
+                    cell.render('Cell')
+                  )}
+                </td>
+              ))}
+              <td className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex gap-2 justify-center shadow-left h-full">
+                <ActionButtons
+                  viewUrl={`/admin/units/${row.original.id}`}
+                  editUrl={`/admin/units/update?id=${row.original.id}`}
+                  onDelete={() => handleDelete(row)}
+                />
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+</div>
+
   );
 }
 

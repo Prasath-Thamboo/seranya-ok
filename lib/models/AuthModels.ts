@@ -21,6 +21,7 @@ export interface RegisterUserModel {
   profileImage?: File | string;
   createdAt: string;
   updatedAt: string;
+  isSubscribed: boolean;
 }
 
 // Interface pour le modèle de connexion d'utilisateur

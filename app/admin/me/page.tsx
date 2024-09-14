@@ -144,6 +144,9 @@ const ProfilePage = () => {
                 <strong>Statut :</strong> {user.status}
               </p>
               <p className="text-gray-700">
+    <strong>Abonnement :</strong> {user.isSubscribed ? "Abonné" : "Non abonné"}
+  </p>
+              <p className="text-gray-700">
                 <strong>Date de création :</strong> {new Date(user.createdAt).toLocaleDateString()}
               </p>
               <p className="text-gray-700">
