@@ -1,3 +1,5 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -8,7 +10,6 @@ const nextConfig = {
         hostname: 'assets.website-files.com',
       },
       {
-        // Ajout pour supporter localhost
         protocol: 'http',
         hostname: 'localhost',
         port: '5000', // Indique le port si nécessaire, ici c'est 5000
@@ -17,4 +18,9 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Activation de l'analyse de bundle lorsque la variable d'environnement ANALYZE est définie
+const bundleAnalyzerConfig = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})(nextConfig);
+
+export default bundleAnalyzerConfig;
