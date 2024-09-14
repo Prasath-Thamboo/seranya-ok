@@ -69,7 +69,20 @@ const UnitDetailPage = () => {
       }
     };
   
+    // Fetch the current user to check if they are subscribed
+    const fetchUserSubscriptionStatus = async () => {
+      try {
+        const currentUser = await fetchCurrentUser();
+        setIsSubscribed(currentUser.isSubscribed); // Assuming `isSubscribed` is part of the user object
+      } catch (error) {
+        console.error("Failed to fetch user subscription status:", error);
+      } finally {
+        setLoadingUser(false); // Stop loading state once the user is fetched
+      }
+    };
+  
     fetchUnit();
+    fetchUserSubscriptionStatus();
   }, [id]);
   
 
@@ -299,44 +312,51 @@ const UnitDetailPage = () => {
             )}
 
 {activeSection === "nouvelles" && (
-    <div className="relative z-10">
-  <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
-    <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
-      Nouvelles
-    </h2>
+  <div className="relative z-10">
+    <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
+      <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
+        Nouvelles
+      </h2>
 
-    {/* Si l'utilisateur n'est pas abonné */}
-    {!isSubscribed && (
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center z-20 h-full min-h-[300px]">
-        <FaLock className="text-8xl text-gray-400 mb-6" />
-        <p className="text-2xl text-white mb-4">Contenu réservé aux abonnés</p>
-        <button
-          onClick={handleSubscriptionClick}
-          className="bg-indigo-600 text-white px-6 py-3 text-lg rounded-lg hover:bg-indigo-500"
-        >
-          S&#39;abonner
-        </button>
-      </div>
-    )}
+      {/* Loading state while fetching user */}
+      {loadingUser ? (
+        <p className="text-gray-400">Chargement des informations d'abonnement...</p>
+      ) : (
+        <>
+          {/* If the user is not subscribed */}
+          {!isSubscribed && (
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center z-20 h-full min-h-[300px]">
+              <FaLock className="text-8xl text-gray-400 mb-6" />
+              <p className="text-2xl text-white mb-4">Contenu réservé aux abonnés</p>
+              <button
+                onClick={handleSubscriptionClick}
+                className="bg-indigo-600 text-white px-6 py-3 text-lg rounded-lg hover:bg-indigo-500"
+              >
+                S&#39;abonner
+              </button>
+            </div>
+          )}
 
-    {/* Si abonné et qu'il y a une story */}
-    {isSubscribed && unit.story && (
-      <div
-        className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto"
-        dangerouslySetInnerHTML={{
-          __html: unit.story,
-        }}
-      />
-    )}
+          {/* If subscribed and there is a story */}
+          {isSubscribed && unit.story && (
+            <div
+              className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto"
+              dangerouslySetInnerHTML={{
+                __html: unit.story,
+              }}
+            />
+          )}
 
-    {/* Si abonné mais pas de story */}
-    {isSubscribed && !unit.story && (
-      <p className="text-gray-500 text-lg">Pas de nouvelles pour le moment.</p>
-    )}
+          {/* If subscribed but no story */}
+          {isSubscribed && !unit.story && (
+            <p className="text-gray-500 text-lg">Pas de nouvelles pour le moment.</p>
+          )}
+        </>
+      )}
+    </div>
   </div>
-</div>
+)}
 
-            )}
           </div>
         </div>
       </div>
