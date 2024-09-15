@@ -19,12 +19,12 @@ const UpdateUnit = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [unit, setUnit] = useState<UnitModel | null>(null);
-  const [bioValue, setBioValue] = useState(''); 
-  const [storyValue, setStoryValue] = useState(''); 
+  const [bioValue, setBioValue] = useState('');
+  const [storyValue, setStoryValue] = useState('');
   const [classes, setClasses] = useState<ClassModel[]>([]);
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
-  const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string; uid: string }[]>([]);
+  const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string }[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams?.get("id");
@@ -45,13 +45,13 @@ const UpdateUnit = () => {
           if (data) {
             setUnit(data);
 
-            // Log des données reçues
+            // Vérification des données reçues pour la galerie
             console.log("Unit data:", data);
 
+            // Création des URLs complètes pour les images de galerie
             const galleryUrls = data.gallery?.map((imgUrl: string) => ({
-              id: imgUrl,
-              url: `${backendUrl}${imgUrl}`, // URL complète de l'image
-              uid: imgUrl,
+              id: imgUrl, // Utiliser l'URL complète comme ID
+              url: imgUrl, // L'URL de l'image est directement disponible
             })) || [];
 
             // Log des URLs d'images de galerie
@@ -168,9 +168,10 @@ const UpdateUnit = () => {
     return e?.fileList;
   };
 
-  const handleDeleteImage = (imageId: string) => {
-    setGalleryImagesToDelete((prev) => [...prev, imageId]);
-    setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
+  const handleDeleteImage = (imageUrl: string) => {
+    setGalleryImagesToDelete((prev) => [...prev, imageUrl]);
+    setVisibleGallery(visibleGallery.filter((image) => image.url !== imageUrl));
+    console.log("Images to delete:", galleryImagesToDelete);
   };
 
   return (
@@ -304,7 +305,7 @@ const UpdateUnit = () => {
                     <div className="relative">
                       <Image src={image.url} alt={`Galerie Image ${index + 1}`} />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
-                        <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
+                        <DeleteOutlined onClick={() => handleDeleteImage(image.url)} style={{ color: "white", fontSize: "24px" }} />
                       </div>
                     </div>
                   </Card>
