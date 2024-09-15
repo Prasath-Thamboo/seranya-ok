@@ -95,7 +95,7 @@ const UniversPage = () => {
         backgroundImage="/images/backgrounds/Bastion1.png"
         title="Explorez l'Univers"
         titleColor="#fff"
-        strongTitle="des Légendes"
+        strongTitle="de Spectral"
         strongTitleColor="#ff6347"
         content="Découvrez les personnages, leurs histoires et plongez dans l'univers spectaculaire de Spectral."
         contentColor="#ddd"

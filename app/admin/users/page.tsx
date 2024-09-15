@@ -84,6 +84,7 @@ const UsersPage = () => {
         columns={columns} 
         createButtonText="Ajouter un utilisateur" 
         createUrl="/admin/users/create"
+        baseRoute="/admin/users" // Ajoute ici la baseRoute
         onDelete={handleDelete}
       />
     </div>
