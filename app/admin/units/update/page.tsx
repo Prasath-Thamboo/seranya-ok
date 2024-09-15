@@ -24,21 +24,17 @@ const UpdateUnit = () => {
   const [classes, setClasses] = useState<ClassModel[]>([]);  
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);  // Changement de number[] à string[]
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
-  const [visibleGallery, setVisibleGallery] = useState<string[]>([]); 
+  const [visibleGallery, setVisibleGallery] = useState<{ id: string, url: string }[]>([]); // Changement ici pour stocker l'id et l'URL de chaque image
   const router = useRouter();
   const searchParams = useSearchParams(); 
   const id = searchParams?.get("id");
   const numericId = id ? parseInt(id, 10) : null;
   
-
   const { addNotification } = useNotification();
 
   const backendUrl = process.env.NODE_ENV === 'production'
   ? process.env.NEXT_PUBLIC_API_URL_PROD
   : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
-
-
-
   
   useEffect(() => {
     if (numericId !== null) { // Utilisation de l'ID numérique
@@ -48,8 +44,20 @@ const UpdateUnit = () => {
   
           if (data) {
             setUnit(data);
-            setVisibleGallery(data.gallery || []);
-            setSelectedClassIds(data.classes?.map(c => c.id) || []);  // IDs des classes présélectionnées en string[]
+  
+            // On vérifie que `data.gallery` est un tableau d'objets avec `id` et `path`
+            if (Array.isArray(data.gallery) && data.gallery.every((img) => typeof img === 'object' && 'id' in img && 'path' in img)) {
+              setVisibleGallery(
+                data.gallery.map((img: { id: number; path: string }) => ({
+                  id: img.id.toString(),  // Convertir `id` en chaîne
+                  url: img.path,  // Assigner le chemin de l'image
+                }))
+              );
+            } else {
+              setVisibleGallery([]); // Si pas de galerie valide, vide le tableau
+            }
+  
+            setSelectedClassIds(data.classes?.map(c => c.id.toString()) || []);  // IDs des classes présélectionnées en string[]
             setBioValue(data.bio || '');
             setStoryValue(data.story || '');
   
@@ -58,7 +66,7 @@ const UpdateUnit = () => {
               intro: data.intro || '',
               subtitle: data.subtitle || '',
               type: data.type || UnitType.UNIT,
-              classIds: data.classes?.map(c => c.id) || [],  // IDs des classes présélectionnées
+              classIds: data.classes?.map(c => c.id.toString()) || [],  // IDs des classes présélectionnées
             });
           }
         } catch (error) {
@@ -80,7 +88,10 @@ const UpdateUnit = () => {
       loadUnit();
       loadClasses();
     }
-  }, [numericId, form, addNotification, backendUrl]); // Utilisation de numericId ici
+  }, [numericId, form, addNotification, backendUrl]);
+  
+  
+  
 
 
   const handleSubmit = async (values: any) => {
@@ -127,7 +138,7 @@ const UpdateUnit = () => {
       // Ajoutez les images à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
-          formData.append(`galleryImagesToDelete[${index}]`, imageId);
+          formData.append(`galleryImagesToDelete[${index}]`, imageId); // On envoie l'id de l'upload à supprimer
         });
       }
   
@@ -159,15 +170,10 @@ const UpdateUnit = () => {
     return e?.fileList;
   };
 
-  const handleRemoveGalleryImage = (file: UploadFile) => {
-    if (file.uid && typeof file.uid === 'string') {
-      setGalleryImagesToDelete(prev => [...prev, file.uid]);
-    }
-  };
-
+  // Fonction pour supprimer une image de la galerie (par son ID)
   const handleDeleteImage = (imageId: string) => {
-    setGalleryImagesToDelete(prev => [...prev, imageId]);
-    setVisibleGallery(visibleGallery.filter(url => url !== imageId));
+    setGalleryImagesToDelete(prev => [...prev, imageId]); // Ajouter l'ID à la liste des suppressions
+    setVisibleGallery(visibleGallery.filter(image => image.id !== imageId)); // Supprimer l'image visuellement
   };
 
   return (
@@ -319,12 +325,12 @@ const UpdateUnit = () => {
             <h2 className="font-kanit text-black">Galerie</h2>
             {visibleGallery.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {visibleGallery.map((url, index) => (
+                {visibleGallery.map((image, index) => (
                   <Card key={index} hoverable>
                     <div className="relative">
-                      <Image src={url} alt={`Galerie Image ${index + 1}`} />
+                      <Image src={image.url} alt={`Galerie Image ${index + 1}`} />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
-                        <DeleteOutlined onClick={() => handleDeleteImage(url)} style={{ color: "white", fontSize: "24px" }} />
+                        <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
                       </div>
                     </div>
                   </Card>
