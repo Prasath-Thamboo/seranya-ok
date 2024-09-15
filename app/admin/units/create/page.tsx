@@ -57,12 +57,12 @@ const CreateUnit = () => {
       formData.append('bio', bioValue);
       formData.append('type', values.type);
   
-      // Ajout des classes associées
-// Ajout des classes associées
-if (values.classIds && Array.isArray(values.classIds)) {
-  // Envoi du tableau sous forme de chaîne JSON
-  formData.append('classIds', JSON.stringify(values.classIds));
-}
+      values.classIds.forEach((classId: string | number) => {
+        formData.append('classIds[]', classId.toString()); // Convertir en string pour éviter l'erreur
+      });
+      
+
+
 
   
       // Ajout des fichiers au formulaire avec vérification
