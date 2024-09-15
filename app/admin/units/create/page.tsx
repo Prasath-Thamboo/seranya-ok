@@ -58,10 +58,12 @@ const CreateUnit = () => {
       formData.append('type', values.type);
   
       // Ajout des classes associées
-      if (values.classIds && Array.isArray(values.classIds)) {
-        // Transforme l'array en string JSON pour que l'API l'accepte correctement
-        formData.append('classIds', JSON.stringify(values.classIds));
-      }
+// Ajout des classes associées
+if (values.classIds && Array.isArray(values.classIds)) {
+  // Envoi du tableau sous forme de chaîne JSON
+  formData.append('classIds', JSON.stringify(values.classIds));
+}
+
   
       // Ajout des fichiers au formulaire avec vérification
       if (values.profileImage && values.profileImage.length > 0) {
@@ -185,22 +187,23 @@ const CreateUnit = () => {
 
           {/* Sélection des classes associées */}
           <Form.Item
-            name="classIds"
-            label={<span className="font-kanit text-black">Classes associées</span>}
-          >
-            <Select
-              mode="multiple"
-              placeholder="Sélectionnez des classes"
-              showSearch
-              optionFilterProp="children"
-            >
-              {classes.map((classItem: ClassModel) => (
-                <Option key={classItem.id} value={classItem.id}>
-                  {classItem.title}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+  name="classIds"
+  label={<span className="font-kanit text-black">Classes associées</span>}
+>
+  <Select
+    mode="multiple"
+    placeholder="Sélectionnez des classes"
+    showSearch
+    optionFilterProp="children"
+  >
+    {classes.map((classItem: ClassModel) => (
+      <Option key={classItem.id} value={classItem.id}>
+        {classItem.title}
+      </Option>
+    ))}
+  </Select>
+</Form.Item>
+
 
           <Form.Item
             name="profileImage"
