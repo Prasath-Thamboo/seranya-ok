@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button, Upload, Select, Image, Row, Col, Card } from "antd"; 
+import { Form, Input, Button, Upload, Select, Image, Row, Col, Card } from "antd";
 import { UploadOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,52 +21,53 @@ const UpdateUnit = () => {
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [bioValue, setBioValue] = useState(''); // Valeur de bio en HTML
   const [storyValue, setStoryValue] = useState(''); // Valeur de story en HTML
-  const [classes, setClasses] = useState<ClassModel[]>([]);  
-  const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);  // Changement de number[] à string[]
+  const [classes, setClasses] = useState<ClassModel[]>([]);
+  const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
-  const [visibleGallery, setVisibleGallery] = useState<{ id: string, url: string }[]>([]); // Changement ici pour stocker l'id et l'URL de chaque image
+  const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string; uid: string }[]>([]); // Correction pour inclure `uid`
   const router = useRouter();
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const id = searchParams?.get("id");
   const numericId = id ? parseInt(id, 10) : null;
-  
+
   const { addNotification } = useNotification();
 
   const backendUrl = process.env.NODE_ENV === 'production'
-  ? process.env.NEXT_PUBLIC_API_URL_PROD
-  : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
-  
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
   useEffect(() => {
-    if (numericId !== null) { // Utilisation de l'ID numérique
+    if (numericId !== null) {
       const loadUnit = async () => {
         try {
-          const data = await fetchUnitById(numericId);  // ID traité comme number
-  
+          const data = await fetchUnitById(numericId);
+
           if (data) {
             setUnit(data);
-  
-            // On vérifie que `data.gallery` est un tableau d'objets avec `id` et `path`
+
+            // Vérification de `data.gallery`
             if (Array.isArray(data.gallery) && data.gallery.every((img) => typeof img === 'object' && 'id' in img && 'path' in img)) {
               setVisibleGallery(
                 data.gallery.map((img: { id: number; path: string }) => ({
-                  id: img.id.toString(),  // Convertir `id` en chaîne
-                  url: img.path,  // Assigner le chemin de l'image
+                  id: img.id.toString(),
+                  url: img.path,
+                  uid: img.id.toString(), // Ajout de `uid` pour rendre l'image unique
                 }))
               );
             } else {
-              setVisibleGallery([]); // Si pas de galerie valide, vide le tableau
+              setVisibleGallery([]);
             }
-  
-            setSelectedClassIds(data.classes?.map(c => c.id.toString()) || []);  // IDs des classes présélectionnées en string[]
+
+            setSelectedClassIds(data.classes?.map((c) => c.id.toString()) || []);
             setBioValue(data.bio || '');
             setStoryValue(data.story || '');
-  
+
             form.setFieldsValue({
               title: data.title || '',
               intro: data.intro || '',
               subtitle: data.subtitle || '',
               type: data.type || UnitType.UNIT,
-              classIds: data.classes?.map(c => c.id.toString()) || [],  // IDs des classes présélectionnées
+              classIds: data.classes?.map((c) => c.id.toString()) || [],
             });
           }
         } catch (error) {
@@ -74,7 +75,7 @@ const UpdateUnit = () => {
           addNotification("critical", "Erreur lors du chargement de l'unité.");
         }
       };
-  
+
       const loadClasses = async () => {
         try {
           const response = await axios.get<ClassModel[]>(`${backendUrl}/classes`);
@@ -84,15 +85,11 @@ const UpdateUnit = () => {
           addNotification("critical", "Erreur lors de la récupération des classes.");
         }
       };
-  
+
       loadUnit();
       loadClasses();
     }
   }, [numericId, form, addNotification, backendUrl]);
-  
-  
-  
-
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
@@ -101,7 +98,7 @@ const UpdateUnit = () => {
       if (!token) {
         throw new Error("Token not found");
       }
-  
+
       const formData = new FormData();
       formData.append('title', values.title);
       formData.append('intro', values.intro);
@@ -109,15 +106,13 @@ const UpdateUnit = () => {
       formData.append('story', storyValue);
       formData.append('bio', bioValue);
       formData.append('type', values.type);
-  
-      // Convertir les classIds en string[] avant de les ajouter à FormData
+
       if (selectedClassIds.length > 0) {
         selectedClassIds.forEach((classId) => {
-          formData.append('classIds[]', classId);  // Changement : Utilisation des strings
+          formData.append('classIds[]', classId);
         });
       }
-  
-      // Ajoutez d'autres champs comme les images...
+
       if (values.profileImage && values.profileImage[0]?.originFileObj) {
         formData.append('profileImage', values.profileImage[0].originFileObj as Blob);
       }
@@ -134,21 +129,20 @@ const UpdateUnit = () => {
           }
         });
       }
-  
-      // Ajoutez les images à supprimer
+
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
-          formData.append(`galleryImagesToDelete[${index}]`, imageId); // On envoie l'id de l'upload à supprimer
+          formData.append(`galleryImagesToDelete[${index}]`, imageId);
         });
       }
-  
+
       const response = await axios.patch(`${backendUrl}/units/${id}`, formData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       if (response.data) {
         addNotification("success", "Unité mise à jour avec succès!");
         router.push("/admin/units");
@@ -170,10 +164,9 @@ const UpdateUnit = () => {
     return e?.fileList;
   };
 
-  // Fonction pour supprimer une image de la galerie (par son ID)
   const handleDeleteImage = (imageId: string) => {
-    setGalleryImagesToDelete(prev => [...prev, imageId]); // Ajouter l'ID à la liste des suppressions
-    setVisibleGallery(visibleGallery.filter(image => image.id !== imageId)); // Supprimer l'image visuellement
+    setGalleryImagesToDelete((prev) => [...prev, imageId]);
+    setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
   };
 
   return (
@@ -190,7 +183,6 @@ const UpdateUnit = () => {
           layout="vertical"
           className="text-black font-kanit"
         >
-          {/* Titre */}
           <Form.Item
             name="title"
             label={<span className="text-black font-kanit">Titre</span>}
@@ -199,7 +191,6 @@ const UpdateUnit = () => {
             <Input placeholder="Titre de l'unité" className="bg-white text-black font-kanit" />
           </Form.Item>
 
-          {/* Introduction */}
           <Form.Item
             name="intro"
             label={<span className="text-black">Introduction</span>}
@@ -209,32 +200,18 @@ const UpdateUnit = () => {
             <Input.TextArea placeholder="Introduction" className="bg-white text-black font-kanit" />
           </Form.Item>
 
-          {/* Sous-titre */}
-          <Form.Item
-            name="subtitle"
-            label="Sous-titre"
-            className="font-kanit"
-          >
+          <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
             <Input placeholder="Sous-titre de l'unité" className="bg-white text-black font-kanit" />
           </Form.Item>
 
-          {/* Histoire */}
-          <Form.Item
-            label="Histoire"
-            className="font-kanit"
-          >
+          <Form.Item label="Histoire" className="font-kanit">
             <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
           </Form.Item>
 
-          {/* Biographie */}
-          <Form.Item
-            label="Biographie"
-            className="font-kanit"
-          >
+          <Form.Item label="Biographie" className="font-kanit">
             <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
           </Form.Item>
 
-          {/* Type */}
           <Form.Item
             name="type"
             label="Type"
@@ -242,18 +219,21 @@ const UpdateUnit = () => {
             className="font-kanit"
           >
             <Select placeholder="Sélectionnez le type" className="bg-white text-black font-kanit">
-              <Option className="font-kanit" value={UnitType.UNIT}>UNIT</Option>
-              <Option className="font-kanit" value={UnitType.CHAMPION}>CHAMPION</Option>
+              <Option className="font-kanit" value={UnitType.UNIT}>
+                UNIT
+              </Option>
+              <Option className="font-kanit" value={UnitType.CHAMPION}>
+                CHAMPION
+              </Option>
             </Select>
           </Form.Item>
 
-          {/* Classe associée */}
           <Form.Item label="Classe associée">
             <Select
               mode="multiple"
               placeholder="Sélectionnez une ou plusieurs classes"
               value={selectedClassIds}
-              onChange={setSelectedClassIds}  // Les IDs des classes sont gérées en tant que strings
+              onChange={setSelectedClassIds}
             >
               {classes.map((classe) => (
                 <Select.Option key={classe.id} value={classe.id}>
@@ -263,7 +243,6 @@ const UpdateUnit = () => {
             </Select>
           </Form.Item>
 
-          {/* Profil Image */}
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -277,12 +256,9 @@ const UpdateUnit = () => {
                 </Upload>
               </Form.Item>
             </Col>
-            <Col span={12}>
-              {unit?.profileImage && <Image src={unit.profileImage} alt="Profil actuel" />}
-            </Col>
+            <Col span={12}>{unit?.profileImage && <Image src={unit.profileImage} alt="Profil actuel" />}</Col>
           </Row>
 
-          {/* Header Image */}
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -296,12 +272,9 @@ const UpdateUnit = () => {
                 </Upload>
               </Form.Item>
             </Col>
-            <Col span={12}>
-              {unit?.headerImage && <Image src={unit.headerImage} alt="Header actuel" />}
-            </Col>
+            <Col span={12}>{unit?.headerImage && <Image src={unit.headerImage} alt="Header actuel" />}</Col>
           </Row>
 
-          {/* Footer Image */}
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -315,12 +288,9 @@ const UpdateUnit = () => {
                 </Upload>
               </Form.Item>
             </Col>
-            <Col span={12}>
-              {unit?.footerImage && <Image src={unit.footerImage} alt="Pied de page actuel" />}
-            </Col>
+            <Col span={12}>{unit?.footerImage && <Image src={unit.footerImage} alt="Pied de page actuel" />}</Col>
           </Row>
 
-          {/* Galerie */}
           <div className="bg-gray-200 p-4 rounded-lg mb-4">
             <h2 className="font-kanit text-black">Galerie</h2>
             {visibleGallery.length > 0 && (
@@ -337,11 +307,7 @@ const UpdateUnit = () => {
                 ))}
               </div>
             )}
-            <Form.Item
-              name="gallery"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-            >
+            <Form.Item name="gallery" valuePropName="fileList" getValueFromEvent={normFile}>
               <Upload name="gallery" listType="picture-card" multiple beforeUpload={() => false}>
                 <div>
                   <PlusOutlined />
@@ -351,7 +317,6 @@ const UpdateUnit = () => {
             </Form.Item>
           </div>
 
-          {/* Bouton Submit */}
           <Form.Item className="flex justify-center font-kanit">
             <Button
               type="primary"
