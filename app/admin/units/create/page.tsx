@@ -58,7 +58,8 @@ const CreateUnit = () => {
       formData.append('type', values.type);
   
       // Ajout des classes associées
-      if (values.classIds) {
+      if (values.classIds && Array.isArray(values.classIds)) {
+        // Transforme l'array en string JSON pour que l'API l'accepte correctement
         formData.append('classIds', JSON.stringify(values.classIds));
       }
   
