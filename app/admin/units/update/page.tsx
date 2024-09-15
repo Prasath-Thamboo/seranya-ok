@@ -19,12 +19,12 @@ const UpdateUnit = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [unit, setUnit] = useState<UnitModel | null>(null);
-  const [bioValue, setBioValue] = useState(''); // Valeur de bio en HTML
-  const [storyValue, setStoryValue] = useState(''); // Valeur de story en HTML
+  const [bioValue, setBioValue] = useState(''); 
+  const [storyValue, setStoryValue] = useState(''); 
   const [classes, setClasses] = useState<ClassModel[]>([]);
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
-  const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string; uid: string }[]>([]); // Correction pour inclure `uid`
+  const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string; uid: string }[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams?.get("id");
@@ -45,18 +45,14 @@ const UpdateUnit = () => {
           if (data) {
             setUnit(data);
 
-            // Vérification de `data.gallery`
-            if (Array.isArray(data.gallery) && data.gallery.every((img) => typeof img === 'object' && 'id' in img && 'path' in img)) {
-              setVisibleGallery(
-                data.gallery.map((img: { id: number; path: string }) => ({
-                  id: img.id.toString(),
-                  url: img.path,
-                  uid: img.id.toString(), // Ajout de `uid` pour rendre l'image unique
-                }))
-              );
-            } else {
-              setVisibleGallery([]);
-            }
+            // Ajustement pour afficher les images avec les bonnes URLs
+            const galleryUrls = data.gallery?.map((imgUrl: string) => ({
+              id: imgUrl,
+              url: `${backendUrl}${imgUrl}`,
+              uid: imgUrl,
+            })) || [];
+
+            setVisibleGallery(galleryUrls);
 
             setSelectedClassIds(data.classes?.map((c) => c.id.toString()) || []);
             setBioValue(data.bio || '');
