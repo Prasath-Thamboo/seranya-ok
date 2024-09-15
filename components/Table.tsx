@@ -5,6 +5,8 @@ import { FaSearch, FaChevronDown, FaCheck, FaChevronLeft, FaChevronRight, FaSort
 import { Image } from 'antd';
 import Badge from './Badge';
 import CustomModal from './CustomModal';
+import { useNotification } from '@/components/notifications/NotificationProvider';
+
 
 const BASE_URL =
   process.env.NODE_ENV === 'production'
@@ -278,6 +280,8 @@ interface TableComponentProps {
 function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, prepareRow, onDelete, baseRoute }: TableComponentProps) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [unitToDelete, setUnitToDelete] = useState<any>(null);
+  const { addNotification } = useNotification();
+
 
   const handleDelete = (row: any) => {
     setUnitToDelete(row.original);
@@ -287,15 +291,16 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
   const confirmDelete = async () => {
     if (unitToDelete) {
       try {
-        const token = localStorage.getItem("access_token");  // Récupération du token depuis localStorage
+        const token = localStorage.getItem("access_token");
         if (!token) {
           throw new Error("Token not found");
         }
-        await axios.delete(`${BASE_URL}/${baseRoute}/${unitToDelete.id}`, {
+        await axios.delete(`https://api.spectralunivers.com/units/${unitToDelete.id}`, {
           headers: {
-            Authorization: `Bearer ${token}`,  // Envoi du token dans l'en-tête
+            Authorization: `Bearer ${token}`,
           },
         });
+        
         onDelete(unitToDelete);
       } catch (error) {
         console.error('Error deleting item:', error);
@@ -307,6 +312,16 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
 
   return (
     <div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm max-w-full px-4">
+      <CustomModal
+        visible={isDeleteModalVisible}
+        onCancel={() => setDeleteModalVisible(false)}
+        onConfirm={confirmDelete}
+        title="Supprimer l'unité"
+        subtitle="Êtes-vous sûr de vouloir supprimer cette unité ? Cette action est irréversible."
+        confirmText="Confirmer"
+        cancelText="Annuler"
+        iconType="delete"
+      />
       <div className="relative inline-block min-w-full">
         <table {...getTableProps()} className="min-w-full table-auto">
           <thead>
@@ -323,16 +338,10 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                       <div className="text-gray-600">{column.render('Header')}</div>
                       <div className="flex flex-col">
                         <FaSortUp
-                          className={`text-base translate-y-1/2 ${
-                            column.isSorted && !column.isSortedDesc
-                              ? 'text-black'
-                              : 'text-gray-300'
-                          }`}
+                          className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-black' : 'text-gray-300'}`}
                         />
                         <FaSortDown
-                          className={`text-base -translate-y-1/2 ${
-                            column.isSortedDesc ? 'text-black' : 'text-gray-300'
-                          }`}
+                          className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-black' : 'text-gray-300'}`}
                         />
                       </div>
                     </div>
@@ -357,9 +366,7 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                     >
                       {cell.column.id === 'story' || cell.column.id === 'bio' ? (
                         <div title={cell.value}>
-                          {cell.value.length > 30
-                            ? `${cell.value.slice(0, 30)}...`
-                            : cell.value}
+                          {cell.value.length > 30 ? `${cell.value.slice(0, 30)}...` : cell.value}
                         </div>
                       ) : cell.column.id === 'type' ? (
                         <Badge type={cell.value} />
@@ -370,8 +377,8 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                   ))}
                   <td className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex gap-2 justify-center shadow-left h-full">
                     <ActionButtons
-                      viewUrl={`/${baseRoute}/${row.original.id}`} // Utilise baseRoute ici
-                      editUrl={`/${baseRoute}/update?id=${row.original.id}`} // Utilise baseRoute ici
+                      viewUrl={`/${baseRoute}/${row.original.id}`}
+                      editUrl={`/${baseRoute}/update?id=${row.original.id}`}
                       onDelete={() => handleDelete(row)}
                     />
                   </td>
@@ -384,6 +391,7 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
     </div>
   );
 }
+
 
 
 interface TableProps {
@@ -421,7 +429,7 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
   );
 
   return (
-    <div className="flex flex-col gap-4 font-kanit">
+    <div className="flex flex-col gap-4 font-kanit w-11/12">
       <div className="flex flex-col sm:flex-row justify-between gap-2">
         <GlobalSearchFilter1 className="sm:w-64" globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
         <div className="flex gap-2 items-center sm:w-auto">

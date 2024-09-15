@@ -328,7 +328,7 @@ const UpdateUnit = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit"
+              className="bg-white text-black font-kanit font-lg uppercase p-3"
               icon={<PlusOutlined />}
               loading={loading}
             >

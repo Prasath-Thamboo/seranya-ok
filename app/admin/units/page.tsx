@@ -44,9 +44,20 @@ const UnitsPage = () => {
     fetchData();
   }, []);
 
-  const handleDelete = (deletedUnit: UnitModel) => {
-    setUnits(units.filter((unit) => unit.id !== deletedUnit.id));
+  const handleDelete = async (deletedUnit: UnitModel) => {
+    try {
+      // Re-fetch data from the server after a delete
+      const fetchedUnits = await fetchUnits();
+      const unitsWithImages = fetchedUnits.map((unit) => ({
+        ...unit,
+        profileImage: `${BASE_URL}/uploads/units/${unit.id}/ProfileImage.png`,
+      }));
+      setUnits(unitsWithImages);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des unités après suppression :", error);
+    }
   };
+  
 
   const columns = useMemo(
     () => [
