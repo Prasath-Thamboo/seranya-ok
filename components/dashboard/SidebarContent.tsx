@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { AiFillHome } from 'react-icons/ai';
-import { FaUsers, FaComments, FaUsersCog, FaCubes } from 'react-icons/fa';
+import { FaUsers, FaComments, FaCubes, FaBook } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
@@ -11,19 +10,28 @@ import CustomModal from "@/components/CustomModal";
 import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'; // Import du composant Image
+import { AiFillHome } from 'react-icons/ai';
 
 export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Basculer vers mobile-friendly sidebar
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const token = getAccessToken();
     if (token) {
       fetchCurrentUser()
         .then((userData) => {
-          // Assure que l'URL de l'image est complète et servie par le backend
           const profileImageUrl = `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/users/${userData.id}/ProfileImage.png`;
           setUser({
             ...userData,
@@ -31,9 +39,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
             role: userData.role || UserRole.USER,
           });
         })
-        .catch(() => {
-          setUser(null);
-        });
+        .catch(() => setUser(null));
     }
   }, []);
 
@@ -58,15 +64,41 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
     router.push('/');
   };
 
+  if (isMobile) {
+    // Adjusted layout to position the logo in the center with 2 icons on each side
+    return (
+      <nav className="fixed bottom-0 left-0 w-full h-20 bg-black text-white flex items-center justify-between z-50 shadow-lg px-4">
+        {/* Left Side Icons */}
+        <div className="flex items-center space-x-6">
+          <FaUsers className="w-6 h-6" onClick={() => router.push('/admin/users')} />
+          <FaCubes className="w-6 h-6" onClick={() => router.push('/admin/units')} />
+        </div>
+
+        {/* Center Logo */}
+        <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/admin')}>
+          <Image
+            src="/logos/favicon.ico" // Utilisation du logo du site
+            alt="Home"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        </div>
+
+        {/* Right Side Icons */}
+        <div className="flex items-center space-x-6">
+          <FaBook className="w-6 h-6" onClick={() => router.push('/admin/classes')} />
+          <FaComments className="w-6 h-6" onClick={() => router.push('/admin/discussion')} />
+        </div>
+      </nav>
+    );
+  }
+
   return (
     <div
       className={`relative flex flex-col h-full text-white bg-black shadow-lg transition-all duration-300 ${
         collapsed ? 'w-20' : 'w-80'
-      }`}
-      style={{
-        boxShadow: '4px 0 8px rgba(0, 0, 0, 0.5)',
-        overflow: 'hidden',
-      }}
+      } overflow-hidden`}  // Empêche le dépassement du contenu
     >
       {/* Toggle Button */}
       <div
@@ -101,12 +133,13 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
       <Menu
         mode="inline"
         className="font-iceberg" // Police Iceberg pour toute la barre de navigation
-        style={{ background: 'black', borderRight: 'none' }}
+        style={{ background: 'black', borderRight: 'none', boxShadow: '0 -3px 10px rgba(0, 0, 0, 0.5)' }} // Adding top shadow
       >
         <Menu.Item
           key="dashboard"
           icon={<AiFillHome className="w-5 h-5 text-shadow-white" />}
           className="menu-item"
+          onClick={() => router.push('/admin')}
         >
           {!collapsed && <span className="uppercase text-shadow-white">Tableau de bord</span>}
         </Menu.Item>
@@ -137,8 +170,25 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
             key="general-units"
             className="submenu-item"
             style={{ borderLeft: '4px solid black' }}
+            onClick={() => router.push('/admin/units')}
           >
-            <a href="/admin/units" className="uppercase">Général</a>
+            <span className="uppercase">Général</span>
+          </Menu.Item>
+        </Menu.SubMenu>
+
+        <Menu.SubMenu
+          key="classes"
+          icon={<FaBook className="w-5 h-5 text-shadow-white" />}
+          title={!collapsed && <span className="uppercase text-shadow-white">Classes</span>}
+          className="menu-item"
+        >
+          <Menu.Item
+            key="general-classes"
+            className="submenu-item"
+            style={{ borderLeft: '4px solid black' }}
+            onClick={() => router.push('/admin/classes')}
+          >
+            <span className="uppercase">Général</span>
           </Menu.Item>
         </Menu.SubMenu>
 
@@ -146,6 +196,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           key="chat"
           icon={<FaComments className="w-5 h-5 text-shadow-white" />}
           className="menu-item"
+          onClick={() => router.push('/admin/discussion')}
         >
           {!collapsed && <span className="uppercase text-shadow-white">Discussion</span>}
         </Menu.Item>
@@ -154,20 +205,17 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
       {/* Fixed Bottom Section */}
       <div className="mt-auto">
         <div
-          className={`flex flex-col items-center justify-center mb-2 relative transition-all duration-300 p-4 rounded-lg w-full cursor-pointer ${isHovered ? 'bg-gray-700 text-white' : 'bg-gray-900'}`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          className={`flex flex-col items-center justify-center mb-2 relative transition-all duration-300 p-4 rounded-lg w-full cursor-pointer`}
           onClick={handleProfileClick}
         >
           <div className="flex flex-col items-center justify-center">
-          <Image
-  src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
-  alt="User Avatar"
-  width={48}
-  height={48}
-  className="rounded-full object-cover mb-2"
-/>
-
+            <Image
+              src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
+              alt="User Avatar"
+              width={48}
+              height={48}
+              className="rounded-full object-cover mb-2"
+            />
             {!collapsed && (
               <div className="flex items-center">
                 <span className="text-lg font-iceberg font-semibold mr-2">{user?.pseudo}</span>

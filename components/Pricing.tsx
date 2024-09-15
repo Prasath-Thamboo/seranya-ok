@@ -55,46 +55,24 @@ export const Pricing = () => {
       if (data.sessionUrl) {
         window.open(data.sessionUrl, '_blank'); // Ouvrir dans un nouvel onglet
       } else {
-        addNotification("critical", "Une erreur s&apos;est produite lors de la création de l&apos;abonnement.");
+        addNotification("critical", "Une erreur s'est produite lors de la création de l'abonnement.");
       }
     } catch (error) {
       console.error('Subscription error:', error);
-      addNotification("critical", "Erreur lors de la tentative de création de l&apos;abonnement.");
+      addNotification("critical", "Erreur lors de la tentative de création de l'abonnement.");
     }
   };
 
   return (
-    <div className="px-6 py-20 mx-auto max-w-full md:px-24 lg:px-12 lg:py-24">
-      <div className="max-w-4xl mb-12 md:mx-auto sm:text-center lg:w-full md:mb-14">
+    <div className="px-4 py-12 mx-auto max-w-full md:px-12 lg:px-24 lg:py-20">
+      <div className="max-w-4xl mb-8 md:mx-auto sm:text-center lg:w-full">
         <div>
           <p className="inline-block px-4 py-1 mb-4 text-xs font-semibold tracking-wider text-white uppercase rounded-full bg-teal-500 text-iceberg">
             Nouveau
           </p>
         </div>
-        <h2 className="max-w-lg mb-8 font-iceberg text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:mx-auto">
+        <h2 className="max-w-lg mb-8 font-iceberg text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-white md:mx-auto">
           <span className="relative inline-block">
-            <svg
-              viewBox="0 0 52 24"
-              fill="currentColor"
-              className="absolute top-0 left-0 z-0 hidden w-32 -mt-8 -ml-20 text-blue-gray-100 lg:w-32 lg:-ml-28 lg:-mt-10 sm:block"
-            >
-              <defs>
-                <pattern
-                  id="ace59d72-08d5-4850-b9e4-d9d0b86c0525"
-                  x="0"
-                  y="0"
-                  width=".135"
-                  height=".30"
-                >
-                  <circle cx="1" cy="1" r=".7" />
-                </pattern>
-              </defs>
-              <rect
-                fill="url(#ace59d72-08d5-4850-b9e4-d9d0b86c0525)"
-                width="52"
-                height="24"
-              />
-            </svg>
             <span className="relative uppercase">Abonnement</span>
           </span>{' '}
         </h2>
@@ -103,18 +81,18 @@ export const Pricing = () => {
         </p>
       </div>
 
-      <div className="grid max-w-full gap-12 row-gap-8 lg:max-w-screen-lg lg:grid-cols-2 sm:mx-auto">
+      <div className="grid gap-8 row-gap-6 lg:grid-cols-2 max-w-full sm:mx-auto">
         {/* Carte Utilisation personnelle */}
-        <div className="flex flex-col justify-between p-8 bg-black border border-gray-700 rounded-lg shadow-lg">
+        <div className="flex flex-col justify-between p-6 bg-black border border-gray-700 rounded-lg shadow-lg">
           <div className="mb-8">
             <div className="flex items-center justify-between pb-8 mb-8 border-b border-gray-600">
               <div>
                 <p className="text-sm font-bold tracking-wider uppercase text-white font-kanit">
                   Plan Gratuit
                 </p>
-                <p className="text-5xl font-extrabold text-white font-iceberg mt-3">Gratuit</p>
+                <p className="text-4xl lg:text-5xl font-extrabold text-white font-iceberg mt-3">Gratuit</p>
               </div>
-              <div className="flex items-center justify-center w-24 h-24 rounded-full bg-gray-800">
+              <div className="flex items-center justify-center w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-gray-800">
                 <svg
                   className="w-10 h-10 text-white"
                   viewBox="0 0 24 24"
@@ -216,7 +194,7 @@ export const Pricing = () => {
           </div>
           <div>
             <button
-              className="inline-flex items-center justify-center w-full h-14 px-6 mb-4 font-medium tracking-wide text-white transition duration-200 bg-gray-800 rounded-lg shadow-md hover:bg-gray-900 focus:shadow-outline focus:outline-none font-kanit"
+              className="inline-flex items-center justify-center w-full h-12 px-6 mb-4 font-medium tracking-wide text-white transition duration-200 bg-gray-800 rounded-lg shadow-md hover:bg-gray-900 focus:shadow-outline focus:outline-none font-kanit"
               disabled
             >
               Plan actuel
@@ -228,16 +206,16 @@ export const Pricing = () => {
         </div>
 
         {/* Carte Utilisation pour équipe */}
-        <div className="flex flex-col justify-between p-8 bg-black border border-gray-700 rounded-lg shadow-lg">
+        <div className="flex flex-col justify-between p-6 bg-black border border-gray-700 rounded-lg shadow-lg">
           <div className="mb-8">
             <div className="flex items-center justify-between pb-8 mb-8 border-b border-gray-600">
               <div>
                 <p className="text-sm font-bold tracking-wider uppercase text-white font-kanit">
                   Plan payant
                 </p>
-                <p className="text-5xl font-extrabold text-white font-iceberg mt-3">05,00€/mois</p>
+                <p className="text-4xl lg:text-5xl font-extrabold text-white font-iceberg mt-3">05,00€/mois</p>
               </div>
-              <div className="flex items-center justify-center w-24 h-24 rounded-full bg-gray-800">
+              <div className="flex items-center justify-center w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-gray-800">
                 <svg
                   className="w-10 h-10 text-white"
                   viewBox="0 0 24 24"
@@ -339,7 +317,7 @@ export const Pricing = () => {
           </div>
           <div>
             <button
-              className={`inline-flex items-center justify-center w-full h-14 px-6 mb-4 font-medium tracking-wide text-white transition duration-200 rounded-lg shadow-md font-kanit uppercase ${isSubscribed ? 'bg-gray-600 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'}`}
+              className={`inline-flex items-center justify-center w-full h-12 px-6 mb-4 font-medium tracking-wide text-white transition duration-200 rounded-lg shadow-md font-kanit uppercase ${isSubscribed ? 'bg-gray-600 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'}`}
               onClick={handleSubscription}
               disabled={isSubscribed}
             >

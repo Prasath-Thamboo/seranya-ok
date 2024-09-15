@@ -125,7 +125,7 @@ export default function Navbar() {
             <span className="stroke-text">Contact</span>
           </Link>
           {/* Ajout du lien vers Pricing */}
-          <Link href="/pricing" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
+          <Link href="/subscription" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
             <span className="stroke-text">Abonnement</span>
           </Link>
         </div>
@@ -177,7 +177,7 @@ export default function Navbar() {
         </div>
 
         {/* Menu hamburger pour mobile */}
-        <div className="md:hidden">
+        <div className="md:hidden z-50">
           <button
             className="text-white focus:outline-none hover:text-gray-300 transition-all"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -187,47 +187,59 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Menu mobile */}
+      {/* Overlay and Menu mobile */}
       {isMenuOpen && (
-        <div className="md:hidden flex flex-col items-center mt-4 space-y-4 text-center">
-          <Link href="/univers" className="text-white font-iceberg text-lg hover:text-gray-300">
-            Univers
-          </Link>
-          <Link href="/contact" className="text-white font-iceberg text-lg hover:text-gray-300">
-            Contact
-          </Link>
-          {/* Ajout du lien vers Pricing dans le menu mobile */}
-          <Link href="/pricing" className="text-white font-iceberg text-lg hover:text-gray-300">
-            Abonnement
-          </Link>
-          {isLoggedIn && user ? (
-            <>
-              <Link href="/admin/me" className="text-white font-iceberg text-lg hover:text-gray-300">
-                Mon Profil
-              </Link>
-              {user.role === "ADMIN" && (
-                <Link href="/admin" className="text-white font-iceberg text-lg hover:text-gray-300">
-                  Administration
+        <>
+          {/* Gray background overlay */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsMenuOpen(false)} // Allow click to close the menu
+          ></div>
+
+          {/* Menu mobile */}
+          <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-black bg-opacity-75 z-50 p-5">
+            <Link href="/univers" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+              Univers
+            </Link>
+            <Link href="/contact" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+              Contact
+            </Link>
+            {/* Ajout du lien vers Pricing dans le menu mobile */}
+            <Link href="/subscription" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+              Abonnement
+            </Link>
+            {isLoggedIn && user ? (
+              <>
+                <Link href="/admin/me" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                  Mon Profil
                 </Link>
-              )}
-              <button
-                onClick={handleLogout}
-                className="text-red-500 font-iceberg text-lg hover:text-red-700"
-              >
-                Déconnexion
-              </button>
-            </>
-          ) : (
-            <>
-              <Link href="/auth/login" className="text-white font-iceberg text-lg hover:text-gray-300">
-                Connexion
-              </Link>
-              <Link href="/auth/register" className="text-white font-iceberg text-lg hover:text-gray-300">
-                Inscription
-              </Link>
-            </>
-          )}
-        </div>
+                {user.role === "ADMIN" && (
+                  <Link href="/admin" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                    Administration
+                  </Link>
+                )}
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="text-red-500 font-iceberg text-lg hover:text-red-700"
+                >
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                  Connexion
+                </Link>
+                <Link href="/auth/register" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                  Inscription
+                </Link>
+              </>
+            )}
+          </div>
+        </>
       )}
     </nav>
   );
