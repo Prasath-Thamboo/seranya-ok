@@ -45,17 +45,14 @@ const UpdateUnit = () => {
           if (data) {
             setUnit(data);
 
-            // Vérification des données reçues pour la galerie
-            console.log("Unit data:", data);
-
-            // Création des URLs complètes pour les images de galerie
-            const galleryUrls = data.gallery?.map((imgUrl: string) => ({
-              id: imgUrl, // Utiliser l'URL complète comme ID
-              url: imgUrl, // L'URL de l'image est directement disponible
+            // Si data.gallery est un tableau de chaînes d'URLs
+            const galleryUrls = data.gallery?.map((imgUrl: string, index: number) => ({
+              id: `${index}`, // Utiliser l'index comme ID unique
+              url: imgUrl, // L'URL de l'image
             })) || [];
 
-            // Log des URLs d'images de galerie
-            console.log("Gallery URLs:", galleryUrls);
+            // Log des URLs d'images de galerie avec ID
+            console.log("Gallery with IDs:", galleryUrls);
 
             setVisibleGallery(galleryUrls);
 
@@ -168,10 +165,10 @@ const UpdateUnit = () => {
     return e?.fileList;
   };
 
-  const handleDeleteImage = (imageUrl: string) => {
-    setGalleryImagesToDelete((prev) => [...prev, imageUrl]);
-    setVisibleGallery(visibleGallery.filter((image) => image.url !== imageUrl));
-    console.log("Images to delete:", galleryImagesToDelete);
+  const handleDeleteImage = (imageId: string) => {
+    setGalleryImagesToDelete((prev) => [...prev, imageId]); // Ajoute l'ID de l'objet upload
+    setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
+    console.log("Images to delete (IDs):", galleryImagesToDelete); // Log des IDs des images à supprimer
   };
 
   return (
@@ -305,7 +302,7 @@ const UpdateUnit = () => {
                     <div className="relative">
                       <Image src={image.url} alt={`Galerie Image ${index + 1}`} />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
-                        <DeleteOutlined onClick={() => handleDeleteImage(image.url)} style={{ color: "white", fontSize: "24px" }} />
+                        <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
                       </div>
                     </div>
                   </Card>
