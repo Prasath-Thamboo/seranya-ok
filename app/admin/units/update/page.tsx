@@ -45,12 +45,17 @@ const UpdateUnit = () => {
           if (data) {
             setUnit(data);
 
-            // Ajustement pour afficher les images avec les bonnes URLs
+            // Log des données reçues
+            console.log("Unit data:", data);
+
             const galleryUrls = data.gallery?.map((imgUrl: string) => ({
               id: imgUrl,
-              url: `${backendUrl}${imgUrl}`,
+              url: `${backendUrl}${imgUrl}`, // URL complète de l'image
               uid: imgUrl,
             })) || [];
+
+            // Log des URLs d'images de galerie
+            console.log("Gallery URLs:", galleryUrls);
 
             setVisibleGallery(galleryUrls);
 
@@ -131,6 +136,9 @@ const UpdateUnit = () => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
         });
       }
+
+      // Log des données du formulaire envoyées
+      console.log("FormData sent:", formData);
 
       const response = await axios.patch(`${backendUrl}/units/${id}`, formData, {
         headers: {
