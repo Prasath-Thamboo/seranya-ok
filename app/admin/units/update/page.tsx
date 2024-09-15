@@ -36,6 +36,7 @@ const UpdateUnit = () => {
     ? process.env.NEXT_PUBLIC_API_URL_PROD
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
+  // Chargement des unités et des classes
   useEffect(() => {
     if (numericId !== null) {
       const loadUnit = async () => {
@@ -45,14 +46,14 @@ const UpdateUnit = () => {
           if (data) {
             setUnit(data);
 
-            // Si data.gallery est un tableau de chaînes d'URLs
-            const galleryUrls = data.gallery?.map((imgUrl: string, index: number) => ({
-              id: `${index}`, // Utiliser l'index comme ID unique
-              url: imgUrl, // L'URL de l'image
+            // Chargement des véritables objets Upload (galerie)
+            const galleryUrls = data.gallery.map((url: string, index: number) => ({
+              id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '', // ID réel de l'objet Upload
+              url, // URL complète de l'image
             })) || [];
 
-            // Log des URLs d'images de galerie avec ID
-            console.log("Gallery with IDs:", galleryUrls);
+            // Log des URLs d'images de galerie avec les vrais IDs
+            console.log("Gallery with real Upload IDs:", galleryUrls);
 
             setVisibleGallery(galleryUrls);
 
@@ -89,6 +90,7 @@ const UpdateUnit = () => {
     }
   }, [numericId, form, addNotification, backendUrl]);
 
+  // Gestion de la soumission du formulaire
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
@@ -128,6 +130,7 @@ const UpdateUnit = () => {
         });
       }
 
+      // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
@@ -158,6 +161,7 @@ const UpdateUnit = () => {
     }
   };
 
+  // Norme pour le fichier uploadé
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
@@ -165,6 +169,7 @@ const UpdateUnit = () => {
     return e?.fileList;
   };
 
+  // Gestion de la suppression d'une image de galerie
   const handleDeleteImage = (imageId: string) => {
     setGalleryImagesToDelete((prev) => [...prev, imageId]); // Ajoute l'ID de l'objet upload
     setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));

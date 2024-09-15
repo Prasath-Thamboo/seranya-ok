@@ -38,6 +38,7 @@ export interface UnitModel {
   gallery: string[];
   users: { user: User }[];  // Ajout de la propriété users avec le type approprié
   classes: ClassModel[]; 
+  galleryUploadIds?: number[];
 }
 
 // Interface pour le modèle de création d'unité
@@ -71,4 +72,5 @@ export interface UpdateUnitModel {
   gallery?: FileType[];
   galleryImagesToDelete?: string[];
   classIds?: string[];
+
 }
