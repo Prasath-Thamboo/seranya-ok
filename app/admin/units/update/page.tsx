@@ -46,10 +46,10 @@ const UpdateUnit = () => {
           if (data) {
             setUnit(data);
 
-            // Construction correcte des URLs d'images de la galerie
+            // Correction des URLs des images
             const galleryUrls = data.gallery.map((url: string, index: number) => ({
-              id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '',
-              url: `${backendUrl}${url}`, // Assure que l'URL est complète
+              id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '', // ID réel de l'objet Upload
+              url: `${backendUrl}${url}`, // URL complète de l'image
             })) || [];
 
             // Log des URLs d'images de galerie avec les vrais IDs
