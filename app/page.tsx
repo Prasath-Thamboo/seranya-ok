@@ -211,7 +211,7 @@ const Home = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Grande carte à gauche */}
       {units[0] && (
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 border rounded border-gray-900 shadow-lg">
           <Link href={`/univers/units/${units[0].id}`}>
             {new Date(units[0].createdAt) > new Date(new Date().setDate(new Date().getDate() - 7)) && (
               <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
@@ -224,17 +224,17 @@ const Home = () => {
                   />
                   <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
                   <div className="flex justify-center">
-  <div className="relative">
-    <Image
-      src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
-      alt="Profile Image"
-      width={100}
-      height={100}
-      className="rounded-full border border-gray-600 object-cover shadow-lg"
-      onLoad={handleImageLoad}
-    />
-  </div>
-</div>
+                    <div className="relative">
+                      <Image
+                        src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
+                        alt="Profile Image"
+                        width={100}
+                        height={100}
+                        className="rounded-full border border-gray-600 object-cover shadow-lg"
+                        onLoad={handleImageLoad}
+                      />
+                    </div>
+                  </div>
 
                     <div className="flex flex-col justify-center items-center text-center mt-4">
                       <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
@@ -256,9 +256,9 @@ const Home = () => {
       <div className="lg:col-span-1 grid grid-rows-2 gap-4">
       {units.slice(1, 3).map((unit, index) => (
   unit && unit.headerImage && ( // Ensure there's data
-    <Link href={`/univers/units/${unit.id}`} key={unit.id}>
+    <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg">
       <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
-        <div className="relative group overflow-hidden rounded-lg shadow-lg">
+        <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
           <div
             className="relative w-full h-64 bg-cover bg-[center_top] transition-transform duration-500 group-hover:scale-110"
             style={{

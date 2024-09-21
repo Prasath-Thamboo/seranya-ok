@@ -90,7 +90,7 @@ const UnitViewPage = () => {
               <DividersWithHeading 
                 text={unit.title} 
                 badge={unit.type} 
-                customStyle="text-4xl text-black font-bold font-oxanium uppercase text-center" 
+                customStyle="text-4xl text-black font-bold font-oxanium uppercase text-center text-black" 
               />
               {unit.subtitle && (
                 <p className="text-lg italic text-center text-gray-600 mb-4">{unit.subtitle}</p>

@@ -296,5 +296,29 @@ button.ant-btn-primary:hover {
   color: black;
 }
 
+.card-container {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.card-container:hover {
+  grid-column: span 2 !important; /* Prend deux colonnes */
+  grid-row: span 2 !important;    /* Prend deux lignes */
+  position: relative;
+  z-index: 10; /* Au-dessus des autres éléments */
+  transform: scale(1.05); /* Augmente légèrement la taille */
+}
+
+.card-content {
+  padding: 16px; /* Ajout de padding pour le texte */
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.card-content:hover {
+  max-height: none; /* Pour montrer plus de contenu */
+}
+
 
 
