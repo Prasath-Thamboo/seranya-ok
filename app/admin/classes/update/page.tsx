@@ -25,6 +25,9 @@ const UpdateClass = () => {
   const [selectedUnitIds, setSelectedUnitIds] = useState<string[]>([]);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
   const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string }[]>([]);
+  const [profileImageFileList, setProfileImageFileList] = useState<UploadFile[]>([]);
+  const [headerImageFileList, setHeaderImageFileList] = useState<UploadFile[]>([]);
+  const [footerImageFileList, setFooterImageFileList] = useState<UploadFile[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams?.get("id");
@@ -44,6 +47,38 @@ const UpdateClass = () => {
 
           if (data) {
             setClassData(data);
+
+            // Initialiser les fileList
+            if (data.profileImage) {
+              setProfileImageFileList([
+                {
+                  uid: '-1',
+                  name: 'Profil actuel',
+                  status: 'done',
+                  url: data.profileImage,
+                },
+              ]);
+            }
+            if (data.headerImage) {
+              setHeaderImageFileList([
+                {
+                  uid: '-1',
+                  name: 'Header actuel',
+                  status: 'done',
+                  url: data.headerImage,
+                },
+              ]);
+            }
+            if (data.footerImage) {
+              setFooterImageFileList([
+                {
+                  uid: '-1',
+                  name: 'Footer actuel',
+                  status: 'done',
+                  url: data.footerImage,
+                },
+              ]);
+            }
 
             // Chargement des images de la galerie avec les vrais IDs
             const galleryUrls = data.gallery?.map((url: string, index: number) => ({
@@ -106,15 +141,28 @@ const UpdateClass = () => {
         });
       }
 
-      if (values.profileImage && values.profileImage[0]?.originFileObj) {
-        formData.append('profileImage', values.profileImage[0].originFileObj as Blob);
+      // Gestion de profileImage
+      if (profileImageFileList.length > 0 && profileImageFileList[0].originFileObj) {
+        formData.append('profileImage', profileImageFileList[0].originFileObj as Blob);
+      } else if (profileImageFileList.length === 0 && classData?.profileImage) {
+        // L'utilisateur a supprimé l'image
+        formData.append('removeProfileImage', 'true');
       }
-      if (values.headerImage && values.headerImage[0]?.originFileObj) {
-        formData.append('headerImage', values.headerImage[0].originFileObj as Blob);
+
+      // Gestion de headerImage
+      if (headerImageFileList.length > 0 && headerImageFileList[0].originFileObj) {
+        formData.append('headerImage', headerImageFileList[0].originFileObj as Blob);
+      } else if (headerImageFileList.length === 0 && classData?.headerImage) {
+        formData.append('removeHeaderImage', 'true');
       }
-      if (values.footerImage && values.footerImage[0]?.originFileObj) {
-        formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
+
+      // Gestion de footerImage
+      if (footerImageFileList.length > 0 && footerImageFileList[0].originFileObj) {
+        formData.append('footerImage', footerImageFileList[0].originFileObj as Blob);
+      } else if (footerImageFileList.length === 0 && classData?.footerImage) {
+        formData.append('removeFooterImage', 'true');
       }
+
       if (values.gallery && values.gallery.length > 0) {
         values.gallery.forEach((file: UploadFile) => {
           if (file.originFileObj) {
@@ -179,158 +227,73 @@ const UpdateClass = () => {
           layout="vertical"
           className="text-black font-kanit"
         >
-          <Form.Item
-            name="title"
-            label={<span className="text-black font-kanit">Titre</span>}
-            rules={[{ required: true, message: "Veuillez entrer le titre de la classe!" }]}
-          >
-            <Input placeholder="Titre de la classe" className="bg-white text-black font-kanit" />
-          </Form.Item>
+          {/* ... autres champs du formulaire ... */}
 
-          <Form.Item
-            name="intro"
-            label={<span className="text-black">Introduction</span>}
-            rules={[{ required: true, message: "Veuillez entrer l'introduction de la classe!" }]}
-            className="font-kanit"
-          >
-            <Input.TextArea placeholder="Introduction" className="bg-white text-black font-kanit" />
-          </Form.Item>
-
-          <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
-            <Input placeholder="Sous-titre de la classe" className="bg-white text-black font-kanit" />
-          </Form.Item>
-
-          <Form.Item label="Histoire" className="font-kanit">
-            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
-          </Form.Item>
-
-          <Form.Item label="Biographie" className="font-kanit">
-            <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
-          </Form.Item>
-
-          <Form.Item label="Unités associées">
-            <Select
-              mode="multiple"
-              placeholder="Sélectionnez une ou plusieurs unités"
-              value={selectedUnitIds}
-              onChange={setSelectedUnitIds}
+          {/* Gestion des images de profil, header, footer */}
+          <Form.Item label="Image de profil">
+            <Upload
+              name="profileImage"
+              listType="picture-card"
+              fileList={profileImageFileList}
+              onChange={({ fileList }) => setProfileImageFileList(fileList)}
+              beforeUpload={() => false}
+              onRemove={() => {
+                setProfileImageFileList([]);
+                return true;
+              }}
             >
-              {units.map((unit) => (
-                <Select.Option key={unit.id} value={unit.id}>
-                  {unit.title}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          {/* Gestion des images de profil, header, footer et galerie */}
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="profileImage"
-                label="Image de profil"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="profileImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Télécharger</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              {classData?.profileImage && (
-                <Image src={classData.profileImage} alt="Profil actuel" />
-              )}
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="headerImage"
-                label="Image Header"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="headerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Télécharger</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              {classData?.headerImage && (
-                <Image src={classData.headerImage} alt="Header actuel" />
-              )}
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="footerImage"
-                label="Image de pied de page"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="footerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Télécharger</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              {classData?.footerImage && (
-                <Image src={classData.footerImage} alt="Pied de page actuel" />
-              )}
-            </Col>
-          </Row>
-
-          {/* Galerie */}
-          <div className="bg-gray-200 p-4 rounded-lg mb-4">
-            <h2 className="font-kanit text-black">Galerie</h2>
-            {visibleGallery.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {visibleGallery.map((image, index) => (
-                  <Card key={index} hoverable>
-                    <div className="relative">
-                      <Image src={image.url} alt={`Galerie Image ${index + 1}`} />
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
-                        <DeleteOutlined
-                          onClick={() => handleDeleteImage(image.id)}
-                          style={{ color: "white", fontSize: "24px" }}
-                        />
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-            <Form.Item
-              name="gallery"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-            >
-              <Upload name="gallery" listType="picture-card" multiple beforeUpload={() => false}>
+              {profileImageFileList.length >= 1 ? null : (
                 <div>
                   <PlusOutlined />
                   <div style={{ marginTop: 8 }}>Télécharger</div>
                 </div>
-              </Upload>
-            </Form.Item>
-          </div>
-
-          {/* Bouton de soumission */}
-          <Form.Item className="flex justify-center font-kanit">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="bg-white text-black font-kanit font-lg uppercase p-3"
-              icon={loading ? <LoadingOutlined /> : <PlusOutlined />}
-              loading={loading}
-              disabled={loading}
-            >
-              {loading ? "Mise à jour en cours" : "Mettre à jour"}
-            </Button>
+              )}
+            </Upload>
           </Form.Item>
+
+          <Form.Item label="Image Header">
+            <Upload
+              name="headerImage"
+              listType="picture-card"
+              fileList={headerImageFileList}
+              onChange={({ fileList }) => setHeaderImageFileList(fileList)}
+              beforeUpload={() => false}
+              onRemove={() => {
+                setHeaderImageFileList([]);
+                return true;
+              }}
+            >
+              {headerImageFileList.length >= 1 ? null : (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Télécharger</div>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+
+          <Form.Item label="Image de pied de page">
+            <Upload
+              name="footerImage"
+              listType="picture-card"
+              fileList={footerImageFileList}
+              onChange={({ fileList }) => setFooterImageFileList(fileList)}
+              beforeUpload={() => false}
+              onRemove={() => {
+                setFooterImageFileList([]);
+                return true;
+              }}
+            >
+              {footerImageFileList.length >= 1 ? null : (
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Télécharger</div>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+
+          {/* ... le reste de votre code ... */}
         </Form>
       </div>
     </div>
