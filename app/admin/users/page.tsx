@@ -5,28 +5,54 @@ import Table from '@/components/Table';
 import { fetchUsers } from '@/lib/queries/UserQueries';
 import { RegisterUserModel } from '@/lib/models/AuthModels';
 import { Image } from 'antd';
-import { getAccessToken } from '@/lib/queries/AuthQueries'; // Assurez-vous d'importer cette fonction pour obtenir le token
+import { getAccessToken } from '@/lib/queries/AuthQueries';
+import { useNotification } from '@/components/notifications/NotificationProvider';
 
 const UsersPage = () => {
   const [users, setUsers] = useState<RegisterUserModel[]>([]);
+  const { addNotification } = useNotification();
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = getAccessToken(); // Obtenir le token d'accès
+      const token = getAccessToken();
+      if (token) {
+        try {
+          const fetchedUsers = await fetchUsers(token);
+          const usersWithImages = fetchedUsers.map(user => ({
+            ...user,
+            profileImage: typeof user.profileImage === 'string' ? user.profileImage : '/images/backgrounds/placeholder.jpg',
+          }));
+          setUsers(usersWithImages as RegisterUserModel[]);
+        } catch (error) {
+          console.error("Erreur lors de la récupération des utilisateurs:", error);
+          addNotification("critical", "Erreur lors de la récupération des utilisateurs.");
+        }
+      } else {
+        addNotification("critical", "Token d'accès non trouvé.");
+      }
+    };
+    fetchData();
+  }, [addNotification]);
+
+  const handleDelete = async (deletedUser: RegisterUserModel) => {
+    try {
+      // Re-fetch data from the server after a delete
+      const token = getAccessToken();
       if (token) {
         const fetchedUsers = await fetchUsers(token);
         const usersWithImages = fetchedUsers.map(user => ({
           ...user,
           profileImage: typeof user.profileImage === 'string' ? user.profileImage : '/images/backgrounds/placeholder.jpg',
         }));
-        setUsers(usersWithImages as RegisterUserModel[]); // Assurez-vous que le type correspond
+        setUsers(usersWithImages as RegisterUserModel[]);
+        addNotification("success", "Utilisateur supprimé avec succès.");
+      } else {
+        addNotification("critical", "Token d'accès non trouvé.");
       }
-    };
-    fetchData();
-  }, []);
-
-  const handleDelete = (deletedUser: RegisterUserModel) => {
-    setUsers(users.filter(user => user.email !== deletedUser.email));
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des utilisateurs après suppression :", error);
+      addNotification("critical", "Erreur lors de la mise à jour des utilisateurs après suppression.");
+    }
   };
 
   const columns = useMemo(
@@ -84,7 +110,9 @@ const UsersPage = () => {
         columns={columns} 
         createButtonText="Ajouter un utilisateur" 
         createUrl="/admin/users/create"
-        baseRoute="/admin/users" // Ajoute ici la baseRoute
+        baseRoute="admin/users"
+        apiRoute="users"
+        itemType="utilisateur"
         onDelete={handleDelete}
       />
     </div>
