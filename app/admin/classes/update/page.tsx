@@ -61,7 +61,7 @@ const UpdateClass = () => {
               title: data.title || '',
               intro: data.intro || '',
               subtitle: data.subtitle || '',
-              color: data.color || '#FFFFFF',
+              color: data.color || '#FFFFFF', // Utiliser 'color' ici
             });
           }
         } catch (error) {
@@ -205,13 +205,18 @@ const UpdateClass = () => {
 
         {/* Champ Couleur */}
         <Form.Item
-            name="color"
-            label={<span className="font-kanit text-black">Couleur</span>}
-            valuePropName="value"
-            trigger="onChange"
-          >
-            <ColorPicker format="hex" />
-          </Form.Item>
+        name="color"
+        label={<span className="font-kanit text-black">Couleur</span>}
+      >
+        <ColorPicker
+          format="hex"
+          value={form.getFieldValue('color')}
+          onChange={(color, hexString) => {
+            form.setFieldsValue({ color: hexString });
+          }}
+        />
+      </Form.Item>
+
 
           <Form.Item label="Histoire" className="font-kanit">
             <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
