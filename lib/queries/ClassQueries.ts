@@ -1,4 +1,4 @@
-// classQueries.ts
+// ClassQueries.ts
 
 import axios from 'axios';
 import { ClassModel } from '@/lib/models/ClassModels';
@@ -44,8 +44,8 @@ export const createClass = async (classData: FormData): Promise<ClassModel> => {
     });
 
     return response.data;
-  } catch (error) {
-    console.error('Error creating class:', error);
+  } catch (error: any) {
+    console.error('Error creating class:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -64,8 +64,8 @@ export const updateClass = async (id: string, classData: FormData): Promise<Clas
     });
 
     return response.data;
-  } catch (error) {
-    console.error('Error updating class:', error);
+  } catch (error: any) {
+    console.error('Error updating class:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -81,8 +81,8 @@ export const deleteClass = async (id: string): Promise<void> => {
         Authorization: `Bearer ${token}`,
       },
     });
-  } catch (error) {
-    console.error('Error deleting class:', error);
+  } catch (error: any) {
+    console.error('Error deleting class:', error.response?.data || error.message);
     throw error;
   }
 };

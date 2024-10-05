@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { UserRole } from "@/lib/models/UserModels";
+import React from "react";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

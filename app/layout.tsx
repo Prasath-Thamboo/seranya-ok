@@ -10,6 +10,8 @@ import CookieConsent from "@/components/CookieConsent";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import { metadata } from "@/app/metadata"; // Import des métadonnées
+import React from "react";
+import { LoadingProvider } from "@/components/LoadingContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -110,12 +112,14 @@ export default function RootLayout({
           )}
 
 
+<LoadingProvider>
             <NotificationProvider>
               <ClientLayout>
-                <CookieConsent /> {/* Ajout de la bannière de consentement */}
+                <CookieConsent />
                 {children}
               </ClientLayout>
             </NotificationProvider>
+          </LoadingProvider>
 
         </body>
       </ConfigProvider>

@@ -12,15 +12,15 @@ import { FaEdit } from 'react-icons/fa';
 
 const { TabPane } = Tabs;
 
-// Définir l'URL de base en fonction de l'environnement
-const backendUrl = process.env.NODE_ENV === 'production'
-  ? process.env.NEXT_PUBLIC_API_URL_PROD
-  : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+// Plus besoin de définir 'backendUrl' car les URLs sont complètes
+// const backendUrl =
+//   process.env.NODE_ENV === 'production'
+//     ? process.env.NEXT_PUBLIC_API_URL_PROD
+//     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 const ClassViewPage = () => {
   const params = useParams();
-  const paramId = params?.id as string | undefined; // Assurez-vous que l'id est une chaîne de caractères
-  const id = paramId || null;
+  const id = params?.id as string | undefined;
   const [cls, setCls] = useState<ClassModel | null>(null);
   const router = useRouter();
 
@@ -31,21 +31,37 @@ const ClassViewPage = () => {
           const fetchedClass = await fetchClassById(id);
 
           if (fetchedClass) {
-            // Extraire les images depuis le tableau 'uploads' en utilisant les types définis
-            const profileImage = fetchedClass.uploads.find(upload => upload.type === UploadType.PROFILEIMAGE)?.path;
-            const headerImage = fetchedClass.uploads.find(upload => upload.type === UploadType.HEADERIMAGE)?.path;
-            const footerImage = fetchedClass.uploads.find(upload => upload.type === UploadType.FOOTERIMAGE)?.path;
-            const gallery = fetchedClass.uploads
-              .filter(upload => upload.type === UploadType.GALERY)
-              .map(upload => upload.path);
+            // Extraire les images sans préfixer avec 'backendUrl'
+            const profileImageUpload = fetchedClass.uploads.find(
+              (upload) => upload.type === UploadType.PROFILEIMAGE
+            );
+            const profileImage = profileImageUpload ? profileImageUpload.path : null;
 
-            // Ajouter l'URL complète pour les images
+            const headerImageUpload = fetchedClass.uploads.find(
+              (upload) => upload.type === UploadType.HEADERIMAGE
+            );
+            const headerImage = headerImageUpload ? headerImageUpload.path : null;
+
+            const footerImageUpload = fetchedClass.uploads.find(
+              (upload) => upload.type === UploadType.FOOTERIMAGE
+            );
+            const footerImage = footerImageUpload ? footerImageUpload.path : null;
+
+            const galleryUploads = fetchedClass.uploads.filter(
+              (upload) => upload.type === UploadType.GALERY
+            );
+            const gallery =
+              galleryUploads.length > 0
+                ? galleryUploads.map((upload) => upload.path)
+                : null;
+
+            // Créer un objet de classe avec les images
             const classWithImages = {
               ...fetchedClass,
-              profileImage: profileImage ? `${backendUrl}${profileImage}` : null,
-              headerImage: headerImage ? `${backendUrl}${headerImage}` : null,
-              footerImage: footerImage ? `${backendUrl}${footerImage}` : null,
-              gallery: gallery.length > 0 ? gallery.map(imgUrl => `${backendUrl}${imgUrl}`) : null,
+              profileImage,
+              headerImage,
+              footerImage,
+              gallery,
             };
 
             setCls(classWithImages);
@@ -81,20 +97,29 @@ const ClassViewPage = () => {
                 src={cls.profileImage || '/images/backgrounds/placeholder.jpg'}
                 alt={`${cls.title} Profile`}
                 className="rounded-lg mb-4"
-                style={{ width: '100%', height: 'auto', maxHeight: '240px', objectFit: 'cover' }}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '240px',
+                  objectFit: 'cover',
+                }}
                 preview={true}
               />
-              <DividersWithHeading 
-                text={cls.title} 
-                customStyle="text-4xl text-black font-bold font-oxanium uppercase text-center" 
+              <DividersWithHeading
+                text={cls.title}
+                customStyle="text-4xl text-black font-bold font-oxanium uppercase text-center"
               />
               {cls.subtitle && (
-                <p className="text-lg italic text-center text-gray-600 mb-4">{cls.subtitle}</p>
+                <p className="text-lg italic text-center text-gray-600 mb-4">
+                  {cls.subtitle}
+                </p>
               )}
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-black font-oxanium mb-4">Introduction</h2>
+              <h2 className="text-2xl font-bold text-black font-oxanium mb-4">
+                Introduction
+              </h2>
               <p className="text-lg mb-4">{cls.intro}</p>
             </div>
 
@@ -104,11 +129,18 @@ const ClassViewPage = () => {
                   src={cls.headerImage}
                   alt={`${cls.title} Header`}
                   className="rounded-lg"
-                  style={{ width: '100%', height: 'auto', maxHeight: '300px', objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '300px',
+                    objectFit: 'cover',
+                  }}
                   preview={true}
                 />
               ) : (
-                <p className="text-gray-500 italic">Aucune image d&apos;en-tête disponible.</p>
+<p className="text-gray-500 italic">
+  Aucune image d&apos;en-tête disponible.
+</p>
               )}
             </div>
 
@@ -118,17 +150,28 @@ const ClassViewPage = () => {
                   src={cls.footerImage}
                   alt={`${cls.title} Footer`}
                   className="rounded-lg"
-                  style={{ width: '100%', height: 'auto', maxHeight: '240px', objectFit: 'cover' }}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '240px',
+                    objectFit: 'cover',
+                  }}
                   preview={true}
                 />
               ) : (
-                <p className="text-gray-500 italic">Aucune image de pied de page disponible.</p>
+                <p className="text-gray-500 italic">
+                  Aucune image de pied de page disponible.
+                </p>
               )}
             </div>
 
             <div className="text-sm text-gray-500 italic mt-8">
-              <p className="mb-2">Créé le: {new Date(cls.createdAt).toLocaleDateString()}</p>
-              <p className="mb-2">Mis à jour le: {new Date(cls.updatedAt).toLocaleDateString()}</p>
+              <p className="mb-2">
+                Créé le: {new Date(cls.createdAt).toLocaleDateString()}
+              </p>
+              <p className="mb-2">
+                Mis à jour le: {new Date(cls.updatedAt).toLocaleDateString()}
+              </p>
             </div>
 
             <div className="text-right mt-4">
@@ -157,12 +200,18 @@ const ClassViewPage = () => {
                       src={imgUrl}
                       alt={`${cls.title} Gallery Image ${index + 1}`}
                       className="rounded-lg"
-                      style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        objectFit: 'cover',
+                      }}
                       preview={true}
                     />
                   ))
                 ) : (
-                  <p className="text-gray-500 col-span-full text-center italic">Aucune image disponible dans la galerie.</p>
+                  <p className="text-gray-500 col-span-full text-center italic">
+                    Aucune image disponible dans la galerie.
+                  </p>
                 )}
               </div>
             </div>

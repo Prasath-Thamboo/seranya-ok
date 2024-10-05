@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
+import React from "react";
+import { useLoading } from "@/components/LoadingContext"; 
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();

@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Input, Button, Upload } from "antd";
-import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
+import { UploadOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -40,13 +40,24 @@ const CreateClass = () => {
       formData.append('story', storyValue || '');
       formData.append('bio', bioValue || '');
 
-      // Ajout de l'image de profil si disponible
+      // Ajout des images si disponibles
       if (values.profileImage && values.profileImage[0]?.originFileObj) {
         formData.append('profileImage', values.profileImage[0].originFileObj as Blob);
       }
+      if (values.headerImage && values.headerImage[0]?.originFileObj) {
+        formData.append('headerImage', values.headerImage[0].originFileObj as Blob);
+      }
+      if (values.footerImage && values.footerImage[0]?.originFileObj) {
+        formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
+      }
+      if (values.gallery && values.gallery.length > 0) {
+        values.gallery.forEach((file: any) => {
+          formData.append('gallery', file.originFileObj as Blob);
+        });
+      }
 
       // Envoi du formulaire au backend avec Axios
-      const response = await axios.post(`${backendUrl}/classes`, formData, {
+      await axios.post(`${backendUrl}/classes`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -88,7 +99,11 @@ const CreateClass = () => {
           {/* Champ Titre */}
           <Form.Item
             name="title"
-            label={<span className="font-kanit text-black">Titre</span>}
+            label={
+              <span className="font-kanit text-black">
+                Titre<span className="text-red-500 ml-1">*</span>
+              </span>
+            }
             rules={[{ required: true, message: "Veuillez entrer le titre de la classe!" }]}
           >
             <Input
@@ -101,8 +116,12 @@ const CreateClass = () => {
           {/* Champ Intro */}
           <Form.Item
             name="intro"
-            label={<span className="font-kanit text-black">Introduction</span>}
-            rules={[{ required: true, message: "Veuillez entrer l'intro de la classe!" }]}
+            label={
+              <span className="font-kanit text-black">
+                Introduction<span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            rules={[{ required: true, message: "Veuillez entrer l&#39;intro de la classe!" }]}
           >
             <Input.TextArea placeholder="Introduction de la classe" />
           </Form.Item>
@@ -148,15 +167,72 @@ const CreateClass = () => {
             </Upload>
           </Form.Item>
 
+          {/* Upload Image Header */}
+          <Form.Item
+            name="headerImage"
+            label={<span className="font-kanit text-black">Image d&#39;en-tête</span>}
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload
+              name="headerImage"
+              listType="picture"
+              maxCount={1}
+              beforeUpload={() => false}
+            >
+              <Button icon={<UploadOutlined />}>Télécharger</Button>
+            </Upload>
+          </Form.Item>
+
+          {/* Upload Image de pied de page */}
+          <Form.Item
+            name="footerImage"
+            label={<span className="font-kanit text-black">Image de pied de page</span>}
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload
+              name="footerImage"
+              listType="picture"
+              maxCount={1}
+              beforeUpload={() => false}
+            >
+              <Button icon={<UploadOutlined />}>Télécharger</Button>
+            </Upload>
+          </Form.Item>
+
+          {/* Upload Galerie */}
+          <Form.Item
+            name="gallery"
+            label={<span className="font-kanit text-black">Galerie</span>}
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload
+              name="gallery"
+              listType="picture-card"
+              multiple
+              beforeUpload={() => false}
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Télécharger</div>
+              </div>
+            </Upload>
+          </Form.Item>
+
           <Form.Item className="flex justify-center mt-6">
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold"
-              icon={<PlusOutlined className="mr-2" />}
+              className={`${
+                loading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white text-black"
+              } font-kanit text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold`}
               loading={loading}
+              disabled={loading}
+              icon={!loading && <PlusOutlined className="mr-2" />}
             >
-              Créer
+              {loading ? "Création en cours" : "Créer"}
             </Button>
           </Form.Item>
         </Form>

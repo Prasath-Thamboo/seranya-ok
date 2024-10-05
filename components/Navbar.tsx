@@ -8,15 +8,25 @@ import Badge from "@/components/Badge";
 import { Dropdown, Menu } from "antd";
 import { FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import { useNotification } from "@/components/notifications/NotificationProvider";
+import React from "react";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<RegisterUserModel | null>(null);
   const [navbarBackground, setNavbarBackground] = useState("bg-transparent");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0); // État pour la progression du scroll
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { addNotification } = useNotification();
+
+  // Mettre à jour la progression de la barre de scroll
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY;
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollPosition / totalHeight) * 100;
+    setScrollProgress(scrollPercent);
+  };
 
   useEffect(() => {
     const token = getAccessToken();
@@ -38,7 +48,8 @@ export default function Navbar() {
       setIsLoggedIn(false);
     }
 
-    const handleScroll = () => {
+    // Gestion du scroll pour l'arrière-plan de la navbar
+    const handleNavbarScroll = () => {
       if (window.scrollY > 0) {
         setNavbarBackground("bg-black bg-opacity-75 backdrop-blur-md");
       } else {
@@ -46,11 +57,12 @@ export default function Navbar() {
       }
     };
 
-    handleScroll();
+    window.addEventListener("scroll", handleNavbarScroll);
+    window.addEventListener("scroll", handleScroll); // Listener pour mettre à jour la barre de progression
 
-    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleNavbarScroll);
+      window.removeEventListener("scroll", handleScroll); // Nettoyage des listeners
     };
   }, []);
 
@@ -185,6 +197,14 @@ export default function Navbar() {
             {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
           </button>
         </div>
+      </div>
+
+      {/* Progress bar fixed at the bottom */}
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-200 z-50">
+        <div
+          className="h-full bg-indigo-600 transition-all"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
       </div>
 
       {/* Overlay and Menu mobile */}

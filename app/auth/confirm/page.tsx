@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { Suspense } from 'react';
+import React from 'react';
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");

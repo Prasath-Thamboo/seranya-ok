@@ -11,6 +11,7 @@ import Accordion from "@/components/Accordion";
 import Carousel from "@/components/Carousel";
 import { FaCheck } from "react-icons/fa";
 import Loader from "@/components/Loader";
+import { motion } from "framer-motion";
 
 const includedFeatures = [
   "Accès aux nouvelles de chaque personnage",
@@ -30,6 +31,12 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);  
   const [loadedImagesCount, setLoadedImagesCount] = useState(0); 
   const totalImagesCount = 15;  // Nombre exact d'images à charger
+
+  // Animation settings
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
 
   // Masquer le loader après 2 secondes, même si les images ne sont pas encore prêtes
   useEffect(() => {
@@ -141,7 +148,12 @@ const Home = () => {
   }
   
   return (
-    <main className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white">
+    <main
+      className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white relative"
+    >
+
+      
+
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
@@ -157,13 +169,19 @@ const Home = () => {
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
       </div>
 
+
+
       {/* Carousel */}
       <Carousel items={carouselItems} height="100vh" width="100vw" />
 
       {/* Hero Section */}
-      <section
+      <motion.section
         className="relative pt-16 pb-32 flex content-center items-center justify-center w-full bg-transparent z-10"
         style={{ minHeight: "75vh" }}
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        viewport={{ once: true }}
       >
         <div className="container relative mx-auto z-10">
           <div className="items-center flex flex-wrap">
@@ -180,10 +198,16 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+        </motion.section>
 
 {/* Section des Unités récentes */}
-<section className="relative py-16 px-8 w-full z-20">
+<motion.section
+        className="relative py-16 px-8 w-full z-20"
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        viewport={{ once: true }}
+      >
   {/* Image de fond de la section */}
   {sectionImages[1] && (
     <div
@@ -282,7 +306,7 @@ const Home = () => {
       </div>
     </div>
   </div>
-</section>
+</motion.section>
 
 
 
@@ -352,8 +376,17 @@ const Home = () => {
 
         </div>
       </section>
+
+
+
        {/* Pricing Section */}
-       <section className="relative z-20 bg-transparent py-24 sm:py-32 w-full">
+ <motion.section
+        className="relative z-20 bg-transparent py-24 sm:py-32 w-full"
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        viewport={{ once: true }}
+      >
   {/* Image de fond de la section */}
   {sectionImages[4] && (
     <div
@@ -415,11 +448,17 @@ const Home = () => {
       </div>
     </div>
   </div>
-</section>
+</motion.section>
 
 
       {/* Contact Section */}
-      <section className="relative block py-24 lg:pt-0 w-full bg-transparent">
+      <motion.section
+        className="relative block py-24 lg:pt-0 w-full bg-transparent-mt-32 z-20"
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        viewport={{ once: true }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center lg:-mt-64 -mt-48">
             <div className="w-full lg:w-6/12 px-4">
@@ -488,7 +527,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Section FAQ */}
       <Accordion backgroundColor="bg-transparent" textColor="text-white" />
