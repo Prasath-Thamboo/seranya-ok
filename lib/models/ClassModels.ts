@@ -17,6 +17,7 @@ export interface ClassModel {
   footerImage?: string | null;
   gallery?: string[] | null;
   galleryUploadIds?: number[] | null; // Ajout de cette ligne
+  color?: string | null;
 }
 
 export interface UnitModel {

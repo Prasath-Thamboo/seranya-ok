@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button, Upload } from "antd";
+import { Form, Input, Button, Upload, ColorPicker } from "antd";
 import { UploadOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,7 @@ const CreateClass = () => {
       formData.append('subtitle', values.subtitle || '');
       formData.append('story', storyValue || '');
       formData.append('bio', bioValue || '');
+      formData.append('color', values.color || '');
 
       // Ajout des images si disponibles
       if (values.profileImage && values.profileImage[0]?.originFileObj) {
@@ -112,6 +113,16 @@ const CreateClass = () => {
               style={{ height: "3rem" }}
             />
           </Form.Item>
+
+          <Form.Item
+  name="color"
+  label={<span className="font-kanit text-black">Couleur</span>}
+  valuePropName="value"
+  trigger="onChange"
+>
+  <ColorPicker format="hex" />
+</Form.Item>
+
 
           {/* Champ Intro */}
           <Form.Item

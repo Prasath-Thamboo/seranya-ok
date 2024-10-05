@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button, Upload, Select, Image, Row, Col, Card } from "antd";
+import { Form, Input, Button, Upload, Select, Image, Row, Col, Card, ColorPicker } from "antd";
 import { UploadOutlined, PlusOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -61,6 +61,7 @@ const UpdateClass = () => {
               title: data.title || '',
               intro: data.intro || '',
               subtitle: data.subtitle || '',
+              color: data.color || '#FFFFFF',
             });
           }
         } catch (error) {
@@ -99,6 +100,8 @@ const UpdateClass = () => {
       formData.append('subtitle', values.subtitle);
       formData.append('story', storyValue);
       formData.append('bio', bioValue);
+      formData.append('color', values.color || '');
+      
 
       if (selectedUnitIds.length > 0) {
         selectedUnitIds.forEach((unitId) => {
@@ -198,6 +201,16 @@ const UpdateClass = () => {
 
           <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
             <Input placeholder="Sous-titre de la classe" className="bg-white text-black font-kanit" />
+          </Form.Item>
+
+        {/* Champ Couleur */}
+        <Form.Item
+            name="color"
+            label={<span className="font-kanit text-black">Couleur</span>}
+            valuePropName="value"
+            trigger="onChange"
+          >
+            <ColorPicker format="hex" />
           </Form.Item>
 
           <Form.Item label="Histoire" className="font-kanit">
