@@ -2,17 +2,10 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import Table from '@/components/Table';
-import CardList from '@/components/CardList';
-import { SidebarContent } from '@/components/dashboard/SidebarContent';
 import { fetchClasses } from '@/lib/queries/ClassQueries';
 import { ClassModel } from '@/lib/models/ClassModels';
 import { Image } from 'antd';
 import Badge from '@/components/Badge';
-
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_API_URL_PROD
-    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 const ClassesPage = () => {
   const [classes, setClasses] = useState<ClassModel[]>([]);
@@ -49,7 +42,6 @@ const ClassesPage = () => {
     };
     fetchData();
   }, []);
-
 
   const handleDelete = async (deletedClass: ClassModel) => {
     try {
@@ -131,17 +123,17 @@ const ClassesPage = () => {
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">
         Classes
       </h1>
-    
 
-        <Table
-          data={classes}
-          columns={columns}
-          createButtonText="Créer une classe"
-          createUrl="/admin/classes/create"
-          onDelete={handleDelete}
-          baseRoute="admin/classes"
-        />
-
+      <Table
+        data={classes}
+        columns={columns}
+        createButtonText="Créer une classe"
+        createUrl="/admin/classes/create"
+        onDelete={handleDelete}
+        baseRoute="admin/classes" // Pour les routes côté client
+        apiRoute="classes"        // Pour les appels à l'API
+        itemType="classe"         // Pour personnaliser les textes
+      />
     </div>
   );
 };

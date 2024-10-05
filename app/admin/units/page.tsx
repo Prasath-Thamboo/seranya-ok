@@ -3,20 +3,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Table from '@/components/Table';
 import CardList from '@/components/CardList';
-import { SidebarContent } from '@/components/dashboard/SidebarContent'; // Importation du SidebarContent
+import { SidebarContent } from '@/components/dashboard/SidebarContent';
 import { fetchUnits } from '@/lib/queries/UnitQueries';
 import { UnitModel } from '@/lib/models/UnitModels';
 import { Image } from 'antd';
 import Badge from '@/components/Badge';
-
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_API_URL_PROD
-    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+import { useNotification } from '@/components/notifications/NotificationProvider';
 
 const UnitsPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const { addNotification } = useNotification();
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,30 +31,46 @@ const UnitsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedUnits = await fetchUnits();
-      const unitsWithImages = fetchedUnits.map((unit) => ({
-        ...unit,
-        profileImage: `${BASE_URL}/uploads/units/${unit.id}/ProfileImage.png`,
-      }));
-      setUnits(unitsWithImages);
+      try {
+        const fetchedUnits = await fetchUnits();
+
+        const unitsWithImages = fetchedUnits.map((unit: UnitModel) => {
+          const profileImageUpload = unit.uploads?.find(upload => upload.type === 'PROFILEIMAGE');
+          const profileImage = profileImageUpload ? profileImageUpload.path : '/images/backgrounds/placeholder.jpg';
+          return {
+            ...unit,
+            profileImage,
+          };
+        });
+
+        setUnits(unitsWithImages);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des unités:', error);
+        addNotification('critical', 'Erreur lors de la récupération des unités.');
+      }
     };
     fetchData();
-  }, []);
+  }, [addNotification]);
 
   const handleDelete = async (deletedUnit: UnitModel) => {
     try {
       // Re-fetch data from the server after a delete
       const fetchedUnits = await fetchUnits();
-      const unitsWithImages = fetchedUnits.map((unit) => ({
-        ...unit,
-        profileImage: `${BASE_URL}/uploads/units/${unit.id}/ProfileImage.png`,
-      }));
+      const unitsWithImages = fetchedUnits.map((unit: UnitModel) => {
+        const profileImageUpload = unit.uploads?.find(upload => upload.type === 'PROFILEIMAGE');
+        const profileImage = profileImageUpload ? profileImageUpload.path : '/images/backgrounds/placeholder.jpg';
+        return {
+          ...unit,
+          profileImage,
+        };
+      });
       setUnits(unitsWithImages);
+      addNotification('success', 'Unité supprimée avec succès.');
     } catch (error) {
       console.error("Erreur lors de la mise à jour des unités après suppression :", error);
+      addNotification('critical', 'Erreur lors de la mise à jour des unités après suppression.');
     }
   };
-  
 
   const columns = useMemo(
     () => [
@@ -112,8 +125,8 @@ const UnitsPage = () => {
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Units</h1>
       {isMobile ? (
         <>
-          <CardList units={units} itemsPerPage={4} /> 
-          <SidebarContent collapsed={false} toggleSidebar={() => {}} /> {/* Sidebar en bas */}
+          <CardList units={units} itemsPerPage={4} />
+          <SidebarContent collapsed={false} toggleSidebar={() => {}} />
         </>
       ) : (
         <Table
@@ -123,6 +136,8 @@ const UnitsPage = () => {
           createUrl="/admin/units/create"
           onDelete={handleDelete}
           baseRoute="admin/units"
+          apiRoute="units"
+          itemType="unité"
         />
       )}
     </div>

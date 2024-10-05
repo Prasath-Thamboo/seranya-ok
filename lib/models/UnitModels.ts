@@ -17,7 +17,13 @@ export interface User {
 export interface ClassModel {
   id: string;
   title: string;
-  
+}
+
+// Interface pour les uploads associés
+export interface Upload {
+  id: number;
+  path: string;
+  type: string;
 }
 
 // Interface pour le modèle d'unité (données complètes)
@@ -36,9 +42,10 @@ export interface UnitModel {
   headerImage?: string;
   footerImage?: string;
   gallery: string[];
-  users: { user: User }[];  // Ajout de la propriété users avec le type approprié
-  classes: ClassModel[]; 
+  users: { user: User }[];
+  classes: ClassModel[];
   galleryUploadIds?: number[];
+  uploads?: Upload[]; // Ajout de la propriété uploads
 }
 
 // Interface pour le modèle de création d'unité
@@ -72,5 +79,4 @@ export interface UpdateUnitModel {
   gallery?: FileType[];
   galleryImagesToDelete?: string[];
   classIds?: string[];
-
 }

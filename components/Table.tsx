@@ -7,12 +7,10 @@ import Badge from './Badge';
 import CustomModal from './CustomModal';
 import { useNotification } from '@/components/notifications/NotificationProvider';
 
-
 const BASE_URL =
   process.env.NODE_ENV === 'production'
     ? process.env.NEXT_PUBLIC_API_URL_PROD
-    : process.env.NEXT_PUBLIC_API_URL_LOCAL;
-
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 interface AvatarProps {
   src: string;
@@ -22,12 +20,12 @@ interface AvatarProps {
 function Avatar({ src, alt = 'avatar' }: AvatarProps) {
   return (
     <Image
-      width={120}  
-      height={80}  
+      width={120}
+      height={80}
       src={src}
       alt={alt}
-      style={{ borderRadius: '8px', objectFit: 'cover' }} 
-      preview={true}  
+      style={{ borderRadius: '8px', objectFit: 'cover' }}
+      preview={true}
     />
   );
 }
@@ -264,46 +262,40 @@ interface TableComponentProps {
   getTableBodyProps: () => any;
   rows: any[];
   prepareRow: (row: any) => void;
-  onDelete: (unit: any) => void;
+  onDelete: (item: any) => void;
+  baseRoute: string;
+  apiRoute: string;
+  itemType: string;
 }
 
-interface TableComponentProps {
-  getTableProps: () => any;
-  headerGroups: any;
-  getTableBodyProps: () => any;
-  rows: any[];
-  prepareRow: (row: any) => void;
-  onDelete: (unit: any) => void;
-  baseRoute: string; // Ajout de baseRoute pour définir les bonnes routes
-}
-
-function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, prepareRow, onDelete, baseRoute }: TableComponentProps) {
+function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, prepareRow, onDelete, baseRoute, apiRoute, itemType }: TableComponentProps) {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [unitToDelete, setUnitToDelete] = useState<any>(null);
+  const [itemToDelete, setItemToDelete] = useState<any>(null);
   const { addNotification } = useNotification();
 
-
   const handleDelete = (row: any) => {
-    setUnitToDelete(row.original);
+    setItemToDelete(row.original);
     setDeleteModalVisible(true);
   };
 
   const confirmDelete = async () => {
-    if (unitToDelete) {
+    if (itemToDelete) {
       try {
         const token = localStorage.getItem("access_token");
         if (!token) {
-          throw new Error("Token not found");
+          throw new Error("Token non trouvé");
         }
-        await axios.delete(`https://api.spectralunivers.com/units/${unitToDelete.id}`, {
+        await axios.delete(`${BASE_URL}/${apiRoute}/${itemToDelete.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         
-        onDelete(unitToDelete);
+        onDelete(itemToDelete);
+        addNotification("success", `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} supprimée avec succès.`);
       } catch (error) {
-        console.error('Error deleting item:', error);
+        console.error('Erreur lors de la suppression :', error);
+        addNotification("critical", `Erreur lors de la suppression de la ${itemType}.`);
       } finally {
         setDeleteModalVisible(false);
       }
@@ -316,8 +308,8 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
         visible={isDeleteModalVisible}
         onCancel={() => setDeleteModalVisible(false)}
         onConfirm={confirmDelete}
-        title="Supprimer l'unité"
-        subtitle="Êtes-vous sûr de vouloir supprimer cette unité ? Cette action est irréversible."
+        title={`Supprimer ${itemType}`}
+        subtitle={`Êtes-vous sûr de vouloir supprimer cette ${itemType} ? Cette action est irréversible.`}
         confirmText="Confirmer"
         cancelText="Annuler"
         iconType="delete"
@@ -392,17 +384,18 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
   );
 }
 
-
-
 interface TableProps {
   data: any[];
   columns: Column<any>[];
   createButtonText?: string;
   createUrl?: string;
-  onDelete: (unit: any) => void;
+  onDelete: (item: any) => void;
+  baseRoute: string; // Pour les routes côté client
+  apiRoute: string;  // Pour les appels à l'API
+  itemType: string;  // Pour personnaliser les textes (e.g., 'classe')
 }
 
-function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute }: TableProps & { baseRoute: string }) {
+function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute, apiRoute, itemType }: TableProps) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -456,7 +449,9 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
         rows={rows}
         prepareRow={prepareRow}
         onDelete={onDelete}
-        baseRoute={baseRoute} // Passer baseRoute ici
+        baseRoute={baseRoute}
+        apiRoute={apiRoute}
+        itemType={itemType}
       />
       <div className="flex justify-center">
         <PaginationNav1 gotoPage={gotoPage} canPreviousPage={canPreviousPage} canNextPage={canNextPage} pageCount={pageCount} pageIndex={pageIndex} />
@@ -464,6 +459,5 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
     </div>
   );
 }
-
 
 export default Table;
