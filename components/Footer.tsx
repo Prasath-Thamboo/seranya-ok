@@ -12,6 +12,7 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
   const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
+    // Only load a random image if no backgroundImage (footerImage) is provided
     const loadRandomBackgroundImage = async () => {
       if (!backgroundImage) {
         try {

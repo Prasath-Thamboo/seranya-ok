@@ -7,11 +7,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
 import React from "react";
-import { useLoading } from "@/components/LoadingContext"; 
 
 interface ClientLayoutProps {
   children: ReactNode;
-  footerImage?: string; // Add the footerImage prop
+  footerImage?: string; // Accept footerImage prop
 }
 
 export default function ClientLayout({ children, footerImage }: ClientLayoutProps) {
@@ -36,13 +35,13 @@ export default function ClientLayout({ children, footerImage }: ClientLayoutProp
                            !pathname.startsWith("/auth/register") &&
                            !pathname.startsWith("/admin");
 
-                           return (
-                            <>
-                              {shouldShowNavbar && <Navbar />}
-                              <div className={shouldShowNavbar ? "" : ""}>
-                                {children}
-                              </div>
-                              {shouldShowFooter && <Footer backgroundImage={footerImage} />} {/* Pass the footerImage here */}
-                            </>
-                          );
-                        }
+  return (
+    <>
+      {shouldShowNavbar && <Navbar />}
+      <div className={shouldShowNavbar ? "" : ""}>
+        {children}
+      </div>
+      {shouldShowFooter && <Footer backgroundImage={footerImage} />}
+    </>
+  );
+}

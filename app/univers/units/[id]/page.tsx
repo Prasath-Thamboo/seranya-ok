@@ -9,6 +9,7 @@ import { FaBook, FaImage, FaLock, FaNewspaper } from "react-icons/fa";
 import Badge from "@/components/Badge";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
+import ClientLayout from "@/components/ClientLayout";
 
 interface ClassModel {
   id: string;
@@ -47,6 +48,8 @@ const UnitDetailPage = () => {
 
         fetchedUnit.profileImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/ProfileImage.png`;
         fetchedUnit.headerImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/HeaderImage.png`;
+        fetchedUnit.footerImage = `${backendUrl}/uploads/units/${fetchedUnit.id}/FooterImage.png`;
+        
 
         if (fetchedUnit.gallery && Array.isArray(fetchedUnit.gallery)) {
           fetchedUnit.gallery = fetchedUnit.gallery.map((imgUrl) => {
@@ -104,7 +107,8 @@ const UnitDetailPage = () => {
   const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
-    <div className="relative w-full min-h-screen text-white font-kanit">
+    <ClientLayout footerImage={unit.footerImage || null}>
+          <div className="relative w-full min-h-screen text-white font-kanit">
       <div
         className="fixed inset-0 bg-cover bg-center"
         style={{
@@ -364,6 +368,8 @@ const UnitDetailPage = () => {
         </div>
       </div>
     </div>
+      </ClientLayout>
+
   );
 };
 
