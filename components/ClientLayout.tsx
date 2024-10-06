@@ -1,4 +1,4 @@
-"use client"; 
+"use client";  // Specifies this is a client-side component
 
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -9,7 +9,7 @@ import React from "react";
 
 interface ClientLayoutProps {
   children: ReactNode;
-  footerImage?: string; // Accept footerImage prop
+  footerImage?: string; // Optional prop for the footer image
 }
 
 export default function ClientLayout({ children, footerImage }: ClientLayoutProps) {
@@ -18,29 +18,29 @@ export default function ClientLayout({ children, footerImage }: ClientLayoutProp
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false); // Simulate loading time (2s)
+      setIsLoading(false); // Simulates loading time (2s)
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
-    return <Loader />; // Display the loader while loading
+    return <Loader />; // Shows loader while the page is loading
   }
 
+  // Ensure pathname is not null before using it
   const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
   const shouldShowFooter = pathname && !pathname.startsWith("/auth/login") &&
                            !pathname.startsWith("/auth/register") &&
-                           !pathname.startsWith("/admin");
-
-  // Prevent Footer rendering twice: render it only when no `footerImage` is passed to pages.
-  const renderFooter = footerImage || shouldShowFooter;
+                           !pathname.startsWith("/admin") &&
+                           !pathname.startsWith("/univers/units");
 
   return (
     <>
       {shouldShowNavbar && <Navbar />}
       <div>{children}</div>
-      {renderFooter && <Footer backgroundImage={footerImage} />}
+      {/* Only render the footer once, prioritize footerImage */}
+      {shouldShowFooter && <Footer backgroundImage={footerImage} />}
     </>
   );
 }
