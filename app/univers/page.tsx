@@ -259,7 +259,13 @@ const UniversPage = () => {
                             <div className="text-center">
                               <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
                               <div className="mt-4">
-                                <BadgeComponent type={unit.type} />
+                              <BadgeComponent
+  classes={unit.classes.map((classItem) => ({
+    title: classItem.title,
+    color: classItem.color || undefined,  // Remplace null par undefined
+  }))}
+/>
+
                               </div>
                             </div>
                           }

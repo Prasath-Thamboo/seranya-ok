@@ -3,15 +3,37 @@ import React from 'react';
 interface BadgeProps {
   type?: string;
   role?: string;
+  classes?: Array<{ title: string; color?: string }>; // Nouvelle prop pour les classes
 }
 
-const Badge: React.FC<BadgeProps> = ({ type, role }) => {
+const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
+  if (classes && classes.length > 0) {
+    // Si des classes sont fournies, on affiche des badges pour chaque classe
+    return (
+      <div className="flex flex-wrap gap-2">
+        {classes.map((classItem, index) => (
+          <span
+            key={index}
+            className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium ring-1 ring-inset"
+            style={{
+              backgroundColor: classItem.color || 'rgba(0, 0, 0, 0.1)', // Utilisation de la couleur de la classe
+              color: classItem.color ? '#fff' : '#000', // Texte blanc si couleur définie, noir sinon
+            }}
+          >
+            {classItem.title} {/* Affiche le titre de la classe */}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  // Code existant pour afficher les badges basés sur "type" ou "role"
   let badgeStyle = 'font-iceberg'; // Police Iceberg par défaut
 
   if (type) {
     switch (type.toUpperCase()) {
       case 'CHAMPION':
-        badgeStyle += ' bg-yellow-600/10 text-yellow-400 ring-yellow-400/30 neon-gold font-bold'; // Doré avec effet néon
+        badgeStyle += ' bg-yellow-600/10 text-yellow-400 ring-yellow-400/30 neon-gold font-bold';
         break;
       case 'UNIT':
         badgeStyle += ' bg-gray-300/10 text-black ring-gray-300/20 font-bold';
@@ -23,7 +45,7 @@ const Badge: React.FC<BadgeProps> = ({ type, role }) => {
   } else if (role) {
     switch (role.toUpperCase()) {
       case 'CHAMPION':
-        badgeStyle += ' bg-yellow-600/10 text-yellow-400 ring-yellow-400/30 neon-gold font-bold'; // Badge doré avec effet néon
+        badgeStyle += ' bg-yellow-600/10 text-yellow-400 ring-yellow-400/30 neon-gold font-bold';
         break;
       case 'ADMIN':
         badgeStyle += ' bg-indigo-400/10 text-indigo-400 ring-indigo-400/30 font-bold';

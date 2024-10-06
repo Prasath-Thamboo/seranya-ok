@@ -14,6 +14,7 @@ interface ClassModel {
   id: string;
   title: string;
   profileImage: string;
+  color?: string | null;
 }
 
 const UnitDetailPage = () => {
@@ -26,9 +27,9 @@ const UnitDetailPage = () => {
 
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [activeSection, setActiveSection] = useState("biographie");
-  const [showContent, setShowContent] = useState(true); 
+  const [showContent, setShowContent] = useState(true);
   const [relatedClasses, setRelatedClasses] = useState<ClassModel[]>([]);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(false); 
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [loadingUser, setLoadingUser] = useState<boolean>(true);
 
   useEffect(() => {
@@ -57,7 +58,8 @@ const UnitDetailPage = () => {
           const classesWithImages = fetchedUnit.classes.map((cls) => ({
             id: cls.id,
             title: cls.title,
-            profileImage: `${backendUrl}/uploads/class/${cls.id}/PROFILEIMAGE.png`,
+            profileImage: `${backendUrl}/uploads/class/${cls.id}/ProfileImage.png`,
+            color: cls.color || null,
           }));
 
           setRelatedClasses(classesWithImages);
@@ -97,6 +99,9 @@ const UnitDetailPage = () => {
   if (!unit) {
     return <div className="text-center text-white">Chargement...</div>;
   }
+
+  // Récupérer la première classe associée à l'unité
+  const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
     <div className="relative w-full min-h-screen text-white font-kanit">

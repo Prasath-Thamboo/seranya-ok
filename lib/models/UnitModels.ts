@@ -15,6 +15,8 @@ export interface User {
 
 // Interface pour les classes associées à une unité
 export interface ClassModel {
+  color: null;
+  profileImage: any;
   id: string;
   title: string;
 }
