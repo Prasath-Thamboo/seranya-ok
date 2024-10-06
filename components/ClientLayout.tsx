@@ -37,11 +37,9 @@ export default function ClientLayout({ children, footerImage }: ClientLayoutProp
 
   return (
     <>
-      {shouldShowNavbar && <Navbar />}
-      <div className={shouldShowNavbar ? "" : ""}>
-        {children}
-      </div>
-      {shouldShowFooter && <Footer backgroundImage={footerImage} />}
-    </>
+    {shouldShowNavbar && <Navbar />}
+    <div>{children}</div>
+    {shouldShowFooter && <Footer backgroundImage={footerImage} />}
+  </>
   );
 }
