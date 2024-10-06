@@ -7,17 +7,19 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
+  // Si des classes sont fournies, on affiche des badges pour chaque classe
   if (classes && classes.length > 0) {
-    // Si des classes sont fournies, on affiche des badges pour chaque classe
     return (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 justify-center">
         {classes.map((classItem, index) => (
           <span
             key={index}
-            className="inline-flex items-center rounded-md px-3 py-1 text-sm font-medium ring-1 ring-inset"
+            className="inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-bold uppercase neon-effect"
             style={{
-              backgroundColor: classItem.color || 'rgba(0, 0, 0, 0.1)', // Utilisation de la couleur de la classe
-              color: classItem.color ? '#fff' : '#000', // Texte blanc si couleur définie, noir sinon
+              backgroundColor: classItem.color || '#ffffff', // Blanc par défaut si pas de couleur
+              color: classItem.color ? '#ffffff' : '#000000', // Texte noir si couleur non définie
+              boxShadow: `0 0 8px ${classItem.color || '#000000'}`, // Effet néon avec la couleur de la classe ou noir
+              border: `1px solid ${classItem.color || '#000000'}`, // Bordure avec la couleur ou noir
             }}
           >
             {classItem.title} {/* Affiche le titre de la classe */}
@@ -28,7 +30,7 @@ const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
   }
 
   // Code existant pour afficher les badges basés sur "type" ou "role"
-  let badgeStyle = 'font-iceberg'; // Police Iceberg par défaut
+  let badgeStyle = 'font-iceberg uppercase'; // Police Iceberg par défaut avec uppercase
 
   if (type) {
     switch (type.toUpperCase()) {
@@ -61,7 +63,7 @@ const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
 
   return (
     <span
-      className={`inline-flex items-center rounded-md px-3 py-2 text-sm font-medium ring-1 ring-inset ${badgeStyle}`}
+      className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium ring-1 ring-inset ${badgeStyle}`}
     >
       {type?.toUpperCase() || role?.toUpperCase()}
     </span>
