@@ -1,4 +1,5 @@
-"use client";  // Specifies this is a client-side component
+// spectralnext/components/ClientLayout.tsx
+"use client"; 
 
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -9,7 +10,7 @@ import React from "react";
 
 interface ClientLayoutProps {
   children: ReactNode;
-  footerImage?: string; // Optional prop for the footer image
+  footerImage?: string; // Accept footerImage prop
 }
 
 export default function ClientLayout({ children, footerImage }: ClientLayoutProps) {
@@ -18,17 +19,17 @@ export default function ClientLayout({ children, footerImage }: ClientLayoutProp
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false); // Simulates loading time (2s)
+      setIsLoading(false); // Simulate loading delay
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
-    return <Loader />; // Shows loader while the page is loading
+    return <Loader />; // Display loader while the page is loading
   }
 
-  // Ensure pathname is not null before using it
+  // Conditionally display the Navbar and Footer based on the path
   const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
   const shouldShowFooter = pathname && !pathname.startsWith("/auth/login") &&
                            !pathname.startsWith("/auth/register") &&
@@ -38,8 +39,8 @@ export default function ClientLayout({ children, footerImage }: ClientLayoutProp
     <>
       {shouldShowNavbar && <Navbar />}
       <div>{children}</div>
-      {/* Only render the footer once, prioritize footerImage */}
-      {shouldShowFooter && <Footer backgroundImage={footerImage} />}
+      {/* Only render the footer if no specific footerImage is provided */}
+      {shouldShowFooter && !footerImage && <Footer />}
     </>
   );
 }
