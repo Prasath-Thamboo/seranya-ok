@@ -14,10 +14,10 @@ const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
         {classes.map((classItem, index) => (
           <span
             key={index}
-            className="inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-bold uppercase neon-effect"
+            className={`inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-bold uppercase neon-effect font-iceberg`}
             style={{
-              backgroundColor: classItem.color || '#ffffff', // Blanc par défaut si pas de couleur
-              color: classItem.color ? '#ffffff' : '#000000', // Texte noir si couleur non définie
+              backgroundColor: 'transparent',
+              color: classItem.color || '#000000', // Utilisation de la couleur de la classe pour le texte
               boxShadow: `0 0 8px ${classItem.color || '#000000'}`, // Effet néon avec la couleur de la classe ou noir
               border: `1px solid ${classItem.color || '#000000'}`, // Bordure avec la couleur ou noir
             }}
