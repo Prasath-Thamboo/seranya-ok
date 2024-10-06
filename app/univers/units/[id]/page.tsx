@@ -107,7 +107,7 @@ const UnitDetailPage = () => {
   const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
-    <ClientLayout footerImage={unit.footerImage || null}>
+    <ClientLayout footerImage={unit.footerImage || undefined}>
           <div className="relative w-full min-h-screen text-white font-kanit">
       <div
         className="fixed inset-0 bg-cover bg-center"
