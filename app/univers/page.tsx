@@ -260,10 +260,14 @@ const UniversPage = () => {
                               <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
                               <div className="mt-4">
                               <BadgeComponent
-  classes={unit.classes.map((classItem) => ({
-    title: classItem.title,
-    color: classItem.color || undefined,  // Remplace null par undefined
-  }))}
+  classes={
+    unit.classes && unit.classes.length > 0
+      ? unit.classes.map((classItem) => ({
+          title: classItem.title,
+          color: classItem.color || undefined,  // Remplace null par undefined
+        }))
+      : [] // No classes, pass an empty array
+  }
 />
 
 

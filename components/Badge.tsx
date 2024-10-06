@@ -7,19 +7,20 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
-  // Si des classes sont fournies, on affiche des badges pour chaque classe
+  // Si des classes sont fournies et qu'elles existent
   if (classes && classes.length > 0) {
     return (
       <div className="flex flex-wrap gap-2 justify-center">
         {classes.map((classItem, index) => (
           <span
             key={index}
-            className={`inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-bold uppercase neon-effect font-iceberg`}
+            className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-bold uppercase neon-effect font-iceberg`}
             style={{
-              backgroundColor: 'transparent',
-              color: classItem.color || '#000000', // Utilisation de la couleur de la classe pour le texte
-              boxShadow: `0 0 8px ${classItem.color || '#000000'}`, // Effet néon avec la couleur de la classe ou noir
-              border: `1px solid ${classItem.color || '#000000'}`, // Bordure avec la couleur ou noir
+              color: classItem.color || '#000000', // Texte avec couleur de classe ou noir
+              boxShadow: `0 0 8px ${classItem.color || '#000000'}`, // Effet néon avec couleur de classe
+              border: `1px solid ${classItem.color || '#000000'}`, // Bordure avec couleur de classe ou noir
+              padding: '6px 12px', // Ajout d'un padding-y léger
+              textShadow: `0 0 5px ${classItem.color || '#000000'}`, // Ajout de l'ombre de texte avec la couleur de la classe
             }}
           >
             {classItem.title} {/* Affiche le titre de la classe */}
