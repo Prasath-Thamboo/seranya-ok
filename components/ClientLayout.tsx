@@ -32,8 +32,7 @@ export default function ClientLayout({ children, footerImage }: ClientLayoutProp
   const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
   const shouldShowFooter = pathname && !pathname.startsWith("/auth/login") &&
                            !pathname.startsWith("/auth/register") &&
-                           !pathname.startsWith("/admin") &&
-                           !pathname.startsWith("/univers/units");
+                           !pathname.startsWith("/admin");
 
   return (
     <>
