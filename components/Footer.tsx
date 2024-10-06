@@ -1,5 +1,3 @@
-// spectralnext/components/Footer.tsx
-
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
@@ -9,26 +7,26 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
-  const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | null>(null);
+  const [finalBackgroundImage, setFinalBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Only load a random image if no backgroundImage (footerImage) is provided
     const loadRandomBackgroundImage = async () => {
+      // Only fetch a random image if no backgroundImage is provided
       if (!backgroundImage) {
         try {
           const response = await fetch('/api/getRandomImage');
           const data = await response.json();
-          setRandomBackgroundImage(data.imagePath);
+          setFinalBackgroundImage(data.imagePath);
         } catch (error) {
           console.error("Failed to load random background image:", error);
         }
+      } else {
+        setFinalBackgroundImage(backgroundImage); // Use the provided background image
       }
     };
 
     loadRandomBackgroundImage();
   }, [backgroundImage]);
-
-  const finalBackgroundImage = backgroundImage || randomBackgroundImage;
 
   return (
     <footer className="relative block text-white font-iceberg uppercase">
