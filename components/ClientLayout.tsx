@@ -9,7 +9,12 @@ import Loader from "@/components/Loader";
 import React from "react";
 import { useLoading } from "@/components/LoadingContext"; 
 
-export default function ClientLayout({ children }: { children: ReactNode }) {
+interface ClientLayoutProps {
+  children: ReactNode;
+  footerImage?: string; // Add the footerImage prop
+}
+
+export default function ClientLayout({ children, footerImage }: ClientLayoutProps) {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,13 +36,13 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
                            !pathname.startsWith("/auth/register") &&
                            !pathname.startsWith("/admin");
 
-  return (
-    <>
-      {shouldShowNavbar && <Navbar />}
-      <div className={shouldShowNavbar ? "" : ""}>
-        {children}
-      </div>
-      {shouldShowFooter && <Footer />}
-    </>
-  );
-}
+                           return (
+                            <>
+                              {shouldShowNavbar && <Navbar />}
+                              <div className={shouldShowNavbar ? "" : ""}>
+                                {children}
+                              </div>
+                              {shouldShowFooter && <Footer backgroundImage={footerImage} />} {/* Pass the footerImage here */}
+                            </>
+                          );
+                        }

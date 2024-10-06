@@ -1,16 +1,17 @@
+// spectralnext/components/Footer.tsx
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 
 interface FooterProps {
-  backgroundImage?: string; // Prop optionnelle pour l'image de fond
+  backgroundImage?: string; // Optional prop for the background image
 }
 
 const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
   const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Charger une image aléatoire si aucune image n'est fournie en props
     const loadRandomBackgroundImage = async () => {
       if (!backgroundImage) {
         try {
@@ -30,12 +31,12 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
 
   return (
     <footer className="relative block text-white font-iceberg uppercase">
-      {/* Image de fond avec filtre opaque */}
+      {/* Background image with opaque filter */}
       <div className="absolute inset-0 z-0">
         {finalBackgroundImage && (
           <Image
             src={finalBackgroundImage}
-            alt="Image de fond du footer"
+            alt="Footer background"
             layout="fill"
             objectFit="cover"
             className="opacity-50"
@@ -44,7 +45,7 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
         <div className="absolute inset-0 bg-black opacity-50"></div>
       </div>
 
-      {/* Contenu */}
+      {/* Footer content */}
       <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
         <div className="flex-col flex items-center">
           {/* Logo */}
@@ -82,7 +83,7 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
 
           <div className="mb-8 mt-8 border-b border-gray-500 w-48"></div>
 
-          {/* Réseaux sociaux */}
+          {/* Social media links */}
           <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3 items-start">
             <a href="https://github.com" className="mx-auto flex-col flex items-center text-white">
               <FaGithub size={32} />
