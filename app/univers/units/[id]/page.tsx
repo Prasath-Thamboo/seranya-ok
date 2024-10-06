@@ -108,6 +108,7 @@ const UnitDetailPage = () => {
 
   return (
     <ClientLayout footerImage={unit.footerImage || undefined} disableFooter>
+
           <div className="relative w-full min-h-screen text-white font-kanit">
       <div
         className="fixed inset-0 bg-cover bg-center"
