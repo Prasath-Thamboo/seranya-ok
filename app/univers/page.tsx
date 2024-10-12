@@ -223,21 +223,7 @@ const UniversPage = () => {
                     </div>
 
                     {/* Text Content */}
-                    <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow"
-                      style={{
-                        backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                      }}
-                    >
-                      {/* Overlay pour assombrir l'image de footer */}
-                      {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
-                      )}
-
-                      {/* Contenu Principal */}
+                    <div className="pt-12 pb-4 text-center px-3 flex flex-col justify-between flex-grow">
                       <div className="relative z-10">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
@@ -255,7 +241,7 @@ const UniversPage = () => {
                       </div>
 
                       {/* Bouton Explorer */}
-                      <div className="text-center mt-6 transition-all duration-300 relative z-10">
+                      <div className="text-center mt-6 transition-all duration-300">
                         <Link href={`/univers/units/${unit.id}`}>
                           <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
                             Explorer
@@ -298,21 +284,7 @@ const UniversPage = () => {
                     </div>
 
                     {/* Text Content */}
-                    <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow"
-                      style={{
-                        backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                      }}
-                    >
-                      {/* Overlay pour assombrir l'image de footer */}
-                      {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
-                      )}
-
-                      {/* Contenu Principal */}
+                    <div className="pt-12 pb-4 text-center px-3 flex flex-col justify-between flex-grow">
                       <div className="relative z-10">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
@@ -330,7 +302,7 @@ const UniversPage = () => {
                       </div>
 
                       {/* Bouton Explorer */}
-                      <div className="text-center mt-6 transition-all duration-300 relative z-10">
+                      <div className="text-center mt-6 transition-all duration-300">
                         <Link href={`/univers/units/${unit.id}`}>
                           <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
                             Explorer
