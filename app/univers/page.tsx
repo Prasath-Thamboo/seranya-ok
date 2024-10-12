@@ -12,7 +12,7 @@ import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
 import { UploadType } from "@/lib/models/ClassModels"; // Importation correcte des types
 import Image from "next/image"; // Utilisation du composant Image de Next.js
-import { motion } from "framer-motion"; // Importation de Framer Motion
+import { motion } from "framer-motion"; // Import Framer Motion
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -33,9 +33,13 @@ const UniversPage = () => {
         const fetchedUnits = await fetchUnits();
 
         // Utilisez les URLs d'images telles qu'elles sont fournies par le backend
-        const unitsWithImages: UnitModel[] = fetchedUnits.sort((a, b) =>
-          a.title.localeCompare(b.title)
-        ); // Tri alphabétique des unités
+        const unitsWithImages: UnitModel[] = fetchedUnits
+          .map((unit) => ({
+            ...unit,
+            profileImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/ProfileImage.png`,
+            headerImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/HeaderImage.png`,
+          }))
+          .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
 
         setUnits(unitsWithImages);
         setFilteredUnits(unitsWithImages); // Initialisation des unités
@@ -87,6 +91,12 @@ const UniversPage = () => {
     .filter((unit) => unit.type.toUpperCase() === "UNIT")
     .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
 
+  // Framer Motion variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
   return (
     <div className="relative w-full min-h-screen text-white font-kanit">
       {/* Image de Fond Aléatoire */}
@@ -96,10 +106,10 @@ const UniversPage = () => {
             src={backgroundImage}
             alt="Background"
             fill
-            style={{ objectFit: "cover", objectPosition: "center", filter: "brightness(20%)" }}
-            priority={true}
+            className="object-cover"
+            priority
             quality={100}
-            className=""
+            style={{ filter: 'brightness(20%)' }}
           />
           <div className="absolute inset-0 bg-black opacity-90 z-10"></div> {/* Overlay noir */}
         </div>
@@ -124,7 +134,13 @@ const UniversPage = () => {
 
       <section className="relative z-10 py-16 px-12 flex">
         {/* Barre Latérale des Filtres */}
-        <div className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-24 mr-8">
+        <motion.div
+          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-24 mr-8"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           <h2 className="text-2xl font-iceberg text-white mb-8">Filtres par Type</h2>
           <ul className="space-y-4">
             <li>
@@ -158,12 +174,24 @@ const UniversPage = () => {
               </button>
             </li>
           </ul>
-        </div>
+        </motion.div>
 
         {/* Section Principale */}
-        <div className="lg:w-3/4">
+        <motion.div
+          className="lg:w-3/4"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {/* Barre de Recherche */}
-          <div className="mb-8 flex items-center">
+          <motion.div
+            className="mb-8 flex items-center"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             <SearchOutlined className="text-gray-400 mr-3" style={{ fontSize: "1.5rem" }} />
             <input
               className="w-full lg:w-1/2 h-12 pl-4 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-black form-input"
@@ -173,7 +201,7 @@ const UniversPage = () => {
               value={searchQuery}
               onChange={handleSearch}
             />
-          </div>
+          </motion.div>
 
           {/* Section Champions */}
           {sortedChampions.length > 0 && (
@@ -190,9 +218,10 @@ const UniversPage = () => {
                   >
                     <motion.div
                       className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
+                      variants={fadeInUp}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
                     >
                       {/* Image d'En-tête */}
                       <div
@@ -202,7 +231,7 @@ const UniversPage = () => {
                         }}
                       >
                         {/* Image de Profil */}
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20">
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
@@ -216,7 +245,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0"
+                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
@@ -276,9 +305,10 @@ const UniversPage = () => {
                   >
                     <motion.div
                       className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
+                      variants={fadeInUp}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
                     >
                       {/* Image d'En-tête */}
                       <div
@@ -288,7 +318,7 @@ const UniversPage = () => {
                         }}
                       >
                         {/* Image de Profil */}
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20">
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
@@ -302,7 +332,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0"
+                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
@@ -355,7 +385,7 @@ const UniversPage = () => {
               </div>
             </>
           )}
-        </div>
+        </motion.div>
       </section>
     </div>
   );
