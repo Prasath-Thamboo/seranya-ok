@@ -347,9 +347,9 @@ const UniversPage = () => {
             </>
           )}
         </motion.div>
-      </section>
-      </motion.div>
+        </section>
+        </motion.div>
       );
-    };
+};
 
-    export default UniversPage;
+export default UniversPage;
