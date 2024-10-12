@@ -6,11 +6,11 @@ import CardList from '@/components/CardList';
 import { SidebarContent } from '@/components/dashboard/SidebarContent';
 import { fetchUnits } from '@/lib/queries/UnitQueries';
 import { UnitModel } from '@/lib/models/UnitModels';
-import { Image } from 'antd';
 import Badge from '@/components/Badge';
 import { useNotification } from '@/components/notifications/NotificationProvider';
 import Link from 'next/link';
 import { FaEye, FaEdit } from 'react-icons/fa';
+import Image from 'next/image'; // Utilisation du composant Image de Next.js
 
 const UnitsPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
@@ -75,8 +75,14 @@ const UnitsPage = () => {
       setUnits(unitsWithImages);
       addNotification('success', 'Unité supprimée avec succès.');
     } catch (error) {
-      console.error("Erreur lors de la mise à jour des unités après suppression :", error);
-      addNotification('critical', 'Erreur lors de la mise à jour des unités après suppression.');
+      console.error(
+        "Erreur lors de la mise à jour des unités après suppression :",
+        error
+      );
+      addNotification(
+        'critical',
+        'Erreur lors de la mise à jour des unités après suppression.'
+      );
     }
   };
 
@@ -86,43 +92,72 @@ const UnitsPage = () => {
         Header: 'Titre',
         accessor: 'title',
         Cell: ({ row, value }: any) => (
-          <div className="flex flex-col items-center gap-2 p-5">
+          <div className="flex flex-col items-center gap-2 p-2">
             <Image
               src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'}
               alt={`${value}'s Avatar`}
-              width={150}
-              height={150}
-              style={{ borderRadius: '8px', objectFit: 'cover' }}
-              preview={true} // Permet le zoom au clic
+              width={60} // Dimension réduite pour une meilleure intégration
+              height={60}
+              style={{ borderRadius: '50%', objectFit: 'cover' }} // Image ronde
+              className="border-2 border-gray-300 shadow-lg z-20" // Bordure et ombre pour la visibilité
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/images/backgrounds/placeholder.jpg';
+              }}
             />
-            <div>{value}</div>
+            <div className="text-center">{value}</div>
           </div>
         ),
       },
       {
         Header: 'Introduction',
         accessor: 'intro',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
+        Cell: ({ value }: any) => (
+          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
+        ),
       },
       {
         Header: 'Sous-titre',
         accessor: 'subtitle',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
+        Cell: ({ value }: any) => (
+          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
+        ),
       },
       {
         Header: 'Histoire',
         accessor: 'story',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
+        Cell: ({ value }: any) => (
+          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
+        ),
       },
       {
         Header: 'Biographie',
         accessor: 'bio',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
+        Cell: ({ value }: any) => (
+          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
+        ),
       },
       {
         Header: 'Type',
         accessor: 'type',
         Cell: ({ value }: any) => <Badge type={value} />,
+      },
+      {
+        Header: 'Actions',
+        accessor: 'actions',
+        Cell: ({ row }: any) => (
+          <div className="flex space-x-2">
+            <Link href={`/admin/units/${row.original.id}`}>
+              <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                <FaEye />
+              </button>
+            </Link>
+            <Link href={`/admin/units/update?id=${row.original.id}`}>
+              <button className="p-2 bg-green-500 text-white rounded hover:bg-green-600">
+                <FaEdit />
+              </button>
+            </Link>
+          </div>
+        ),
       },
     ],
     []
@@ -140,6 +175,12 @@ const UnitsPage = () => {
           alt={`${unit.title}'s Avatar`}
           className="rounded-lg w-full h-full object-cover"
           style={{ objectFit: 'cover', borderRadius: '8px', maxHeight: '100%' }}
+          width={300} // Dimension adaptée pour les cartes
+          height={192}
+          priority
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/images/backgrounds/placeholder.jpg';
+          }}
         />
       </div>
       <h3 className="text-xl font-bold text-center text-black font-iceberg uppercase">
