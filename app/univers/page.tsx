@@ -10,7 +10,8 @@ import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
-import Image from "next/image"; // Pour optimiser les images
+import { UploadType } from "@/lib/models/ClassModels"; // Importation correcte des types
+import Image from "next/image"; // Utilisation du composant Image de Next.js
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -31,8 +32,9 @@ const UniversPage = () => {
         const fetchedUnits = await fetchUnits();
 
         // Utilisez les URLs d'images telles qu'elles sont fournies par le backend
-        const unitsWithImages: UnitModel[] = fetchedUnits
-          .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
+        const unitsWithImages: UnitModel[] = fetchedUnits.sort((a, b) =>
+          a.title.localeCompare(b.title)
+        ); // Tri alphabétique des unités
 
         setUnits(unitsWithImages);
         setFilteredUnits(unitsWithImages); // Initialisation des unités
@@ -44,9 +46,7 @@ const UniversPage = () => {
     const fetchBgImage = async () => {
       try {
         const image = await fetchRandomImage();
-        const imageUrl = getImageUrl(image);
-        console.log("Background Image URL:", imageUrl); // Debugging
-        setBackgroundImage(imageUrl);
+        setBackgroundImage(getImageUrl(image));
       } catch (error) {
         console.error("Error fetching background image:", error);
       }
@@ -99,7 +99,7 @@ const UniversPage = () => {
             objectPosition="center"
             priority={true}
             quality={100}
-            className="brightness-20" // Tailwind CSS pour assombrir
+            className="brightness-20" // Tailwind CSS pour assombrir l'image
           />
           <div className="absolute inset-0 bg-black opacity-90 z-10"></div> {/* Overlay noir */}
         </div>
@@ -198,13 +198,10 @@ const UniversPage = () => {
                       >
                         {/* Image de Profil */}
                         <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
-                          <Image
+                          <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                            width={96} // 24 * 4
-                            height={96}
-                            className="object-cover rounded-full border-4 border-black shadow-lg"
-                            priority={true}
+                            className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-lg"
                           />
                         </div>
                       </div>
@@ -282,13 +279,10 @@ const UniversPage = () => {
                       >
                         {/* Image de Profil */}
                         <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
-                          <Image
+                          <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                            width={96} // 24 * 4
-                            height={96}
-                            className="object-cover rounded-full border-4 border-black shadow-lg"
-                            priority={true}
+                            className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-lg"
                           />
                         </div>
                       </div>
@@ -298,7 +292,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-30 z-0" // Opacité très sombre
+                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
