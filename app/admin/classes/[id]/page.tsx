@@ -1,22 +1,28 @@
 "use client";
 
-import { Tabs } from 'antd';
+import { Tabs, Image } from 'antd';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchClassById } from '@/lib/queries/ClassQueries';
 import { ClassModel, UploadType } from '@/lib/models/ClassModels';
-import { Image } from 'antd';
 import DividersWithHeading from '@/components/DividersWhithHeading';
 import Reader from '@/components/Reader';
 import { FaEdit } from 'react-icons/fa';
 
 const { TabPane } = Tabs;
 
-// Plus besoin de définir 'backendUrl' car les URLs sont complètes
-// const backendUrl =
-//   process.env.NODE_ENV === 'production'
-//     ? process.env.NEXT_PUBLIC_API_URL_PROD
-//     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+// Fonction d'aide pour obtenir une URL d'image valide
+const getImageUrl = (url: string | null | undefined) => {
+  if (!url) return '/images/backgrounds/placeholder.jpg'; // Path to your placeholder image
+
+  // Vérifier si l'URL commence par 'http' ou 'https'
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+
+  // Sinon, utiliser un placeholder ou construire une URL locale si nécessaire
+  return '/images/backgrounds/placeholder.jpg'; // Ajustez selon vos besoins
+};
 
 const ClassViewPage = () => {
   const params = useParams();
@@ -31,7 +37,7 @@ const ClassViewPage = () => {
           const fetchedClass = await fetchClassById(id);
 
           if (fetchedClass) {
-            // Extraire les images sans préfixer avec 'backendUrl'
+            // Extraire les images en utilisant les types d'uploads
             const profileImageUpload = fetchedClass.uploads.find(
               (upload) => upload.type === UploadType.PROFILEIMAGE
             );
@@ -53,7 +59,7 @@ const ClassViewPage = () => {
             const gallery =
               galleryUploads.length > 0
                 ? galleryUploads.map((upload) => upload.path)
-                : null;
+                : [];
 
             // Créer un objet de classe avec les images
             const classWithImages = {
@@ -94,7 +100,7 @@ const ClassViewPage = () => {
           <TabPane tab="Général" key="1">
             <div className="flex flex-col items-center mb-8">
               <Image
-                src={cls.profileImage || '/images/backgrounds/placeholder.jpg'}
+                src={getImageUrl(cls.profileImage)}
                 alt={`${cls.title} Profile`}
                 className="rounded-lg mb-4"
                 style={{
@@ -126,7 +132,7 @@ const ClassViewPage = () => {
             <div className="flex justify-center mb-8">
               {cls.headerImage ? (
                 <Image
-                  src={cls.headerImage}
+                  src={getImageUrl(cls.headerImage)}
                   alt={`${cls.title} Header`}
                   className="rounded-lg"
                   style={{
@@ -138,16 +144,16 @@ const ClassViewPage = () => {
                   preview={true}
                 />
               ) : (
-<p className="text-gray-500 italic">
-  Aucune image d&apos;en-tête disponible.
-</p>
+                <p className="text-gray-500 italic">
+                  Aucune image d&apos;en-tête disponible.
+                </p>
               )}
             </div>
 
             <div className="flex justify-center mb-8">
               {cls.footerImage ? (
                 <Image
-                  src={cls.footerImage}
+                  src={getImageUrl(cls.footerImage)}
                   alt={`${cls.title} Footer`}
                   className="rounded-lg"
                   style={{
@@ -197,7 +203,7 @@ const ClassViewPage = () => {
                   cls.gallery.map((imgUrl, index) => (
                     <Image
                       key={index}
-                      src={imgUrl}
+                      src={getImageUrl(imgUrl)}
                       alt={`${cls.title} Gallery Image ${index + 1}`}
                       className="rounded-lg"
                       style={{
