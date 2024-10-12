@@ -272,8 +272,6 @@ const UpdateUnit = () => {
                     src={unit.profileImage}
                     alt="Profil actuel"
                     style={{ maxWidth: '100%' }}
-                    // Activation du zoom sur l'image
-                    preview={{ visible: true }}
                   />
                 )}
               </Col>
@@ -301,7 +299,6 @@ const UpdateUnit = () => {
                     src={unit.headerImage}
                     alt="Header actuel"
                     style={{ maxWidth: '100%' }}
-                    preview={{ visible: true }}
                   />
                 )}
               </Col>
@@ -329,7 +326,6 @@ const UpdateUnit = () => {
                     src={unit.footerImage}
                     alt="Pied de page actuel"
                     style={{ maxWidth: '100%' }}
-                    preview={{ visible: true }}
                   />
                 )}
               </Col>
@@ -359,8 +355,6 @@ const UpdateUnit = () => {
                       <Image
                         src={image.url}
                         alt={`Galerie Image ${index + 1}`}
-                        // Activation du zoom sur l'image
-                        preview={{ visible: true }}
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
                         <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
