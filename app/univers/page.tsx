@@ -9,7 +9,6 @@ import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image";
-import Image from "next/image";
 import { motion } from "framer-motion"; // Importation de Framer Motion
 
 // Fonction pour récupérer une image de fond aléatoire via l'API
@@ -101,21 +100,14 @@ const UniversPage = () => {
       transition={{ duration: 1 }}
       className="relative w-full min-h-screen text-white font-kanit overflow-x-hidden"
     >
-      {/* Image de Fond Aléatoire Fixée et Proportionnée */}
+      {/* Image de Fond Fixée et Proportionnée */}
       {backgroundImage && (
-        <div className="fixed inset-0 z-0">
-          <Image
-            src={backgroundImage}
-            alt="Background"
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
-            priority={true}
-            quality={100}
-            className="brightness-30"
-          />
+        <div
+          className="fixed inset-0 w-full h-full bg-cover bg-center bg-fixed z-0"
+          style={{ backgroundImage: `url(${backgroundImage})` }}
+        >
           {/* Overlay pour assombrir l'image */}
-          <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+          <div className="absolute inset-0 bg-black opacity-50"></div>
         </div>
       )}
 
@@ -210,7 +202,7 @@ const UniversPage = () => {
                     className="relative group overflow-visible rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Card Content */}
-                    <div className="overflow-hidden flex flex-col">
+                    <div className="relative flex flex-col flex-grow">
                       {/* Image d'En-tête */}
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
@@ -246,7 +238,7 @@ const UniversPage = () => {
                           <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
 
                           {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
-                          <div className="max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-500 ease-in-out group-hover:mt-4">
+                          <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[200px]">
                             <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                           </div>
                         </div>
@@ -263,11 +255,12 @@ const UniversPage = () => {
                     </div>
 
                     {/* Image de Profil avec bordure noire et ombre noire */}
-                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-[60] pointer-events-none">
+                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-50 pointer-events-none">
                       <img
                         alt={unit.title}
                         src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
+                        className="w-24 h-24 object-cover rounded-full border-4 border-black"
+                        style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
                       />
                     </div>
                   </div>
@@ -287,7 +280,7 @@ const UniversPage = () => {
                     className="relative group overflow-visible rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Card Content */}
-                    <div className="overflow-hidden flex flex-col">
+                    <div className="relative flex flex-col flex-grow">
                       {/* Image d'En-tête */}
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
@@ -323,7 +316,7 @@ const UniversPage = () => {
                           <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
 
                           {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
-                          <div className="max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-500 ease-in-out group-hover:mt-4">
+                          <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[200px]">
                             <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                           </div>
                         </div>
@@ -340,11 +333,12 @@ const UniversPage = () => {
                     </div>
 
                     {/* Image de Profil avec bordure noire et ombre noire */}
-                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-[60] pointer-events-none">
+                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-50 pointer-events-none">
                       <img
                         alt={unit.title}
                         src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
+                        className="w-24 h-24 object-cover rounded-full border-4 border-black"
+                        style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
                       />
                     </div>
                   </div>
@@ -353,9 +347,9 @@ const UniversPage = () => {
             </>
           )}
         </motion.div>
-      </section>
-    </motion.div>
-  );
-};
+        </section>
+        </motion.div>
+      );
+    };
 
-export default UniversPage;
+    export default UniversPage;
