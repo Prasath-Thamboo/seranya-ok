@@ -28,7 +28,7 @@ const Home = () => {
 
   const [isLoading, setIsLoading] = useState(true);  
   const [loadedImagesCount, setLoadedImagesCount] = useState(0); 
-  const totalImagesCount = 15;  // Nombre exact d'images à charger
+  const totalImagesCount = 15;
 
   // Animation settings
   const fadeInUp = {
@@ -227,14 +227,25 @@ const Home = () => {
                       />
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
                         <div className="flex justify-center">
-                          <Image
-                            src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
-                            alt={units[0].title}
-                            width={100}
-                            height={100}
-                            className="rounded-full border border-gray-600 object-cover shadow-lg"
-                            onLoad={handleImageLoad}
-                          />
+                          {units[0].profileImage ? (
+                            <Image
+                              src={units[0].profileImage}
+                              alt={units[0].title}
+                              width={100}
+                              height={100}
+                              className="rounded-full border border-gray-600 object-cover shadow-lg"
+                              onLoad={handleImageLoad}
+                            />
+                          ) : (
+                            <Image
+                              src="/images/backgrounds/placeholder.jpg"
+                              alt="Placeholder"
+                              width={100}
+                              height={100}
+                              className="rounded-full border border-gray-600 object-cover shadow-lg"
+                              onLoad={handleImageLoad}
+                            />
+                          )}
                         </div>
 
                         <div className="flex flex-col justify-center items-center text-center mt-4">
@@ -258,9 +269,10 @@ const Home = () => {
                   <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       <div
-                        className="relative w-full h-64 bg-cover bg-[center_top] transition-transform duration-500 group-hover:scale-110"
+                        className="relative w-full h-64 bg-cover bg-[center_bottom] transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundPosition: "center bottom", // Adjusted position
                         }}
                       />
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
