@@ -222,7 +222,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-12"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -232,7 +232,7 @@ const UniversPage = () => {
                     >
                       {/* Overlay pour assombrir l'image de footer */}
                       {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
+                        <div className="absolute inset-0 bg-black opacity-60 rounded-b-lg"></div>
                       )}
 
                       {/* Contenu Principal */}
@@ -249,7 +249,7 @@ const UniversPage = () => {
 
                       {/* Intro */}
                       <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                        <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                       </div>
 
                       {/* Bouton Explorer */}
@@ -305,7 +305,7 @@ const UniversPage = () => {
                     >
                       {/* Overlay pour assombrir l'image de footer */}
                       {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
+                        <div className="absolute inset-0 bg-black opacity-60 rounded-b-lg"></div>
                       )}
 
                       {/* Contenu Principal */}
