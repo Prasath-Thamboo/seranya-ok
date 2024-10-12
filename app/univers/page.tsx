@@ -86,7 +86,7 @@ const UniversPage = () => {
     .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white font-kanit">
+    <div className="relative w-full min-h-screen text-white font-kanit">
       {/* Image de Fond Aléatoire */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
