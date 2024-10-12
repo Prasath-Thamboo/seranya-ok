@@ -1,25 +1,19 @@
 "use client";
 
-import { Tabs } from 'antd';
+import { Tabs, Image } from 'antd';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchUnitById } from '@/lib/queries/UnitQueries';
 import { UnitModel } from '@/lib/models/UnitModels';
-import { Image } from 'antd';
 import DividersWithHeading from '@/components/DividersWhithHeading';
 import Reader from '@/components/Reader';
 import { FaEdit } from 'react-icons/fa';
 
 const { TabPane } = Tabs;
 
-// Définir l'URL de base en fonction de l'environnement
-const backendUrl = process.env.NODE_ENV === 'production'
-  ? process.env.NEXT_PUBLIC_API_URL_PROD
-  : process.env.NEXT_PUBLIC_API_URL_LOCAL;
-
 const UnitViewPage = () => {
   const params = useParams();
-  const paramId = params?.id as string | undefined; // Assurez-vous que l'id est une chaîne de caractères
+  const paramId = params?.id as string | undefined;
   const id = paramId ? parseInt(paramId, 10) : null;
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const router = useRouter();
@@ -29,25 +23,14 @@ const UnitViewPage = () => {
       if (id) {
         try {
           const fetchedUnit = await fetchUnitById(id);
-  
+
           if (fetchedUnit) {
-            const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL;
-  
-            // Mise à jour des URL d'images pour correspondre à l'environnement
-            fetchedUnit.profileImage = `${backendUrl}/uploads/units/${id}/ProfileImage.png`;
-            fetchedUnit.headerImage = `${backendUrl}/uploads/units/${id}/HeaderImage.png`;
-            fetchedUnit.footerImage = `${backendUrl}/uploads/units/${id}/FooterImage.png`;
-  
-            // Mise à jour des URLs des images de la galerie
-            if (fetchedUnit.gallery) {
-              fetchedUnit.gallery = fetchedUnit.gallery.map((imgUrl) => {
-                if (imgUrl.startsWith("http")) {
-                  return imgUrl;
-                }
-                return `${backendUrl}${imgUrl}`;
-              });
-            }
-  
+            // **Supprimer la construction manuelle des URLs**
+            // fetchedUnit.profileImage = `${backendUrl}/uploads/units/${id}/ProfileImage.png`;
+            // fetchedUnit.headerImage = `${backendUrl}/uploads/units/${id}/HeaderImage.png`;
+            // fetchedUnit.footerImage = `${backendUrl}/uploads/units/${id}/FooterImage.png`;
+
+            // **Utiliser les URLs S3 fournies par le backend directement**
             setUnit(fetchedUnit);
           }
         } catch (error) {
@@ -57,7 +40,6 @@ const UnitViewPage = () => {
     };
     fetchUnitData();
   }, [id]);
-  
 
   if (!unit) {
     return <div>Loading...</div>;
