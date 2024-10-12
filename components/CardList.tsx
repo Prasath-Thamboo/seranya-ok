@@ -1,60 +1,29 @@
 // components/CardList.tsx
 import React, { useState } from 'react';
-import { UnitModel } from '@/lib/models/UnitModels';
-import { FaEye, FaEdit } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import { Image } from 'antd';
 
-interface CardListProps {
-  units: UnitModel[];
+interface CardListProps<T> {
+  items: T[];
   itemsPerPage?: number;
+  renderItem: (item: T) => React.ReactNode;
 }
 
-const CardList: React.FC<CardListProps> = ({ units, itemsPerPage = 4 }) => {
+function CardList<T>({ items, itemsPerPage = 4, renderItem }: CardListProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(units.length / itemsPerPage);
+  const totalPages = Math.ceil(items.length / itemsPerPage);
   const router = useRouter();
 
   // Pagination logic
   const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const handlePreviousPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-  const currentUnits = units.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentItems = items.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="flex flex-col items-center space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {currentUnits.map((unit) => (
-          <div
-            key={unit.id}
-            className="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center space-y-4"
-          >
-            <div className="relative w-full h-48">
-              <Image
-                src={unit.profileImage || '/images/backgrounds/placeholder.jpg'}
-                alt={`${unit.title}'s Avatar`}
-                className="rounded-lg w-full h-full object-cover"
-                style={{ objectFit: 'cover', borderRadius: '8px', maxHeight: '100%' }}
-              />
-            </div>
-            <h3 className="text-xl font-bold text-center text-black font-iceberg uppercase">{unit.title}</h3>
-            <p className="text-center text-gray-600">{unit.intro}</p>
-
-            <div className="flex space-x-2">
-              <button
-                className="p-2 bg-black text-white rounded-full hover:bg-gray-700 transition"
-                onClick={() => router.push(`/admin/units/${unit.id}`)}
-              >
-                <FaEye />
-              </button>
-              <button
-                className="p-2 bg-black text-white rounded-full hover:bg-gray-700 transition"
-                onClick={() => router.push(`/admin/units/update?id=${unit.id}`)}
-              >
-                <FaEdit />
-              </button>
-            </div>
-          </div>
+        {currentItems.map((item) => (
+          <div key={(item as any).id}>{renderItem(item)}</div>
         ))}
       </div>
 
@@ -78,6 +47,6 @@ const CardList: React.FC<CardListProps> = ({ units, itemsPerPage = 4 }) => {
       </div>
     </div>
   );
-};
+}
 
 export default CardList;
