@@ -81,12 +81,12 @@ const UnitsPage = () => {
         Header: 'Titre',
         accessor: 'title',
         Cell: ({ row, value }: any) => (
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 p-5">
             <Image
               src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'}
               alt={`${value}'s Avatar`}
-              width={120}
-              height={120}
+              width={150}
+              height={150}
               style={{ borderRadius: '8px', objectFit: 'cover' }}
               preview={true} // Permet le zoom au clic
             />
