@@ -214,17 +214,15 @@ const UniversPage = () => {
                     ></div>
 
                     {/* Profile Image */}
-                    <div className="-mt-12 flex justify-center z-10">
-                      <img
-                        alt={unit.title}
-                        src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
-                      />
-                    </div>
+                    <img
+                      alt={unit.title}
+                      src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
+                    />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -289,17 +287,15 @@ const UniversPage = () => {
                     ></div>
 
                     {/* Profile Image */}
-                    <div className="-mt-12 flex justify-center z-10">
-                      <img
-                        alt={unit.title}
-                        src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
-                      />
-                    </div>
+                    <img
+                      alt={unit.title}
+                      src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
+                    />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
