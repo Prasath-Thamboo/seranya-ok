@@ -35,6 +35,11 @@ const UpdateUnit = () => {
   // Définir l'URL de base en fonction de l'environnement
   const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
+  // Fonction pour nettoyer le chemin des images
+  const cleanPath = (path: string) => {
+    return path.replace(/^undefined\//, '').replace(/^\//, '');
+  };
+
   // Chargement des unités et des classes
   useEffect(() => {
     if (numericId !== null) {
@@ -50,9 +55,9 @@ const UpdateUnit = () => {
 
             const adjustedUnit: UnitModel = {
               ...data,
-              profileImage: profileImageUpload ? `${backendUrl}/${profileImageUpload.path}` : undefined,
-              headerImage: headerImageUpload ? `${backendUrl}/${headerImageUpload.path}` : undefined,
-              footerImage: footerImageUpload ? `${backendUrl}/${footerImageUpload.path}` : undefined,
+              profileImage: profileImageUpload ? `${backendUrl}/${cleanPath(profileImageUpload.path)}` : undefined,
+              headerImage: headerImageUpload ? `${backendUrl}/${cleanPath(headerImageUpload.path)}` : undefined,
+              footerImage: footerImageUpload ? `${backendUrl}/${cleanPath(footerImageUpload.path)}` : undefined,
             };
 
             setUnit(adjustedUnit);
@@ -60,7 +65,7 @@ const UpdateUnit = () => {
             // Chargement des images de la galerie avec les URLs complètes
             const galleryUrls = data.gallery?.map((url: string, index: number) => ({
               id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '',
-              url: url.startsWith('http') ? url : `${backendUrl}/${url}`,
+              url: url.startsWith('http') ? url : `${backendUrl}/${cleanPath(url)}`,
             })) || [];
 
             setVisibleGallery(galleryUrls);
@@ -179,9 +184,9 @@ const UpdateUnit = () => {
 
   // Gestion de la suppression d'une image de galerie
   const handleDeleteImage = (imageId: string) => {
-    setGalleryImagesToDelete((prev) => [...prev, imageId]); // Ajoute l'ID de l'objet upload
+    setGalleryImagesToDelete((prev) => [...prev, imageId]);
     setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
-    console.log("Images to delete (IDs):", galleryImagesToDelete); // Log des IDs des images à supprimer
+    console.log("Images to delete (IDs):", galleryImagesToDelete);
   };
 
   return (
@@ -263,7 +268,13 @@ const UpdateUnit = () => {
             <Row gutter={16} align="middle">
               <Col span={12}>
                 {unit?.profileImage && (
-                  <Image src={unit.profileImage} alt="Profil actuel" style={{ maxWidth: '100%' }} />
+                  <Image
+                    src={unit.profileImage}
+                    alt="Profil actuel"
+                    style={{ maxWidth: '100%' }}
+                    // Activation du zoom sur l'image
+                    preview={{ visible: true }}
+                  />
                 )}
               </Col>
               <Col span={12}>
@@ -286,7 +297,12 @@ const UpdateUnit = () => {
             <Row gutter={16} align="middle">
               <Col span={12}>
                 {unit?.headerImage && (
-                  <Image src={unit.headerImage} alt="Header actuel" style={{ maxWidth: '100%' }} />
+                  <Image
+                    src={unit.headerImage}
+                    alt="Header actuel"
+                    style={{ maxWidth: '100%' }}
+                    preview={{ visible: true }}
+                  />
                 )}
               </Col>
               <Col span={12}>
@@ -309,7 +325,12 @@ const UpdateUnit = () => {
             <Row gutter={16} align="middle">
               <Col span={12}>
                 {unit?.footerImage && (
-                  <Image src={unit.footerImage} alt="Pied de page actuel" style={{ maxWidth: '100%' }} />
+                  <Image
+                    src={unit.footerImage}
+                    alt="Pied de page actuel"
+                    style={{ maxWidth: '100%' }}
+                    preview={{ visible: true }}
+                  />
                 )}
               </Col>
               <Col span={12}>
@@ -335,7 +356,12 @@ const UpdateUnit = () => {
                 {visibleGallery.map((image, index) => (
                   <Card key={index} hoverable>
                     <div className="relative">
-                      <Image src={image.url} alt={`Galerie Image ${index + 1}`} />
+                      <Image
+                        src={image.url}
+                        alt={`Galerie Image ${index + 1}`}
+                        // Activation du zoom sur l'image
+                        preview={{ visible: true }}
+                      />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
                         <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
                       </div>
