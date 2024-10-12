@@ -290,12 +290,12 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]z-50000"
                     />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-12"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -322,7 +322,7 @@ const UniversPage = () => {
 
                       {/* Intro */}
                       <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                        <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                       </div>
 
                       {/* Bouton Explorer */}
