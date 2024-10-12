@@ -252,7 +252,7 @@ const Home = () => {
                           <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
                             {units[0].title}
                           </h3>
-                          <p className="text-lg text-gray-300 font kanit">
+                          <p className="text-lg text-gray-300 font-kanit">
                             {units[0].subtitle || "Aucune description"}
                           </p>
                         </div>
