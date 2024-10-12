@@ -43,20 +43,23 @@ const UpdateUnit = () => {
           const data = await fetchUnitById(numericId);
 
           if (data) {
-            // Ajuster les URLs des images
-            const adjustedUnit = {
+            // Extraction des images des uploads
+            const profileImageUpload = data.uploads?.find((upload) => upload.type === "PROFILEIMAGE");
+            const headerImageUpload = data.uploads?.find((upload) => upload.type === "HEADERIMAGE");
+            const footerImageUpload = data.uploads?.find((upload) => upload.type === "FOOTERIMAGE");
+
+            const adjustedUnit: UnitModel = {
               ...data,
-              profileImage: data.profileImage ? `${backendUrl}/${data.profileImage}` : undefined,
-              headerImage: data.headerImage ? `${backendUrl}/${data.headerImage}` : undefined,
-              footerImage: data.footerImage ? `${backendUrl}/${data.footerImage}` : undefined,
+              profileImage: profileImageUpload ? `${backendUrl}/${profileImageUpload.path}` : undefined,
+              headerImage: headerImageUpload ? `${backendUrl}/${headerImageUpload.path}` : undefined,
+              footerImage: footerImageUpload ? `${backendUrl}/${footerImageUpload.path}` : undefined,
             };
-            
 
             setUnit(adjustedUnit);
 
             // Chargement des images de la galerie avec les URLs complètes
             const galleryUrls = data.gallery?.map((url: string, index: number) => ({
-              id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '', // ID réel de l'objet Upload
+              id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '',
               url: url.startsWith('http') ? url : `${backendUrl}/${url}`,
             })) || [];
 
