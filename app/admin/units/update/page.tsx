@@ -190,113 +190,70 @@ const UpdateUnit = () => {
           layout="vertical"
           className="text-black font-kanit"
         >
-          <Form.Item
-            name="title"
-            label={<span className="text-black font-kanit">Titre</span>}
-            rules={[{ required: true, message: "Veuillez entrer le titre de l'unité!" }]}
-          >
-            <Input placeholder="Titre de l'unité" className="bg-white text-black font-kanit" />
+          {/* Vos autres champs du formulaire */}
+
+          {/* Image de profil */}
+          <Form.Item label="Image de profil">
+            <Row gutter={16}>
+              <Col span={12}>
+                {unit?.profileImage && <Image src={unit.profileImage} alt="Profil actuel" />}
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="profileImage"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload name="profileImage" listType="picture" maxCount={1} beforeUpload={() => false}>
+                    <Button icon={<UploadOutlined />}>Télécharger</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form.Item>
 
-          <Form.Item
-            name="intro"
-            label={<span className="text-black">Introduction</span>}
-            rules={[{ required: true, message: "Veuillez entrer l'introduction de l'unité!" }]}
-            className="font-kanit"
-          >
-            <Input.TextArea placeholder="Introduction" className="bg-white text-black font-kanit" />
+          {/* Image Header */}
+          <Form.Item label="Image Header">
+            <Row gutter={16}>
+              <Col span={12}>
+                {unit?.headerImage && <Image src={unit.headerImage} alt="Header actuel" />}
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="headerImage"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload name="headerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
+                    <Button icon={<UploadOutlined />}>Télécharger</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form.Item>
 
-          <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
-            <Input placeholder="Sous-titre de l'unité" className="bg-white text-black font-kanit" />
+          {/* Image Footer */}
+          <Form.Item label="Image de pied de page">
+            <Row gutter={16}>
+              <Col span={12}>
+                {unit?.footerImage && <Image src={unit.footerImage} alt="Pied de page actuel" />}
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="footerImage"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload name="footerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
+                    <Button icon={<UploadOutlined />}>Télécharger</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form.Item>
-
-          <Form.Item label="Histoire" className="font-kanit">
-            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
-          </Form.Item>
-
-          <Form.Item label="Biographie" className="font-kanit">
-            <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
-          </Form.Item>
-
-          <Form.Item
-            name="type"
-            label="Type"
-            rules={[{ required: true, message: "Veuillez choisir un type!" }]}
-            className="font-kanit"
-          >
-            <Select placeholder="Sélectionnez le type" className="bg-white text-black font-kanit">
-              <Option className="font-kanit" value={UnitType.UNIT}>
-                UNIT
-              </Option>
-              <Option className="font-kanit" value={UnitType.CHAMPION}>
-                CHAMPION
-              </Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item label="Classe associée">
-            <Select
-              mode="multiple"
-              placeholder="Sélectionnez une ou plusieurs classes"
-              value={selectedClassIds}
-              onChange={setSelectedClassIds}
-            >
-              {classes.map((classe) => (
-                <Select.Option key={classe.id} value={classe.id}>
-                  {classe.title}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="profileImage"
-                label="Image de profil"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="profileImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Télécharger</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col span={12}>{unit?.profileImage && <Image src={unit.profileImage} alt="Profil actuel" />}</Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="headerImage"
-                label="Image Header"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="headerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Télécharger</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col span={12}>{unit?.headerImage && <Image src={unit.headerImage} alt="Header actuel" />}</Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="footerImage"
-                label="Image de pied de page"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="footerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Télécharger</Button>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col span={12}>{unit?.footerImage && <Image src={unit.footerImage} alt="Pied de page actuel" />}</Col>
-          </Row>
 
           <div className="bg-gray-200 p-4 rounded-lg mb-4">
             <h2 className="font-kanit text-black">Galerie</h2>
