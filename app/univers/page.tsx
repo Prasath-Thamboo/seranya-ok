@@ -279,42 +279,47 @@ const UniversPage = () => {
                           />
                         </div>
                       </div>
-                      <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow">
-                        <Card.Meta
-                          title={
-                            <div className="text-center">
-                              <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
-                            </div>
-                          }
-                          description={
-                            <div className="text-center">
-                              <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
-                              <div className="mt-4">
-                                <BadgeComponent
-                                  classes={
-                                    unit.classes && unit.classes.length > 0
-                                      ? unit.classes.map((classItem) => ({
-                                          title: classItem.title,
-                                          color: classItem.color || undefined,
-                                        }))
-                                      : []
-                                  }
-                                />
-                              </div>
-                            </div>
-                          }
-                        />
-                        <div className="hidden group-hover:block mt-4 text-gray-100">
-                          <p className="font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
-                        </div>
-                        <div className="text-center mt-6 transition-all duration-300">
-                          <Link href={`/univers/units/${unit.id}`}>
-                            <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
-                              Explorer
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
+                      <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow relative">
+  {/* Footer Image as Background */}
+  {unit.footerImage && (
+    <div
+      className="absolute inset-0 bg-cover bg-center opacity-30 z-0" // Set the background and opacity
+      style={{
+        backgroundImage: `url(${unit.footerImage})`,
+      }}
+    ></div>
+  )}
+
+  {/* Textual Content */}
+  <div className="relative z-10"> {/* Keep text content above the background */}
+    <Card.Meta
+      title={
+        <div className="text-center">
+          <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+        </div>
+      }
+      description={
+        <div className="text-center">
+          <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
+          <div className="mt-4">
+            <BadgeComponent type={unit.type} />
+          </div>
+        </div>
+      }
+    />
+    <div className="hidden group-hover:block mt-4 text-gray-100">
+      <p className="font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+    </div>
+    <div className="text-center mt-6 transition-all duration-300">
+      <Link href={`/univers/units/${unit.id}`}>
+        <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
+          Explorer
+        </button>
+      </Link>
+    </div>
+  </div>
+</div>
+
                     </div>
                   </Badge.Ribbon>
                 ))}
