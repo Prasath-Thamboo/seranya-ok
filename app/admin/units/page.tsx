@@ -15,6 +15,9 @@ const UnitsPage = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const { addNotification } = useNotification();
 
+  // Définir l'URL de base en fonction de l'environnement
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768); // Mode mobile si l'écran <= 768px
@@ -35,8 +38,9 @@ const UnitsPage = () => {
         const fetchedUnits = await fetchUnits();
 
         const unitsWithImages = fetchedUnits.map((unit: UnitModel) => {
-          const profileImageUpload = unit.uploads?.find(upload => upload.type === 'PROFILEIMAGE');
-          const profileImage = profileImageUpload ? profileImageUpload.path : '/images/backgrounds/placeholder.jpg';
+          // Construction de l'URL de l'image de profil comme dans la page de vue détaillée
+          const profileImage = `${backendUrl}/uploads/units/${unit.id}/ProfileImage.png`;
+
           return {
             ...unit,
             profileImage,
@@ -50,15 +54,14 @@ const UnitsPage = () => {
       }
     };
     fetchData();
-  }, [addNotification]);
+  }, [addNotification, backendUrl]);
 
   const handleDelete = async (deletedUnit: UnitModel) => {
     try {
       // Re-fetch data from the server after a delete
       const fetchedUnits = await fetchUnits();
       const unitsWithImages = fetchedUnits.map((unit: UnitModel) => {
-        const profileImageUpload = unit.uploads?.find(upload => upload.type === 'PROFILEIMAGE');
-        const profileImage = profileImageUpload ? profileImageUpload.path : '/images/backgrounds/placeholder.jpg';
+        const profileImage = `${backendUrl}/uploads/units/${unit.id}/ProfileImage.png`;
         return {
           ...unit,
           profileImage,
@@ -85,7 +88,7 @@ const UnitsPage = () => {
               width={80}
               height={80}
               style={{ borderRadius: '8px', objectFit: 'cover' }}
-              preview={true}
+              preview={true} // Permet le zoom au clic
             />
             <div>{value}</div>
           </div>
