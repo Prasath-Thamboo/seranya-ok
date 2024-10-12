@@ -217,7 +217,7 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-50000"
                     />
 
                     {/* Text Content */}
@@ -290,7 +290,7 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]z-50000"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-50000"
                     />
 
                     {/* Text Content */}
