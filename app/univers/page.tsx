@@ -216,6 +216,15 @@ const UniversPage = () => {
                           />
                         </div>
                       </div>
+                        {/* Footer Image as Background */}
+  {unit.footerImage && (
+    <div
+      className="absolute inset-0 bg-cover bg-center opacity-30 z-0" // Set the background and opacity
+      style={{
+        backgroundImage: `url(${unit.footerImage})`,
+      }}
+    ></div>
+  )}
                       {/* Contenu Textuel */}
                       <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow">
                         <Card.Meta
