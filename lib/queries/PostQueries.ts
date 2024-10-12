@@ -3,8 +3,11 @@
 import axios from 'axios';
 import { PostModel, CreatePostModel, UpdatePostModel } from '../models/PostModels';
 
-// Utilisation directe de NEXT_PUBLIC_API_URL_LOCAL
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
 
 console.log('BASE_URL:', BASE_URL);
 
@@ -14,7 +17,7 @@ export const fetchPosts = async (): Promise<PostModel[]> => {
     const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`);
     return response.data;
   };
-  
+
 // Fonction pour récupérer un post par ID
 export const fetchPostById = async (id: number): Promise<PostModel> => {
   const response = await axios.get<PostModel>(`${BASE_URL}/posts/${id}`);
