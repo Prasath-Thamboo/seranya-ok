@@ -99,11 +99,11 @@ const UniversPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative w-full min-h-screen text-white font-kanit overflow-x-hidden"
+      className="relative w-full min-h-screen text-white font-kanit"
     >
       {/* Image de Fond Aléatoire Fixée et Proportionnée */}
       {backgroundImage && (
-        <div className="fixed inset-0 z-0">
+        <div className="fixed inset-0 z-0 w-full h-full">
           <Image
             src={backgroundImage}
             alt="Background"
@@ -207,7 +207,7 @@ const UniversPage = () => {
                 {sortedChampions.map((unit) => (
                   <div
                     key={unit.id}
-                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
+                    className="relative group overflow-visible rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Image d'En-tête */}
                     <div
@@ -281,7 +281,7 @@ const UniversPage = () => {
                 {sortedBestiaire.map((unit) => (
                   <div
                     key={unit.id}
-                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
+                    className="relative group overflow-visible rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Image d'En-tête */}
                     <div
@@ -350,6 +350,6 @@ const UniversPage = () => {
         </section>
         </motion.div>
       );
-};
+    };
 
-export default UniversPage;
+    export default UniversPage;
