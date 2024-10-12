@@ -102,7 +102,7 @@ const UniversPage = () => {
       transition={{ duration: 1 }}
       className="relative w-full min-h-screen text-white font-kanit"
     >
-      {/* Image de Fond Aléatoire */}
+      {/* Image de Fond Aléatoire Fixée et Proportionnée */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
           <Image
@@ -217,19 +217,35 @@ const UniversPage = () => {
                         backgroundImage: `url(${getImageUrl(unit.headerImage) || "/images/backgrounds/placeholder.jpg"})`,
                       }}
                     >
-                      {/* Image de Profil */}
+                      {/* Image de Profil avec bordure noire et ombre noire */}
                       <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-30">
                         <img
                           alt={unit.title}
                           src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                          className="w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg"
+                          className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-black"
+                          style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
                         />
                       </div>
                     </div>
 
-                    {/* Contenu Textuel */}
-                    <div className="pt-12 pb-4 text-center relative z-10 px-3 flex flex-col justify-between flex-grow">
-                      <div className="text-center">
+                    {/* Contenu Textuel avec Image de Footer en Arrière-Plan */}
+                    <div
+                      className="relative pt-12 pb-4 text-center px-3 flex flex-col justify-between flex-grow"
+                      style={{
+                        backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative',
+                      }}
+                    >
+                      {/* Overlay pour assombrir l'image de footer */}
+                      {unit.footerImage && (
+                        <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                      )}
+
+                      {/* Contenu Principal */}
+                      <div className="relative z-10">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
@@ -238,12 +254,15 @@ const UniversPage = () => {
                           </div>
                         )}
                         <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+
+                        {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
+                        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+                          <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        </div>
                       </div>
-                      {/* Intro avec animation smooth */}
-                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out flex items-center justify-center">
-                        <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
-                      </div>
-                      <div className="text-center mt-6 transition-all duration-300">
+
+                      {/* Bouton Explorer */}
+                      <div className="relative z-10 text-center mt-6 transition-all duration-300">
                         <Link href={`/univers/units/${unit.id}`}>
                           <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
                             Explorer
@@ -274,19 +293,35 @@ const UniversPage = () => {
                         backgroundImage: `url(${getImageUrl(unit.headerImage) || "/images/backgrounds/placeholder.jpg"})`,
                       }}
                     >
-                      {/* Image de Profil */}
+                      {/* Image de Profil avec bordure noire et ombre noire */}
                       <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-30">
                         <img
                           alt={unit.title}
                           src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                          className="w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg"
+                          className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-black"
+                          style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
                         />
                       </div>
                     </div>
 
-                    {/* Contenu Textuel */}
-                    <div className="pt-12 pb-4 text-center relative z-10 px-3 flex flex-col justify-between flex-grow">
-                      <div className="text-center">
+                    {/* Contenu Textuel avec Image de Footer en Arrière-Plan */}
+                    <div
+                      className="relative pt-12 pb-4 text-center px-3 flex flex-col justify-between flex-grow"
+                      style={{
+                        backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative',
+                      }}
+                    >
+                      {/* Overlay pour assombrir l'image de footer */}
+                      {unit.footerImage && (
+                        <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                      )}
+
+                      {/* Contenu Principal */}
+                      <div className="relative z-10">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
@@ -295,12 +330,15 @@ const UniversPage = () => {
                           </div>
                         )}
                         <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+
+                        {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
+                        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+                          <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        </div>
                       </div>
-                      {/* Intro avec animation smooth */}
-                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out flex items-center justify-center">
-                        <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
-                      </div>
-                      <div className="text-center mt-6 transition-all duration-300">
+
+                      {/* Bouton Explorer */}
+                      <div className="relative z-10 text-center mt-6 transition-all duration-300">
                         <Link href={`/univers/units/${unit.id}`}>
                           <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
                             Explorer
@@ -315,8 +353,9 @@ const UniversPage = () => {
           )}
         </motion.div>
       </section>
-    </motion.div>
-  );
-};
 
-export default UniversPage;
+      </motion.div>
+            );
+    };
+
+    export default UniversPage;
