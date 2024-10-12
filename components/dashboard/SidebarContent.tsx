@@ -11,6 +11,7 @@ import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'; // Import du composant Image
 import { AiFillHome } from 'react-icons/ai';
+import { FaFolderOpen } from "react-icons/fa6";
 
 export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
@@ -143,6 +144,22 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         >
           {!collapsed && <span className="uppercase text-shadow-white">Tableau de bord</span>}
         </Menu.Item>
+
+        <Menu.SubMenu
+          key="posts"
+          icon={<FaFolderOpen className="w-5 h-5 text-shadow-white" />}
+          title={!collapsed && <span className="uppercase text-shadow-white">Articles</span>}
+          className="menu-item"
+        >
+          <Menu.Item
+            key="general-posts"
+            className="submenu-item"
+            style={{ borderLeft: '4px solid black' }}
+            onClick={() => router.push('/admin/post')}
+          >
+            <span className="uppercase">Général</span>
+          </Menu.Item>
+        </Menu.SubMenu>
 
         <Menu.SubMenu
           key="users"

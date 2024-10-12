@@ -3,18 +3,18 @@
 import axios from 'axios';
 import { PostModel, CreatePostModel, UpdatePostModel } from '../models/PostModels';
 
-// Utilisation des variables d'environnement pour définir la base URL
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_API_URL_PROD
-    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000'; // Fallback vers localhost en mode dev
+// Utilisation directe de NEXT_PUBLIC_API_URL_LOCAL
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
+console.log('BASE_URL:', BASE_URL);
 
 // Fonction pour récupérer tous les posts
 export const fetchPosts = async (): Promise<PostModel[]> => {
-  const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`);
-  return response.data;
-};
-
+    console.log('fetchPosts called');
+    const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`);
+    return response.data;
+  };
+  
 // Fonction pour récupérer un post par ID
 export const fetchPostById = async (id: number): Promise<PostModel> => {
   const response = await axios.get<PostModel>(`${BASE_URL}/posts/${id}`);
