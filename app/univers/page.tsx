@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { Card } from "antd";
 import Link from "next/link";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
 import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
-import { getImageUrl } from "@/utils/image"; 
+import { getImageUrl } from "@/utils/image";
 import Image from "next/image";
 import { motion } from "framer-motion"; // Importation de Framer Motion
 
@@ -100,7 +99,7 @@ const UniversPage = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative w-full min-h-screen text-white font-kanit"
+      className="relative w-full min-h-screen text-white font-kanit overflow-x-hidden"
     >
       {/* Image de Fond Aléatoire Fixée et Proportionnée */}
       {backgroundImage && (
@@ -113,7 +112,7 @@ const UniversPage = () => {
             objectPosition="center"
             priority={true}
             quality={100}
-            className="brightness-30" // Ajustez la luminosité selon vos besoins
+            className="brightness-30"
           />
           {/* Overlay pour assombrir l'image */}
           <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
@@ -208,7 +207,7 @@ const UniversPage = () => {
                 {sortedChampions.map((unit) => (
                   <div
                     key={unit.id}
-                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col bg-black/60"
+                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Image d'En-tête */}
                     <div
@@ -218,12 +217,11 @@ const UniversPage = () => {
                       }}
                     >
                       {/* Image de Profil avec bordure noire et ombre noire */}
-                      <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-30">
+                      <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-50 pointer-events-none">
                         <img
                           alt={unit.title}
                           src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                          className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-black"
-                          style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
+                          className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
                         />
                       </div>
                     </div>
@@ -236,12 +234,11 @@ const UniversPage = () => {
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
-                        position: 'relative',
                       }}
                     >
                       {/* Overlay pour assombrir l'image de footer */}
                       {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
                       )}
 
                       {/* Contenu Principal */}
@@ -256,7 +253,7 @@ const UniversPage = () => {
                         <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
 
                         {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
-                        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+                        <div className="mt-4 max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-500 ease-in-out">
                           <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                         </div>
                       </div>
@@ -284,7 +281,7 @@ const UniversPage = () => {
                 {sortedBestiaire.map((unit) => (
                   <div
                     key={unit.id}
-                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col bg-black/60"
+                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Image d'En-tête */}
                     <div
@@ -294,12 +291,11 @@ const UniversPage = () => {
                       }}
                     >
                       {/* Image de Profil avec bordure noire et ombre noire */}
-                      <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-30">
+                      <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-50 pointer-events-none">
                         <img
                           alt={unit.title}
                           src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                          className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-black"
-                          style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
+                          className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
                         />
                       </div>
                     </div>
@@ -312,12 +308,11 @@ const UniversPage = () => {
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
-                        position: 'relative',
                       }}
                     >
                       {/* Overlay pour assombrir l'image de footer */}
                       {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
                       )}
 
                       {/* Contenu Principal */}
@@ -332,7 +327,7 @@ const UniversPage = () => {
                         <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
 
                         {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
-                        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out">
+                        <div className="mt-4 max-h-0 overflow-hidden group-hover:max-h-40 transition-all duration-500 ease-in-out">
                           <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                         </div>
                       </div>
@@ -353,9 +348,8 @@ const UniversPage = () => {
           )}
         </motion.div>
       </section>
-
       </motion.div>
-            );
+      );
     };
 
     export default UniversPage;
