@@ -12,6 +12,7 @@ import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
 import { UploadType } from "@/lib/models/ClassModels"; // Importation correcte des types
 import Image from "next/image"; // Utilisation du composant Image de Next.js
+import { motion } from "framer-motion"; // Importation de Framer Motion
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -94,12 +95,11 @@ const UniversPage = () => {
           <Image
             src={backgroundImage}
             alt="Background"
-            layout="fill"
-            objectFit="cover"
-            objectPosition="center"
+            fill
+            style={{ objectFit: "cover", objectPosition: "center", filter: "brightness(20%)" }}
             priority={true}
             quality={100}
-            className="brightness-20" // Tailwind CSS pour assombrir l'image
+            className=""
           />
           <div className="absolute inset-0 bg-black opacity-90 z-10"></div> {/* Overlay noir */}
         </div>
@@ -188,7 +188,12 @@ const UniversPage = () => {
                     className="font-iceberg shadow-lg"
                     style={{ boxShadow: "0px 4px 12px rgba(255, 0, 0, 0.4)" }}
                   >
-                    <div className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col">
+                    <motion.div
+                      className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
                       {/* Image d'En-tête */}
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
@@ -197,7 +202,7 @@ const UniversPage = () => {
                         }}
                       >
                         {/* Image de Profil */}
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20">
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
@@ -211,7 +216,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
+                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0"
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
@@ -249,7 +254,7 @@ const UniversPage = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </Badge.Ribbon>
                 ))}
               </div>
@@ -269,7 +274,12 @@ const UniversPage = () => {
                     className="font-iceberg shadow-lg"
                     style={{ boxShadow: "0px 4px 12px rgba(255, 0, 0, 0.4)" }}
                   >
-                    <div className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col">
+                    <motion.div
+                      className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
                       {/* Image d'En-tête */}
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
@@ -278,7 +288,7 @@ const UniversPage = () => {
                         }}
                       >
                         {/* Image de Profil */}
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20">
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
@@ -292,7 +302,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
+                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0"
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
@@ -339,7 +349,7 @@ const UniversPage = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   </Badge.Ribbon>
                 ))}
               </div>
