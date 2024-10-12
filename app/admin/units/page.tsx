@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import Table from "@/components/Table";
-import CardList from "@/components/CardList";
-import { SidebarContent } from "@/components/dashboard/SidebarContent";
-import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { UnitModel } from "@/lib/models/UnitModels";
-import { Image } from "antd";
-import Badge from "@/components/Badge";
-import { useNotification } from "@/components/notifications/NotificationProvider";
-import Link from "next/link";
-import { FaEye, FaEdit } from "react-icons/fa";
-import { motion } from "framer-motion"; // Import de Framer Motion
+import React, { useEffect, useMemo, useState } from 'react';
+import Table from '@/components/Table';
+import CardList from '@/components/CardList';
+import { SidebarContent } from '@/components/dashboard/SidebarContent';
+import { fetchUnits } from '@/lib/queries/UnitQueries';
+import { UnitModel } from '@/lib/models/UnitModels';
+import { Image } from 'antd';
+import Badge from '@/components/Badge';
+import { useNotification } from '@/components/notifications/NotificationProvider';
+import Link from 'next/link';
+import { FaEye, FaEdit } from 'react-icons/fa';
 
 const UnitsPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
@@ -22,7 +21,7 @@ const UnitsPage = () => {
   const backendUrl =
     process.env.NEXT_PUBLIC_API_URL_PROD ||
     process.env.NEXT_PUBLIC_API_URL_LOCAL ||
-    "http://localhost:5000";
+    'http://localhost:5000';
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,10 +30,10 @@ const UnitsPage = () => {
 
     handleResize();
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -55,8 +54,8 @@ const UnitsPage = () => {
 
         setUnits(unitsWithImages);
       } catch (error) {
-        console.error("Erreur lors de la récupération des unités:", error);
-        addNotification("critical", "Erreur lors de la récupération des unités.");
+        console.error('Erreur lors de la récupération des unités:', error);
+        addNotification('critical', 'Erreur lors de la récupération des unités.');
       }
     };
     fetchData();
@@ -74,89 +73,56 @@ const UnitsPage = () => {
         };
       });
       setUnits(unitsWithImages);
-      addNotification("success", "Unité supprimée avec succès.");
+      addNotification('success', 'Unité supprimée avec succès.');
     } catch (error) {
-      console.error(
-        "Erreur lors de la mise à jour des unités après suppression :",
-        error
-      );
-      addNotification(
-        "critical",
-        "Erreur lors de la mise à jour des unités après suppression."
-      );
+      console.error("Erreur lors de la mise à jour des unités après suppression :", error);
+      addNotification('critical', 'Erreur lors de la mise à jour des unités après suppression.');
     }
   };
 
   const columns = useMemo(
     () => [
       {
-        Header: "Titre",
-        accessor: "title",
+        Header: 'Titre',
+        accessor: 'title',
         Cell: ({ row, value }: any) => (
-          <div className="flex flex-col items-center gap-2 p-2">
+          <div className="flex flex-col items-center gap-2 p-5">
             <Image
-              src={row.original.profileImage || "/images/backgrounds/placeholder.jpg"}
+              src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'}
               alt={`${value}'s Avatar`}
-              width={60} // Dimension réduite pour une meilleure intégration
-              height={60}
-              style={{ borderRadius: "50%", objectFit: "cover" }} // Image ronde
-              preview={false} // Désactiver le zoom pour une intégration fluide
-              className="border-2 border-gray-300 shadow-lg z-20" // Bordure et ombre pour la visibilité
+              width={150}
+              height={150}
+              style={{ borderRadius: '8px', objectFit: 'cover' }}
+              preview={true} // Permet le zoom au clic
             />
-            <div className="text-center">{value}</div>
+            <div>{value}</div>
           </div>
         ),
       },
       {
-        Header: "Introduction",
-        accessor: "intro",
-        Cell: ({ value }: any) => (
-          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
-        ),
+        Header: 'Introduction',
+        accessor: 'intro',
+        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
       },
       {
-        Header: "Sous-titre",
-        accessor: "subtitle",
-        Cell: ({ value }: any) => (
-          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
-        ),
+        Header: 'Sous-titre',
+        accessor: 'subtitle',
+        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
       },
       {
-        Header: "Histoire",
-        accessor: "story",
-        Cell: ({ value }: any) => (
-          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
-        ),
+        Header: 'Histoire',
+        accessor: 'story',
+        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
       },
       {
-        Header: "Biographie",
-        accessor: "bio",
-        Cell: ({ value }: any) => (
-          <div className="whitespace-pre-wrap text-gray-700">{value}</div>
-        ),
+        Header: 'Biographie',
+        accessor: 'bio',
+        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
       },
       {
-        Header: "Type",
-        accessor: "type",
+        Header: 'Type',
+        accessor: 'type',
         Cell: ({ value }: any) => <Badge type={value} />,
-      },
-      {
-        Header: "Actions",
-        accessor: "actions",
-        Cell: ({ row }: any) => (
-          <div className="flex space-x-2">
-            <Link href={`/admin/units/${row.original.id}`}>
-              <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                <FaEye />
-              </button>
-            </Link>
-            <Link href={`/admin/units/update?id=${row.original.id}`}>
-              <button className="p-2 bg-green-500 text-white rounded hover:bg-green-600">
-                <FaEdit />
-              </button>
-            </Link>
-          </div>
-        ),
       },
     ],
     []
@@ -170,12 +136,10 @@ const UnitsPage = () => {
     >
       <div className="relative w-full h-48">
         <Image
-          src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+          src={unit.profileImage || '/images/backgrounds/placeholder.jpg'}
           alt={`${unit.title}'s Avatar`}
           className="rounded-lg w-full h-full object-cover"
-          style={{ objectFit: "cover", borderRadius: "8px", maxHeight: "100%" }}
-          width={300} // Dimension adaptée pour les cartes
-          height={192}
+          style={{ objectFit: 'cover', borderRadius: '8px', maxHeight: '100%' }}
         />
       </div>
       <h3 className="text-xl font-bold text-center text-black font-iceberg uppercase">
@@ -198,44 +162,25 @@ const UnitsPage = () => {
     </div>
   );
 
-  // Framer Motion variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
-
   return (
     <div className="p-6 font-kanit relative">
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Units</h1>
       {isMobile ? (
         <>
-          <motion.div
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            className="mb-6"
-          >
-            <CardList items={units} itemsPerPage={4} renderItem={renderUnitItem} />
-          </motion.div>
+          <CardList items={units} itemsPerPage={4} renderItem={renderUnitItem} />
           <SidebarContent collapsed={false} toggleSidebar={() => {}} />
         </>
       ) : (
-        <motion.div
-          variants={fadeInUp}
-          initial="hidden"
-          animate="visible"
-        >
-          <Table
-            data={units}
-            columns={columns}
-            createButtonText="Créer une unité"
-            createUrl="/admin/units/create"
-            onDelete={handleDelete}
-            baseRoute="admin/units"
-            apiRoute="units"
-            itemType="unité"
-          />
-        </motion.div>
+        <Table
+          data={units}
+          columns={columns}
+          createButtonText="Créer une unité"
+          createUrl="/admin/units/create"
+          onDelete={handleDelete}
+          baseRoute="admin/units"
+          apiRoute="units"
+          itemType="unité"
+        />
       )}
     </div>
   );
