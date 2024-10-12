@@ -32,9 +32,8 @@ const UpdateUnit = () => {
 
   const { addNotification } = useNotification();
 
-  const backendUrl = process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_API_URL_PROD
-    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+  // Définir l'URL de base en fonction de l'environnement
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
   // Chargement des unités et des classes
   useEffect(() => {
@@ -44,16 +43,22 @@ const UpdateUnit = () => {
           const data = await fetchUnitById(numericId);
 
           if (data) {
-            setUnit(data);
+            // Ajuster les URLs des images
+            const adjustedUnit = {
+              ...data,
+              profileImage: data.profileImage ? `${backendUrl}/${data.profileImage}` : undefined,
+              headerImage: data.headerImage ? `${backendUrl}/${data.headerImage}` : undefined,
+              footerImage: data.footerImage ? `${backendUrl}/${data.footerImage}` : undefined,
+            };
+            
 
-            // Correction : Chargement des véritables objets Upload (galerie)
+            setUnit(adjustedUnit);
+
+            // Chargement des images de la galerie avec les URLs complètes
             const galleryUrls = data.gallery?.map((url: string, index: number) => ({
               id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '', // ID réel de l'objet Upload
-              url: url.startsWith('http') ? url : `${backendUrl}/${url}`, // Correction pour les URL complètes
+              url: url.startsWith('http') ? url : `${backendUrl}/${url}`,
             })) || [];
-
-            // Log des URLs d'images de galerie avec les vrais IDs
-            console.log("Gallery with real Upload IDs:", galleryUrls);
 
             setVisibleGallery(galleryUrls);
 
@@ -190,13 +195,73 @@ const UpdateUnit = () => {
           layout="vertical"
           className="text-black font-kanit"
         >
-          {/* Vos autres champs du formulaire */}
+          <Form.Item
+            name="title"
+            label={<span className="text-black font-kanit">Titre</span>}
+            rules={[{ required: true, message: "Veuillez entrer le titre de l'unité!" }]}
+          >
+            <Input placeholder="Titre de l'unité" className="bg-white text-black font-kanit" />
+          </Form.Item>
+
+          <Form.Item
+            name="intro"
+            label={<span className="text-black">Introduction</span>}
+            rules={[{ required: true, message: "Veuillez entrer l'introduction de l'unité!" }]}
+            className="font-kanit"
+          >
+            <Input.TextArea placeholder="Introduction" className="bg-white text-black font-kanit" />
+          </Form.Item>
+
+          <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
+            <Input placeholder="Sous-titre de l'unité" className="bg-white text-black font-kanit" />
+          </Form.Item>
+
+          <Form.Item label="Histoire" className="font-kanit">
+            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
+          </Form.Item>
+
+          <Form.Item label="Biographie" className="font-kanit">
+            <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
+          </Form.Item>
+
+          <Form.Item
+            name="type"
+            label="Type"
+            rules={[{ required: true, message: "Veuillez choisir un type!" }]}
+            className="font-kanit"
+          >
+            <Select placeholder="Sélectionnez le type" className="bg-white text-black font-kanit">
+              <Option className="font-kanit" value={UnitType.UNIT}>
+                UNIT
+              </Option>
+              <Option className="font-kanit" value={UnitType.CHAMPION}>
+                CHAMPION
+              </Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Classe associée">
+            <Select
+              mode="multiple"
+              placeholder="Sélectionnez une ou plusieurs classes"
+              value={selectedClassIds}
+              onChange={setSelectedClassIds}
+            >
+              {classes.map((classe) => (
+                <Select.Option key={classe.id} value={classe.id}>
+                  {classe.title}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
 
           {/* Image de profil */}
           <Form.Item label="Image de profil">
-            <Row gutter={16}>
+            <Row gutter={16} align="middle">
               <Col span={12}>
-                {unit?.profileImage && <Image src={unit.profileImage} alt="Profil actuel" />}
+                {unit?.profileImage && (
+                  <Image src={unit.profileImage} alt="Profil actuel" style={{ maxWidth: '100%' }} />
+                )}
               </Col>
               <Col span={12}>
                 <Form.Item
@@ -215,9 +280,11 @@ const UpdateUnit = () => {
 
           {/* Image Header */}
           <Form.Item label="Image Header">
-            <Row gutter={16}>
+            <Row gutter={16} align="middle">
               <Col span={12}>
-                {unit?.headerImage && <Image src={unit.headerImage} alt="Header actuel" />}
+                {unit?.headerImage && (
+                  <Image src={unit.headerImage} alt="Header actuel" style={{ maxWidth: '100%' }} />
+                )}
               </Col>
               <Col span={12}>
                 <Form.Item
@@ -236,9 +303,11 @@ const UpdateUnit = () => {
 
           {/* Image Footer */}
           <Form.Item label="Image de pied de page">
-            <Row gutter={16}>
+            <Row gutter={16} align="middle">
               <Col span={12}>
-                {unit?.footerImage && <Image src={unit.footerImage} alt="Pied de page actuel" />}
+                {unit?.footerImage && (
+                  <Image src={unit.footerImage} alt="Pied de page actuel" style={{ maxWidth: '100%' }} />
+                )}
               </Col>
               <Col span={12}>
                 <Form.Item
@@ -255,6 +324,7 @@ const UpdateUnit = () => {
             </Row>
           </Form.Item>
 
+          {/* Galerie */}
           <div className="bg-gray-200 p-4 rounded-lg mb-4">
             <h2 className="font-kanit text-black">Galerie</h2>
             {visibleGallery.length > 0 && (
