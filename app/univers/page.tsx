@@ -11,6 +11,7 @@ import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
 import { UploadType } from "@/lib/models/ClassModels"; // Importation correcte des types
+import Image from "next/image"; // Optionnel, pour optimiser les images
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -92,11 +93,11 @@ const UniversPage = () => {
             className="absolute inset-0 w-full h-full bg-cover bg-center"
             style={{
               backgroundImage: `url(${backgroundImage})`,
-              filter: "brightness(70%)",
+              filter: "brightness(30%)", // Assombrissement accru
               backgroundAttachment: "fixed",
             }}
           ></div>
-          <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
+          <div className="absolute inset-0 bg-black opacity-80 z-10"></div> {/* Opacité accrue */}
         </div>
       )}
 
@@ -186,7 +187,7 @@ const UniversPage = () => {
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
                         }}
                       >
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center">
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
@@ -198,7 +199,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-50 z-0"
+                            className="absolute inset-0 bg-cover bg-center opacity-80 z-0" // Opacité très sombre
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
@@ -260,7 +261,7 @@ const UniversPage = () => {
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
                         }}
                       >
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center">
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
@@ -272,7 +273,7 @@ const UniversPage = () => {
                         {/* Footer Image Background */}
                         {unit.footerImage && (
                           <div
-                            className="absolute inset-0 bg-cover bg-center opacity-50 z-0"
+                            className="absolute inset-0 bg-cover bg-center opacity-80 z-0" // Opacité très sombre
                             style={{
                               backgroundImage: `url(${unit.footerImage})`,
                             }}
@@ -297,7 +298,7 @@ const UniversPage = () => {
                                             title: classItem.title,
                                             color: classItem.color || undefined, // Remplace null par undefined
                                           }))
-                                        : [] // No classes, pass an empty array
+                                        : [] // Pas de classes, passez un tableau vide
                                     }
                                   />
                                 </div>
