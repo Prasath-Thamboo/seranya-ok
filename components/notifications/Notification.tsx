@@ -1,13 +1,7 @@
 "use client"; // Ensure this component is a client component
 
 import React, { useEffect, useState } from "react";
-import { Progress } from "antd";
-import {
-  AiOutlineInfoCircle,
-  AiOutlineCheckCircle,
-  AiOutlineWarning,
-  AiOutlineCloseCircle,
-} from "react-icons/ai";
+import { AiOutlineInfoCircle, AiOutlineCheckCircle, AiOutlineWarning, AiOutlineCloseCircle } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 
 type NotificationType = "information" | "success" | "warning" | "critical";
@@ -31,42 +25,40 @@ interface NotificationFlashProps {
   duration?: number;
 }
 
-const typeStyles = {
+const typeStyles: Record<NotificationType, {
+  container: string;
+  iconContainer: string;
+  icon: React.JSX.Element;
+  title: string;
+  description: string;
+}> = {
   information: {
-    container: "text-white bg-blue-700/50 border-blue-200 shadow-blue-500/50 text-kanit",
-    primaryButton:
-      "bg-blue-700 hover:bg-white hover:text-blue-700 focus:ring-blue-500 transition-all transform hover:scale-105 text-kanit",
-    secondaryButton:
-      "bg-blue-700/50 border-blue-500 hover:bg-white hover:text-blue-600 focus:ring-blue-400 transition-all transform hover:scale-105 text-kanit",
-    icon: <AiOutlineInfoCircle size={24} className="text-white" />,
-    progressColor: "#1545C7",
+    container: "bg-blue-50 border-t-2 border-blue-500 rounded-lg p-4 dark:bg-blue-800/30",
+    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 dark:border-blue-900 dark:bg-blue-800 dark:text-blue-400",
+    icon: <AiOutlineInfoCircle className="shrink-0 size-4" />,
+    title: "text-gray-800 font-semibold dark:text-white",
+    description: "text-sm text-gray-700 dark:text-neutral-400",
   },
   success: {
-    container: "text-white bg-green-700/50 border-green-200 shadow-green-500/50 text-kanit",
-    primaryButton:
-      "bg-green-700 hover:bg-white hover:text-green-700 focus:ring-green-500 transition-all transform hover:scale-105",
-    secondaryButton:
-      "bg-green-700/50 border-green-500 hover:bg-white hover:text-green-600 focus:ring-green-400 transition-all transform hover:scale-105",
-    icon: <AiOutlineCheckCircle size={24} className="text-white" />,
-    progressColor: "#11B462",
+    container: "bg-teal-50 border-t-2 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30",
+    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400",
+    icon: <AiOutlineCheckCircle className="shrink-0 size-4" />,
+    title: "text-gray-800 font-semibold dark:text-white",
+    description: "text-sm text-gray-700 dark:text-neutral-400",
   },
   warning: {
-    container: "text-white bg-yellow-700/50 border-yellow-200 shadow-yellow-500/50",
-    primaryButton:
-      "bg-yellow-500 hover:bg-white hover:text-yellow-500 focus:ring-yellow-500 transition-all transform hover:scale-105",
-    secondaryButton:
-      "bg-yellow-700/50 border-yellow-500 hover:bg-white hover:text-yellow-600 focus:ring-yellow-400 transition-all transform hover:scale-105",
-    icon: <AiOutlineWarning size={24} className="text-white" />,
-    progressColor: "#FFE604",
+    container: "bg-yellow-50 border-t-2 border-yellow-500 rounded-lg p-4 dark:bg-yellow-800/30",
+    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-yellow-100 bg-yellow-200 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800 dark:text-yellow-400",
+    icon: <AiOutlineWarning className="shrink-0 size-4" />,
+    title: "text-gray-800 font-semibold dark:text-white",
+    description: "text-sm text-gray-700 dark:text-neutral-400",
   },
   critical: {
-    container: "text-white bg-red-700/50 border-red-200 shadow-red-500/50",
-    primaryButton:
-      "bg-red-600 hover:bg-white hover:text-red-600 focus:ring-red-500 transition-all transform hover:scale-105",
-    secondaryButton:
-      "bg-red-700/50 border-red-500 hover:bg-white hover:text-red-600 focus:ring-red-400 transition-all transform hover:scale-105",
-    icon: <AiOutlineCloseCircle size={24} className="text-white" />,
-    progressColor: "#E70E0E",
+    container: "bg-red-50 border-s-4 border-red-500 p-4 dark:bg-red-800/30",
+    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400",
+    icon: <AiOutlineCloseCircle className="shrink-0 size-4" />,
+    title: "text-gray-800 font-semibold dark:text-white",
+    description: "text-sm text-gray-700 dark:text-neutral-400",
   },
 };
 
@@ -81,72 +73,48 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
   onSecondaryButtonClick,
   duration = 5000,
 }) => {
-  const [progress, setProgress] = useState(100);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => (prev > 0 ? prev - 1 : 0));
-    }, duration / 100);
+    const timeout = setTimeout(() => {
+      setVisible(false);
+      onClose();
+    }, duration);
 
-    if (progress <= 0) {
-      setTimeout(() => {
-        setVisible(false);
-        onClose();
-      }, 200); // Smooth fade out over 200ms
-    }
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [progress, duration, onClose]);
+    return () => clearTimeout(timeout);
+  }, [duration, onClose]);
 
   const styles = typeStyles[type];
 
   return visible ? (
-    <div
-      className={`relative p-4 w-96 ${styles.container} border rounded-md shadow-lg transition-all duration-200 ease-out transform hover:scale-105 hover:opacity-75 flex items-center`}
-      style={{ opacity: progress > 0 ? 1 : 0, transition: "opacity 2s" }}
-    >
-      <div className="mr-4">{styles.icon}</div>
-      <div className="flex-1">
-        <Progress
-          percent={progress}
-          showInfo={false}
-          strokeColor={styles.progressColor}
-          className="mb-2 w-full"
-        />
-        <h4 className="text-md leading-6 font-medium">{message}</h4>
-        {description && <p className="text-sm">{description}</p>}
-        <div className="flex mt-2">
-          <button
-            type="button"
-            className={`inline-flex justify-center rounded-md border shadow-sm px-4 py-2 ${styles.primaryButton} text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
-            onClick={onPrimaryButtonClick}
-          >
-            {primaryButtonLabel}
-          </button>
-          {secondaryButtonLabel && (
+    <div className={`space-y-5 ${styles.container}`} role="alert" tabIndex={-1}>
+      <div className="flex">
+        <div className="shrink-0">
+          <span className={styles.iconContainer}>{styles.icon}</span>
+        </div>
+        <div className="ms-3">
+          <h3 className={styles.title}>{message}</h3>
+          {description && <p className={styles.description}>{description}</p>}
+          <div className="mt-4 space-x-2">
             <button
               type="button"
-              className={`inline-flex justify-center rounded-md border shadow-sm px-4 py-2 ml-2 ${styles.secondaryButton} text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm`}
-              onClick={onSecondaryButtonClick}
+              className="bg-teal-500 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded transition-all"
+              onClick={onPrimaryButtonClick}
             >
-              {secondaryButtonLabel}
+              {primaryButtonLabel}
             </button>
-          )}
+            {secondaryButtonLabel && (
+              <button
+                type="button"
+                className="bg-teal-200 text-teal-800 font-semibold py-2 px-4 rounded transition-all hover:bg-teal-300"
+                onClick={onSecondaryButtonClick}
+              >
+                {secondaryButtonLabel}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      <button
-        type="button"
-        className="absolute top-2 right-2 rounded-full text-gray-300 hover:text-white hover:shadow-neon focus:outline-none focus:ring-2 transition-all"
-        onClick={() => {
-          setVisible(false);
-          onClose(); // Trigger immediate close
-        }}
-      >
-        <IoCloseSharp size={24} />
-      </button>
     </div>
   ) : null;
 };
@@ -157,58 +125,34 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
   onClose,
   duration = 5000,
 }) => {
-  const [progress, setProgress] = useState(100);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((prev) => (prev > 0 ? prev - 1 : 0));
-    }, duration / 100);
+    const timeout = setTimeout(() => {
+      setVisible(false);
+      onClose();
+    }, duration);
 
-    if (progress <= 0) {
-      setTimeout(() => {
-        setVisible(false);
-        onClose();
-      }, 200); // Smooth fade out over 200ms
-    }
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [progress, duration, onClose]);
+    return () => clearTimeout(timeout);
+  }, [duration, onClose]);
 
   const styles = typeStyles[type];
 
   return visible ? (
-    <div
-      className={`relative p-4 w-96 ${styles.container} border rounded-md shadow-lg transition-all duration-200 ease-out transform hover:scale-105 hover:opacity-75 flex items-center`}
-      style={{ opacity: progress > 0 ? 1 : 0, transition: "opacity 2s" }}
-    >
-      <div className="mr-4">{styles.icon}</div>
-      <div className="flex-1">
-        <Progress
-          percent={progress}
-          showInfo={false}
-          strokeColor={styles.progressColor}
-          className="mb-2 w-full"
-        />
-        <h4 className="text-md leading-6 font-medium font-kanit">{message}</h4>
+    <div className={`space-y-5 ${styles.container}`} role="alert" tabIndex={-1}>
+      <div className="flex">
+        <div className="shrink-0">
+          <span className={styles.iconContainer}>{styles.icon}</span>
+        </div>
+        <div className="ms-3">
+          <h3 className={styles.title}>{message}</h3>
+        </div>
       </div>
-      <button
-        type="button"
-        className="absolute top-2 right-2 rounded-full text-gray-300 hover:text-white hover:shadow-neon focus:outline-none focus:ring-2 transition-all"
-        onClick={() => {
-          setVisible(false);
-          onClose(); // Trigger immediate close
-        }}
-      >
-        <IoCloseSharp size={24} />
-      </button>
     </div>
   ) : null;
 };
 
-// Composant NotificationList modifié pour inclure les deux types de notifications
+// Composant NotificationList pour afficher la liste des notifications
 interface NotificationListProps {
   notifications: Array<{
     id: string;

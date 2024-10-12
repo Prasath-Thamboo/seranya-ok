@@ -203,10 +203,10 @@ const Home = () => {
 
         <div className="relative z-10 container mx-auto">
           <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
-            Découvrez les Unités Récentes
+            Explorer l&apos;encyclopédie
           </h2>
           <p className="text-lg text-gray-300 mb-12 text-center">
-            Plongez dans les aventures captivantes de nos dernières unités.
+            Plongez dans le bestiaire de Spectral.
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -252,7 +252,7 @@ const Home = () => {
                           <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
                             {units[0].title}
                           </h3>
-                          <p className="text-lg text-gray-300">
+                          <p className="text-lg text-gray-300 font kanit">
                             {units[0].subtitle || "Aucune description"}
                           </p>
                         </div>
@@ -279,7 +279,7 @@ const Home = () => {
                         <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
                           {unit.title || "No Title"}
                         </h3>
-                        <p className="text-sm text-gray-300">
+                        <p className="text-sm text-gray-300 font-kanit">
                           {unit.subtitle || "No Description"}
                         </p>
                       </div>
