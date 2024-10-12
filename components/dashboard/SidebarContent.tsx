@@ -155,7 +155,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
             key="general-posts"
             className="submenu-item"
             style={{ borderLeft: '4px solid black' }}
-            onClick={() => router.push('/admin/post')}
+            onClick={() => router.push('/admin/posts')}
           >
             <span className="uppercase">Général</span>
           </Menu.Item>
