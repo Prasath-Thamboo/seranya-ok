@@ -86,9 +86,9 @@ const UniversPage = () => {
     .sort((a, b) => a.title.localeCompare(b.title));
 
   // Helper function to transform classes to match BadgeComponent's expectation
-  const transformClasses = (classes: UnitModel['classes']) => {
+  const transformClasses = (classes: UnitModel["classes"]) => {
     if (!classes) return [];
-    return classes.map(cls => ({
+    return classes.map((cls) => ({
       title: cls.title,
       color: cls.color || undefined, // Remplacer null par undefined
     }));
@@ -183,7 +183,10 @@ const UniversPage = () => {
         >
           {/* Barre de Recherche */}
           <div className="mb-8 flex items-center">
-            <SearchOutlined className="text-gray-400 mr-3" style={{ fontSize: "1.5rem" }} />
+            <SearchOutlined
+              className="text-gray-400 mr-3"
+              style={{ fontSize: "1.5rem" }}
+            />
             <input
               className="w-full lg:w-1/2 h-12 pl-4 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-black form-input"
               type="text"
@@ -202,7 +205,7 @@ const UniversPage = () => {
                 {sortedChampions.map((unit) => (
                   <div
                     key={unit.id}
-                    className="relative group overflow-visible rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
+                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Card Content */}
                     <div className="relative flex flex-col flex-grow">
@@ -210,7 +213,9 @@ const UniversPage = () => {
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
-                          backgroundImage: `url(${getImageUrl(unit.headerImage) || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundImage: `url(${getImageUrl(
+                            unit.headerImage
+                          ) || "/images/backgrounds/placeholder.jpg"})`,
                         }}
                       ></div>
 
@@ -218,10 +223,12 @@ const UniversPage = () => {
                       <div
                         className="relative pt-12 pb-4 text-center px-3 flex flex-col justify-between flex-grow"
                         style={{
-                          backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat',
+                          backgroundImage: unit.footerImage
+                            ? `url(${getImageUrl(unit.footerImage)})`
+                            : undefined,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat",
                         }}
                       >
                         {/* Overlay pour assombrir l'image de footer */}
@@ -231,18 +238,27 @@ const UniversPage = () => {
 
                         {/* Contenu Principal */}
                         <div className="relative z-10">
-                          <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                          <span className="text-2xl font-iceberg uppercase">
+                            {unit.title}
+                          </span>
                           {/* Badge des classes associées */}
                           {unit.classes && unit.classes.length > 0 && (
                             <div className="mt-2">
-                              <BadgeComponent classes={transformClasses(unit.classes)} />
+                              <BadgeComponent
+                                classes={transformClasses(unit.classes)}
+                              />
                             </div>
                           )}
-                          <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+                          <p className="text-gray-300 font-kanit mt-2">
+                            {unit.subtitle || "Aucune citation"}
+                          </p>
 
                           {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
                           <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                            <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                            <p className="text-gray-300 font-kanit p-3">
+                              {unit.intro ||
+                                "Aucune introduction disponible."}
+                            </p>
                           </div>
                         </div>
 
@@ -258,10 +274,13 @@ const UniversPage = () => {
                     </div>
 
                     {/* Image de Profil avec bordure noire et ombre noire */}
-                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-50 pointer-events-none">
+                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20 pointer-events-none">
                       <img
                         alt={unit.title}
-                        src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                        src={
+                          unit.profileImage ||
+                          "/images/backgrounds/placeholder.jpg"
+                        }
                         className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
                       />
                     </div>
@@ -279,7 +298,7 @@ const UniversPage = () => {
                 {sortedBestiaire.map((unit) => (
                   <div
                     key={unit.id}
-                    className="relative group overflow-visible rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
+                    className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
                   >
                     {/* Card Content */}
                     <div className="relative flex flex-col flex-grow">
@@ -287,7 +306,9 @@ const UniversPage = () => {
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
-                          backgroundImage: `url(${getImageUrl(unit.headerImage) || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundImage: `url(${getImageUrl(
+                            unit.headerImage
+                          ) || "/images/backgrounds/placeholder.jpg"})`,
                         }}
                       ></div>
 
@@ -295,10 +316,12 @@ const UniversPage = () => {
                       <div
                         className="relative pt-12 pb-4 text-center px-3 flex flex-col justify-between flex-grow"
                         style={{
-                          backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat',
+                          backgroundImage: unit.footerImage
+                            ? `url(${getImageUrl(unit.footerImage)})`
+                            : undefined,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat",
                         }}
                       >
                         {/* Overlay pour assombrir l'image de footer */}
@@ -308,18 +331,27 @@ const UniversPage = () => {
 
                         {/* Contenu Principal */}
                         <div className="relative z-10">
-                          <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                          <span className="text-2xl font-iceberg uppercase">
+                            {unit.title}
+                          </span>
                           {/* Badge des classes associées */}
                           {unit.classes && unit.classes.length > 0 && (
                             <div className="mt-2">
-                              <BadgeComponent classes={transformClasses(unit.classes)} />
+                              <BadgeComponent
+                                classes={transformClasses(unit.classes)}
+                              />
                             </div>
                           )}
-                          <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+                          <p className="text-gray-300 font-kanit mt-2">
+                            {unit.subtitle || "Aucune citation"}
+                          </p>
 
                           {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
                           <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                            <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                            <p className="text-gray-300 font-kanit p-3">
+                              {unit.intro ||
+                                "Aucune introduction disponible."}
+                            </p>
                           </div>
                         </div>
 
@@ -335,10 +367,13 @@ const UniversPage = () => {
                     </div>
 
                     {/* Image de Profil avec bordure noire et ombre noire */}
-                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-50 pointer-events-none">
+                    <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20 pointer-events-none">
                       <img
                         alt={unit.title}
-                        src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                        src={
+                          unit.profileImage ||
+                          "/images/backgrounds/placeholder.jpg"
+                        }
                         className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
                       />
                     </div>
@@ -348,9 +383,9 @@ const UniversPage = () => {
             </>
           )}
         </motion.div>
-        </section>
-      </div>
-      );
-    };
+      </section>
+    </div>
+  );
+};
 
-    export default UniversPage;
+export default UniversPage;
