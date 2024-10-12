@@ -9,6 +9,8 @@ import { UnitModel } from "@/lib/models/UnitModels";
 import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
+import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
+import { UploadType, ClassModel as ImportedClassModel } from "@/lib/models/ClassModels"; // Importation correcte des types
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -25,23 +27,31 @@ const UniversPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedUnits = await fetchUnits();
+      try {
+        const fetchedUnits = await fetchUnits();
 
-      const unitsWithImages = fetchedUnits
-        .map((unit) => ({
-          ...unit,
-          profileImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/ProfileImage.png`,
-          headerImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/HeaderImage.png`,
-        }))
-        .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
+        const unitsWithImages: UnitModel[] = fetchedUnits
+          .map((unit) => ({
+            ...unit,
+            profileImage: getImageUrl(`/uploads/units/${unit.id}/ProfileImage.png`),
+            headerImage: getImageUrl(`/uploads/units/${unit.id}/HeaderImage.png`),
+          }))
+          .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
 
-      setUnits(unitsWithImages);
-      setFilteredUnits(unitsWithImages); // Initialisation des unités
+        setUnits(unitsWithImages);
+        setFilteredUnits(unitsWithImages); // Initialisation des unités
+      } catch (error) {
+        console.error("Error fetching units:", error);
+      }
     };
 
     const fetchBgImage = async () => {
-      const image = await fetchRandomImage();
-      setBackgroundImage(image);
+      try {
+        const image = await fetchRandomImage();
+        setBackgroundImage(getImageUrl(image));
+      } catch (error) {
+        console.error("Error fetching background image:", error);
+      }
     };
 
     fetchData();
@@ -53,7 +63,9 @@ const UniversPage = () => {
     if (filterType === "ALL") {
       setFilteredUnits(units);
     } else {
-      setFilteredUnits(units.filter((unit) => unit.type.toUpperCase() === filterType));
+      setFilteredUnits(
+        units.filter((unit) => unit.type.toUpperCase() === filterType)
+      );
     }
   };
 
@@ -259,18 +271,16 @@ const UniversPage = () => {
                             <div className="text-center">
                               <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
                               <div className="mt-4">
-                              <BadgeComponent
-  classes={
-    unit.classes && unit.classes.length > 0
-      ? unit.classes.map((classItem) => ({
-          title: classItem.title,
-          color: classItem.color || undefined,  // Remplace null par undefined
-        }))
-      : [] // No classes, pass an empty array
-  }
-/>
-
-
+                                <BadgeComponent
+                                  classes={
+                                    unit.classes && unit.classes.length > 0
+                                      ? unit.classes.map((classItem) => ({
+                                          title: classItem.title,
+                                          color: classItem.color || undefined,  // Remplace null par undefined
+                                        }))
+                                      : [] // No classes, pass an empty array
+                                  }
+                                />
                               </div>
                             </div>
                           }
@@ -299,5 +309,3 @@ const UniversPage = () => {
 };
 
 export default UniversPage;
-
-//
