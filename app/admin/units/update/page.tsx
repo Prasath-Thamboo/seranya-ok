@@ -35,10 +35,6 @@ const UpdateUnit = () => {
   // Définir l'URL de base en fonction de l'environnement
   const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
-  // Fonction pour nettoyer le chemin des images
-  const cleanPath = (path: string) => {
-    return path.replace(/^undefined\//, '').replace(/^\//, '');
-  };
 
   // Chargement des unités et des classes
   useEffect(() => {
@@ -52,21 +48,27 @@ const UpdateUnit = () => {
             const profileImageUpload = data.uploads?.find((upload) => upload.type === "PROFILEIMAGE");
             const headerImageUpload = data.uploads?.find((upload) => upload.type === "HEADERIMAGE");
             const footerImageUpload = data.uploads?.find((upload) => upload.type === "FOOTERIMAGE");
+            
 
             const adjustedUnit: UnitModel = {
               ...data,
-              profileImage: profileImageUpload ? `${backendUrl}/${cleanPath(profileImageUpload.path)}` : undefined,
-              headerImage: headerImageUpload ? `${backendUrl}/${cleanPath(headerImageUpload.path)}` : undefined,
-              footerImage: footerImageUpload ? `${backendUrl}/${cleanPath(footerImageUpload.path)}` : undefined,
+              profileImage: profileImageUpload ? profileImageUpload.path : undefined,
+              headerImage: headerImageUpload ? headerImageUpload.path : undefined,
+              footerImage: footerImageUpload ? footerImageUpload.path : undefined,
             };
 
             setUnit(adjustedUnit);
 
             // Chargement des images de la galerie avec les URLs complètes
-            const galleryUrls = data.gallery?.map((url: string, index: number) => ({
-              id: data.galleryUploadIds ? data.galleryUploadIds[index].toString() : '',
-              url: url.startsWith('http') ? url : `${backendUrl}/${cleanPath(url)}`,
-            })) || [];
+            const galleryUploads = data.uploads?.filter((upload) => upload.type === "GALERY") || [];
+
+            const galleryUrls = galleryUploads.map((upload) => ({
+              id: upload.id.toString(),
+              url: upload.path,
+            }));
+            
+            setVisibleGallery(galleryUrls);
+            
 
             setVisibleGallery(galleryUrls);
 
