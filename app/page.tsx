@@ -228,14 +228,14 @@ const Home = () => {
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
                         <div className="flex justify-center">
                           {units[0].profileImage ? (
-                            <Image
-                              src={units[0].profileImage}
-                              alt={units[0].title}
-                              width={100}
-                              height={100}
-                              className="rounded-full border border-gray-600 object-cover shadow-lg"
-                              onLoad={handleImageLoad}
-                            />
+                            <div className="w-24 h-24 relative rounded-full border border-gray-600 shadow-lg overflow-hidden">
+                              <img
+                                src={units[0].profileImage}
+                                alt={units[0].title}
+                                className="object-cover w-full h-full"
+                                onLoad={handleImageLoad}
+                              />
+                            </div>
                           ) : (
                             <Image
                               src="/images/backgrounds/placeholder.jpg"
@@ -269,10 +269,10 @@ const Home = () => {
                   <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       <div
-                        className="relative w-full h-64 bg-cover bg-[center_bottom] transition-transform duration-500 group-hover:scale-110"
+                        className="relative w-full h-64 bg-cover bg-[center] transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                          backgroundPosition: "center bottom", // Adjusted position
+                          backgroundPosition: "center", // Adjusted position
                         }}
                       />
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
