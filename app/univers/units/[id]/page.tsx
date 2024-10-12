@@ -10,7 +10,7 @@ import Badge from "@/components/Badge";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
 import ClientLayout from "@/components/ClientLayout";
-import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
+import { getImageUrl } from "@/utils/image";
 import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
 
 interface ClassModel {
@@ -40,15 +40,7 @@ const UnitDetailPage = () => {
       if (id) {
         try {
           const fetchedUnit = await fetchUnitById(parseInt(id, 10));
-
           if (fetchedUnit) {
-            // **Suppression de la construction manuelle des URLs**
-            // Les URLs d'images sont déjà fournies par le backend
-
-            // **Gestion des Images de Galerie**
-            // Les URLs de la galerie sont déjà complètes
-
-            // **Gestion des Classes Associées**
             if (fetchedUnit.classes && fetchedUnit.classes.length > 0) {
               const classesWithImages: ClassModel[] = fetchedUnit.classes.map((cls) => {
                 const profileImageUpload = cls.uploads.find(
@@ -59,14 +51,13 @@ const UnitDetailPage = () => {
                 return {
                   id: cls.id,
                   title: cls.title,
-                  profileImage: getImageUrl(profileImage), // Utilisation de getImageUrl
+                  profileImage: getImageUrl(profileImage),
                   color: cls.color || null,
                 };
               });
 
               setRelatedClasses(classesWithImages);
             }
-
             setUnit(fetchedUnit);
           }
         } catch (error) {
@@ -106,13 +97,11 @@ const UnitDetailPage = () => {
     return <div className="text-center text-white">Chargement...</div>;
   }
 
-  // Récupérer la première classe associée à l'unité (si nécessaire)
   const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
     <ClientLayout footerImage={unit.footerImage || undefined} disableFooter>
       <div className="relative w-full min-h-screen text-white font-kanit">
-        {/* Fond d'écran avec image d'en-tête */}
         <div
           className="fixed inset-0 bg-cover bg-center"
           style={{
@@ -123,7 +112,6 @@ const UnitDetailPage = () => {
         />
 
         <div className="relative z-10">
-          {/* Section d'en-tête */}
           <div className="relative h-screen">
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -151,7 +139,6 @@ const UnitDetailPage = () => {
             </div>
           </div>
 
-          {/* Image de profil de l'unité */}
           <div className="relative flex justify-center -mt-24 z-10">
             <div className="relative w-72 h-72 neon-avatar">
               <AntImage
@@ -165,16 +152,13 @@ const UnitDetailPage = () => {
             </div>
           </div>
 
-          {/* Introduction */}
           {unit.intro && (
             <div className="mt-8 text-center text-gray-400 italic text-lg">
               <p>{unit.intro}</p>
             </div>
           )}
 
-          {/* Section principale avec navigation et contenu */}
           <div className="lg:flex lg:items-start lg:justify-center lg:mt-12">
-            {/* Barre latérale de navigation */}
             <div className="lg:w-1/4 p-4 lg:fixed top-0 w-full lg:max-w-sm lg:max-h-screen lg:h-auto flex justify-center z-10 lg:sticky lg:top-24">
               <div className="bg-black p-6 rounded-lg shadow-lg w-full">
                 <div className="flex items-center space-x-4">
@@ -186,13 +170,10 @@ const UnitDetailPage = () => {
                     className="w-20 h-20 object-cover rounded-full shadow-lg neon-effect neon-avatar"
                     preview={false}
                   />
-                  <h2 className="text-2xl font-oxanium text-white">
-                    {unit.title}
-                  </h2>
+                  <h2 className="text-2xl font-oxanium text-white">{unit.title}</h2>
                   <Badge role={unit.type} />
                 </div>
 
-                {/* Menu de navigation */}
                 <nav className="mt-8">
                   <ul className="space-y-4">
                     <li>
@@ -237,7 +218,6 @@ const UnitDetailPage = () => {
                   </ul>
                 </nav>
 
-                {/* Classes associées */}
                 {relatedClasses.length > 0 && (
                   <div className="mt-8">
                     {relatedClasses.map((relatedClass) => (
@@ -260,13 +240,11 @@ const UnitDetailPage = () => {
               </div>
             </div>
 
-            {/* Contenu principal */}
             <div
               className={`lg:w-3/4 lg:ml-[5%] p-6 transition-opacity duration-1000 ${
                 showContent ? "opacity-100" : "opacity-0"
               }`}
             >
-              {/* Biographie */}
               {activeSection === "biographie" && (
                 <div className="relative z-10">
                   <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
@@ -274,7 +252,7 @@ const UnitDetailPage = () => {
                       Biographie
                     </h2>
                     <div
-                      className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto"
+                      className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 first-letter:mr-3 first-letter:float-left"
                       dangerouslySetInnerHTML={{
                         __html:
                           unit.bio || "<p>Aucune biographie disponible.</p>",
@@ -284,7 +262,6 @@ const UnitDetailPage = () => {
                 </div>
               )}
 
-              {/* Galerie */}
               {activeSection === "galerie" && (
                 <div className="relative z-10">
                   <div className="mt-12 px-4 sm:px-8 lg:px-16">
@@ -316,16 +293,13 @@ const UnitDetailPage = () => {
                           </div>
                         ))
                       ) : (
-                        <p className="text-gray-500">
-                          Aucune image disponible dans la galerie.
-                        </p>
+                        <p className="text-gray-500">Aucune image disponible dans la galerie.</p>
                       )}
                     </Masonry>
                   </div>
                 </div>
               )}
 
-              {/* Nouvelles */}
               {activeSection === "nouvelles" && (
                 <div className="relative z-10">
                   <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
@@ -356,7 +330,7 @@ const UnitDetailPage = () => {
 
                         {isSubscribed && unit.story && (
                           <div
-                            className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto"
+                            className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 first-letter:mr-3 first-letter:float-left"
                             dangerouslySetInnerHTML={{
                               __html: unit.story,
                             }}
