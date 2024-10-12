@@ -9,9 +9,10 @@ import { UnitModel } from "@/lib/models/UnitModels";
 import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
-import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
-import { UploadType } from "@/lib/models/ClassModels"; // Importation correcte des types
-import Image from "next/image"; // Utilisation du composant Image de Next.js
+import { getImageUrl } from "@/utils/image"; 
+import { UploadType } from "@/lib/models/ClassModels"; 
+import Image from "next/image";
+import { motion } from "framer-motion"; // Importation de Framer Motion
 
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
@@ -30,14 +31,11 @@ const UniversPage = () => {
     const fetchData = async () => {
       try {
         const fetchedUnits = await fetchUnits();
-
-        // Utilisez les URLs d'images telles qu'elles sont fournies par le backend
         const unitsWithImages: UnitModel[] = fetchedUnits.sort((a, b) =>
           a.title.localeCompare(b.title)
-        ); // Tri alphabétique des unités
-
+        );
         setUnits(unitsWithImages);
-        setFilteredUnits(unitsWithImages); // Initialisation des unités
+        setFilteredUnits(unitsWithImages);
       } catch (error) {
         console.error("Error fetching units:", error);
       }
@@ -70,24 +68,27 @@ const UniversPage = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-
     const filtered = units.filter((unit) =>
       unit.title.toLowerCase().includes(query)
     );
     setFilteredUnits(filtered);
   };
 
-  // Tri des unités filtrées
   const sortedChampions = filteredUnits
     .filter((unit) => unit.type.toUpperCase() === "CHAMPION")
-    .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des champions
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   const sortedBestiaire = filteredUnits
     .filter((unit) => unit.type.toUpperCase() === "UNIT")
-    .sort((a, b) => a.title.localeCompare(b.title)); // Tri alphabétique des unités
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
-    <div className="relative w-full min-h-screen text-white font-kanit">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      className="relative w-full min-h-screen text-white font-kanit"
+    >
       {/* Image de Fond Aléatoire */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
@@ -99,9 +100,9 @@ const UniversPage = () => {
             objectPosition="center"
             priority={true}
             quality={100}
-            className="brightness-20" // Tailwind CSS pour assombrir l'image
+            className="brightness-20"
           />
-          <div className="absolute inset-0 bg-black opacity-90 z-10"></div> {/* Overlay noir */}
+          <div className="absolute inset-0 bg-black opacity-90 z-10"></div>
         </div>
       )}
 
@@ -124,7 +125,12 @@ const UniversPage = () => {
 
       <section className="relative z-10 py-16 px-12 flex">
         {/* Barre Latérale des Filtres */}
-        <div className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-24 mr-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-24 mr-8"
+        >
           <h2 className="text-2xl font-iceberg text-white mb-8">Filtres par Type</h2>
           <ul className="space-y-4">
             <li>
@@ -158,10 +164,15 @@ const UniversPage = () => {
               </button>
             </li>
           </ul>
-        </div>
+        </motion.div>
 
         {/* Section Principale */}
-        <div className="lg:w-3/4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="lg:w-3/4"
+        >
           {/* Barre de Recherche */}
           <div className="mb-8 flex items-center">
             <SearchOutlined className="text-gray-400 mr-3" style={{ fontSize: "1.5rem" }} />
@@ -197,56 +208,40 @@ const UniversPage = () => {
                         }}
                       >
                         {/* Image de Profil */}
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20">
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                            className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-lg"
+                            className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-lg z-30" // Ensure image stays on top
                           />
                         </div>
                       </div>
-
-                      {/* Conteneur Textuel avec Arrière-Plan Footer Image */}
-                      <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow relative">
-                        {/* Footer Image Background */}
-                        {unit.footerImage && (
-                          <div
-                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
-                            style={{
-                              backgroundImage: `url(${unit.footerImage})`,
-                            }}
-                          ></div>
-                        )}
-
-                        {/* Contenu Textuel */}
-                        <div className="relative z-10">
-                          <Card.Meta
-                            title={
-                              <div className="text-center">
-                                <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                      {/* Contenu Textuel */}
+                      <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow">
+                        <Card.Meta
+                          title={
+                            <div className="text-center">
+                              <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                            </div>
+                          }
+                          description={
+                            <div className="text-center">
+                              <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
+                              <div className="mt-4">
+                                <BadgeComponent type={unit.type} />
                               </div>
-                            }
-                            description={
-                              <div className="text-center">
-                                <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
-                                <div className="mt-4">
-                                  <BadgeComponent type={unit.type} />
-                                </div>
-                              </div>
-                            }
-                          />
-                          {/* Contenu Caché au Hover */}
-                          <div className="hidden group-hover:block mt-4 text-gray-100">
-                            <p className="font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
-                          </div>
-                          {/* Bouton Explorer */}
-                          <div className="text-center mt-6 transition-all duration-300">
-                            <Link href={`/univers/units/${unit.id}`}>
-                              <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
-                                Explorer
-                              </button>
-                            </Link>
-                          </div>
+                            </div>
+                          }
+                        />
+                        <div className="hidden group-hover:block mt-4 text-gray-100">
+                          <p className="font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        </div>
+                        <div className="text-center mt-6 transition-all duration-300">
+                          <Link href={`/univers/units/${unit.id}`}>
+                            <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
+                              Explorer
+                            </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -270,73 +265,54 @@ const UniversPage = () => {
                     style={{ boxShadow: "0px 4px 12px rgba(255, 0, 0, 0.4)" }}
                   >
                     <div className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 h-full flex flex-col">
-                      {/* Image d'En-tête */}
                       <div
                         className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
                         }}
                       >
-                        {/* Image de Profil */}
-                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20"> {/* z-20 pour au-dessus */}
+                        <div className="absolute inset-x-0 top-full transform -translate-y-1/2 flex justify-center z-20">
                           <img
                             alt={unit.title}
                             src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                            className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-lg"
+                            className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-lg z-30"
                           />
                         </div>
                       </div>
-
-                      {/* Conteneur Textuel avec Arrière-Plan Footer Image */}
-                      <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow relative">
-                        {/* Footer Image Background */}
-                        {unit.footerImage && (
-                          <div
-                            className="absolute inset-0 bg-cover bg-center opacity-90 z-0" // Opacité très sombre
-                            style={{
-                              backgroundImage: `url(${unit.footerImage})`,
-                            }}
-                          ></div>
-                        )}
-
-                        {/* Contenu Textuel */}
-                        <div className="relative z-10">
-                          <Card.Meta
-                            title={
-                              <div className="text-center">
-                                <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                      <div className="pt-12 pb-4 text-center bg-black rounded-b-lg px-3 flex flex-col justify-between flex-grow">
+                        <Card.Meta
+                          title={
+                            <div className="text-center">
+                              <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                            </div>
+                          }
+                          description={
+                            <div className="text-center">
+                              <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
+                              <div className="mt-4">
+                                <BadgeComponent
+                                  classes={
+                                    unit.classes && unit.classes.length > 0
+                                      ? unit.classes.map((classItem) => ({
+                                          title: classItem.title,
+                                          color: classItem.color || undefined,
+                                        }))
+                                      : []
+                                  }
+                                />
                               </div>
-                            }
-                            description={
-                              <div className="text-center">
-                                <p className="text-gray-300 font-kanit">{unit.subtitle || "Aucune citation"}</p>
-                                <div className="mt-4">
-                                  <BadgeComponent
-                                    classes={
-                                      unit.classes && unit.classes.length > 0
-                                        ? unit.classes.map((classItem) => ({
-                                            title: classItem.title,
-                                            color: classItem.color || undefined, // Remplace null par undefined
-                                          }))
-                                        : [] // Pas de classes, passez un tableau vide
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            }
-                          />
-                          {/* Contenu Caché au Hover */}
-                          <div className="hidden group-hover:block mt-4 text-gray-100">
-                            <p className="font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
-                          </div>
-                          {/* Bouton Explorer */}
-                          <div className="text-center mt-6 transition-all duration-300">
-                            <Link href={`/univers/units/${unit.id}`}>
-                              <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
-                                Explorer
-                              </button>
-                            </Link>
-                          </div>
+                            </div>
+                          }
+                        />
+                        <div className="hidden group-hover:block mt-4 text-gray-100">
+                          <p className="font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        </div>
+                        <div className="text-center mt-6 transition-all duration-300">
+                          <Link href={`/univers/units/${unit.id}`}>
+                            <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
+                              Explorer
+                            </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -345,9 +321,9 @@ const UniversPage = () => {
               </div>
             </>
           )}
-        </div>
+        </motion.div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 
