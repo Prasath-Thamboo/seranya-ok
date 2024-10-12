@@ -9,6 +9,7 @@ import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image";
+import Image from "next/image";
 import { motion } from "framer-motion"; // Importation de Framer Motion
 
 // Fonction pour récupérer une image de fond aléatoire via l'API
@@ -94,20 +95,22 @@ const UniversPage = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      className="relative w-full min-h-screen text-white font-kanit overflow-x-hidden"
-    >
+    <div className="relative w-full min-h-screen text-white font-kanit">
       {/* Image de Fond Fixée et Proportionnée */}
       {backgroundImage && (
-        <div
-          className="fixed inset-0 w-full h-full bg-cover bg-center bg-fixed z-0"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
+        <div className="fixed inset-0 z-0">
+          <Image
+            src={backgroundImage}
+            alt="Background"
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            priority={true}
+            quality={100}
+            className="brightness-30"
+          />
           {/* Overlay pour assombrir l'image */}
-          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
         </div>
       )}
 
@@ -238,7 +241,7 @@ const UniversPage = () => {
                           <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
 
                           {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
-                          <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[200px]">
+                          <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
                             <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                           </div>
                         </div>
@@ -259,8 +262,7 @@ const UniversPage = () => {
                       <img
                         alt={unit.title}
                         src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="w-24 h-24 object-cover rounded-full border-4 border-black"
-                        style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
+                        className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
                       />
                     </div>
                   </div>
@@ -316,7 +318,7 @@ const UniversPage = () => {
                           <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
 
                           {/* Intro avec animation smooth, apparait entre le titre et le bouton */}
-                          <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[200px]">
+                          <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
                             <p className="text-gray-300 font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                           </div>
                         </div>
@@ -337,8 +339,7 @@ const UniversPage = () => {
                       <img
                         alt={unit.title}
                         src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="w-24 h-24 object-cover rounded-full border-4 border-black"
-                        style={{ boxShadow: '0 0 10px black' }} // Ombre noire personnalisée
+                        className="w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black]"
                       />
                     </div>
                   </div>
@@ -348,7 +349,7 @@ const UniversPage = () => {
           )}
         </motion.div>
         </section>
-        </motion.div>
+      </div>
       );
     };
 
