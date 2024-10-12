@@ -11,6 +11,7 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
 import ClientLayout from "@/components/ClientLayout";
 import { getImageUrl } from "@/utils/image"; // Importation de la fonction d'aide
+import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
 
 interface ClassModel {
   id: string;
@@ -49,12 +50,19 @@ const UnitDetailPage = () => {
 
             // **Gestion des Classes Associées**
             if (fetchedUnit.classes && fetchedUnit.classes.length > 0) {
-              const classesWithImages = fetchedUnit.classes.map((cls) => ({
-                id: cls.id,
-                title: cls.title,
-                profileImage: cls.profileImage, // Utilisation directe des URLs S3
-                color: cls.color || null,
-              }));
+              const classesWithImages: ClassModel[] = fetchedUnit.classes.map((cls) => {
+                const profileImageUpload = cls.uploads.find(
+                  (upload: UploadModel) => upload.type === UploadType.PROFILEIMAGE
+                );
+                const profileImage = profileImageUpload ? profileImageUpload.path : null;
+
+                return {
+                  id: cls.id,
+                  title: cls.title,
+                  profileImage: getImageUrl(profileImage), // Utilisation de getImageUrl
+                  color: cls.color || null,
+                };
+              });
 
               setRelatedClasses(classesWithImages);
             }
@@ -98,7 +106,7 @@ const UnitDetailPage = () => {
     return <div className="text-center text-white">Chargement...</div>;
   }
 
-  // Récupérer la première classe associée à l'unité
+  // Récupérer la première classe associée à l'unité (si nécessaire)
   const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
@@ -235,7 +243,7 @@ const UnitDetailPage = () => {
                     {relatedClasses.map((relatedClass) => (
                       <div key={relatedClass.id} className="text-center mb-4">
                         <AntImage
-                          src={getImageUrl(relatedClass.profileImage)}
+                          src={relatedClass.profileImage}
                           alt={`Classe ${relatedClass.title} Profile`}
                           width={200}
                           height={200}
@@ -327,7 +335,7 @@ const UnitDetailPage = () => {
 
                     {loadingUser ? (
                       <p className="text-gray-400">
-                        Chargement des informations d&#39;abonnement...
+                        Chargement des informations d&apos;abonnement...
                       </p>
                     ) : (
                       <>
@@ -341,7 +349,7 @@ const UnitDetailPage = () => {
                               onClick={handleSubscriptionClick}
                               className="bg-indigo-600 text-white px-6 py-3 text-lg rounded-lg hover:bg-indigo-500"
                             >
-                              S&#39;abonner
+                              S&apos;abonner
                             </button>
                           </div>
                         )}
