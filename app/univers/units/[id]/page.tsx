@@ -252,7 +252,7 @@ const UnitDetailPage = () => {
                       Biographie
                     </h2>
                     <div
-                      className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 first-letter:mr-3 first-letter:float-left"
+                      className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                       dangerouslySetInnerHTML={{
                         __html:
                           unit.bio || "<p>Aucune biographie disponible.</p>",
@@ -330,7 +330,7 @@ const UnitDetailPage = () => {
 
                         {isSubscribed && unit.story && (
                           <div
-                            className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-gray-900 first-letter:mr-3 first-letter:float-left"
+                            className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                             dangerouslySetInnerHTML={{
                               __html: unit.story,
                             }}
