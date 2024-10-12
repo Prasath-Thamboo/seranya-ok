@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "antd"; // Importation du Badge d'Ant Design
-import { fetchUnits } from "@/lib/queries/UnitQueries"; // Utilisez la même fonction que dans univers
+import { Badge } from "antd";
+import { fetchUnits } from "@/lib/queries/UnitQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
 import HeroSection from "@/components/HeroSection";
 import Accordion from "@/components/Accordion";
@@ -26,8 +26,6 @@ const Home = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
   const [backgroundImage, setBackgroundImage] = useState<string>("");
 
-  
-
   const [isLoading, setIsLoading] = useState(true);  
   const [loadedImagesCount, setLoadedImagesCount] = useState(0); 
   const totalImagesCount = 15;  // Nombre exact d'images à charger
@@ -38,7 +36,6 @@ const Home = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
-  // Masquer le loader après 2 secondes, même si les images ne sont pas encore prêtes
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsLoading(false);
@@ -47,17 +44,15 @@ const Home = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Incrémenter le compteur d'images chargées
   const handleImageLoad = () => {
     setLoadedImagesCount((prevCount) => {
       const newCount = prevCount + 1;
       if (newCount >= totalImagesCount) {
-        setIsLoading(false); // Toutes les images sont chargées
+        setIsLoading(false);
       }
       return newCount;
     });
   };
-
 
   useEffect(() => {
     const loadUnits = async () => {
@@ -70,17 +65,10 @@ const Home = () => {
           .sort(
             (a, b) =>
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          ) // Trier par ordre de création (récents d'abord)
+          )
           .slice(0, 3); // Prendre les 3 unités récentes
 
-        const unitsWithImages = sortedUnits.map((unit) => ({
-          ...unit,
-          isNew: new Date(unit.createdAt) > oneWeekAgo, // Calculer si l'unité a moins d'une semaine
-          profileImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/ProfileImage.png`,
-          headerImage: `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/units/${unit.id}/HeaderImage.png`,
-        }));
-
-        setUnits(unitsWithImages);
+        setUnits(sortedUnits);
       } catch (error) {
         console.error("Failed to load units:", error);
       }
@@ -140,20 +128,15 @@ const Home = () => {
   }, []);
 
   if (!backgroundImage) {
-    return null; // Ne pas rendre la page tant que les images ne sont pas chargées
+    return null;
   }
 
   if (isLoading) {
-    return <Loader />;  // Affiche le loader tant que le chargement est en cours
+    return <Loader />;
   }
   
   return (
-    <main
-      className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white relative"
-    >
-
-      
-
+    <main className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white relative">
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
@@ -168,8 +151,6 @@ const Home = () => {
         />
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
       </div>
-
-
 
       {/* Carousel */}
       <Carousel items={carouselItems} height="100vh" width="100vw" />
@@ -198,115 +179,106 @@ const Home = () => {
             </div>
           </div>
         </div>
-        </motion.section>
+      </motion.section>
 
-{/* Section des Unités récentes */}
-<motion.section
+      {/* Section des Unités récentes */}
+      <motion.section
         className="relative py-16 px-8 w-full z-20"
         initial="hidden"
         whileInView="visible"
         variants={fadeInUp}
         viewport={{ once: true }}
       >
-  {/* Image de fond de la section */}
-  {sectionImages[1] && (
-    <div
-      className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
-      style={{
-        backgroundImage: `url(${sectionImages[1]})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        filter: "brightness(70%)",
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-    </div>
-  )}
-
-  {/* Contenu de la section */}
-  <div className="relative z-10 container mx-auto">
-    <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
-      Découvrez les Unités Récentes
-    </h2>
-    <p className="text-lg text-gray-300 mb-12 text-center">
-      Plongez dans les aventures captivantes de nos dernières unités.
-    </p>
-
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Grande carte à gauche */}
-      {units[0] && (
-        <div className="lg:col-span-1 border rounded border-gray-900 shadow-lg">
-          <Link href={`/univers/units/${units[0].id}`}>
-            {new Date(units[0].createdAt) > new Date(new Date().setDate(new Date().getDate() - 7)) && (
-              <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
-                <div className="relative group overflow-hidden rounded-lg shadow-lg">
-                  <div
-                    className="relative w-full h-[30rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                    style={{
-                      backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                    }}
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
-                  <div className="flex justify-center">
-                    <div className="relative">
-                      <Image
-                        src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
-                        alt="Profile Image"
-                        width={100}
-                        height={100}
-                        className="rounded-full border border-gray-600 object-cover shadow-lg"
-                        onLoad={handleImageLoad}
-                      />
-                    </div>
-                  </div>
-
-                    <div className="flex flex-col justify-center items-center text-center mt-4">
-                      <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
-                        {units[0].title}
-                      </h3>
-                      <p className="text-lg text-gray-300">
-                        {units[0].subtitle || "Aucune description"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Badge.Ribbon>
-            )}
-          </Link>
-        </div>
-      )}
-
-      {/* Deux petites cartes à droite */}
-      <div className="lg:col-span-1 grid grid-rows-2 gap-4">
-      {units.slice(1, 3).map((unit, index) => (
-  unit && unit.headerImage && ( // Ensure there's data
-    <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg">
-      <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
-        <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
+        {sectionImages[1] && (
           <div
-            className="relative w-full h-64 bg-cover bg-[center_top] transition-transform duration-500 group-hover:scale-110"
+            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
             style={{
-              backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+              backgroundImage: `url(${sectionImages[1]})`,
+              filter: "brightness(70%)",
             }}
-          />
-          <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
-            <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
-              {unit.title || "No Title"}
-            </h3>
-            <p className="text-sm text-gray-300">
-              {unit.subtitle || "No Description"}
-            </p>
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+          </div>
+        )}
+
+        <div className="relative z-10 container mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
+            Découvrez les Unités Récentes
+          </h2>
+          <p className="text-lg text-gray-300 mb-12 text-center">
+            Plongez dans les aventures captivantes de nos dernières unités.
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {units[0] && (
+              <div className="lg:col-span-1 border rounded border-gray-900 shadow-lg">
+                <Link href={`/univers/units/${units[0].id}`}>
+                  <Badge.Ribbon
+                    text="NEW"
+                    color="red"
+                    className="font-iceberg z-30"
+                  >
+                    <div className="relative group overflow-hidden rounded-lg shadow-lg">
+                      <div
+                        className="relative w-full h-[30rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
+                        }}
+                      />
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+                        <div className="flex justify-center">
+                          <Image
+                            src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
+                            alt={units[0].title}
+                            width={100}
+                            height={100}
+                            className="rounded-full border border-gray-600 object-cover shadow-lg"
+                            onLoad={handleImageLoad}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center items-center text-center mt-4">
+                          <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
+                            {units[0].title}
+                          </h3>
+                          <p className="text-lg text-gray-300">
+                            {units[0].subtitle || "Aucune description"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </Badge.Ribbon>
+                </Link>
+              </div>
+            )}
+
+            <div className="lg:col-span-1 grid grid-rows-2 gap-4">
+              {units.slice(1, 3).map((unit) => (
+                <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg">
+                  <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+                    <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
+                      <div
+                        className="relative w-full h-64 bg-cover bg-[center_top] transition-transform duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+                        }}
+                      />
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+                        <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
+                          {unit.title || "No Title"}
+                        </h3>
+                        <p className="text-sm text-gray-300">
+                          {unit.subtitle || "No Description"}
+                        </p>
+                      </div>
+                    </div>
+                  </Badge.Ribbon>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-      </Badge.Ribbon>
-    </Link>
-  )
-))}
-
-      </div>
-    </div>
-  </div>
-</motion.section>
+      </motion.section>
 
 
 
