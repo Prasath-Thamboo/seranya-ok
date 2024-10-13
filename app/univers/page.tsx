@@ -32,7 +32,9 @@ const UniversPage = () => {
   const [filteredUnits, setFilteredUnits] = useState<UnitModel[]>([]);
   const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState("ALL");
+  const [activeFilter, setActiveFilter] = useState<string>("ALL");
+  const [isTypeFilterOpen, setIsTypeFilterOpen] = useState<boolean>(true);
+  const [isClassFilterOpen, setIsClassFilterOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,52 +142,88 @@ const UniversPage = () => {
           className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-4 max-h-screen overflow-y-auto mr-8"
         >
           {/* Barre de Recherche dans la Sidebar */}
-          <div className="mb-8 flex items-center">
-            <SearchOutlined className="text-gray-400 mr-3" style={{ fontSize: "1.5rem" }} />
+          <div className="mb-8 relative">
             <input
-              className="w-full h-12 pl-4 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-black form-input"
+              className="w-full h-12 pl-10 pr-4 text-sm text-white placeholder-gray-400 bg-black border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-gray-800 focus:ring-2 focus:ring-blue-500"
               type="text"
               placeholder="Rechercher..."
               aria-label="Rechercher"
               value={searchQuery}
               onChange={handleSearch}
             />
+            <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Filtres par Type */}
-          <h2 className="text-2xl font-iceberg text-white mb-8">Filtres par Type</h2>
-          <ul className="space-y-4">
-            <li>
-              <button
-                className={`text-lg font-iceberg text-gray-400 hover:bg-white hover:text-black w-full py-3 px-4 rounded transition-colors duration-200 ${
-                  activeFilter === "ALL" ? "bg-white text-black" : ""
-                }`}
-                onClick={() => handleFilterClick("ALL")}
-              >
-                Toutes les Unités
-              </button>
-            </li>
-            <li>
-              <button
-                className={`text-lg font-iceberg text-gray-400 hover:bg-white hover:text-black w-full py-3 px-4 rounded transition-colors duration-200 ${
-                  activeFilter === "CHAMPION" ? "bg-white text-black" : ""
-                }`}
-                onClick={() => handleFilterClick("CHAMPION")}
-              >
-                Champions
-              </button>
-            </li>
-            <li>
-              <button
-                className={`text-lg font-iceberg text-gray-400 hover:bg-white hover:text-black w-full py-3 px-4 rounded transition-colors duration-200 ${
-                  activeFilter === "UNIT" ? "bg-white text-black" : ""
-                }`}
-                onClick={() => handleFilterClick("UNIT")}
-              >
-                Units
-              </button>
-            </li>
-          </ul>
+          {/* Filtres Dépliables */}
+          {/* Filtrage par Type */}
+          <div className="mb-4">
+            <button
+              onClick={() => setIsTypeFilterOpen(!isTypeFilterOpen)}
+              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-800 rounded-t-lg focus:outline-none"
+            >
+              Filtrage par type
+            </button>
+            {isTypeFilterOpen && (
+              <ul className="max-w-sm flex flex-col bg-white dark:bg-neutral-800">
+                {["ALL", "CHAMPION", "UNIT"].map((type) => (
+                  <li
+                    key={type}
+                    className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white border-b last:border-b-0 dark:bg-neutral-800"
+                  >
+                    <input
+                      id={`type-filter-${type}`}
+                      name={`type-filter-${type}`}
+                      type="checkbox"
+                      checked={activeFilter === type}
+                      onChange={() => handleFilterClick(type)}
+                      className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700"
+                    />
+                    <label
+                      htmlFor={`type-filter-${type}`}
+                      className="ms-3.5 block text-sm font-medium text-gray-600 dark:text-neutral-500"
+                    >
+                      {type === "ALL" ? "Toutes les Unités" : type.charAt(0) + type.slice(1).toLowerCase()}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Filtrage par Classe */}
+          <div>
+            <button
+              onClick={() => setIsClassFilterOpen(!isClassFilterOpen)}
+              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-800 rounded-b-lg focus:outline-none"
+            >
+              Filtrage par classe
+            </button>
+            {isClassFilterOpen && (
+              <ul className="max-w-sm flex flex-col bg-white dark:bg-neutral-800">
+                {/* Remplacez ces éléments par vos classes réelles */}
+                {["Classe A", "Classe B", "Classe C"].map((classe, index) => (
+                  <li
+                    key={index}
+                    className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white border-b last:border-b-0 dark:bg-neutral-800"
+                  >
+                    <input
+                      id={`class-filter-${index}`}
+                      name={`class-filter-${index}`}
+                      type="checkbox"
+                      // Ajoutez la logique de sélection des classes ici
+                      className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700"
+                    />
+                    <label
+                      htmlFor={`class-filter-${index}`}
+                      className="ms-3.5 block text-sm font-medium text-gray-600 dark:text-neutral-500"
+                    >
+                      {classe}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </motion.div>
 
         {/* Section Principale */}
@@ -195,9 +233,6 @@ const UniversPage = () => {
           transition={{ duration: 1 }}
           className="lg:w-3/4"
         >
-          {/* Barre de Recherche Retirée du Main */}
-          {/* Les cartes viennent ici */}
-
           {/* Section Champions */}
           {sortedChampions.length > 0 && (
             <>
@@ -226,7 +261,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-0"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-4"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -240,7 +275,7 @@ const UniversPage = () => {
                       )}
 
                       {/* Contenu Principal */}
-                      <div className="relative z-10">
+                      <div className="relative z-10 mt-4">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
@@ -248,7 +283,7 @@ const UniversPage = () => {
                             <BadgeComponent classes={transformClasses(unit.classes)} />
                           </div>
                         )}
-                        <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
                       </div>
 
                       {/* Intro */}
@@ -299,7 +334,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-0"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-4"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -313,7 +348,7 @@ const UniversPage = () => {
                       )}
 
                       {/* Contenu Principal */}
-                      <div className="relative z-10">
+                      <div className="relative z-10 mt-4">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
@@ -321,7 +356,7 @@ const UniversPage = () => {
                             <BadgeComponent classes={transformClasses(unit.classes)} />
                           </div>
                         )}
-                        <p className="text-gray-300 font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
                       </div>
 
                       {/* Intro */}
