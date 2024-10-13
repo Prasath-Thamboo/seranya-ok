@@ -231,7 +231,7 @@ const UniversPage = () => {
                   <button
                     key={classe.id}
                     onClick={() => handleClassFilter(classe.title)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium focus:outline-none transition-colors duration-200 cursor-pointer font-iceberg text-uppercase`}
+                    className={`px-3 py-1 rounded-full text-sm font-medium focus:outline-none transition-colors duration-200 cursor-pointer font-iceberg uppercase`}
                     style={{
                       backgroundColor: selectedClasses.includes(classe.title) ? (classe.color ?? '#000000') : '#4B5563', // gris foncé ou couleur de la classe
                       color: '#FFFFFF',

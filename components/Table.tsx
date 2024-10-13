@@ -232,7 +232,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
     <div className="flex gap-2 justify-center">
       {viewUrl && (
         <button
-          className={`bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 shadow-[inset_-2px_0px_4px_rgba(0,0,0,0.3)]`}
+          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
           onClick={() => window.location.href = viewUrl}
         >
           <FaEye className='h-5 w-5' />
@@ -240,7 +240,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
       )}
       {editUrl && (
         <button
-          className={`bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 shadow-[inset_-2px_0px_4px_rgba(0,0,0,0.3)]`}
+          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
           onClick={() => window.location.href = editUrl}
         >
           <FaEdit className='h-4 w-4' />
@@ -248,7 +248,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
       )}
       {onDelete && (
         <button
-          className={`bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red shadow-[inset_-2px_0px_4px_rgba(0,0,0,0.3)]`}
+          className="bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red"
           onClick={onDelete}
         >
           <FaTrash className='h-4 w-4' />
@@ -341,9 +341,10 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                     </div>
                   </th>
                 ))}
-                {/* Colonne "Actions" avec ombre à la bordure gauche */}
+                {/* Modification de la colonne "Actions" */}
                 <th
-                  className="sticky right-0 bg-white px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-[inset_-4px_0px_8px_rgba(0,0,0,0.3)]"
+                  className="sticky right-0 bg-black/80 px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-white"
+                  style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)' }} // Ombre gauche personnalisée
                 >
                   Actions
                 </th>
@@ -359,7 +360,8 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                     <td
                       {...cell.getCellProps()}
                       key={cell.id}
-                      className="px-3 py-2 text-sm font-normal text-gray-700 first:rounded-l-lg last:rounded-r-lg whitespace-nowrap max-w-xs overflow-hidden text-ellipsis"
+                      className={`px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap first:rounded-l-lg last:rounded-r-lg max-w-xs overflow-hidden text-ellipsis`}
+                      // Les cellules autres que "Actions" peuvent garder leur style
                     >
                       {cell.column.id === 'story' || cell.column.id === 'bio' ? (
                         <div title={cell.value}>
@@ -372,9 +374,10 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                       )}
                     </td>
                   ))}
-                  {/* Cellule "Actions" avec ombre à la bordure gauche et centrage des boutons */}
+                  {/* Modification de la cellule "Actions" */}
                   <td
-                    className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex items-center justify-center shadow-[inset_-4px_0px_8px_rgba(0,0,0,0.3)] h-full"
+                    className="sticky right-0 bg-black/80 px-3 py-2 text-sm font-normal text-white whitespace-nowrap flex items-center justify-center shadow-inset-left h-full"
+                    style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)' }} // Ombre gauche personnalisée
                   >
                     <ActionButtons
                       viewUrl={`/${baseRoute}/${row.original.id}`}
