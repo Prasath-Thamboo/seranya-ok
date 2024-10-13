@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
+import { fetchClasses } from "@/lib/queries/ClassQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
+import { ClassModel } from "@/lib/models/ClassModels"; // Assurez-vous d'avoir ce modèle
 import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
@@ -33,20 +35,24 @@ const UniversPage = () => {
   const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("ALL");
+  const [classes, setClasses] = useState<ClassModel[]>([]);
+  const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [isTypeFilterOpen, setIsTypeFilterOpen] = useState<boolean>(true);
-  const [isClassFilterOpen, setIsClassFilterOpen] = useState<boolean>(false);
+  const [isClassFilterOpen, setIsClassFilterOpen] = useState<boolean>(true); // Déplié par défaut
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const fetchedUnits = await fetchUnits();
+        const fetchedClasses = await fetchClasses();
         const unitsWithImages: UnitModel[] = fetchedUnits.sort((a, b) =>
           a.title.localeCompare(b.title)
         );
         setUnits(unitsWithImages);
         setFilteredUnits(unitsWithImages);
+        setClasses(fetchedClasses);
       } catch (error) {
-        console.error("Erreur lors de la récupération des unités :", error);
+        console.error("Erreur lors de la récupération des unités ou des classes :", error);
       }
     };
 
@@ -61,23 +67,45 @@ const UniversPage = () => {
 
   const handleFilterClick = (filterType: string) => {
     setActiveFilter(filterType);
-    if (filterType === "ALL") {
-      setFilteredUnits(units);
+  };
+
+  const handleClassFilter = (classe: string) => {
+    if (selectedClasses.includes(classe)) {
+      setSelectedClasses(selectedClasses.filter((c) => c !== classe));
     } else {
-      setFilteredUnits(
-        units.filter((unit) => unit.type.toUpperCase() === filterType)
-      );
+      setSelectedClasses([...selectedClasses, classe]);
     }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    const filtered = units.filter((unit) =>
-      unit.title.toLowerCase().includes(query)
-    );
-    setFilteredUnits(filtered);
+    // La logique de filtrage est gérée dans useEffect
   };
+
+  useEffect(() => {
+    let filtered = units;
+
+    if (activeFilter !== "ALL") {
+      filtered = filtered.filter((unit) => unit.type.toUpperCase() === activeFilter);
+    }
+
+    if (selectedClasses.length > 0) {
+      filtered = filtered.filter(
+        (unit) =>
+          unit.classes &&
+          unit.classes.some((cls) => selectedClasses.includes(cls.title))
+      );
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter((unit) =>
+        unit.title.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    setFilteredUnits(filtered);
+  }, [activeFilter, selectedClasses, searchQuery, units]);
 
   const sortedChampions = filteredUnits
     .filter((unit) => unit.type.toUpperCase() === "CHAMPION")
@@ -87,10 +115,10 @@ const UniversPage = () => {
     .filter((unit) => unit.type.toUpperCase() === "UNIT")
     .sort((a, b) => a.title.localeCompare(b.title));
 
-  // Helper function to transform classes to match BadgeComponent's expectation
-  const transformClasses = (classes: UnitModel['classes']) => {
+  // Helper function to transformer les classes pour BadgeComponent
+  const transformClasses = (classes: UnitModel["classes"]) => {
     if (!classes) return [];
-    return classes.map(cls => ({
+    return classes.map((cls) => ({
       title: cls.title,
       color: cls.color || undefined, // Remplacer null par undefined
     }));
@@ -139,19 +167,21 @@ const UniversPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-4 max-h-screen overflow-y-auto mr-8"
+          className="lg:w-1/4 p-4 bg-gray-800 rounded-lg shadow-lg sticky top-4 max-h-screen overflow-y-auto mr-8"
         >
           {/* Barre de Recherche dans la Sidebar */}
           <div className="mb-8 relative">
             <input
-              className="w-full h-12 pl-10 pr-4 text-sm text-white placeholder-gray-400 bg-black border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-gray-800 focus:ring-2 focus:ring-blue-500"
+              className="w-full h-12 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-white border-0 rounded-md shadow focus:placeholder-gray-600 focus:bg-gray-100 focus:ring-2 focus:ring-blue-500"
               type="text"
               placeholder="Rechercher..."
               aria-label="Rechercher"
               value={searchQuery}
               onChange={handleSearch}
             />
-            <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black p-1 rounded">
+              <SearchOutlined className="text-white" />
+            </div>
           </div>
 
           {/* Filtres Dépliables */}
@@ -159,28 +189,25 @@ const UniversPage = () => {
           <div className="mb-4">
             <button
               onClick={() => setIsTypeFilterOpen(!isTypeFilterOpen)}
-              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-800 rounded-t-lg focus:outline-none"
+              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-700 rounded-t-lg focus:outline-none"
             >
               Filtrage par type
             </button>
             {isTypeFilterOpen && (
-              <ul className="max-w-sm flex flex-col bg-white dark:bg-neutral-800">
+              <ul className="flex flex-col bg-gray-700">
                 {["ALL", "CHAMPION", "UNIT"].map((type) => (
-                  <li
-                    key={type}
-                    className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white border-b last:border-b-0 dark:bg-neutral-800"
-                  >
+                  <li key={type} className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium text-white bg-gray-700">
                     <input
                       id={`type-filter-${type}`}
                       name={`type-filter-${type}`}
                       type="checkbox"
                       checked={activeFilter === type}
                       onChange={() => handleFilterClick(type)}
-                      className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700"
+                      className="h-4 w-4 accent-black border-gray-300 rounded focus:ring-2 focus:ring-white"
                     />
                     <label
                       htmlFor={`type-filter-${type}`}
-                      className="ms-3.5 block text-sm font-medium text-gray-600 dark:text-neutral-500"
+                      className="block text-sm font-medium text-white"
                     >
                       {type === "ALL" ? "Toutes les Unités" : type.charAt(0) + type.slice(1).toLowerCase()}
                     </label>
@@ -194,34 +221,26 @@ const UniversPage = () => {
           <div>
             <button
               onClick={() => setIsClassFilterOpen(!isClassFilterOpen)}
-              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-800 rounded-b-lg focus:outline-none"
+              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-700 rounded-b-lg focus:outline-none"
             >
               Filtrage par classe
             </button>
             {isClassFilterOpen && (
-              <ul className="max-w-sm flex flex-col bg-white dark:bg-neutral-800">
-                {/* Remplacez ces éléments par vos classes réelles */}
-                {["Classe A", "Classe B", "Classe C"].map((classe, index) => (
-                  <li
-                    key={index}
-                    className="inline-flex items-center gap-x-2 py-3 px-4 text-sm font-medium text-gray-800 dark:text-white border-b last:border-b-0 dark:bg-neutral-800"
+              <div className="flex flex-wrap gap-2 p-4 bg-gray-700">
+                {classes.map((classe) => (
+                  <button
+                    key={classe.id}
+                    onClick={() => handleClassFilter(classe.title)}
+                    className={`px-3 py-1 rounded-full text-sm font-medium focus:outline-none transition-colors duration-200 cursor-pointer`}
+                    style={{
+                      backgroundColor: selectedClasses.includes(classe.title) ? (classe.color || '#000000') : '#4B5563', // gris foncé ou couleur de la classe
+                      color: '#FFFFFF',
+                    }}
                   >
-                    <input
-                      id={`class-filter-${index}`}
-                      name={`class-filter-${index}`}
-                      type="checkbox"
-                      // Ajoutez la logique de sélection des classes ici
-                      className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700"
-                    />
-                    <label
-                      htmlFor={`class-filter-${index}`}
-                      className="ms-3.5 block text-sm font-medium text-gray-600 dark:text-neutral-500"
-                    >
-                      {classe}
-                    </label>
-                  </li>
+                    {classe.title}
+                  </button>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
         </motion.div>
@@ -261,7 +280,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-4"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8" // Ajout de pt-8
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -275,7 +294,7 @@ const UniversPage = () => {
                       )}
 
                       {/* Contenu Principal */}
-                      <div className="relative z-10 mt-4">
+                      <div className="relative z-10">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
@@ -283,12 +302,12 @@ const UniversPage = () => {
                             <BadgeComponent classes={transformClasses(unit.classes)} />
                           </div>
                         )}
-                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p> {/* Changement de text-gray-300 à text-white */}
                       </div>
 
                       {/* Intro */}
                       <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p> {/* Changement de text-gray-300 à text-white */}
                       </div>
 
                       {/* Bouton Explorer */}
@@ -334,7 +353,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-4"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8" // Ajout de pt-8
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -348,7 +367,7 @@ const UniversPage = () => {
                       )}
 
                       {/* Contenu Principal */}
-                      <div className="relative z-10 mt-4">
+                      <div className="relative z-10">
                         <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
@@ -356,12 +375,12 @@ const UniversPage = () => {
                             <BadgeComponent classes={transformClasses(unit.classes)} />
                           </div>
                         )}
-                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
+                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p> {/* Changement de text-gray-300 à text-white */}
                       </div>
 
                       {/* Intro */}
                       <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
+                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p> {/* Changement de text-gray-300 à text-white */}
                       </div>
 
                       {/* Bouton Explorer */}
