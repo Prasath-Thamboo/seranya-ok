@@ -120,7 +120,7 @@ const UniversPage = () => {
     if (!classes) return [];
     return classes.map((cls) => ({
       title: cls.title,
-      color: cls.color || undefined, // Remplacer null par undefined
+      color: cls.color ?? '#000000', // Utilisation de l'opérateur de coalescence nulle
     }));
   };
 
@@ -167,7 +167,7 @@ const UniversPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="lg:w-1/4 p-4 bg-gray-800 rounded-lg shadow-lg sticky top-4 max-h-screen overflow-y-auto mr-8"
+          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-20 max-h-screen overflow-y-auto mr-8" // top-20 pour décaler la sidebar
         >
           {/* Barre de Recherche dans la Sidebar */}
           <div className="mb-8 relative">
@@ -194,9 +194,9 @@ const UniversPage = () => {
               Filtrage par type
             </button>
             {isTypeFilterOpen && (
-              <ul className="flex flex-col bg-gray-700">
+              <ul className="flex flex-col bg-gray-700 rounded-b-lg">
                 {["ALL", "CHAMPION", "UNIT"].map((type) => (
-                  <li key={type} className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium text-white bg-gray-700">
+                  <li key={type} className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium text-white bg-gray-700 rounded-lg mb-2 last:mb-0">
                     <input
                       id={`type-filter-${type}`}
                       name={`type-filter-${type}`}
@@ -226,14 +226,14 @@ const UniversPage = () => {
               Filtrage par classe
             </button>
             {isClassFilterOpen && (
-              <div className="flex flex-wrap gap-2 p-4 bg-gray-700">
+              <div className="flex flex-wrap gap-2 p-4 bg-gray-700 rounded-lg mt-2">
                 {classes.map((classe) => (
                   <button
                     key={classe.id}
                     onClick={() => handleClassFilter(classe.title)}
                     className={`px-3 py-1 rounded-full text-sm font-medium focus:outline-none transition-colors duration-200 cursor-pointer`}
                     style={{
-                      backgroundColor: selectedClasses.includes(classe.title) ? (classe.color || '#000000') : '#4B5563', // gris foncé ou couleur de la classe
+                      backgroundColor: selectedClasses.includes(classe.title) ? (classe.color ?? '#000000') : '#4B5563', // gris foncé ou couleur de la classe
                       color: '#FFFFFF',
                     }}
                   >
@@ -275,12 +275,12 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-10"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20" // z-20 pour être au-dessus du contenu
                     />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8" // Ajout de pt-8
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -302,12 +302,12 @@ const UniversPage = () => {
                             <BadgeComponent classes={transformClasses(unit.classes)} />
                           </div>
                         )}
-                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p> {/* Changement de text-gray-300 à text-white */}
+                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
                       </div>
 
                       {/* Intro */}
                       <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p> {/* Changement de text-gray-300 à text-white */}
+                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                       </div>
 
                       {/* Bouton Explorer */}
@@ -348,12 +348,12 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-10"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20" // z-20 pour être au-dessus du contenu
                     />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8" // Ajout de pt-8
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -375,12 +375,12 @@ const UniversPage = () => {
                             <BadgeComponent classes={transformClasses(unit.classes)} />
                           </div>
                         )}
-                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p> {/* Changement de text-gray-300 à text-white */}
+                        <p className="text-white font-kanit mt-2">{unit.subtitle || "Aucune citation"}</p>
                       </div>
 
                       {/* Intro */}
                       <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p> {/* Changement de text-gray-300 à text-white */}
+                        <p className="text-white font-kanit p-3">{unit.intro || "Aucune introduction disponible."}</p>
                       </div>
 
                       {/* Bouton Explorer */}
