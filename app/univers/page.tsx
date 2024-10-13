@@ -137,8 +137,22 @@ const UniversPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-24 mr-8"
+          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-4 max-h-screen overflow-y-auto mr-8"
         >
+          {/* Barre de Recherche dans la Sidebar */}
+          <div className="mb-8 flex items-center">
+            <SearchOutlined className="text-gray-400 mr-3" style={{ fontSize: "1.5rem" }} />
+            <input
+              className="w-full h-12 pl-4 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-black form-input"
+              type="text"
+              placeholder="Rechercher..."
+              aria-label="Rechercher"
+              value={searchQuery}
+              onChange={handleSearch}
+            />
+          </div>
+
+          {/* Filtres par Type */}
           <h2 className="text-2xl font-iceberg text-white mb-8">Filtres par Type</h2>
           <ul className="space-y-4">
             <li>
@@ -181,18 +195,8 @@ const UniversPage = () => {
           transition={{ duration: 1 }}
           className="lg:w-3/4"
         >
-          {/* Barre de Recherche */}
-          <div className="mb-8 flex items-center">
-            <SearchOutlined className="text-gray-400 mr-3" style={{ fontSize: "1.5rem" }} />
-            <input
-              className="w-full lg:w-1/2 h-12 pl-4 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-black form-input"
-              type="text"
-              placeholder="Rechercher..."
-              aria-label="Rechercher"
-              value={searchQuery}
-              onChange={handleSearch}
-            />
-          </div>
+          {/* Barre de Recherche Retirée du Main */}
+          {/* Les cartes viennent ici */}
 
           {/* Section Champions */}
           {sortedChampions.length > 0 && (
@@ -217,12 +221,12 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-[50000]"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-10"
                     />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-12"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-0"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -232,7 +236,7 @@ const UniversPage = () => {
                     >
                       {/* Overlay pour assombrir l'image de footer */}
                       {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-60 rounded-b-lg"></div>
+                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
                       )}
 
                       {/* Contenu Principal */}
@@ -290,12 +294,12 @@ const UniversPage = () => {
                     <img
                       alt={unit.title}
                       src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-[50000]"
+                      className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-10"
                     />
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-12"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-0"
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -305,7 +309,7 @@ const UniversPage = () => {
                     >
                       {/* Overlay pour assombrir l'image de footer */}
                       {unit.footerImage && (
-                        <div className="absolute inset-0 bg-black opacity-60 rounded-b-lg"></div>
+                        <div className="absolute inset-0 bg-black opacity-30 rounded-b-lg"></div>
                       )}
 
                       {/* Contenu Principal */}
