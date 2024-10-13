@@ -167,7 +167,7 @@ const UniversPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="lg:w-1/4 p-4 bg-black rounded-lg shadow-lg sticky top-20 max-h-screen overflow-y-auto mr-8" // top-20 pour décaler la sidebar
+          className="lg:w-1/4 p-4 bg-black/80 rounded-lg shadow-lg sticky top-24 max-h-[85vh] overflow-y-auto mr-8" // top-24 pour décaler la sidebar, bg-black légèrement transparent, max-h réduit
         >
           {/* Barre de Recherche dans la Sidebar */}
           <div className="mb-8 relative">
@@ -189,14 +189,14 @@ const UniversPage = () => {
           <div className="mb-4">
             <button
               onClick={() => setIsTypeFilterOpen(!isTypeFilterOpen)}
-              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-700 rounded-t-lg focus:outline-none"
+              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-black/70 rounded-t-lg focus:outline-none"
             >
               Filtrage par type
             </button>
             {isTypeFilterOpen && (
-              <ul className="flex flex-col bg-gray-700 rounded-b-lg">
+              <ul className="flex flex-col bg-black/70 rounded-b-lg">
                 {["ALL", "CHAMPION", "UNIT"].map((type) => (
-                  <li key={type} className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium text-white bg-gray-700 rounded-lg mb-2 last:mb-0">
+                  <li key={type} className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium text-white bg-black/70 rounded-lg mb-2 last:mb-0">
                     <input
                       id={`type-filter-${type}`}
                       name={`type-filter-${type}`}
@@ -221,12 +221,12 @@ const UniversPage = () => {
           <div>
             <button
               onClick={() => setIsClassFilterOpen(!isClassFilterOpen)}
-              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-gray-700 rounded-b-lg focus:outline-none"
+              className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-black/70 rounded-b-lg focus:outline-none"
             >
               Filtrage par classe
             </button>
             {isClassFilterOpen && (
-              <div className="flex flex-wrap gap-2 p-4 bg-gray-700 rounded-lg mt-2">
+              <div className="flex flex-wrap gap-2 p-4 bg-black/70 rounded-lg mt-2">
                 {classes.map((classe) => (
                   <button
                     key={classe.id}
@@ -235,6 +235,7 @@ const UniversPage = () => {
                     style={{
                       backgroundColor: selectedClasses.includes(classe.title) ? (classe.color ?? '#000000') : '#4B5563', // gris foncé ou couleur de la classe
                       color: '#FFFFFF',
+                      boxShadow: selectedClasses.includes(classe.title) ? `0 0 10px ${classe.color ?? '#000000'}` : 'none', // Effet néon actif
                     }}
                   >
                     {classe.title}
@@ -280,7 +281,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10" // Augmentation de pt de 8 à 10
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -295,7 +296,7 @@ const UniversPage = () => {
 
                       {/* Contenu Principal */}
                       <div className="relative z-10">
-                        <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                        <span className="text-2xl font-iceberg uppercase mt-4">{unit.title}</span> {/* Ajout de mt-4 */}
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
                           <div className="mt-2">
@@ -353,7 +354,7 @@ const UniversPage = () => {
 
                     {/* Text Content */}
                     <div
-                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-8"
+                      className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10" // Augmentation de pt de 8 à 10
                       style={{
                         backgroundImage: unit.footerImage ? `url(${getImageUrl(unit.footerImage)})` : undefined,
                         backgroundSize: 'cover',
@@ -368,7 +369,7 @@ const UniversPage = () => {
 
                       {/* Contenu Principal */}
                       <div className="relative z-10">
-                        <span className="text-2xl font-iceberg uppercase">{unit.title}</span>
+                        <span className="text-2xl font-iceberg uppercase mt-4">{unit.title}</span> {/* Ajout de mt-4 */}
                         {/* Badge des classes associées */}
                         {unit.classes && unit.classes.length > 0 && (
                           <div className="mt-2">
