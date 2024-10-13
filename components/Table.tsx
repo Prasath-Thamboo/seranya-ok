@@ -324,18 +324,18 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                 {headerGroup.headers.map((column: any) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap"
+                    className="px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap bg-gray-800 text-white"
                     style={{ width: column.width }}
                     key={column.id}
                   >
                     <div className="flex gap-2 items-center">
-                      <div className="text-gray-600">{column.render('Header')}</div>
+                      <div className="text-white">{column.render('Header')}</div>
                       <div className="flex flex-col">
                         <FaSortUp
-                          className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-black' : 'text-gray-300'}`}
+                          className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-yellow-400' : 'text-gray-300'}`}
                         />
                         <FaSortDown
-                          className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-black' : 'text-gray-300'}`}
+                          className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-yellow-400' : 'text-gray-300'}`}
                         />
                       </div>
                     </div>
@@ -343,8 +343,8 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                 ))}
                 {/* Modification de la colonne "Actions" */}
                 <th
-                  className="sticky right-0 bg-black/80 px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-white"
-                  style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)' }} // Ombre gauche personnalisée
+                  className="sticky right-0 bg-gray-800 px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-white"
+                  style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)', zIndex: 2 }} // Ombre gauche personnalisée et z-index élevé
                 >
                   Actions
                 </th>
@@ -361,7 +361,6 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                       {...cell.getCellProps()}
                       key={cell.id}
                       className={`px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap first:rounded-l-lg last:rounded-r-lg max-w-xs overflow-hidden text-ellipsis`}
-                      // Les cellules autres que "Actions" peuvent garder leur style
                     >
                       {cell.column.id === 'story' || cell.column.id === 'bio' ? (
                         <div title={cell.value}>
@@ -376,8 +375,8 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                   ))}
                   {/* Modification de la cellule "Actions" */}
                   <td
-                    className="sticky right-0 bg-black/80 px-3 py-2 text-sm font-normal text-white whitespace-nowrap flex items-center justify-center shadow-inset-left h-full"
-                    style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)' }} // Ombre gauche personnalisée
+                    className="sticky right-0 bg-gray-800 px-3 py-2 text-sm font-normal text-white whitespace-nowrap flex items-center justify-center shadow-inset-left h-full"
+                    style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)', zIndex: 1 }} // Ombre gauche personnalisée et z-index inférieur pour ne pas couvrir le header
                   >
                     <ActionButtons
                       viewUrl={`/${baseRoute}/${row.original.id}`}
@@ -433,7 +432,7 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
   );
 
   return (
-    <div className="flex flex-col gap-4 font-kanit w-11/12">
+    <div className="flex flex-col gap-4 font-kanit w-full">
       <div className="flex flex-col sm:flex-row justify-between gap-2">
         <GlobalSearchFilter1 className="sm:w-64" globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
         <div className="flex gap-2 items-center sm:w-auto">
