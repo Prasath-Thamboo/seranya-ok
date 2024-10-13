@@ -1,3 +1,5 @@
+"use client";
+
 import axios from 'axios';
 import { useTable, useGlobalFilter, useSortBy, usePagination, Column } from 'react-table';
 import { useMemo, useCallback, useState } from 'react';
@@ -230,7 +232,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
     <div className="flex gap-2 justify-center">
       {viewUrl && (
         <button
-          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+          className={`bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 shadow-[inset_-2px_0px_4px_rgba(0,0,0,0.3)]`}
           onClick={() => window.location.href = viewUrl}
         >
           <FaEye className='h-5 w-5' />
@@ -238,7 +240,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
       )}
       {editUrl && (
         <button
-          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+          className={`bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 shadow-[inset_-2px_0px_4px_rgba(0,0,0,0.3)]`}
           onClick={() => window.location.href = editUrl}
         >
           <FaEdit className='h-4 w-4' />
@@ -246,7 +248,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
       )}
       {onDelete && (
         <button
-          className="bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red"
+          className={`bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red shadow-[inset_-2px_0px_4px_rgba(0,0,0,0.3)]`}
           onClick={onDelete}
         >
           <FaTrash className='h-4 w-4' />
@@ -339,7 +341,10 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                     </div>
                   </th>
                 ))}
-                <th className="sticky right-0 bg-white px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-left">
+                {/* Colonne "Actions" avec ombre à la bordure gauche */}
+                <th
+                  className="sticky right-0 bg-white px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-black shadow-[inset_-4px_0px_8px_rgba(0,0,0,0.3)]"
+                >
                   Actions
                 </th>
               </tr>
@@ -367,7 +372,10 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                       )}
                     </td>
                   ))}
-                  <td className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex gap-2 justify-center shadow-left h-full">
+                  {/* Cellule "Actions" avec ombre à la bordure gauche et centrage des boutons */}
+                  <td
+                    className="sticky right-0 bg-white px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap flex items-center justify-center shadow-[inset_-4px_0px_8px_rgba(0,0,0,0.3)] h-full"
+                  >
                     <ActionButtons
                       viewUrl={`/${baseRoute}/${row.original.id}`}
                       editUrl={`/${baseRoute}/update?id=${row.original.id}`}
