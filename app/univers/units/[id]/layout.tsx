@@ -14,9 +14,6 @@ const UnitsLayout = async ({ children, params }: UnitsLayoutProps) => {
   const id = parseInt(params.id, 10);
   const unit: UnitModel | null = await fetchUnitById(id);
 
-  console.log("UnitsLayout: unit:", unit);
-  console.log("UnitsLayout: footerImage:", unit?.footerImage);
-
   return (
     <ClientLayout footerImage={unit?.footerImage || "/images/default-footer.jpg"} disableFooter={false}>
       {children}

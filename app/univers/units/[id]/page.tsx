@@ -358,9 +358,9 @@ const UnitDetailPage = () => {
             )}
           </div>
         </div>
-      </div>
-      </div>
-    );
-  };
+        </div>
+        </div>
+      );
+    };
 
-  export default UnitDetailPage;
+    export default UnitDetailPage;
