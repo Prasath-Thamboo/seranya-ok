@@ -57,12 +57,15 @@ export default function Navbar() {
       if (window.scrollY > 0) {
         setNavbarBackground("bg-gray-800 bg-opacity-75 backdrop-blur-md");
       } else {
-        setNavbarBackground("bg-gray-700"); // Remplace bg-transparent par bg-gray-700
+        setNavbarBackground("bg-transparent"); // Remplace bg-gray-700 par bg-transparent
       }
     };
 
     window.addEventListener("scroll", handleNavbarScroll);
     window.addEventListener("scroll", handleScroll); // Listener pour mettre à jour la barre de progression
+
+    // Initial call to set the correct background on page load
+    handleNavbarScroll();
 
     return () => {
       window.removeEventListener("scroll", handleNavbarScroll);
@@ -132,7 +135,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Menus de navigation (Univers, Contact, Pricing) */}
+        {/* Menus de navigation (Univers, Contact, Abonnement) */}
         <div className="hidden md:flex space-x-8 items-center">
           <Link href="/univers" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
             <span className="stroke-text">Univers</span>
@@ -140,7 +143,7 @@ export default function Navbar() {
           <Link href="/contact" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
             <span className="stroke-text">Contact</span>
           </Link>
-          {/* Ajout du lien vers Pricing */}
+          {/* Ajout du lien vers Abonnement */}
           <Link href="/subscription" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
             <span className="stroke-text">Abonnement</span>
           </Link>
@@ -204,20 +207,20 @@ export default function Navbar() {
       </div>
 
       {/* Progress bar fixed at the bottom */}
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-300 z-50">
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-700 z-50"> {/* Changement bg-gray-300 à bg-gray-700 */}
         <div
           className="h-full bg-teal-500 neon-effect transition-all duration-500"
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
 
-      {/* Overlay and Menu mobile */}
+      {/* Overlay et Menu mobile */}
       {isMenuOpen && (
         <>
           {/* Gray background overlay */}
           <div
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={() => setIsMenuOpen(false)} // Allow click to close the menu
+            onClick={() => setIsMenuOpen(false)} // Permet de fermer le menu en cliquant en dehors
           ></div>
 
           {/* Menu mobile */}
@@ -228,7 +231,7 @@ export default function Navbar() {
             <Link href="/contact" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
               Contact
             </Link>
-            {/* Ajout du lien vers Pricing dans le menu mobile */}
+            {/* Ajout du lien vers Abonnement dans le menu mobile */}
             <Link href="/subscription" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
               Abonnement
             </Link>
