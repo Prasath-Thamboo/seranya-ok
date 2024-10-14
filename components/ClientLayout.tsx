@@ -34,16 +34,8 @@ export default function ClientLayout({
     return <Loader />; // Show the loader while the page is loading
   }
 
-  const shouldShowNavbar =
-    pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
-  const shouldShowFooter =
-    !disableFooter &&
-    pathname &&
-    !pathname.startsWith("/auth/login") &&
-    !pathname.startsWith("/auth/register") &&
-    !pathname.startsWith("/admin");
-
-  console.log("ClientLayout: footerImage prop:", footerImage);
+  const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
+  const shouldShowFooter = !disableFooter && pathname && !pathname.startsWith("/auth/login") && !pathname.startsWith("/auth/register") && !pathname.startsWith("/admin");
 
   return (
     <>
