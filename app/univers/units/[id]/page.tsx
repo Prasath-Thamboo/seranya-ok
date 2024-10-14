@@ -11,7 +11,7 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
 import ClientLayout from "@/components/ClientLayout";
 import { getImageUrl } from "@/utils/image";
-import { UploadType, UploadModel } from "@/lib/models/ClassModels";
+import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
 
 interface ClassModel {
   id: string;
@@ -96,6 +96,8 @@ const UnitDetailPage = () => {
   if (!unit) {
     return <div className="text-center text-white">Chargement...</div>;
   }
+
+  const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
     <ClientLayout footerImage={unit.footerImage || undefined} disableFooter>
@@ -234,9 +236,9 @@ const UnitDetailPage = () => {
                       <AntImage
                         src={relatedClass.profileImage}
                         alt={`Classe ${relatedClass.title} Profile`}
-                        width={120} // Taille agrandie
-                        height={120}
-                        className="w-30 h-30 object-cover rounded-full shadow-custom-black mx-auto mb-4"
+                        width={80}
+                        height={80}
+                        className="w-20 h-20 object-cover rounded-full shadow-custom-black mx-auto mb-4"
                         preview={false}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = "/images/backgrounds/placeholder.jpg";
@@ -293,7 +295,7 @@ const UnitDetailPage = () => {
                           <AntImage
                             src={getImageUrl(imgUrl)}
                             alt={`${unit.title} Gallery Image ${index + 1}`}
-                            width={500} // Taille agrandie
+                            width={500}
                             height={281}
                             className="w-full h-auto rounded-lg shadow-lg"
                             style={{
