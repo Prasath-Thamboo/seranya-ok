@@ -12,6 +12,7 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
 import { getImageUrl } from "@/utils/image";
 import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
+import Footer from "@/components/Footer"; 
 
 interface ClassModel {
   id: string;
@@ -358,6 +359,7 @@ const UnitDetailPage = () => {
           </div>
         </div>
       </div>
+      <Footer backgroundImage={getImageUrl(unit.footerImage)} /> 
     </div>
   );
 };
