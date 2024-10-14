@@ -8,9 +8,6 @@ interface FooterProps {
   backgroundImage?: string; // Optional prop for the background image
 }
 
-// Utilisation d'un flag global pour s'assurer que le Footer n'est rendu qu'une seule fois
-let footerRendered = false;
-
 const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
   const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | null>(null);
 
@@ -33,14 +30,6 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
 
   // Use the provided backgroundImage or fallback to the randomBackgroundImage if no backgroundImage is provided
   const finalBackgroundImage = backgroundImage || randomBackgroundImage;
-
-  // Si le footer a déjà été rendu, ne pas le rendre à nouveau
-  if (footerRendered) {
-    return null;
-  }
-
-  // Marquer le footer comme rendu
-  footerRendered = true;
 
   return (
     <footer className="relative block text-white font-iceberg uppercase">

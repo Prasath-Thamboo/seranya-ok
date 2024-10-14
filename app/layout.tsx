@@ -1,8 +1,9 @@
+// spectralnext/app/layout.tsx
+
 "use client";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "@/components/ClientLayout";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { ConfigProvider } from "antd";
 import frFR from "antd/lib/locale/fr_FR";
@@ -41,7 +42,6 @@ export default function RootLayout({
 
         <link rel="manifest" href="/manifest.json" />
 
-
         {/* Meta tags pour SEO */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
@@ -72,7 +72,6 @@ export default function RootLayout({
         <meta name="geo.position" content="48.8566;2.3522" /> 
         <meta name="ICBM" content="48.8566, 2.3522" />
 
-
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
@@ -84,10 +83,6 @@ export default function RootLayout({
           content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
         />
         <meta name="twitter:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
-
-      
-
-
       </head>
       <ConfigProvider locale={frFR}>
         <body className={inter.className}>
@@ -111,16 +106,12 @@ export default function RootLayout({
             </>
           )}
 
-
-<LoadingProvider>
+          <LoadingProvider>
             <NotificationProvider>
-              <ClientLayout>
-                <CookieConsent />
-                {children}
-              </ClientLayout>
+              <CookieConsent />
+              {children}
             </NotificationProvider>
           </LoadingProvider>
-
         </body>
       </ConfigProvider>
     </html>
