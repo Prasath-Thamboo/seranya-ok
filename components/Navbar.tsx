@@ -1,3 +1,7 @@
+// spectralnext/components/Navbar.tsx
+
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -51,9 +55,9 @@ export default function Navbar() {
     // Gestion du scroll pour l'arrière-plan de la navbar
     const handleNavbarScroll = () => {
       if (window.scrollY > 0) {
-        setNavbarBackground("bg-black bg-opacity-75 backdrop-blur-md");
+        setNavbarBackground("bg-gray-800 bg-opacity-75 backdrop-blur-md");
       } else {
-        setNavbarBackground("bg-transparent");
+        setNavbarBackground("bg-gray-700"); // Remplace bg-transparent par bg-gray-700
       }
     };
 
@@ -158,7 +162,7 @@ export default function Navbar() {
                     />
                   </div>
                 ) : (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-black flex items-center justify-center">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center">
                     <span className="text-white text-lg font-iceberg">
                       {user.pseudo.charAt(0).toUpperCase()}
                     </span>
@@ -200,9 +204,9 @@ export default function Navbar() {
       </div>
 
       {/* Progress bar fixed at the bottom */}
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-200 z-50">
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-300 z-50">
         <div
-          className="h-full bg-indigo-600 transition-all"
+          className="h-full bg-teal-500 neon-effect transition-all duration-500"
           style={{ width: `${scrollProgress}%` }}
         ></div>
       </div>
@@ -217,7 +221,7 @@ export default function Navbar() {
           ></div>
 
           {/* Menu mobile */}
-          <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-black bg-opacity-75 z-50 p-5">
+          <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-gray-700 bg-opacity-90 z-50 p-5 animate-slide-in">
             <Link href="/univers" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
               Univers
             </Link>
@@ -261,6 +265,46 @@ export default function Navbar() {
           </div>
         </>
       )}
+
+      {/* Styles supplémentaires pour l'effet néon et les animations */}
+      <style jsx>{`
+        /* Effet néon pour la progress bar */
+        .neon-effect {
+          box-shadow: 0 0 10px rgba(0, 128, 128, 0.7),
+                      0 0 20px rgba(0, 128, 128, 0.6),
+                      0 0 30px rgba(0, 128, 128, 0.5);
+          animation: neon-glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes neon-glow {
+          from {
+            box-shadow: 0 0 10px rgba(0, 128, 128, 0.7),
+                        0 0 20px rgba(0, 128, 128, 0.6),
+                        0 0 30px rgba(0, 128, 128, 0.5);
+          }
+          to {
+            box-shadow: 0 0 20px rgba(0, 128, 128, 1),
+                        0 0 30px rgba(0, 128, 128, 0.8),
+                        0 0 40px rgba(0, 128, 128, 0.6);
+          }
+        }
+
+        /* Animation pour le menu mobile */
+        @keyframes slide-in {
+          from {
+            transform: translateY(-20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out forwards;
+        }
+      `}</style>
     </nav>
   );
 }
