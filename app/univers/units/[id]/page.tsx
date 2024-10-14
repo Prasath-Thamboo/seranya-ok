@@ -102,6 +102,7 @@ const UnitDetailPage = () => {
   return (
     <ClientLayout footerImage={unit.footerImage || undefined} disableFooter>
       <div className="relative w-full min-h-screen text-white font-kanit">
+        {/* Background Header */}
         <div
           className="fixed inset-0 bg-cover bg-center"
           style={{
@@ -112,7 +113,8 @@ const UnitDetailPage = () => {
         />
 
         <div className="relative z-10">
-          <div className="relative h-screen">
+          {/* Header Section */}
+          <div className="relative h-screen flex items-end justify-center">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
@@ -122,7 +124,7 @@ const UnitDetailPage = () => {
             <div className="absolute bottom-0 w-full h-[60vh] bg-gradient-to-t from-black/95 to-transparent"></div>
 
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center text-center"
+              className="flex flex-col items-center text-center"
               style={{
                 boxShadow: "0px 60vh 60vh -60vh rgba(0, 0, 0, 0.95)",
               }}
@@ -139,26 +141,32 @@ const UnitDetailPage = () => {
             </div>
           </div>
 
-          <div className="relative flex justify-center -mt-26 z-10">
-            <div className="relative w-72 h-72 neon-avatar">
+          {/* Profil Image */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="w-72 h-72 rounded-full overflow-hidden border-4 border-black shadow-2xl">
               <AntImage
                 src={getImageUrl(unit.profileImage)}
                 alt={`${unit.title} Profile`}
                 width={288}
                 height={288}
-                className="w-full h-full object-cover rounded-full shadow-lg"
+                className="w-full h-full object-cover rounded-full"
                 preview={false}
               />
             </div>
           </div>
 
+          {/* Introduction Section */}
           {unit.intro && (
-            <div className="mt-8 text-center text-gray-400 italic text-lg">
-              <p>{unit.intro}</p>
+            <div className="mt-40 md:mt-48 lg:mt-56 text-center px-4 sm:px-8 lg:px-16">
+              <div className="mx-auto max-w-3xl text-gray-400 italic text-lg">
+                <p>{unit.intro}</p>
+              </div>
             </div>
           )}
 
+          {/* Main Content */}
           <div className="lg:flex lg:items-start lg:justify-center lg:mt-12">
+            {/* Sidebar */}
             <div className="lg:w-1/4 p-4 lg:fixed top-0 w-full lg:max-w-sm lg:max-h-screen lg:h-auto flex justify-center z-10 lg:sticky lg:top-24">
               <div className="bg-black p-6 rounded-lg shadow-lg w-full">
                 <div className="flex items-center space-x-4">
@@ -167,7 +175,7 @@ const UnitDetailPage = () => {
                     alt={`${unit.title} Profile`}
                     width={80}
                     height={80}
-                    className="w-20 h-20 object-cover rounded-full shadow-lg neon-effect neon-avatar"
+                    className="w-20 h-20 object-cover rounded-full shadow-lg"
                     preview={false}
                   />
                   <h2 className="text-2xl font-oxanium text-white">{unit.title}</h2>
@@ -178,10 +186,10 @@ const UnitDetailPage = () => {
                   <ul className="space-y-4">
                     <li>
                       <button
-                        className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 ${
+                        className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-white hover:text-black ${
                           activeSection === "biographie"
                             ? "bg-white text-black"
-                            : "text-gray-400 hover:bg-white hover:text-black"
+                            : "text-gray-400"
                         }`}
                         onClick={() => handleMenuClick("biographie")}
                       >
@@ -191,10 +199,10 @@ const UnitDetailPage = () => {
                     </li>
                     <li>
                       <button
-                        className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 ${
+                        className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-white hover:text-black ${
                           activeSection === "galerie"
                             ? "bg-white text-black"
-                            : "text-gray-400 hover:bg-white hover:text-black"
+                            : "text-gray-400"
                         }`}
                         onClick={() => handleMenuClick("galerie")}
                       >
@@ -204,10 +212,10 @@ const UnitDetailPage = () => {
                     </li>
                     <li>
                       <button
-                        className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 ${
+                        className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-white hover:text-black ${
                           activeSection === "nouvelles"
                             ? "bg-white text-black"
-                            : "text-gray-400 hover:bg-white hover:text-black"
+                            : "text-gray-400"
                         }`}
                         onClick={() => handleMenuClick("nouvelles")}
                       >
@@ -227,7 +235,7 @@ const UnitDetailPage = () => {
                           alt={`Classe ${relatedClass.title} Profile`}
                           width={200}
                           height={200}
-                          className="w-64 h-64 object-cover rounded-full mx-auto mb-4"
+                          className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
                           preview={false}
                         />
                         <h3 className="text-xl font-iceberg uppercase text-white">
@@ -240,6 +248,7 @@ const UnitDetailPage = () => {
               </div>
             </div>
 
+            {/* Content Section */}
             <div
               className={`lg:w-3/4 lg:ml-[5%] p-6 transition-opacity duration-1000 ${
                 showContent ? "opacity-100" : "opacity-0"
@@ -252,7 +261,7 @@ const UnitDetailPage = () => {
                       Biographie
                     </h2>
                     <div
-                      className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
+                      className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                       dangerouslySetInnerHTML={{
                         __html:
                           unit.bio || "<p>Aucune biographie disponible.</p>",
@@ -281,7 +290,7 @@ const UnitDetailPage = () => {
                               alt={`${unit.title} Gallery Image ${index + 1}`}
                               width="100%"
                               height="100%"
-                              className="w-full h-auto rounded-lg shadow-lg"
+                              className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
                               style={{
                                 objectFit: "cover",
                                 aspectRatio: "16/9",
@@ -321,7 +330,7 @@ const UnitDetailPage = () => {
                             </p>
                             <button
                               onClick={handleSubscriptionClick}
-                              className="bg-indigo-600 text-white px-6 py-3 text-lg rounded-lg hover:bg-indigo-500"
+                              className="bg-indigo-600 text-white px-6 py-3 text-lg rounded-lg hover:bg-indigo-500 transition-colors duration-200"
                             >
                               S&apos;abonner
                             </button>
@@ -330,7 +339,7 @@ const UnitDetailPage = () => {
 
                         {isSubscribed && unit.story && (
                           <div
-                            className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
+                            className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                             dangerouslySetInnerHTML={{
                               __html: unit.story,
                             }}
