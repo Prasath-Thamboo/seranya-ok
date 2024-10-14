@@ -362,7 +362,7 @@ const UnitDetailPage = () => {
       {/* Hardcoded Footer Section */}
       <footer className="relative block text-white font-iceberg uppercase">
   {/* Background image with better containment */}
-  <div className="absolute inset-0 z-0">
+  <div className="absolute inset-0 z-0 w-full h-full">
     {unit.footerImage && (
       <AntImage
         src={getImageUrl(unit.footerImage)}
