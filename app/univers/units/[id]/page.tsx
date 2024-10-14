@@ -236,9 +236,9 @@ const UnitDetailPage = () => {
                       <AntImage
                         src={relatedClass.profileImage}
                         alt={`Classe ${relatedClass.title} Profile`}
-                        width={80}
-                        height={80}
-                        className="w-20 h-20 object-cover rounded-full shadow-custom-black mx-auto mb-4"
+                        width={120} 
+                        height={120} 
+                        className="w-30 h-30 object-cover rounded-full shadow-custom-black mx-auto mb-4"
                         preview={false}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = "/images/backgrounds/placeholder.jpg";
@@ -270,7 +270,8 @@ const UnitDetailPage = () => {
                   <div
                     className="text-lg text-gray-300 leading-relaxed max-w-5xl mx-auto px-4 sm:px-8 lg:px-16 first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                     dangerouslySetInnerHTML={{
-                      __html: unit.bio || "<p>Aucune biographie disponible.</p>",
+                      __html:
+                        unit.bio || "<p>Aucune biographie disponible.</p>",
                     }}
                   />
                 </div>
