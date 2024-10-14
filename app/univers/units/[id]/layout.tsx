@@ -1,6 +1,6 @@
 // spectralnext/app/univers/units/[id]/layout.tsx
 
-import ClientLayout from "@/components/ClientLayout";
+import FooterSetter from "@/components/FooterSetter"; // Importez FooterSetter
 import { fetchUnitById } from "@/lib/queries/UnitQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
 import React from "react";
@@ -14,10 +14,14 @@ const UnitsLayout = async ({ children, params }: UnitsLayoutProps) => {
   const id = parseInt(params.id, 10);
   const unit: UnitModel | null = await fetchUnitById(id);
 
+  if (!unit) {
+    return <div>Unité non trouvée</div>;
+  }
+
   return (
-    <ClientLayout footerImage={unit?.footerImage || "/images/default-footer.jpg"} disableFooter={false}>
+    <FooterSetter footerImage={unit.footerImage || "/images/default-footer.jpg"}>
       {children}
-    </ClientLayout>
+    </FooterSetter>
   );
 };
 
