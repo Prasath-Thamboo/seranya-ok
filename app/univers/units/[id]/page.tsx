@@ -1,5 +1,4 @@
 // spectralnext/app/univers/units/[id]/page.tsx
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -231,7 +230,7 @@ const UnitDetailPage = () => {
                   {relatedClasses.map((relatedClass) => (
                     <div key={relatedClass.id} className="text-center mb-4">
                       <AntImage
-                        src={relatedClass.profileImage}
+                        src={getImageUrl(relatedClass.profileImage)}
                         alt={`Classe ${relatedClass.title} Profile`}
                         width={200}
                         height={200}
@@ -358,9 +357,9 @@ const UnitDetailPage = () => {
             )}
           </div>
         </div>
-        </div>
-        </div>
-      );
-    };
+      </div>
+    </div>
+  );
+};
 
-    export default UnitDetailPage;
+export default UnitDetailPage;

@@ -4,44 +4,50 @@
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import ViewFooter from "./newFooter"; // Remplacez Footer par ViewFooter
 import Loader from "@/components/Loader";
 import React from "react";
+import { useFooter } from "@/context/FooterContext"; // Importez le hook useFooter
 
 interface ClientLayoutProps {
   children: ReactNode;
-  footerImage?: string; // Accept footerImage prop
-  disableFooter?: boolean; // New prop to control whether the footer should be shown
+  disableFooter?: boolean; // Nouvelle prop pour contrôler l'affichage du footer
 }
 
 export default function ClientLayout({
   children,
-  footerImage,
-  disableFooter = false, // Default to false
+  disableFooter = false, // Par défaut à false
 }: ClientLayoutProps) {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
+  const { footerImage: contextFooterImage } = useFooter(); // Utilisez le contexte
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false); // Simulate a loading delay
+      setIsLoading(false); // Simulez un délai de chargement
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
-    return <Loader />; // Show the loader while the page is loading
+    return <Loader />; // Affichez le loader pendant le chargement
   }
 
-  const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
-  const shouldShowFooter = !disableFooter && pathname && !pathname.startsWith("/auth/login") && !pathname.startsWith("/auth/register") && !pathname.startsWith("/admin");
+  // Définir les chemins à exclure
+  const excludedPaths = ["/auth", "/admin", "/contact", "/subscription", "/login"];
+
+  // Vérifiez si le chemin actuel est exclu
+  const isExcluded = excludedPaths.some((path) => pathname?.startsWith(path));
+
+  const shouldShowNavbar = !isExcluded;
+  const shouldShowFooter = !disableFooter && !isExcluded;
 
   return (
     <>
       {shouldShowNavbar && <Navbar />}
       <div>{children}</div>
-      {shouldShowFooter && <Footer backgroundImage={footerImage} />}
+      {shouldShowFooter && <ViewFooter backgroundImage={contextFooterImage} />}
     </>
   );
 }
