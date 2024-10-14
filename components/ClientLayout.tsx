@@ -1,4 +1,3 @@
-// spectralnext/components/ClientLayout.tsx
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
@@ -34,8 +33,17 @@ export default function ClientLayout({
     return <Loader />; // Show the loader while the page is loading
   }
 
+  // Define paths where the footer should not be shown
+  const excludedFooterPaths = [
+    "/auth/login",
+    "/auth/register",
+    "/admin",
+    "/univers/units", // Path for the unit detail pages
+  ];
+
+  // Determine if the current path should exclude the footer
   const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
-  const shouldShowFooter = !disableFooter && pathname && !pathname.startsWith("/auth/login") && !pathname.startsWith("/auth/register") && !pathname.startsWith("/admin");
+  const shouldShowFooter = !disableFooter && pathname && !excludedFooterPaths.some((path) => pathname.startsWith(path));
 
   return (
     <>

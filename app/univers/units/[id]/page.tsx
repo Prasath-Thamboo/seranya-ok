@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { fetchUnitById } from "@/lib/queries/UnitQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
 import Masonry from "react-masonry-css";
-import { FaBook, FaImage, FaLock, FaNewspaper } from "react-icons/fa";
+import { FaBook, FaGithub, FaImage, FaInstagram, FaLock, FaNewspaper, FaTwitter } from "react-icons/fa";
 import Badge from "@/components/Badge";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
@@ -359,7 +359,60 @@ const UnitDetailPage = () => {
           </div>
         </div>
       </div>
-      <Footer backgroundImage={encodeURI(getImageUrl(unit.footerImage))} />
+      {/* Hardcoded Footer Section */}
+      <footer className="relative block text-white font-iceberg uppercase">
+        {/* Background image with opaque filter */}
+        <div className="absolute inset-0 z-0">
+          {unit.footerImage && (
+            <AntImage
+              src={getImageUrl(unit.footerImage)}
+              alt="Footer background"
+              style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.5 }}
+            />
+          )}
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+        </div>
+
+        {/* Footer content */}
+        <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
+          <div className="flex-col flex items-center">
+            {/* Logo */}
+            <a href="#" className="mb-8 inline-block max-w-full">
+              <AntImage
+                src="/logos/spectral-high-resolution-logo-white-transparent.png"
+                alt="Logo Spectral"
+                width={160}
+                height={40}
+                className="inline-block object-contain"
+              />
+            </a>
+
+            {/* Menu */}
+            <div className="text-center font-semibold">
+              <a href="/about" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">À propos</a>
+              <a href="/mentions" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">Mentions légales</a>
+              <a href="#" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">© Copyright</a>
+            </div>
+
+            <div className="mb-8 mt-8 border-b border-gray-500 w-48"></div>
+
+            {/* Social media links */}
+            <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3 items-start">
+              <a href="https://github.com" className="mx-auto flex-col flex items-center text-white">
+                <FaGithub size={32} />
+              </a>
+              <a href="https://twitter.com" className="mx-auto flex-col flex items-center text-white">
+                <FaTwitter size={32} />
+              </a>
+              <a href="https://instagram.com" className="mx-auto flex-col flex items-center text-white">
+                <FaInstagram size={32} />
+              </a>
+            </div>
+
+            <p className="text-sm sm:text-base">© Copyright 2021. Tous droits réservés.</p>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );
