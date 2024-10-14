@@ -359,7 +359,8 @@ const UnitDetailPage = () => {
           </div>
         </div>
       </div>
-      <Footer backgroundImage={getImageUrl(unit.footerImage)} /> 
+      <Footer backgroundImage={encodeURI(getImageUrl(unit.footerImage))} />
+
     </div>
   );
 };
