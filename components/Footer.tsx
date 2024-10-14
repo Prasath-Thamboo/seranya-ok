@@ -41,7 +41,7 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
           <Image
             src={finalBackgroundImage}
             alt="Footer background"
-            fill
+            fill // Utilisez 'fill' pour couvrir l'espace parent
             className="object-cover opacity-50"
           />
         )}

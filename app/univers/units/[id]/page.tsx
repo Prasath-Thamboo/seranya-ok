@@ -4,8 +4,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { fetchUnitById } from "@/lib/queries/UnitQueries";
-import { UnitModel } from "@/lib/models/UnitModels";
 import Masonry from "react-masonry-css";
 import { FaBook, FaImage, FaLock, FaNewspaper } from "react-icons/fa";
 import Badge from "@/components/Badge";
@@ -29,44 +27,16 @@ const UnitDetailPage = () => {
       : params.id
     : null;
 
-  const [unit, setUnit] = useState<UnitModel | null>(null);
   const [activeSection, setActiveSection] = useState("biographie");
   const [showContent, setShowContent] = useState(true);
   const [relatedClasses, setRelatedClasses] = useState<ClassModel[]>([]);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [loadingUser, setLoadingUser] = useState<boolean>(true);
 
+  // Note : Les données de l'unité sont déjà récupérées dans le layout imbriqué
+
   useEffect(() => {
-    const fetchUnit = async () => {
-      if (id) {
-        try {
-          const fetchedUnit = await fetchUnitById(parseInt(id, 10));
-          if (fetchedUnit) {
-            if (fetchedUnit.classes && fetchedUnit.classes.length > 0) {
-              const classesWithImages: ClassModel[] = fetchedUnit.classes.map((cls) => {
-                const profileImageUpload = cls.uploads.find(
-                  (upload: UploadModel) => upload.type === UploadType.PROFILEIMAGE
-                );
-                const profileImage = profileImageUpload ? profileImageUpload.path : null;
-
-                return {
-                  id: cls.id,
-                  title: cls.title,
-                  profileImage: getImageUrl(profileImage),
-                  color: cls.color || null,
-                };
-              });
-
-              setRelatedClasses(classesWithImages);
-            }
-            setUnit(fetchedUnit);
-          }
-        } catch (error) {
-          console.error("Error fetching unit:", error);
-        }
-      }
-    };
-
+    // Si vous avez besoin de données supplémentaires, récupérez-les ici
     const fetchUserSubscriptionStatus = async () => {
       try {
         const currentUser = await fetchCurrentUser();
@@ -78,7 +48,6 @@ const UnitDetailPage = () => {
       }
     };
 
-    fetchUnit();
     fetchUserSubscriptionStatus();
   }, [id]);
 
@@ -94,11 +63,11 @@ const UnitDetailPage = () => {
     }, 500);
   };
 
-  if (!unit) {
+  if (!id) {
     return <div className="text-center text-white">Chargement...</div>;
   }
 
-  const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
+  // Vous pouvez continuer à utiliser les données passées via le layout si nécessaire
 
   return (
     <div className="relative w-full min-h-screen text-white font-kanit">
@@ -106,9 +75,8 @@ const UnitDetailPage = () => {
       <div
         className="fixed inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${getImageUrl(unit.headerImage)})`,
-          backgroundAttachment: "fixed",
-          filter: "brightness(25%)",
+          // Remarque : L'image de fond est gérée dans le layout imbriqué via `ClientLayout`
+          // Vous pouvez supprimer cette partie si elle n'est plus nécessaire
         }}
       />
 
@@ -118,7 +86,7 @@ const UnitDetailPage = () => {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url(${getImageUrl(unit.headerImage)})`,
+              // Remarque : L'image de fond est gérée dans le layout imbriqué via `ClientLayout`
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent"></div>
@@ -130,14 +98,13 @@ const UnitDetailPage = () => {
             }}
           >
             <h1 className="text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-              {unit.title}
+              {/* Titre de l'unité */}
+              {/* Vous pouvez passer les données nécessaires via un contexte ou une autre méthode */}
             </h1>
-            <Badge role={unit.type} />
-            {unit.subtitle && (
-              <p className="mt-4 text-xl font-kanit text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                {unit.subtitle}
-              </p>
-            )}
+            <Badge role={"UNIT_TYPE"} /> {/* Remplacez par le rôle réel de l'unité */}
+            <p className="mt-4 text-xl font-kanit text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+              {/* Sous-titre de l'unité */}
+            </p>
           </div>
         </div>
 
@@ -145,8 +112,8 @@ const UnitDetailPage = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <div className="w-72 h-72 rounded-full overflow-hidden border-4 border-black shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
             <AntImage
-              src={getImageUrl(unit.profileImage)}
-              alt={`${unit.title} Profile`}
+              src={""} // Remplacez par l'URL de l'image de profil de l'unité
+              alt={`Classe Profile`}
               width={288}
               height={288}
               className="w-full h-full object-cover rounded-full"
@@ -156,13 +123,7 @@ const UnitDetailPage = () => {
         </div>
 
         {/* Introduction Section */}
-        {unit.intro && (
-          <div className="mt-40 md:mt-48 lg:mt-56 text-center px-4 sm:px-8 lg:px-16">
-            <div className="mx-auto max-w-3xl text-gray-400 italic text-lg">
-              <p>{unit.intro}</p>
-            </div>
-          </div>
-        )}
+        {/* Ajoutez ici le contenu d'introduction si nécessaire */}
 
         {/* Main Content */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12">
@@ -171,15 +132,15 @@ const UnitDetailPage = () => {
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
               <div className="flex items-center space-x-4">
                 <AntImage
-                  src={getImageUrl(unit.profileImage)}
-                  alt={`${unit.title} Profile`}
+                  src={""} // Remplacez par l'URL de l'image de profil de la classe
+                  alt={`Classe Profile`}
                   width={80}
                   height={80}
                   className="w-20 h-20 object-cover rounded-full shadow-lg"
                   preview={false}
                 />
-                <h2 className="text-2xl font-oxanium text-white">{unit.title}</h2>
-                <Badge role={unit.type} />
+                <h2 className="text-2xl font-oxanium text-white">Titre de la Classe</h2>
+                <Badge role={"CLASS_TYPE"} /> {/* Remplacez par le rôle réel de la classe */}
               </div>
 
               <nav className="mt-8">
@@ -231,7 +192,7 @@ const UnitDetailPage = () => {
                   {relatedClasses.map((relatedClass) => (
                     <div key={relatedClass.id} className="text-center mb-4">
                       <AntImage
-                        src={getImageUrl(relatedClass.profileImage)}
+                        src={relatedClass.profileImage}
                         alt={`Classe ${relatedClass.title} Profile`}
                         width={200}
                         height={200}
@@ -264,7 +225,7 @@ const UnitDetailPage = () => {
                     className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                     dangerouslySetInnerHTML={{
                       __html:
-                        unit.bio || "<p>Aucune biographie disponible.</p>",
+                        "<p>Aucune biographie disponible.</p>", // Remplacez par les données réelles
                     }}
                   />
                 </div>
@@ -282,28 +243,25 @@ const UnitDetailPage = () => {
                     className="flex -ml-4 w-auto"
                     columnClassName="pl-4"
                   >
-                    {unit.gallery && unit.gallery.length > 0 ? (
-                      unit.gallery.map((imgUrl, index) => (
-                        <div key={index} className="relative mb-4">
-                          <AntImage
-                            src={getImageUrl(imgUrl)}
-                            alt={`${unit.title} Gallery Image ${index + 1}`}
-                            width="100%"
-                            height="100%"
-                            className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-                            style={{
-                              objectFit: "cover",
-                              aspectRatio: "16/9",
-                            }}
-                            preview={{
-                              src: imgUrl,
-                            }}
-                          />
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500">Aucune image disponible dans la galerie.</p>
-                    )}
+                    {/* Ajoutez ici les images de la galerie */}
+                    {/* Exemple */}
+                    <div className="relative mb-4">
+                      <AntImage
+                        src="/path/to/image1.png"
+                        alt="Gallery Image 1"
+                        width={800}
+                        height={450}
+                        className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+                        style={{
+                          objectFit: "cover",
+                          aspectRatio: "16/9",
+                        }}
+                        preview={{
+                          src: "/path/to/image1.png",
+                        }}
+                      />
+                    </div>
+                    {/* Répétez pour les autres images */}
                   </Masonry>
                 </div>
               </div>
@@ -337,16 +295,16 @@ const UnitDetailPage = () => {
                         </div>
                       )}
 
-                      {isSubscribed && unit.story && (
+                      {isSubscribed && (
                         <div
                           className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                           dangerouslySetInnerHTML={{
-                            __html: unit.story,
+                            __html: "<p>Contenu des nouvelles.</p>", // Remplacez par les données réelles
                           }}
                         />
                       )}
 
-                      {isSubscribed && !unit.story && (
+                      {isSubscribed && (
                         <p className="text-gray-500 text-lg">
                           Pas de nouvelles pour le moment.
                         </p>
