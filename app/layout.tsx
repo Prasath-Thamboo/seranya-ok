@@ -1,7 +1,5 @@
 // spectralnext/app/layout.tsx
 
-"use client";
-
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
@@ -10,7 +8,7 @@ import frFR from "antd/lib/locale/fr_FR";
 import CookieConsent from "@/components/CookieConsent";
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import { metadata } from "@/app/metadata"; // Import des métadonnées
+import { metadata } from "@/app/metadata";
 import React from "react";
 import { LoadingProvider } from "@/components/LoadingContext";
 
@@ -46,7 +44,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
-          content={String(metadata.description) ?? "Description par défaut"} // Conversion en chaîne
+          content={String(metadata.description) ?? "Description par défaut"}
         />
         <meta
           name="keywords"
@@ -57,11 +55,11 @@ export default function RootLayout({
         {/* Open Graph pour les réseaux sociaux */}
         <meta
           property="og:title"
-          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
+          content={String(metadata.title) ?? "Spectral"}
         />
         <meta
           property="og:description"
-          content={String(metadata.description) ?? "Plongez dans le monde fascinant de Spectral."} // Conversion en chaîne
+          content={String(metadata.description) ?? "Plongez dans le monde fascinant de Spectral."}
         />
         <meta property="og:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
         <meta property="og:type" content="website" />
@@ -76,11 +74,11 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
+          content={String(metadata.title) ?? "Spectral"}
         />
         <meta
           name="twitter:description"
-          content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
+          content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."}
         />
         <meta name="twitter:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
       </head>

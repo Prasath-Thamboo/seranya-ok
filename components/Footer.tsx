@@ -31,6 +31,8 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
   // Use the provided backgroundImage or fallback to the randomBackgroundImage if no backgroundImage is provided
   const finalBackgroundImage = backgroundImage || randomBackgroundImage;
 
+  console.log("Rendering Footer with backgroundImage:", finalBackgroundImage);
+
   return (
     <footer className="relative block text-white font-iceberg uppercase">
       {/* Background image with opaque filter */}
@@ -39,9 +41,8 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
           <Image
             src={finalBackgroundImage}
             alt="Footer background"
-            layout="fill"
-            objectFit="cover"
-            className="opacity-50"
+            fill
+            className="object-cover opacity-50"
           />
         )}
         <div className="absolute inset-0 bg-black opacity-50"></div>
