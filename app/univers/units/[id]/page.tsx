@@ -100,7 +100,7 @@ const UnitDetailPage = () => {
   const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
 
   return (
-    <ClientLayout footerImage={unit.footerImage || undefined} disableFooter>
+    <ClientLayout footerImage={unit.footerImage || undefined} disableFooter={false}>
       <div className="relative w-full min-h-screen text-white font-kanit">
         {/* Background Header */}
         <div
@@ -114,14 +114,14 @@ const UnitDetailPage = () => {
 
         <div className="relative z-10">
           {/* Header Section */}
-          <div className="relative h-screen flex items-end justify-center">
+          <div className="relative h-screen flex items-center justify-center">
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
                 backgroundImage: `url(${getImageUrl(unit.headerImage)})`,
               }}
             />
-            <div className="absolute bottom-0 w-full h-[60vh] bg-gradient-to-t from-black/95 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent"></div>
 
             <div
               className="flex flex-col items-center text-center"
@@ -143,7 +143,7 @@ const UnitDetailPage = () => {
 
           {/* Profil Image */}
           <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="w-72 h-72 rounded-full overflow-hidden border-4 border-black shadow-2xl">
+            <div className="w-72 h-72 rounded-full overflow-hidden border-4 border-black shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
               <AntImage
                 src={getImageUrl(unit.profileImage)}
                 alt={`${unit.title} Profile`}
