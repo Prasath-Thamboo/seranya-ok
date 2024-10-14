@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useFooter } from "@/context/FooterContect";
+import { useFooter } from "@/context/FooterContext";
 
 interface FooterSetterProps {
   footerImage: string;

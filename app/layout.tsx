@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { metadata } from "@/app/metadata"; // Import des métadonnées
 import React from "react";
 import { LoadingProvider } from "@/components/LoadingContext";
+import { FooterProvider } from "@/context/FooterContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -114,10 +115,12 @@ export default function RootLayout({
 
 <LoadingProvider>
             <NotificationProvider>
+            <FooterProvider>
               <ClientLayout>
                 <CookieConsent />
                 {children}
               </ClientLayout>
+              </FooterProvider>
             </NotificationProvider>
           </LoadingProvider>
 
