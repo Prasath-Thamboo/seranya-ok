@@ -361,7 +361,7 @@ const UnitDetailPage = () => {
       </div>
       {/* Hardcoded Footer Section */}
       <footer className="relative block text-white font-iceberg uppercase">
-  {/* Background image with proper fitting */}
+  {/* Background image with better containment */}
   <div className="absolute inset-0 z-0">
     {unit.footerImage && (
       <AntImage
@@ -370,13 +370,13 @@ const UnitDetailPage = () => {
         style={{ 
           width: "100%", 
           height: "100%", 
-          objectFit: "cover", 
-          objectPosition: "center", // Ensure the image is centered 
-          overflow: "hidden", // Prevent overflow
+          objectFit: "cover",   // Ensures the image covers the area without distortion
+          objectPosition: "center center",  // Centers the image
+          overflow: "hidden"    // Prevents image overflow
         }}
       />
     )}
-    <div className="absolute inset-0 bg-black opacity-50"></div> {/* Overlay to darken the image */}
+    <div className="absolute inset-0 bg-black opacity-50"></div>
   </div>
 
   {/* Footer content */}
@@ -419,6 +419,7 @@ const UnitDetailPage = () => {
     </div>
   </div>
 </footer>
+
 
 
     </div>
