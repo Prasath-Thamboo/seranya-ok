@@ -34,16 +34,8 @@ export default function ClientLayout({
     return <Loader />; // Show the loader while the page is loading
   }
 
-  // Définir les chemins à exclure
-  const excludedPaths = ["/auth", "/admin", "/contact", "/subscription", "/login"];
-
-  // Fonction pour vérifier si le chemin actuel commence par un des chemins exclus
-  const isExcluded = excludedPaths.some((path) => pathname?.startsWith(path));
-
-  const shouldShowNavbar = !isExcluded;
-  const shouldShowFooter = !disableFooter && !isExcluded;
-
-  console.log("ClientLayout: footerImage prop:", footerImage);
+  const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
+  const shouldShowFooter = !disableFooter && pathname && !pathname.startsWith("/auth/login") && !pathname.startsWith("/auth/register") && !pathname.startsWith("/admin");
 
   return (
     <>

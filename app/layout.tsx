@@ -1,16 +1,15 @@
-// spectralnext/app/layout.tsx
-
 "use client";
 
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ClientLayout from "@/components/ClientLayout";
 import { NotificationProvider } from "@/components/notifications/NotificationProvider";
 import { ConfigProvider } from "antd";
 import frFR from "antd/lib/locale/fr_FR";
 import CookieConsent from "@/components/CookieConsent";
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import { metadata } from "@/app/metadata";
+import { metadata } from "@/app/metadata"; // Import des métadonnées
 import React from "react";
 import { LoadingProvider } from "@/components/LoadingContext";
 
@@ -42,11 +41,12 @@ export default function RootLayout({
 
         <link rel="manifest" href="/manifest.json" />
 
+
         {/* Meta tags pour SEO */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
-          content={String(metadata.description) ?? "Description par défaut"}
+          content={String(metadata.description) ?? "Description par défaut"} // Conversion en chaîne
         />
         <meta
           name="keywords"
@@ -57,11 +57,11 @@ export default function RootLayout({
         {/* Open Graph pour les réseaux sociaux */}
         <meta
           property="og:title"
-          content={String(metadata.title) ?? "Spectral"}
+          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
         />
         <meta
           property="og:description"
-          content={String(metadata.description) ?? "Plongez dans le monde fascinant de Spectral."}
+          content={String(metadata.description) ?? "Plongez dans le monde fascinant de Spectral."} // Conversion en chaîne
         />
         <meta property="og:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
         <meta property="og:type" content="website" />
@@ -72,17 +72,22 @@ export default function RootLayout({
         <meta name="geo.position" content="48.8566;2.3522" /> 
         <meta name="ICBM" content="48.8566, 2.3522" />
 
+
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content={String(metadata.title) ?? "Spectral"}
+          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
         />
         <meta
           name="twitter:description"
-          content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."}
+          content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
         />
         <meta name="twitter:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
+
+      
+
+
       </head>
       <ConfigProvider locale={frFR}>
         <body className={inter.className}>
@@ -106,12 +111,16 @@ export default function RootLayout({
             </>
           )}
 
-          <LoadingProvider>
+
+<LoadingProvider>
             <NotificationProvider>
-              <CookieConsent />
-              {children}
+              <ClientLayout>
+                <CookieConsent />
+                {children}
+              </ClientLayout>
             </NotificationProvider>
           </LoadingProvider>
+
         </body>
       </ConfigProvider>
     </html>
