@@ -159,8 +159,8 @@ const UnitDetailPage = () => {
           )}
         </div>
 
-        {/* Profil Image */}
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+        {/* Profil Image Principale */}
+        <div className="absolute left-1/2 top-3/5 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <div
             className="w-72 h-72 rounded-full overflow-hidden border-4 border-black flex items-center justify-center"
             style={{
@@ -237,13 +237,16 @@ const UnitDetailPage = () => {
                 {loadingUnit ? (
                   <Skeleton.Avatar active size="large" shape="circle" />
                 ) : (
-                  <AntImage
-                    src={getImageUrl(unit?.profileImage || "")}
-                    alt={`${unit?.title} Profile`}
-                    width={80}
-                    height={80}
-                    className="w-20 h-20 object-cover rounded-full"
-                  />
+                  <div className="flex-shrink-0">
+                    <AntImage
+                      src={getImageUrl(unit?.profileImage || "")}
+                      alt={`${unit?.title} Profile`}
+                      width={80}
+                      height={80}
+                      className="w-20 h-20 object-cover rounded-full aspect-square"
+                      preview={false}
+                    />
+                  </div>
                 )}
                 <h2 className="text-2xl font-oxanium text-white">
                   {unit?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
@@ -308,6 +311,8 @@ const UnitDetailPage = () => {
                           width={200}
                           height={200}
                           className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
+                          style={{ minWidth: "16rem", minHeight: "16rem" }} // Assurer des dimensions minimales
+                          preview={false}
                         />
                       )}
                       <h3 className="text-xl font-iceberg uppercase text-white">
