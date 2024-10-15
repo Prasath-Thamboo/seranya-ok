@@ -15,7 +15,7 @@ import { getImageUrl } from "@/utils/image";
 import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
 import Footer from "@/components/Footer"; 
 import MiniLoader from "@/components/MiniLoader"; // Importation du MiniLoader
-import { ColorContext } from "@/context/ColorContext";// Importer le ColorContext
+import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
 interface ClassModel {
   id: string;
@@ -160,9 +160,9 @@ const UnitDetailPage = () => {
         </div>
 
         {/* Profil Image */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <div
-            className="w-72 h-72 rounded-full overflow-hidden border-4 border-black"
+            className="w-72 h-72 rounded-full overflow-hidden border-4 border-black flex items-center justify-center"
             style={{
               boxShadow: unit?.color
                 ? `0 0 20px ${unit.color}, 0 0 40px ${unit.color}, 0 0 60px ${unit.color}`
@@ -243,12 +243,6 @@ const UnitDetailPage = () => {
                     width={80}
                     height={80}
                     className="w-20 h-20 object-cover rounded-full"
-                    style={{
-                      boxShadow: unit?.color
-                        ? `0 0 10px ${unit.color}, 0 0 20px ${unit.color}`
-                        : "0 0 10px rgba(0,0,0,0.5)",
-                    }}
-                    preview={false}
                   />
                 )}
                 <h2 className="text-2xl font-oxanium text-white">
@@ -314,7 +308,6 @@ const UnitDetailPage = () => {
                           width={200}
                           height={200}
                           className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
-                          preview={false}
                         />
                       )}
                       <h3 className="text-xl font-iceberg uppercase text-white">
