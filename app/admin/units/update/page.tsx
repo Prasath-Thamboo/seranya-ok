@@ -192,7 +192,7 @@ const UpdateUnit = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-kanit">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
         <h1 className="text-2xl font-bold mb-8 text-center uppercase text-black">
           Mettre à jour l&apos;Unité
         </h1>
@@ -329,18 +329,19 @@ const UpdateUnit = () => {
           {/* Image de profil */}
           <Form.Item label={<span className="text-black font-kanit">Image de profil</span>} className="font-kanit">
             <Row gutter={16} align="middle">
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 {unit?.profileImage && (
-                  <Image
-                    src={unit.profileImage}
-                    alt="Profil actuel"
-                    style={{ maxWidth: '100%' }}
-                    width={200}
-                    height={200}
-                  />
+                  <div className="w-full h-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={unit.profileImage}
+                      alt="Profil actuel"
+                      className="w-full h-full object-cover"
+                      preview={false}
+                    />
+                  </div>
                 )}
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 <Form.Item
                   name="profileImage"
                   valuePropName="fileList"
@@ -358,18 +359,19 @@ const UpdateUnit = () => {
           {/* Image Header */}
           <Form.Item label={<span className="text-black font-kanit">Image Header</span>} className="font-kanit">
             <Row gutter={16} align="middle">
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 {unit?.headerImage && (
-                  <Image
-                    src={unit.headerImage}
-                    alt="Header actuel"
-                    style={{ maxWidth: '100%' }}
-                    width={200}
-                    height={200}
-                  />
+                  <div className="w-full h-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={unit.headerImage}
+                      alt="Header actuel"
+                      className="w-full h-full object-cover"
+                      preview={false}
+                    />
+                  </div>
                 )}
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 <Form.Item
                   name="headerImage"
                   valuePropName="fileList"
@@ -387,18 +389,19 @@ const UpdateUnit = () => {
           {/* Image Footer */}
           <Form.Item label={<span className="text-black font-kanit">Image de pied de page</span>} className="font-kanit">
             <Row gutter={16} align="middle">
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 {unit?.footerImage && (
-                  <Image
-                    src={unit.footerImage}
-                    alt="Pied de page actuel"
-                    style={{ maxWidth: '100%' }}
-                    width={200}
-                    height={200}
-                  />
+                  <div className="w-full h-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={unit.footerImage}
+                      alt="Pied de page actuel"
+                      className="w-full h-full object-cover"
+                      preview={false}
+                    />
+                  </div>
                 )}
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 <Form.Item
                   name="footerImage"
                   valuePropName="fileList"
@@ -415,18 +418,18 @@ const UpdateUnit = () => {
 
           {/* Galerie */}
           <div className="bg-gray-200 p-4 rounded-lg mb-4 font-kanit">
-            <h2 className="text-black font-kanit">Galerie</h2>
+            <h2 className="text-black font-kanit mb-4">Galerie</h2>
             {visibleGallery.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {visibleGallery.map((image, index) => (
-                  <Card key={index} hoverable>
-                    <div className="relative">
+                  <Card key={index} hoverable className="overflow-hidden">
+                    <div className="relative w-full h-48">
                       <Image
                         src={image.url}
                         alt={`Galerie Image ${index + 1}`}
-                        width={200}
-                        height={200}
-                        className="object-cover rounded-lg"
+                        className="w-full h-full object-cover"
+                        preview={false}
+                        style={{ objectFit: 'cover' }}
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
                         <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
@@ -450,7 +453,7 @@ const UpdateUnit = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit font-lg uppercase p-3 focus:ring-teal-500 focus:border-teal-500"
+              className="bg-teal-500 text-white font-kanit text-lg uppercase p-3 focus:ring-teal-500 focus:border-teal-500"
               icon={<PlusOutlined />}
               loading={loading}
             >
