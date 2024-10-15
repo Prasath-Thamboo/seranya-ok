@@ -13,6 +13,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 import { fetchUnitById } from "@/lib/queries/UnitQueries";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Importer le style de l'éditeur Quill
+import { useWatch } from "antd/es/form/Form"; // Importer useWatch
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -139,13 +140,6 @@ const UpdateUnit = () => {
       if (values.footerImage && Array.isArray(values.footerImage) && values.footerImage[0]?.originFileObj) {
         formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
       }
-      // Ajout des images de galerie à supprimer
-      if (galleryImagesToDelete.length > 0) {
-        galleryImagesToDelete.forEach((imageId, index) => {
-          formData.append(`galleryImagesToDelete[${index}]`, imageId);
-        });
-      }
-
 
       // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
@@ -154,7 +148,7 @@ const UpdateUnit = () => {
         });
       }
 
-      // Log des données du formulaire envoyées
+      // Log des données du formulaire envoyées (Optionnel, à retirer en production)
       console.log("FormData sent:", formData);
 
       const response = await axios.patch(`${backendUrl}/units/${id}`, formData, {
@@ -193,6 +187,9 @@ const UpdateUnit = () => {
     console.log("Images to delete (IDs):", galleryImagesToDelete);
   };
 
+  // Utiliser useWatch pour surveiller la valeur du champ 'color'
+  const colorValue = useWatch('color', form);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-kanit">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
@@ -220,7 +217,7 @@ const UpdateUnit = () => {
 
           <Form.Item
             name="intro"
-            label={<span className="text-black">Introduction</span>}
+            label={<span className="text-black font-kanit">Introduction</span>}
             rules={[{ required: true, message: "Veuillez entrer l'introduction de l'unité!" }]}
             className="font-kanit"
           >
@@ -230,18 +227,18 @@ const UpdateUnit = () => {
             />
           </Form.Item>
 
-          <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
+          <Form.Item name="subtitle" label={<span className="text-black font-kanit">Sous-titre</span>} className="font-kanit">
             <Input
               placeholder="Sous-titre de l'unité"
               className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
-          <Form.Item label="Histoire" className="font-kanit">
+          <Form.Item label={<span className="text-black font-kanit">Histoire</span>} className="font-kanit">
             <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
           </Form.Item>
 
-          <Form.Item label="Biographie" className="font-kanit">
+          <Form.Item label={<span className="text-black font-kanit">Biographie</span>} className="font-kanit">
             <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
           </Form.Item>
 
@@ -261,7 +258,7 @@ const UpdateUnit = () => {
             />
           </Form.Item>
 
-          {/* Nouveau Champ : Color Picker avec Validation */}
+          {/* Nouveau Champ : Color Picker avec Aperçu et Validation */}
           <Form.Item
             name="color"
             label={<span className="text-black font-kanit">Couleur</span>}
@@ -274,27 +271,25 @@ const UpdateUnit = () => {
             ]}
             className="font-kanit"
           >
-            <div className="max-w-sm space-y-4">
-              <div>
-                <label htmlFor="color-picker" className="block text-sm font-medium mb-2">Choisissez une couleur</label>
-                <div className="relative">
-                  <input
-                    type="color"
-                    id="color-picker"
-                    name="color"
-                    className="py-3 px-4 block w-full border-teal-500 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500"
-                    defaultValue={unit?.color || '#FFFFFF'}
-                    onChange={(e) => form.setFieldsValue({ color: e.target.value })}
-                  />
-                </div>
-                <p className="text-sm text-teal-600 mt-2" id="color-picker-helper">Sélectionnez la couleur de l&apos;unité.</p>
-              </div>
+            <div className="flex items-center space-x-4">
+              <input
+                type="color"
+                id="color-picker"
+                name="color"
+                className="w-12 h-12 border-teal-500 rounded-lg cursor-pointer"
+                onChange={(e) => form.setFieldsValue({ color: e.target.value })}
+              />
+              <div
+                className="w-12 h-12 border border-gray-300 rounded"
+                style={{ backgroundColor: colorValue || '#FFFFFF' }}
+              />
             </div>
+            <p className="text-sm text-teal-600 mt-2" id="color-picker-helper">Sélectionnez la couleur de l&apos;unité.</p>
           </Form.Item>
 
           <Form.Item
             name="type"
-            label="Type"
+            label={<span className="text-black font-kanit">Type</span>}
             rules={[{ required: true, message: "Veuillez choisir un type!" }]}
             className="font-kanit"
           >
@@ -311,7 +306,11 @@ const UpdateUnit = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Classe associée">
+          <Form.Item
+            name="classIds"
+            label={<span className="text-black font-kanit">Classe associée</span>}
+            className="font-kanit"
+          >
             <Select
               mode="multiple"
               placeholder="Sélectionnez une ou plusieurs classes"
@@ -328,7 +327,7 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Image de profil */}
-          <Form.Item label="Image de profil">
+          <Form.Item label={<span className="text-black font-kanit">Image de profil</span>} className="font-kanit">
             <Row gutter={16} align="middle">
               <Col span={12}>
                 {unit?.profileImage && (
@@ -336,6 +335,8 @@ const UpdateUnit = () => {
                     src={unit.profileImage}
                     alt="Profil actuel"
                     style={{ maxWidth: '100%' }}
+                    width={200}
+                    height={200}
                   />
                 )}
               </Col>
@@ -355,7 +356,7 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Image Header */}
-          <Form.Item label="Image Header">
+          <Form.Item label={<span className="text-black font-kanit">Image Header</span>} className="font-kanit">
             <Row gutter={16} align="middle">
               <Col span={12}>
                 {unit?.headerImage && (
@@ -363,6 +364,8 @@ const UpdateUnit = () => {
                     src={unit.headerImage}
                     alt="Header actuel"
                     style={{ maxWidth: '100%' }}
+                    width={200}
+                    height={200}
                   />
                 )}
               </Col>
@@ -382,7 +385,7 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Image Footer */}
-          <Form.Item label="Image de pied de page">
+          <Form.Item label={<span className="text-black font-kanit">Image de pied de page</span>} className="font-kanit">
             <Row gutter={16} align="middle">
               <Col span={12}>
                 {unit?.footerImage && (
@@ -390,6 +393,8 @@ const UpdateUnit = () => {
                     src={unit.footerImage}
                     alt="Pied de page actuel"
                     style={{ maxWidth: '100%' }}
+                    width={200}
+                    height={200}
                   />
                 )}
               </Col>
@@ -409,8 +414,8 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Galerie */}
-          <div className="bg-gray-200 p-4 rounded-lg mb-4">
-            <h2 className="font-kanit text-black">Galerie</h2>
+          <div className="bg-gray-200 p-4 rounded-lg mb-4 font-kanit">
+            <h2 className="text-black font-kanit">Galerie</h2>
             {visibleGallery.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {visibleGallery.map((image, index) => (
@@ -419,6 +424,9 @@ const UpdateUnit = () => {
                       <Image
                         src={image.url}
                         alt={`Galerie Image ${index + 1}`}
+                        width={200}
+                        height={200}
+                        className="object-cover rounded-lg"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
                         <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
