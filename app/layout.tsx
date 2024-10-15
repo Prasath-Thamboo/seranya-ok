@@ -13,6 +13,7 @@ import { metadata } from "@/app/metadata"; // Import des métadonnées
 import React from "react";
 import { LoadingProvider } from "@/components/LoadingContext";
 import { FooterProvider } from "@/context/FooterContext";
+import { ColorProvider } from "@/context/ColorContext";
 import 'antd/dist/reset.css';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -116,12 +117,14 @@ export default function RootLayout({
 
 <LoadingProvider>
             <NotificationProvider>
+            <ColorProvider>
             <FooterProvider>
               <ClientLayout>
                 <CookieConsent />
                 {children}
               </ClientLayout>
               </FooterProvider>
+              </ColorProvider>
             </NotificationProvider>
           </LoadingProvider>
 

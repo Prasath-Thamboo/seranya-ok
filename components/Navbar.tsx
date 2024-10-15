@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getAccessToken, logoutUser } from "@/lib/queries/AuthQueries";
@@ -13,6 +13,7 @@ import { Dropdown, Menu } from "antd";
 import { FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import React from "react";
+import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,6 +24,7 @@ export default function Navbar() {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { addNotification } = useNotification();
+  const { color } = useContext(ColorContext); // Consommer le contexte
 
   // Mettre à jour la progression de la barre de scroll
   const handleScroll = () => {
@@ -207,10 +209,16 @@ export default function Navbar() {
       </div>
 
       {/* Progress bar fixed at the bottom */}
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-700 z-50"> {/* Changement bg-gray-300 à bg-gray-700 */}
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-700 z-50">
         <div
-          className="h-full bg-teal-500 neon-effect transition-all duration-500"
-          style={{ width: `${scrollProgress}%` }}
+          className="h-full neon-effect transition-all duration-500"
+          style={{
+            width: `${scrollProgress}%`,
+            backgroundColor: color || "#008080", // Utiliser la couleur du contexte ou teal par défaut
+            boxShadow: color
+              ? `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`
+              : "0 0 10px #008080, 0 0 20px #008080, 0 0 30px #008080",
+          }}
         ></div>
       </div>
 
