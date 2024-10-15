@@ -73,21 +73,29 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
   onSecondaryButtonClick,
   duration = 5000,
 }) => {
-  const [visible, setVisible] = useState(true);
+  const [fading, setFading] = useState(false);
 
   useEffect(() => {
+    const fadeOutTime = 500; // Duration de l'animation de fade-out en ms
     const timeout = setTimeout(() => {
-      setVisible(false);
-      onClose();
-    }, duration);
+      setFading(true);
+      const timeout2 = setTimeout(() => {
+        onClose();
+      }, fadeOutTime);
+      return () => clearTimeout(timeout2);
+    }, duration - fadeOutTime);
 
     return () => clearTimeout(timeout);
   }, [duration, onClose]);
 
   const styles = typeStyles[type];
 
-  return visible ? (
-    <div className={`space-y-2 ${styles.container}`} role="alert" tabIndex={-1}>
+  return (
+    <div
+      className={`space-y-2 ${styles.container} transition-opacity duration-500 ${fading ? 'opacity-0' : 'opacity-100'}`}
+      role="alert"
+      tabIndex={-1}
+    >
       <div className="flex items-center">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
@@ -117,16 +125,13 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
         <button
           type="button"
           className="ml-4 text-gray-500 hover:text-gray-900"
-          onClick={() => {
-            setVisible(false);
-            onClose();
-          }}
+          onClick={() => onClose()}
         >
           <IoCloseSharp size={24} />
         </button>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export const NotificationFlash: React.FC<NotificationFlashProps> = ({
@@ -135,21 +140,29 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
   onClose,
   duration = 5000,
 }) => {
-  const [visible, setVisible] = useState(true);
+  const [fading, setFading] = useState(false);
 
   useEffect(() => {
+    const fadeOutTime = 500; // Duration de l'animation de fade-out en ms
     const timeout = setTimeout(() => {
-      setVisible(false);
-      onClose();
-    }, duration);
+      setFading(true);
+      const timeout2 = setTimeout(() => {
+        onClose();
+      }, fadeOutTime);
+      return () => clearTimeout(timeout2);
+    }, duration - fadeOutTime);
 
     return () => clearTimeout(timeout);
   }, [duration, onClose]);
 
   const styles = typeStyles[type];
 
-  return visible ? (
-    <div className={`space-y-2 ${styles.container}`} role="alert" tabIndex={-1}>
+  return (
+    <div
+      className={`space-y-2 ${styles.container} transition-opacity duration-500 ${fading ? 'opacity-0' : 'opacity-100'}`}
+      role="alert"
+      tabIndex={-1}
+    >
       <div className="flex items-center">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
@@ -160,16 +173,13 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
         <button
           type="button"
           className="ml-4 text-gray-500 hover:text-gray-900"
-          onClick={() => {
-            setVisible(false);
-            onClose();
-          }}
+          onClick={() => onClose()}
         >
           <IoCloseSharp size={24} />
         </button>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 // Composant NotificationList pour afficher la liste des notifications
