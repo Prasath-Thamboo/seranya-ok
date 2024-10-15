@@ -96,13 +96,13 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
       role="alert"
       tabIndex={-1}
     >
-      <div className="flex items-center">
+      <div className="flex items-start">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
         </div>
         <div className="ml-3 flex-1">
-          <h3 className={styles.title}>{message}</h3>
-          {description && <p className={styles.description}>{description}</p>}
+          <h3 className={`${styles.title} mb-1`}>{message}</h3>
+          {description && <p className={`${styles.description} mb-2`}>{description}</p>}
           <div className="mt-3 flex space-x-2">
             <button
               type="button"
@@ -163,12 +163,12 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
       role="alert"
       tabIndex={-1}
     >
-      <div className="flex items-center">
+      <div className="flex items-start">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
         </div>
         <div className="ml-3 flex-1">
-          <h3 className={styles.title}>{message}</h3>
+          <h3 className={`${styles.title} mb-1`}>{message}</h3>
         </div>
         <button
           type="button"
