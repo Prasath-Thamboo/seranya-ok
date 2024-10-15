@@ -28,37 +28,37 @@ interface NotificationFlashProps {
 const typeStyles: Record<NotificationType, {
   container: string;
   iconContainer: string;
-  icon: React.JSX.Element;
+  icon: React.ReactElement;
   title: string;
   description: string;
 }> = {
   information: {
     container: "bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 dark:bg-blue-800/30",
     iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 dark:border-blue-900 dark:bg-blue-800 dark:text-blue-400",
-    icon: <AiOutlineInfoCircle className="shrink-0 size-4" />,
-    title: "text-gray-800 font-semibold dark:text-white font-kanit",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-kanit",
+    icon: <AiOutlineInfoCircle className="shrink-0 text-xl" />,
+    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
   success: {
     container: "bg-teal-50 border-l-4 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30",
     iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400",
-    icon: <AiOutlineCheckCircle className="shrink-0 size-4" />,
-    title: "text-gray-800 font-semibold dark:text-white font-kanit",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-kanit",
+    icon: <AiOutlineCheckCircle className="shrink-0 text-xl" />,
+    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
   warning: {
     container: "bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 dark:bg-yellow-800/30",
     iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-yellow-100 bg-yellow-200 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800 dark:text-yellow-400",
-    icon: <AiOutlineWarning className="shrink-0 size-4" />,
-    title: "text-gray-800 font-semibold dark:text-white font-kanit",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-kanit",
+    icon: <AiOutlineWarning className="shrink-0 text-xl" />,
+    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
   critical: {
-    container: "bg-red-50 border-l-4 border-red-500 p-4 dark:bg-red-800/30",
+    container: "bg-red-50 border-l-4 border-red-500 rounded-lg p-4 dark:bg-red-800/30",
     iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400",
-    icon: <AiOutlineCloseCircle className="shrink-0 size-4" />,
-    title: "text-gray-800 font-semibold dark:text-white font-kanit",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-kanit",
+    icon: <AiOutlineCloseCircle className="shrink-0 text-xl" />,
+    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
 };
 
@@ -87,18 +87,18 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
   const styles = typeStyles[type];
 
   return visible ? (
-    <div className={`space-y-5 ${styles.container}`} role="alert" tabIndex={-1}>
-      <div className="flex items-center">
+    <div className={`space-y-2 ${styles.container}`} role="alert" tabIndex={-1}>
+      <div className="flex items-start">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
         </div>
-        <div className="ml-4 flex-1">
+        <div className="ml-3 flex-1">
           <h3 className={styles.title}>{message}</h3>
           {description && <p className={styles.description}>{description}</p>}
-          <div className="mt-4 space-x-2">
+          <div className="mt-3 flex space-x-2">
             <button
               type="button"
-              className="bg-teal-500 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded transition-all"
+              className="bg-teal-500 hover:bg-teal-700 text-white font-iceberg py-2 px-4 rounded transition-all"
               onClick={onPrimaryButtonClick}
             >
               {primaryButtonLabel}
@@ -106,7 +106,7 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
             {secondaryButtonLabel && (
               <button
                 type="button"
-                className="bg-teal-200 text-teal-800 font-semibold py-2 px-4 rounded transition-all hover:bg-teal-300"
+                className="bg-teal-200 hover:bg-teal-300 text-teal-800 font-iceberg py-2 px-4 rounded transition-all"
                 onClick={onSecondaryButtonClick}
               >
                 {secondaryButtonLabel}
@@ -116,7 +116,7 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
         </div>
         <button
           type="button"
-          className="ml-2 text-gray-500 hover:text-gray-900"
+          className="ml-4 text-gray-500 hover:text-gray-900 mt-1"
           onClick={() => {
             setVisible(false);
             onClose();
@@ -149,17 +149,17 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
   const styles = typeStyles[type];
 
   return visible ? (
-    <div className={`space-y-5 ${styles.container}`} role="alert" tabIndex={-1}>
-      <div className="flex items-center">
+    <div className={`space-y-2 ${styles.container}`} role="alert" tabIndex={-1}>
+      <div className="flex items-start">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
         </div>
-        <div className="ml-4 flex-1">
+        <div className="ml-3 flex-1">
           <h3 className={styles.title}>{message}</h3>
         </div>
         <button
           type="button"
-          className="ml-2 text-gray-500 hover:text-gray-900"
+          className="ml-4 text-gray-500 hover:text-gray-900 mt-1"
           onClick={() => {
             setVisible(false);
             onClose();
@@ -192,7 +192,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
   onRemoveNotification,
 }) => {
   return (
-    <div className="fixed bottom-4 right-4 space-y-4 z-50">
+    <div className="fixed bottom-4 right-4 space-y-4 z-50 w-80">
       {notifications.map((notification) =>
         notification.primaryButtonLabel ? (
           <NotificationWithButton
