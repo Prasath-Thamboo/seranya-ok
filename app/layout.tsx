@@ -13,6 +13,7 @@ import { metadata } from "@/app/metadata"; // Import des métadonnées
 import React from "react";
 import { LoadingProvider } from "@/components/LoadingContext";
 import { FooterProvider } from "@/context/FooterContext";
+import 'antd/dist/reset.css';
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,4 +1,5 @@
 // spectralnext/app/univers/units/[id]/page.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -9,10 +10,11 @@ import Masonry from "react-masonry-css";
 import { FaBook, FaGithub, FaImage, FaInstagram, FaLock, FaNewspaper, FaTwitter } from "react-icons/fa";
 import Badge from "@/components/Badge";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
-import { Image as AntImage } from "antd"; // Importation du composant Image d'Ant Design
+import { Image as AntImage, Skeleton } from "antd"; // Importation du composant Skeleton
 import { getImageUrl } from "@/utils/image";
 import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
 import Footer from "@/components/Footer"; 
+import MiniLoader from "@/components/MiniLoader"; // Importation du MiniLoader
 
 interface ClassModel {
   id: string;
@@ -35,6 +37,7 @@ const UnitDetailPage = () => {
   const [relatedClasses, setRelatedClasses] = useState<ClassModel[]>([]);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [loadingUser, setLoadingUser] = useState<boolean>(true);
+  const [loadingUnit, setLoadingUnit] = useState<boolean>(true); // État pour le chargement de l'unité
 
   useEffect(() => {
     const fetchUnit = async () => {
@@ -63,6 +66,8 @@ const UnitDetailPage = () => {
           }
         } catch (error) {
           console.error("Error fetching unit:", error);
+        } finally {
+          setLoadingUnit(false); // Indique que le chargement de l'unité est terminé
         }
       }
     };
@@ -94,11 +99,8 @@ const UnitDetailPage = () => {
     }, 500);
   };
 
-  if (!unit) {
-    return <div className="text-center text-white">Chargement...</div>;
-  }
-
-  const unitClass = unit.classes && unit.classes.length > 0 ? unit.classes[0] : null;
+  // Définir si les données sont en cours de chargement
+  const loading = loadingUnit || loadingUser;
 
   return (
     <div className="relative w-full min-h-screen text-white font-kanit">
@@ -106,7 +108,7 @@ const UnitDetailPage = () => {
       <div
         className="fixed inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${getImageUrl(unit.headerImage)})`,
+          backgroundImage: `url(${getImageUrl(unit?.headerImage || "")})`,
           backgroundAttachment: "fixed",
           filter: "brightness(25%)",
         }}
@@ -115,54 +117,70 @@ const UnitDetailPage = () => {
       <div className="relative z-10">
         {/* Header Section */}
         <div className="relative h-screen flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${getImageUrl(unit.headerImage)})`,
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent"></div>
+          {loadingUnit ? (
+            <Skeleton active paragraph={{ rows: 5 }} />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${getImageUrl(unit?.headerImage || "")})`,
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent"></div>
 
-          <div
-            className="flex flex-col items-center text-center"
-            style={{
-              boxShadow: "0px 60vh 60vh -60vh rgba(0, 0, 0, 0.95)",
-            }}
-          >
-            <h1 className="text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-              {unit.title}
-            </h1>
-            <Badge role={unit.type} />
-            {unit.subtitle && (
-              <p className="mt-4 text-xl font-kanit text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                {unit.subtitle}
-              </p>
-            )}
-          </div>
+              <div
+                className="flex flex-col items-center text-center"
+                style={{
+                  boxShadow: "0px 60vh 60vh -60vh rgba(0, 0, 0, 0.95)",
+                }}
+              >
+                <h1 className="text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  {unit?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
+                </h1>
+                <Badge role={unit?.type || "DEFAULT"} />
+                {unit?.subtitle ? (
+                  <p className="mt-4 text-xl font-kanit text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    {unit.subtitle}
+                  </p>
+                ) : (
+                  <Skeleton active paragraph={{ rows: 1 }} />
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Profil Image */}
         <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <div className="w-72 h-72 rounded-full overflow-hidden border-4 border-black shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-            <AntImage
-              src={getImageUrl(unit.profileImage)}
-              alt={`${unit.title} Profile`}
-              width={288}
-              height={288}
-              className="w-full h-full object-cover rounded-full"
-              preview={false}
-            />
+            {loadingUnit ? (
+              <MiniLoader />
+            ) : (
+              <AntImage
+                src={getImageUrl(unit?.profileImage || "")}
+                alt={`${unit?.title} Profile`}
+                width={288}
+                height={288}
+                className="w-full h-full object-cover rounded-full"
+                preview={false}
+              />
+            )}
           </div>
         </div>
 
         {/* Introduction Section */}
-        {unit.intro && (
+        {loadingUnit ? (
+          <div className="mt-40 md:mt-48 lg:mt-56 text-center px-4 sm:px-8 lg:px-16">
+            <Skeleton active paragraph={{ rows: 3 }} />
+          </div>
+        ) : unit?.intro ? (
           <div className="mt-40 md:mt-48 lg:mt-56 text-center px-4 sm:px-8 lg:px-16">
             <div className="mx-auto max-w-3xl text-gray-400 italic text-lg">
               <p>{unit.intro}</p>
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* Main Content */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12">
@@ -170,16 +188,22 @@ const UnitDetailPage = () => {
           <div className="lg:w-1/4 p-4 lg:fixed top-0 w-full lg:max-w-sm lg:max-h-screen lg:h-auto flex justify-center z-10 lg:sticky lg:top-24">
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
               <div className="flex items-center space-x-4">
-                <AntImage
-                  src={getImageUrl(unit.profileImage)}
-                  alt={`${unit.title} Profile`}
-                  width={80}
-                  height={80}
-                  className="w-20 h-20 object-cover rounded-full shadow-lg"
-                  preview={false}
-                />
-                <h2 className="text-2xl font-oxanium text-white">{unit.title}</h2>
-                <Badge role={unit.type} />
+                {loadingUnit ? (
+                  <Skeleton.Avatar active size="large" shape="circle" />
+                ) : (
+                  <AntImage
+                    src={getImageUrl(unit?.profileImage || "")}
+                    alt={`${unit?.title} Profile`}
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 object-cover rounded-full shadow-lg"
+                    preview={false}
+                  />
+                )}
+                <h2 className="text-2xl font-oxanium text-white">
+                  {unit?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
+                </h2>
+                <Badge role={unit?.type || "DEFAULT"} />
               </div>
 
               <nav className="mt-8">
@@ -230,14 +254,18 @@ const UnitDetailPage = () => {
                 <div className="mt-8">
                   {relatedClasses.map((relatedClass) => (
                     <div key={relatedClass.id} className="text-center mb-4">
-                      <AntImage
-                        src={getImageUrl(relatedClass.profileImage)}
-                        alt={`Classe ${relatedClass.title} Profile`}
-                        width={200}
-                        height={200}
-                        className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
-                        preview={false}
-                      />
+                      {loadingUnit ? (
+                        <MiniLoader />
+                      ) : (
+                        <AntImage
+                          src={getImageUrl(relatedClass.profileImage)}
+                          alt={`Classe ${relatedClass.title} Profile`}
+                          width={200}
+                          height={200}
+                          className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
+                          preview={false}
+                        />
+                      )}
                       <h3 className="text-xl font-iceberg uppercase text-white">
                         {relatedClass.title}
                       </h3>
@@ -260,13 +288,17 @@ const UnitDetailPage = () => {
                   <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
                     Biographie
                   </h2>
-                  <div
-                    className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        unit.bio || "<p>Aucune biographie disponible.</p>",
-                    }}
-                  />
+                  {loadingUnit ? (
+                    <Skeleton active paragraph={{ rows: 5 }} />
+                  ) : (
+                    <div
+                      className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          unit?.bio || "<p>Aucune biographie disponible.</p>",
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -282,27 +314,31 @@ const UnitDetailPage = () => {
                     className="flex -ml-4 w-auto"
                     columnClassName="pl-4"
                   >
-                    {unit.gallery && unit.gallery.length > 0 ? (
+                    {unit?.gallery && unit.gallery.length > 0 ? (
                       unit.gallery.map((imgUrl, index) => (
                         <div key={index} className="relative mb-4">
-                          <AntImage
-                            src={getImageUrl(imgUrl)}
-                            alt={`${unit.title} Gallery Image ${index + 1}`}
-                            width="100%"
-                            height="100%"
-                            className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-                            style={{
-                              objectFit: "cover",
-                              aspectRatio: "16/9",
-                            }}
-                            preview={{
-                              src: imgUrl,
-                            }}
-                          />
+                          {loadingUnit ? (
+                            <MiniLoader />
+                          ) : (
+                            <AntImage
+                              src={getImageUrl(imgUrl)}
+                              alt={`${unit.title} Gallery Image ${index + 1}`}
+                              width="100%"
+                              height="100%"
+                              className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+                              style={{
+                                objectFit: "cover",
+                                aspectRatio: "16/9",
+                              }}
+                              preview={{
+                                src: imgUrl,
+                              }}
+                            />
+                          )}
                         </div>
                       ))
                     ) : (
-                      <p className="text-gray-500">Aucune image disponible dans la galerie.</p>
+                      <Skeleton.Image active />
                     )}
                   </Masonry>
                 </div>
@@ -316,10 +352,8 @@ const UnitDetailPage = () => {
                     Nouvelles
                   </h2>
 
-                  {loadingUser ? (
-                    <p className="text-gray-400">
-                      Chargement des informations d&apos;abonnement...
-                    </p>
+                  {loadingUser || loadingUnit ? (
+                    <Skeleton active paragraph={{ rows: 3 }} />
                   ) : (
                     <>
                       {!isSubscribed && (
@@ -337,20 +371,18 @@ const UnitDetailPage = () => {
                         </div>
                       )}
 
-                      {isSubscribed && unit.story && (
+                      {isSubscribed && unit?.story ? (
                         <div
                           className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto first-letter:text-7xl first-letter:font-bold first-letter:text-white first-letter:mr-3 first-letter:float-left first-letter:font-iceberg"
                           dangerouslySetInnerHTML={{
                             __html: unit.story,
                           }}
                         />
-                      )}
-
-                      {isSubscribed && !unit.story && (
+                      ) : isSubscribed && !unit?.story ? (
                         <p className="text-gray-500 text-lg">
                           Pas de nouvelles pour le moment.
                         </p>
-                      )}
+                      ) : null}
                     </>
                   )}
                 </div>
@@ -359,70 +391,88 @@ const UnitDetailPage = () => {
           </div>
         </div>
       </div>
-      {/* Hardcoded Footer Section */}
+
+      {/* Footer Section */}
       <footer className="relative block text-white font-iceberg uppercase">
-  {/* Background image with better containment */}
-  <div className="absolute inset-0 z-0 w-full h-full">
-    {unit.footerImage && (
-      <AntImage
-        src={getImageUrl(unit.footerImage)}
-        alt="Footer background"
-        className="w-full h-full"
-        style={{ 
-          width: "100%", 
-          height: "100%", 
-          objectFit: "cover",   // Ensures the image covers the area without distortion
-          objectPosition: "center center",  // Centers the image
-          overflow: "hidden"    // Prevents image overflow
-        }}
-      />
-    )}
-    <div className="absolute inset-0 bg-black opacity-50"></div>
-  </div>
+        {/* Background image with better containment */}
+        <div className="absolute inset-0 z-0 w-full h-full">
+          {unit?.footerImage && (
+            <AntImage
+              src={getImageUrl(unit.footerImage)}
+              alt="Footer background"
+              className="w-full h-full"
+              style={{ 
+                width: "100%", 
+                height: "100%", 
+                objectFit: "cover",   // Ensures the image covers the area without distortion
+                objectPosition: "center center",  // Centers the image
+                overflow: "hidden"    // Prevents image overflow
+              }}
+            />
+          )}
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+        </div>
 
-  {/* Footer content */}
-  <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
-    <div className="flex-col flex items-center">
-      {/* Logo */}
-      <a href="#" className="mb-8 inline-block max-w-full">
-        <AntImage
-          src="/logos/spectral-high-resolution-logo-white-transparent.png"
-          alt="Logo Spectral"
-          width={160}
-          height={40}
-          className="inline-block object-contain"
-        />
-      </a>
+        {/* Footer content */}
+        <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
+          <div className="flex-col flex items-center">
+            {/* Logo */}
+            <a href="#" className="mb-8 inline-block max-w-full">
+              {loadingUnit ? (
+                <Skeleton.Avatar active size="large" shape="square" />
+              ) : (
+                <AntImage
+                  src="/logos/spectral-high-resolution-logo-white-transparent.png"
+                  alt="Logo Spectral"
+                  width={160}
+                  height={40}
+                  className="inline-block object-contain"
+                />
+              )}
+            </a>
 
-      {/* Menu */}
-      <div className="text-center font-semibold">
-        <a href="/about" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">À propos</a>
-        <a href="/mentions" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">Mentions légales</a>
-        <a href="#" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">© Copyright</a>
-      </div>
+            {/* Menu */}
+            <div className="text-center font-semibold">
+              {loadingUnit ? (
+                <Skeleton active paragraph={{ rows: 1 }} />
+              ) : (
+                <>
+                  <a href="/about" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">À propos</a>
+                  <a href="/mentions" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">Mentions légales</a>
+                  <a href="#" className="inline-block px-6 py-2 font-normal transition hover:text-blue-400">© Copyright</a>
+                </>
+              )}
+            </div>
 
-      <div className="mb-8 mt-8 border-b border-gray-500 w-48"></div>
+            <div className="mb-8 mt-8 border-b border-gray-500 w-48"></div>
 
-      {/* Social media links */}
-      <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3 items-start">
-        <a href="https://github.com" className="mx-auto flex-col flex items-center text-white">
-          <FaGithub size={32} />
-        </a>
-        <a href="https://twitter.com" className="mx-auto flex-col flex items-center text-white">
-          <FaTwitter size={32} />
-        </a>
-        <a href="https://instagram.com" className="mx-auto flex-col flex items-center text-white">
-          <FaInstagram size={32} />
-        </a>
-      </div>
+            {/* Social media links */}
+            <div className="mb-12 grid grid-cols-3 grid-flow-col w-full max-w-52 gap-3 items-start">
+              {loadingUnit ? (
+                <Skeleton.Avatar active size="large" shape="circle" />
+              ) : (
+                <>
+                  <a href="https://github.com" className="mx-auto flex-col flex items-center text-white">
+                    <FaGithub size={32} />
+                  </a>
+                  <a href="https://twitter.com" className="mx-auto flex-col flex items-center text-white">
+                    <FaTwitter size={32} />
+                  </a>
+                  <a href="https://instagram.com" className="mx-auto flex-col flex items-center text-white">
+                    <FaInstagram size={32} />
+                  </a>
+                </>
+              )}
+            </div>
 
-      <p className="text-sm sm:text-base">© Copyright 2021. Tous droits réservés.</p>
-    </div>
-  </div>
-</footer>
-
-
-
+            {loadingUnit ? (
+              <Skeleton active paragraph={{ rows: 1 }} />
+            ) : (
+              <p className="text-sm sm:text-base">© Copyright 2021. Tous droits réservés.</p>
+            )}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
