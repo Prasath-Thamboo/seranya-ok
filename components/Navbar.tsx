@@ -111,7 +111,12 @@ export default function Navbar() {
       : null;
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}>
+    <nav
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}
+      style={{
+        "--neon-color": color || "#008080", // Définir la variable CSS pour la couleur néon
+      } as React.CSSProperties}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
@@ -208,16 +213,13 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Progress bar fixed at the bottom */}
+      {/* Barre de progression fixe en bas */}
       <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-700 z-50">
         <div
           className="h-full neon-effect transition-all duration-500"
           style={{
             width: `${scrollProgress}%`,
-            backgroundColor: color || "#008080", // Utiliser la couleur du contexte ou teal par défaut
-            boxShadow: color
-              ? `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`
-              : "0 0 10px #008080, 0 0 20px #008080, 0 0 30px #008080",
+            // La couleur de fond est gérée par la variable CSS
           }}
         ></div>
       </div>
@@ -279,24 +281,25 @@ export default function Navbar() {
 
       {/* Styles supplémentaires pour l'effet néon et les animations */}
       <style jsx>{`
-        /* Effet néon pour la progress bar */
+        /* Effet néon pour la barre de progression */
         .neon-effect {
-          box-shadow: 0 0 10px rgba(0, 128, 128, 0.7),
-                      0 0 20px rgba(0, 128, 128, 0.6),
-                      0 0 30px rgba(0, 128, 128, 0.5);
+          box-shadow: 0 0 10px var(--neon-color, #008080),
+                      0 0 20px var(--neon-color, #008080),
+                      0 0 30px var(--neon-color, #008080);
           animation: neon-glow 1.5s ease-in-out infinite alternate;
+          background-color: var(--neon-color, #008080);
         }
 
         @keyframes neon-glow {
           from {
-            box-shadow: 0 0 10px rgba(0, 128, 128, 0.7),
-                        0 0 20px rgba(0, 128, 128, 0.6),
-                        0 0 30px rgba(0, 128, 128, 0.5);
+            box-shadow: 0 0 10px var(--neon-color, #008080),
+                        0 0 20px var(--neon-color, #008080),
+                        0 0 30px var(--neon-color, #008080);
           }
           to {
-            box-shadow: 0 0 20px rgba(0, 128, 128, 1),
-                        0 0 30px rgba(0, 128, 128, 0.8),
-                        0 0 40px rgba(0, 128, 128, 0.6);
+            box-shadow: 0 0 20px var(--neon-color, #008080),
+                        0 0 30px var(--neon-color, #008080),
+                        0 0 40px var(--neon-color, #008080);
           }
         }
 

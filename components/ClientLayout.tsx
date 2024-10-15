@@ -2,7 +2,7 @@
 
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useContext } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,6 +10,7 @@ import Loader from "@/components/Loader";
 import React from "react";
 import { BackTop } from "antd"; // Importation de BackTop
 import { FaArrowUp } from "react-icons/fa"; // Importation de l'icône flèche vers le haut
+import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -24,6 +25,7 @@ export default function ClientLayout({
 }: ClientLayoutProps) {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
+  const { color } = useContext(ColorContext); // Consommer le contexte
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,8 +59,13 @@ export default function ClientLayout({
 
       {/* Back to Top Button */}
       <BackTop visibilityHeight={200}>
-        <div className="back-to-top-button">
-          <FaArrowUp className="text-teal-500 text-2xl" />
+        <div
+          className="back-to-top-button"
+          style={{
+            "--neon-color": color || "#008080",
+          } as React.CSSProperties}
+        >
+          <FaArrowUp className="text-2xl" />
         </div>
       </BackTop>
 
@@ -83,10 +90,10 @@ export default function ClientLayout({
           width: 48px;  /* Ajustez la taille selon vos besoins */
           background-color: #000; /* Couleur de fond noire */
           border-radius: 50%;
-          box-shadow: 0 0 10px rgba(0, 255, 255, 0.7),
-                      0 0 20px rgba(0, 255, 255, 0.6),
-                      0 0 30px rgba(0, 255, 255, 0.5);
-          animation: fade-in 1.5s;
+          box-shadow: 0 0 10px var(--neon-color, #008080),
+                      0 0 20px var(--neon-color, #008080),
+                      0 0 30px var(--neon-color, #008080);
+          animation: pulse-neon 2s infinite;
           transition: opacity 0.3s;
           cursor: pointer;
         }
@@ -100,6 +107,49 @@ export default function ClientLayout({
         /* Hover effect pour le bouton */
         .back-to-top-button:hover {
           opacity: 0.8;
+        }
+
+        /* Effet pulsant néon pour le bouton Back to Top */
+        @keyframes pulse-neon {
+          0% {
+            box-shadow: 0 0 10px var(--neon-color, #008080),
+                        0 0 20px var(--neon-color, #008080),
+                        0 0 30px var(--neon-color, #008080);
+          }
+          50% {
+            box-shadow: 0 0 20px var(--neon-color, #008080),
+                        0 0 30px var(--neon-color, #008080),
+                        0 0 40px var(--neon-color, #008080);
+          }
+          100% {
+            box-shadow: 0 0 10px var(--neon-color, #008080),
+                        0 0 20px var(--neon-color, #008080),
+                        0 0 30px var(--neon-color, #008080);
+          }
+        }
+
+        /* Stylisation du contenu du BackTop */
+        .back-to-top-button > svg {
+          color: var(--neon-color, #008080); /* Couleur de l'icône basée sur la couleur néon */
+          transition: color 0.3s;
+        }
+
+        /* Animation optionnelle pour l'icône */
+        @keyframes neon-pulse {
+          0% {
+            color: var(--neon-color, #008080);
+          }
+          50% {
+            color: lighten(var(--neon-color, #008080), 20%);
+          }
+          100% {
+            color: var(--neon-color, #008080);
+          }
+        }
+
+        /* Appliquer l'animation à l'icône */
+        .back-to-top-button > svg {
+          animation: neon-pulse 2s infinite;
         }
       `}</style>
     </>
