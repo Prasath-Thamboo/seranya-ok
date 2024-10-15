@@ -118,4 +118,3 @@ export const deleteUnit = async (id: number, token: string): Promise<void> => {
     },
   });
 };
-

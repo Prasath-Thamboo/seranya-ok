@@ -1,3 +1,7 @@
+// spectralnext/lib/models/UnitModels.ts
+
+import type { UploadFile } from 'antd/es/upload/interface';
+
 // Types pour les images
 export type FileType = File | string;
 
@@ -37,6 +41,8 @@ export interface UnitModel {
   subtitle?: string;
   story?: string;
   bio?: string;
+  quote?: string; // Ajout de la propriété quote
+  color?: string; // Ajout de la propriété color
   isPublished: boolean;
   type: UnitType;
   createdAt: Date;
@@ -58,6 +64,8 @@ export interface CreateUnitModel {
   subtitle?: string;
   story?: string;
   bio?: string;
+  quote?: string; // Ajout de la propriété quote
+  color?: string; // Ajout de la propriété color
   isPublished?: boolean;
   type: UnitType;
   profileImage?: FileType;
@@ -74,6 +82,8 @@ export interface UpdateUnitModel {
   subtitle?: string;
   story?: string;
   bio?: string;
+  quote?: string; // Ajout de la propriété quote
+  color?: string; // Ajout de la propriété color
   isPublished?: boolean;
   type?: UnitType;
   profileImage?: FileType;

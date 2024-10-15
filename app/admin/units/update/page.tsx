@@ -1,3 +1,5 @@
+// spectralnext/app/admin/units/update/page.tsx
+
 "use client";
 
 import { Form, Input, Button, Upload, Select, Image, Row, Col, Card } from "antd";
@@ -6,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
-import { UnitModel, UnitType, ClassModel } from "@/lib/models/UnitModels";
+import { UnitModel, UnitType, ClassModel, UpdateUnitModel } from "@/lib/models/UnitModels";
 import type { UploadFile } from 'antd/es/upload/interface';
 import { fetchUnitById } from "@/lib/queries/UnitQueries";
 import dynamic from 'next/dynamic';
@@ -16,7 +18,7 @@ const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const UpdateUnit = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<UpdateUnitModel>();
   const [loading, setLoading] = useState(false);
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [bioValue, setBioValue] = useState('');
@@ -48,7 +50,6 @@ const UpdateUnit = () => {
             const profileImageUpload = data.uploads?.find((upload) => upload.type === "PROFILEIMAGE");
             const headerImageUpload = data.uploads?.find((upload) => upload.type === "HEADERIMAGE");
             const footerImageUpload = data.uploads?.find((upload) => upload.type === "FOOTERIMAGE");
-            
 
             const adjustedUnit: UnitModel = {
               ...data,
@@ -68,9 +69,6 @@ const UpdateUnit = () => {
             }));
             
             setVisibleGallery(galleryUrls);
-            
-
-            setVisibleGallery(galleryUrls);
 
             setSelectedClassIds(data.classes?.map((c) => c.id.toString()) || []);
             setBioValue(data.bio || '');
@@ -82,6 +80,8 @@ const UpdateUnit = () => {
               subtitle: data.subtitle || '',
               type: data.type || UnitType.UNIT,
               classIds: data.classes?.map((c) => c.id.toString()) || [],
+              quote: data.quote || '', // Initialiser le champ quote
+              color: data.color || '#FFFFFF', // Initialiser le colorPicker avec la couleur actuelle ou blanc
             });
           }
         } catch (error) {
@@ -106,7 +106,7 @@ const UpdateUnit = () => {
   }, [numericId, form, addNotification, backendUrl]);
 
   // Gestion de la soumission du formulaire
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: UpdateUnitModel) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("access_token");
@@ -115,12 +115,14 @@ const UpdateUnit = () => {
       }
 
       const formData = new FormData();
-      formData.append('title', values.title);
-      formData.append('intro', values.intro);
-      formData.append('subtitle', values.subtitle);
+      formData.append('title', values.title || '');
+      formData.append('intro', values.intro || '');
+      formData.append('subtitle', values.subtitle || '');
       formData.append('story', storyValue);
       formData.append('bio', bioValue);
-      formData.append('type', values.type);
+      formData.append('quote', values.quote || ''); // Ajouter la propriété quote
+      formData.append('color', values.color || '#FFFFFF'); // Ajouter la propriété color
+      formData.append('type', values.type || UnitType.UNIT);
 
       if (selectedClassIds.length > 0) {
         selectedClassIds.forEach((classId) => {
@@ -128,22 +130,22 @@ const UpdateUnit = () => {
         });
       }
 
-      if (values.profileImage && values.profileImage[0]?.originFileObj) {
+      if (values.profileImage && Array.isArray(values.profileImage) && values.profileImage[0]?.originFileObj) {
         formData.append('profileImage', values.profileImage[0].originFileObj as Blob);
       }
-      if (values.headerImage && values.headerImage[0]?.originFileObj) {
+      if (values.headerImage && Array.isArray(values.headerImage) && values.headerImage[0]?.originFileObj) {
         formData.append('headerImage', values.headerImage[0].originFileObj as Blob);
       }
-      if (values.footerImage && values.footerImage[0]?.originFileObj) {
+      if (values.footerImage && Array.isArray(values.footerImage) && values.footerImage[0]?.originFileObj) {
         formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
       }
-      if (values.gallery && values.gallery.length > 0) {
-        values.gallery.forEach((file: UploadFile) => {
-          if (file.originFileObj) {
-            formData.append('gallery', file.originFileObj as Blob);
-          }
+      // Ajout des images de galerie à supprimer
+      if (galleryImagesToDelete.length > 0) {
+        galleryImagesToDelete.forEach((imageId, index) => {
+          formData.append(`galleryImagesToDelete[${index}]`, imageId);
         });
       }
+
 
       // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
@@ -177,11 +179,11 @@ const UpdateUnit = () => {
   };
 
   // Norme pour le fichier uploadé
-  const normFile = (e: any) => {
+  const normFile = (e: any): UploadFile<any>[] => {
     if (Array.isArray(e)) {
       return e;
     }
-    return e?.fileList;
+    return e?.fileList || [];
   };
 
   // Gestion de la suppression d'une image de galerie
@@ -210,7 +212,10 @@ const UpdateUnit = () => {
             label={<span className="text-black font-kanit">Titre</span>}
             rules={[{ required: true, message: "Veuillez entrer le titre de l'unité!" }]}
           >
-            <Input placeholder="Titre de l'unité" className="bg-white text-black font-kanit" />
+            <Input
+              placeholder="Titre de l'unité"
+              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+            />
           </Form.Item>
 
           <Form.Item
@@ -219,11 +224,17 @@ const UpdateUnit = () => {
             rules={[{ required: true, message: "Veuillez entrer l'introduction de l'unité!" }]}
             className="font-kanit"
           >
-            <Input.TextArea placeholder="Introduction" className="bg-white text-black font-kanit" />
+            <Input.TextArea
+              placeholder="Introduction"
+              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+            />
           </Form.Item>
 
           <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
-            <Input placeholder="Sous-titre de l'unité" className="bg-white text-black font-kanit" />
+            <Input
+              placeholder="Sous-titre de l'unité"
+              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+            />
           </Form.Item>
 
           <Form.Item label="Histoire" className="font-kanit">
@@ -234,13 +245,63 @@ const UpdateUnit = () => {
             <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
           </Form.Item>
 
+          {/* Nouveau Champ : Quote */}
+          <Form.Item
+            name="quote"
+            label={<span className="text-black font-kanit">Citation</span>}
+            rules={[
+              { required: true, message: "Veuillez entrer une citation pour l'unité!" },
+              { max: 200, message: "La citation ne doit pas dépasser 200 caractères." }
+            ]}
+            className="font-kanit"
+          >
+            <Input.TextArea
+              placeholder="Citation de l'unité"
+              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+            />
+          </Form.Item>
+
+          {/* Nouveau Champ : Color Picker avec Validation */}
+          <Form.Item
+            name="color"
+            label={<span className="text-black font-kanit">Couleur</span>}
+            rules={[
+              { required: true, message: "Veuillez sélectionner une couleur!" },
+              {
+                pattern: /^#([0-9A-F]{3}){1,2}$/i,
+                message: "Veuillez sélectionner une couleur valide."
+              }
+            ]}
+            className="font-kanit"
+          >
+            <div className="max-w-sm space-y-4">
+              <div>
+                <label htmlFor="color-picker" className="block text-sm font-medium mb-2">Choisissez une couleur</label>
+                <div className="relative">
+                  <input
+                    type="color"
+                    id="color-picker"
+                    name="color"
+                    className="py-3 px-4 block w-full border-teal-500 rounded-lg text-sm focus:ring-teal-500 focus:border-teal-500"
+                    defaultValue={unit?.color || '#FFFFFF'}
+                    onChange={(e) => form.setFieldsValue({ color: e.target.value })}
+                  />
+                </div>
+                <p className="text-sm text-teal-600 mt-2" id="color-picker-helper">Sélectionnez la couleur de l&apos;unité.</p>
+              </div>
+            </div>
+          </Form.Item>
+
           <Form.Item
             name="type"
             label="Type"
             rules={[{ required: true, message: "Veuillez choisir un type!" }]}
             className="font-kanit"
           >
-            <Select placeholder="Sélectionnez le type" className="bg-white text-black font-kanit">
+            <Select
+              placeholder="Sélectionnez le type"
+              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+            >
               <Option className="font-kanit" value={UnitType.UNIT}>
                 UNIT
               </Option>
@@ -256,6 +317,7 @@ const UpdateUnit = () => {
               placeholder="Sélectionnez une ou plusieurs classes"
               value={selectedClassIds}
               onChange={setSelectedClassIds}
+              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
             >
               {classes.map((classe) => (
                 <Select.Option key={classe.id} value={classe.id}>
@@ -380,7 +442,7 @@ const UpdateUnit = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit font-lg uppercase p-3"
+              className="bg-white text-black font-kanit font-lg uppercase p-3 focus:ring-teal-500 focus:border-teal-500"
               icon={<PlusOutlined />}
               loading={loading}
             >
