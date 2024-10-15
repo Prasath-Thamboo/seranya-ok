@@ -34,28 +34,28 @@ const typeStyles: Record<NotificationType, {
 }> = {
   information: {
     container: "bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 dark:bg-blue-800/30",
-    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 dark:border-blue-900 dark:bg-blue-800 dark:text-blue-400",
+    iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 dark:border-blue-900 dark:bg-blue-800 dark:text-blue-400",
     icon: <AiOutlineInfoCircle className="shrink-0 text-xl" />,
     title: "text-gray-800 font-semibold dark:text-white font-iceberg",
     description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
   success: {
     container: "bg-teal-50 border-l-4 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30",
-    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400",
+    iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400",
     icon: <AiOutlineCheckCircle className="shrink-0 text-xl" />,
     title: "text-gray-800 font-semibold dark:text-white font-iceberg",
     description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
   warning: {
     container: "bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 dark:bg-yellow-800/30",
-    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-yellow-100 bg-yellow-200 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800 dark:text-yellow-400",
+    iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-yellow-100 bg-yellow-200 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800 dark:text-yellow-400",
     icon: <AiOutlineWarning className="shrink-0 text-xl" />,
     title: "text-gray-800 font-semibold dark:text-white font-iceberg",
     description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
   },
   critical: {
     container: "bg-red-50 border-l-4 border-red-500 rounded-lg p-4 dark:bg-red-800/30",
-    iconContainer: "inline-flex justify-center items-center size-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400",
+    iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400",
     icon: <AiOutlineCloseCircle className="shrink-0 text-xl" />,
     title: "text-gray-800 font-semibold dark:text-white font-iceberg",
     description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
@@ -88,7 +88,7 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
 
   return visible ? (
     <div className={`space-y-2 ${styles.container}`} role="alert" tabIndex={-1}>
-      <div className="flex items-start">
+      <div className="flex items-center">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
         </div>
@@ -116,7 +116,7 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
         </div>
         <button
           type="button"
-          className="ml-4 text-gray-500 hover:text-gray-900 mt-1"
+          className="ml-4 text-gray-500 hover:text-gray-900"
           onClick={() => {
             setVisible(false);
             onClose();
@@ -150,7 +150,7 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
 
   return visible ? (
     <div className={`space-y-2 ${styles.container}`} role="alert" tabIndex={-1}>
-      <div className="flex items-start">
+      <div className="flex items-center">
         <div className="shrink-0">
           <span className={styles.iconContainer}>{styles.icon}</span>
         </div>
@@ -159,7 +159,7 @@ export const NotificationFlash: React.FC<NotificationFlashProps> = ({
         </div>
         <button
           type="button"
-          className="ml-4 text-gray-500 hover:text-gray-900 mt-1"
+          className="ml-4 text-gray-500 hover:text-gray-900"
           onClick={() => {
             setVisible(false);
             onClose();
