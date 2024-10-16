@@ -125,38 +125,38 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 p-3 ${navbarBackground}`} // Réduction de p-5 à p-3
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 py-2 px-3 ${navbarBackground}`} // Ajout de padding-y et réduction de padding-x
       style={{
         "--neon-color": color || "#008080", // Définir la variable CSS pour la couleur néon
       } as React.CSSProperties}
     >
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 flex items-center justify-between h-16"> {/* Réduction de px-4 sm:px-6 lg:px-8 à px-2 sm:px-4 lg:px-6 */}
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 flex items-center justify-between h-16"> {/* Réduction de px-2 sm:px-4 lg:px-6 à px-1 sm:px-2 lg:px-4 */}
         {/* Logo */}
-        <div className="flex-shrink-0 p-2"> {/* Padding maintenu à p-2 */}
+        <div className="flex-shrink-0 p-1"> {/* Réduction de p-2 à p-1 */}
           <Link href="/">
             <div className="hidden md:block">
               <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
+                src="/logos/spectral-high-resolution-logo-white-transparent-1.png" // Utiliser le chemin correct vers votre logo (renommé sans espaces ni parenthèses)
                 alt="Logo Spectral"
-                width={180} // Réduction de la largeur de 200 à 180
-                height={70} // Réduction de la hauteur de 80 à 70
-                className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
+                width={160} // Réduction de la largeur de 180 à 160
+                height={60} // Réduction de la hauteur de 70 à 60
+                className="object-contain max-h-14" // Réduction de max-h-16 à max-h-14 (3.5rem)
               />
             </div>
             <div className="block md:hidden">
               <Image
                 src="/logos/spectral-favicon-color.png" // Assurez-vous que ce chemin est correct
                 alt="Logo Spectral"
-                width={60} // Réduction de la largeur de 70 à 60
-                height={60} // Réduction de la hauteur de 70 à 60
-                className="object-contain max-h-14" // Réduction de max-h-16 à max-h-14 (3.5rem)
+                width={50} // Réduction de la largeur de 60 à 50
+                height={50} // Réduction de la hauteur de 60 à 50
+                className="object-contain max-h-12" // Réduction de max-h-14 à max-h-12 (3rem)
               />
             </div>
           </Link>
         </div>
 
         {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
-        <div className="hidden md:flex space-x-8 items-center">
+        <div className="hidden md:flex space-x-6 items-center"> {/* Réduction de space-x-8 à space-x-6 */}
           {/* Dropdown pour Univers */}
           <Dropdown
             overlay={universSubMenu}
@@ -164,35 +164,35 @@ export default function Navbar() {
             placement="bottom"
             overlayClassName="custom-submenu-dropdown"
           >
-            <button className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
+            <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center"> {/* Réduction de text-lg à text-base */}
               <span className="shadow-text">Univers</span>
               <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
             </button>
           </Dropdown>
 
           {/* Extraits */}
-          <Link href="/posts" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+          <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
             <span className="shadow-text">Extraits</span>
           </Link>
 
           {/* Contact */}
-          <Link href="/contact" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+          <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
             <span className="shadow-text">Contact</span>
           </Link>
 
           {/* Abonnement */}
-          <Link href="/subscription" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+          <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
             <span className="shadow-text">Abonnement</span>
           </Link>
         </div>
 
         {/* Menu utilisateur pour grand écran */}
-        <div ref={userMenuRef} className="hidden md:flex items-center space-x-4">
+        <div ref={userMenuRef} className="hidden md:flex items-center space-x-3"> {/* Réduction de space-x-4 à space-x-3 */}
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer group">
                 {profileImageUrl ? (
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300"> {/* Réduction de w-12 h-12 à w-10 h-10 */}
                     <Image
                       src={profileImageUrl}
                       alt="User Avatar"
@@ -202,17 +202,17 @@ export default function Navbar() {
                     />
                   </div>
                 ) : (
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center">
-                    <span className="text-white text-xl font-iceberg">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center"> {/* Réduction de w-12 h-12 à w-10 h-10 */}
+                    <span className="text-white text-lg font-iceberg">
                       {user.pseudo.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
-                <span className="ml-3 text-white font-iceberg shadow-text group-hover:text-teal-500 transition-colors duration-200">
+                <span className="ml-2 text-white font-iceberg shadow-text group-hover:text-teal-500 transition-colors duration-200">
                   {user.pseudo}
                 </span>
                 {user.role && (
-                  <div className="ml-3">
+                  <div className="ml-2">
                     <Badge role={user.role} />
                   </div>
                 )}
@@ -221,12 +221,12 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-6 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
+                <button className="relative group bg-teal-500 text-white font-semibold py-1 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-base"> {/* Réduction de py-2 px-6 à py-1 px-4 et text-lg à text-base */}
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-6 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
+                <button className="relative group bg-teal-500 text-white font-semibold py-1 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-base"> {/* Réduction de py-2 px-6 à py-1 px-4 et text-lg à text-base */}
                   Inscription
                 </button>
               </Link>
@@ -274,34 +274,34 @@ export default function Navbar() {
               placement="bottomLeft"
               overlayClassName="custom-submenu-dropdown"
             >
-              <button className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
+              <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center"> {/* Réduction de text-lg à text-base */}
                 <span className="shadow-text">Univers</span>
                 <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
               </button>
             </Dropdown>
 
             {/* Extraits */}
-            <Link href="/posts" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
               <span className="shadow-text">Extraits</span>
             </Link>
 
             {/* Contact */}
-            <Link href="/contact" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
               <span className="shadow-text">Contact</span>
             </Link>
 
             {/* Abonnement */}
-            <Link href="/subscription" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
               <span className="shadow-text">Abonnement</span>
             </Link>
 
             {isLoggedIn && user ? (
               <>
-                <Link href="/admin/me" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/admin/me" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   <span className="shadow-text">Mon Profil</span>
                 </Link>
                 {user.role === "ADMIN" && (
-                  <Link href="/admin" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                  <Link href="/admin" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                     <span className="shadow-text">Administration</span>
                   </Link>
                 )}
@@ -310,17 +310,17 @@ export default function Navbar() {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="relative group text-lg font-iceberg uppercase text-red-500 hover:text-red-700 transition-colors duration-200"
+                  className="relative group text-base font-iceberg uppercase text-red-500 hover:text-red-700 transition-colors duration-200"
                 >
                   Déconnexion
                 </button>
               </>
             ) : (
               <>
-                <Link href="/auth/login" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/login" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Connexion
                 </Link>
-                <Link href="/auth/register" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/register" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Inscription
                 </Link>
               </>
