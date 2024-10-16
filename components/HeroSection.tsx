@@ -1,3 +1,5 @@
+// spectralnext/components/HeroSection.tsx
+
 import React from "react";
 
 interface HeroSectionProps {
@@ -40,14 +42,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
         <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
-          <h1 className={`text-3xl font-extrabold sm:text-5xl font-iceberg`} style={{ color: titleColor, textShadow: "2px 2px 5px black" }}>
+          <h1 className={`text-3xl font-extrabold sm:text-5xl font-iceberg text-shadow-lg`} style={{ color: titleColor }}>
             {title}
-            <strong className={`block font-extrabold font-iceberg`} style={{ color: strongTitleColor, textShadow: "2px 2px 5px black" }}>
+            <strong className={`block font-extrabold font-iceberg text-shadow-lg`} style={{ color: strongTitleColor }}>
               {strongTitle}
             </strong>
           </h1>
 
-          <p className={`mt-4 max-w-lg sm:text-xl/relaxed font-kanit`} style={{ color: contentColor, textShadow: "1px 1px 3px black" }}>
+          <p className={`mt-4 max-w-lg sm:text-xl/relaxed font-kanit text-shadow-sm`} style={{ color: contentColor }}>
             {content}
           </p>
 
@@ -73,6 +75,5 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     </section>
   );
 };
-
 
 export default HeroSection;
