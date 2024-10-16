@@ -1,3 +1,5 @@
+// spectralnext/components/Carousel.tsx
+
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
@@ -55,6 +57,9 @@ const Carousel: React.FC<CarouselProps> = ({
               objectFit="cover"
               className="w-full h-full object-cover"
             />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+
             {/* Optional Title and Subtitle */}
             {(item.title || item.subtitle) && (
               <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-center z-50">

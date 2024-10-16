@@ -28,6 +28,8 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 const Home = () => {
   const [carouselItems, setCarouselItems] = useState<
     Array<{ image: string; title: string; subtitle: string }>
@@ -70,7 +72,10 @@ const Home = () => {
 
     const fetchBackgroundImage = async () => {
       try {
-        const res = await fetch("/api/getRandomImage");
+        const res = await fetch(`${BACKEND_URL}/api/getRandomImage`);
+        if (!res.ok) {
+          throw new Error(`Erreur HTTP! statut: ${res.status}`);
+        }
         const data = await res.json();
         setBackgroundImage(data.imagePath);
       } catch (error) {
@@ -81,7 +86,12 @@ const Home = () => {
     const loadCarouselImages = async () => {
       try {
         const promises = Array.from({ length: 5 }).map(() =>
-          fetch("/api/getRandomImage").then((res) => res.json())
+          fetch(`${BACKEND_URL}/api/getRandomImage`).then((res) => {
+            if (!res.ok) {
+              throw new Error(`Erreur HTTP! statut: ${res.status}`);
+            }
+            return res.json();
+          })
         );
         const data = await Promise.all(promises);
 
@@ -100,7 +110,12 @@ const Home = () => {
     const loadSectionImages = async () => {
       try {
         const promises = Array.from({ length: 6 }).map(() =>
-          fetch("/api/getRandomImage").then((res) => res.json())
+          fetch(`${BACKEND_URL}/api/getRandomImage`).then((res) => {
+            if (!res.ok) {
+              throw new Error(`Erreur HTTP! statut: ${res.status}`);
+            }
+            return res.json();
+          })
         );
         const data = await Promise.all(promises);
         setSectionImages(data.map((item) => item.imagePath));
