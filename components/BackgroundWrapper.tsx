@@ -17,32 +17,27 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
   overlayOpacity = 0.5,
   onLoad,
 }) => {
-  const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [finalBackgroundImage, setFinalBackgroundImage] = useState<string | undefined>(backgroundImage);
+  const [isLoading, setIsLoading] = useState<boolean>(!backgroundImage);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadRandomBackgroundImage = async () => {
-      if (!backgroundImage) {
+    if (!backgroundImage) {
+      const loadRandomBackgroundImage = async () => {
         try {
           const imageUrl: string = await fetchRandomBackground();
-          setRandomBackgroundImage(imageUrl);
+          setFinalBackgroundImage(imageUrl);
         } catch (error: any) {
           console.error("Failed to load random background image:", error);
           setLoadError(error.message || 'Erreur inconnue');
         } finally {
           setIsLoading(false);
         }
-      } else {
-        setIsLoading(false);
-      }
-    };
+      };
 
-    loadRandomBackgroundImage();
+      loadRandomBackgroundImage();
+    }
   }, [backgroundImage]);
-
-  // Use the provided backgroundImage or fallback to the randomBackgroundImage if no backgroundImage is provided
-  const finalBackgroundImage: string | undefined = backgroundImage || randomBackgroundImage;
 
   if (isLoading) {
     return (
@@ -71,7 +66,7 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
               priority={false}
               quality={75}
               className="opacity-50"
-              onLoad={onLoad} // Appel du callback onLoad
+              onLoadingComplete={onLoad} // Utiliser onLoadingComplete pour une meilleure compatibilité
             />
             <div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }}></div>
           </>
