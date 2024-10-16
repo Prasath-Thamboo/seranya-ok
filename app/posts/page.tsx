@@ -83,7 +83,7 @@ const PostsPage: React.FC = () => {
       <div className="relative z-10">
         {/* Intégration du HeroSection */}
         <HeroSection
-          // backgroundImage est déjà appliqué globalement, vous pouvez supprimer cette prop si non utilisée
+backgroundImage={backgroundImage || "/images/backgrounds/GhostKnight.png"} 
           title="Bienvenue dans"
           titleColor="#ffffff" // Blanc
           strongTitle="L'Univers Spectral"
