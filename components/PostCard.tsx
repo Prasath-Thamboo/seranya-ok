@@ -14,7 +14,7 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 font-kanit">
       {post.headerImage ? (
         <Image
           src={post.headerImage}
@@ -29,7 +29,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </div>
       )}
       <div className="p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-2">{post.title}</h2>
+        <h2 className="text-2xl font-iceberg font-semibold text-gray-800 mb-2">{post.title}</h2>
         <p className="text-gray-600 mb-4">{post.intro}</p> {/* Utilisation de 'intro' */}
         <Link href={`/posts/${post.id}`}>
           <a className="inline-flex items-center text-teal-500 hover:text-teal-700 font-semibold">
