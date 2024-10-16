@@ -14,8 +14,9 @@ import Carousel from "@/components/Carousel";
 import { FaCheck } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import { motion } from "framer-motion";
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
 
-const includedFeatures = [
+const includedFeatures: string[] = [
   "Accès aux nouvelles de chaque personnage",
   "Ressources des membres",
   "Inscription à la newsletter",
@@ -28,7 +29,7 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-const Home = () => {
+const Home: React.FC = () => {
   const [carouselItems, setCarouselItems] = useState<
     Array<{ image: string; title: string; subtitle: string }>
   >([]);
@@ -38,7 +39,7 @@ const Home = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [loadedImagesCount, setLoadedImagesCount] = useState(0);
-  const totalImagesCount = 15;
+  const totalImagesCount = 15; // Ajustez ce nombre en fonction du nombre total d'images à charger
 
   const handleImageLoad = () => {
     setLoadedImagesCount((prevCount) => {
@@ -53,7 +54,7 @@ const Home = () => {
   useEffect(() => {
     const loadUnits = async () => {
       try {
-        const fetchedUnits = await fetchUnits();
+        const fetchedUnits: UnitModel[] = await fetchUnits();
 
         const sortedUnits = fetchedUnits
           .sort(
@@ -70,55 +71,54 @@ const Home = () => {
 
     const fetchBackgroundImage = async () => {
       try {
-        const res = await fetch("/api/getRandomImage");
-        const data = await res.json();
-        setBackgroundImage(data.imagePath);
+        const imageUrl: string = await fetchRandomBackground();
+        setBackgroundImage(imageUrl);
       } catch (error) {
         console.error("Failed to load background image:", error);
+        // Vous pouvez définir une image de fallback ici si nécessaire
+        setBackgroundImage("/images/backgrounds/default.jpg");
       }
     };
 
     const loadCarouselImages = async () => {
       try {
-        const promises = Array.from({ length: 5 }).map(() =>
-          fetch("/api/getRandomImage").then((res) => res.json())
-        );
-        const data = await Promise.all(promises);
+        const promises: Promise<string>[] = Array.from({ length: 5 }).map(() => fetchRandomBackground());
+        const data: string[] = await Promise.all(promises);
 
         setCarouselItems(
-          data.map((item, index) => ({
-            image: item.imagePath,
+          data.map((imagePath: string, index: number) => ({
+            image: imagePath,
             title: `Image ${index + 1}`,
             subtitle: "Sous-titre du carrousel",
           }))
         );
       } catch (error) {
         console.error("Failed to load carousel images:", error);
+        // Vous pouvez définir des images de fallback ici si nécessaire
       }
     };
 
     const loadSectionImages = async () => {
       try {
-        const promises = Array.from({ length: 6 }).map(() =>
-          fetch("/api/getRandomImage").then((res) => res.json())
-        );
-        const data = await Promise.all(promises);
-        setSectionImages(data.map((item) => item.imagePath));
+        const promises: Promise<string>[] = Array.from({ length: 6 }).map(() => fetchRandomBackground());
+        const data: string[] = await Promise.all(promises);
+        setSectionImages(data);
       } catch (error) {
         console.error("Failed to load section images:", error);
+        // Vous pouvez définir des images de fallback ici si nécessaire
       }
     };
-
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
 
     loadUnits();
     fetchBackgroundImage();
     loadCarouselImages();
     loadSectionImages();
 
-    return () => clearTimeout(timeout);
+    // Optionnel : Vous pouvez ajuster ou supprimer le timeout si vous gérez l'état de chargement dynamiquement
+    // const timeout = setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 2000);
+    // return () => clearTimeout(timeout);
   }, []);
 
   if (!backgroundImage) {
@@ -260,15 +260,15 @@ const Home = () => {
             )}
 
             <div className="lg:col-span-1 grid grid-rows-2 gap-4">
-              {units.slice(1, 3).map((unit) => (
+              {units.slice(1, 3).map((unit: UnitModel) => (
                 <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg">
                   <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       <div
-                        className="relative w-full h-64 bg-cover bg-[center] transition-transform duration-500 group-hover:scale-110"
+                        className="relative w-full h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                          backgroundPosition: "center",
+                          backgroundPosition: "center", // Ajustement de la position
                         }}
                       />
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
@@ -398,7 +398,7 @@ const Home = () => {
                 <div className="h-px flex-auto bg-gray-100" />
               </div>
               <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
-                {includedFeatures.map((feature) => (
+                {includedFeatures.map((feature: string) => (
                   <li key={feature} className="flex gap-x-3">
                     <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />
                     {feature}
