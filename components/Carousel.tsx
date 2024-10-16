@@ -1,6 +1,6 @@
 // spectralnext/components/Carousel.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
@@ -25,6 +25,10 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
+  useEffect(() => {
+    console.log('Carousel received items:', items);
+  }, [items]);
+
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? items.length - 1 : prevIndex - 1
@@ -40,6 +44,10 @@ const Carousel: React.FC<CarouselProps> = ({
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
+
+  if (items.length === 0) {
+    return <div className="text-white">Aucune image pour le carrousel.</div>;
+  }
 
   return (
     <div className="relative overflow-hidden fixed top-0 left-0 z-40" style={{ width, height }}>
@@ -58,7 +66,11 @@ const Carousel: React.FC<CarouselProps> = ({
               layout="fill"
               objectFit="cover"
               className="w-full h-full object-cover"
-              onLoad={onLoad} // Appel du callback onLoad
+              onLoad={() => {
+                console.log(`Image ${index + 1} chargée.`);
+                if (onLoad) onLoad();
+              }}
+              unoptimized={true} // Désactive l'optimisation si nécessaire
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-black opacity-50"></div>

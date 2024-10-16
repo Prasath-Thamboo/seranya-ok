@@ -87,13 +87,15 @@ const Home: React.FC = () => {
       try {
         const data: string[] = await fetchRandomBackgrounds(5);
 
-        setCarouselItems(
-          data.map((imagePath: string, index: number) => ({
-            image: imagePath,
-            title: `Image ${index + 1}`,
-            subtitle: "Sous-titre du carrousel",
-          }))
-        );
+        const formattedCarouselItems = data.map((imagePath: string, index: number) => ({
+          image: imagePath,
+          title: `Image ${index + 1}`,
+          subtitle: "Sous-titre du carrousel",
+        }));
+
+        setCarouselItems(formattedCarouselItems);
+
+        console.log('Carousel Items:', formattedCarouselItems); // Ajoutez cette ligne
 
         // Incrémente le compteur pour chaque image du carrousel
         data.forEach(() => handleImageLoad());
@@ -521,9 +523,6 @@ const Home: React.FC = () => {
 
       {/* Section FAQ */}
       <Accordion backgroundColor="bg-transparent" textColor="text-white" />
-
-      {/* Footer */}
-      <Footer onLoad={handleImageLoad} />
     </main>
   );
 };
