@@ -7,8 +7,6 @@ import BackgroundWrapper from "@/components/BackgroundWrapper";
 import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
 
 interface FooterProps {
-  // Retirer backgroundImage si vous souhaitez toujours récupérer aléatoirement
-  // backgroundImage?: string; // Optional prop for the background image
   onLoad?: () => void; // Optional onLoad callback
 }
 

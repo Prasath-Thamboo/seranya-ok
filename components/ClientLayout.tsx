@@ -7,25 +7,26 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Loader from "@/components/Loader";
-import React from "react";
 import { BackTop } from "antd"; // Importation de BackTop
 import { FaArrowUp } from "react-icons/fa"; // Importation de l'icône flèche vers le haut
 import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
 interface ClientLayoutProps {
   children: ReactNode;
-  footerImage?: string; // Accept footerImage prop
   disableFooter?: boolean; // New prop to control whether the footer should be shown
 }
 
 export default function ClientLayout({
   children,
-  footerImage,
   disableFooter = false, // Default to false
 }: ClientLayoutProps) {
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
   const { color } = useContext(ColorContext); // Consommer le contexte
+
+  // Supprimez les états liés aux images si non nécessaires
+  // const [footerImage, setFooterImage] = useState<string | undefined>(undefined);
+  // etc.
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,11 +52,16 @@ export default function ClientLayout({
   const shouldShowNavbar = pathname && !pathname.startsWith("/auth") && !pathname.startsWith("/admin");
   const shouldShowFooter = !disableFooter && pathname && !excludedFooterPaths.some((path) => pathname.startsWith(path));
 
+  // Handler pour le chargement des images (si nécessaire)
+  const handleImageLoad = () => {
+    // Implémentez la logique de gestion du chargement des images ici
+  };
+
   return (
     <>
       {shouldShowNavbar && <Navbar />}
       <div>{children}</div>
-      {shouldShowFooter && <Footer backgroundImage={footerImage} />}
+      {shouldShowFooter && <Footer onLoad={handleImageLoad} />}
 
       {/* Back to Top Button */}
       <BackTop visibilityHeight={200}>
