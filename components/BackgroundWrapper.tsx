@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
 
 interface BackgroundWrapperProps {
   children: React.ReactNode;
-  backgroundImage?: string;
-  overlayOpacity?: number;
-  onLoad?: () => void;
+  backgroundImage?: string; // Optional prop for the background image
+  overlayOpacity?: number; // Optional prop to adjust overlay opacity
+  onLoad?: () => void; // Optional onLoad callback
 }
 
 const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
@@ -71,7 +71,8 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
               priority={false}
               quality={75}
               className="opacity-50"
-              onLoadingComplete={onLoad}
+              onLoadingComplete={onLoad} // Utiliser onLoadingComplete pour une meilleure compatibilité
+              unoptimized={true} // Ajoutez ce prop
             />
             <div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }}></div>
           </>

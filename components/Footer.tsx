@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 import BackgroundWrapper from "@/components/BackgroundWrapper";
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
 
 interface FooterProps {
-  onLoad?: () => void;
+  onLoad?: () => void; // Optional onLoad callback
 }
 
 const Footer: React.FC<FooterProps> = ({ onLoad }) => {
@@ -44,6 +44,7 @@ const Footer: React.FC<FooterProps> = ({ onLoad }) => {
   }
 
   if (loadError) {
+    console.error("Footer encountered an error:", loadError); // Ajoutez cette ligne
     return (
       <BackgroundWrapper overlayOpacity={0.7}>
         {/* Afficher le footer sans image de fond ou avec une image de fallback */}
