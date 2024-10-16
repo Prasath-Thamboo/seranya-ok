@@ -2,8 +2,8 @@
 
 export const fetchRandomBackground = async (): Promise<string> => {
     try {
-      console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL); // Vérification
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/random-background`);
+      // Utilisation de l'URL du backend en dur
+      const response = await fetch('https://api.spectralunivers.com/api/random-background');
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération de l\'image de fond');
       }

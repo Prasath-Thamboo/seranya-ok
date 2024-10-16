@@ -3,7 +3,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['api.spectralunivers.com'],
+    domains: ['api.spectralunivers.com', 'spectralbucket95.s3.amazonaws.com'],
     remotePatterns: [
       {
         protocol: 'https',
