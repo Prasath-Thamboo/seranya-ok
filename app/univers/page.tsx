@@ -21,6 +21,7 @@ const UniversPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
   const [filteredUnits, setFilteredUnits] = useState<UnitModel[]>([]);
   const [backgroundImage, setBackgroundImage] = useState<string>("");
+  const [heroBackgroundImage, setHeroBackgroundImage] = useState<string>(""); // Nouvel état
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("ALL");
   const [classes, setClasses] = useState<ClassModel[]>([]);
@@ -55,8 +56,20 @@ const UniversPage = () => {
       }
     };
 
+    const loadRandomHeroBackground = async () => {
+      try {
+        const image = await fetchRandomBackground();
+        console.log("Hero background image:", image); // Pour débogage
+        setHeroBackgroundImage(image);
+      } catch (error) {
+        console.error("Échec du chargement de l'image de fond aléatoire pour HeroSection :", error);
+        setHeroBackgroundImage("/images/backgrounds/Bastion1.png"); // Image de secours
+      }
+    };
+
     fetchData();
     loadRandomBackground();
+    loadRandomHeroBackground();
   }, []);
 
   const handleFilterClick = (filterType: string) => {
@@ -232,7 +245,7 @@ const UniversPage = () => {
         >
           {/* Hero Section avec Image Aléatoire */}
           <HeroSection
-            backgroundImage={backgroundImage || "/images/backgrounds/Bastion1.png"} // Utiliser l'image aléatoire
+            backgroundImage={heroBackgroundImage || "/images/backgrounds/Bastion1.png"} // Utiliser l'image aléatoire pour HeroSection
             title="Explorez l'Univers"
             titleColor="#fff"
             strongTitle="de Spectral"
