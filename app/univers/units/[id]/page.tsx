@@ -187,9 +187,7 @@ const UnitDetailPage = () => {
             <Skeleton active paragraph={{ rows: 3 }} />
           </div>
         ) : unit?.quote ? (
-          <blockquote className="relative text-center max-w-lg
-
- mx-auto mt-48 md:mt-56 lg:mt-64">
+          <blockquote className="relative text-center max-w-lg mx-auto mt-48 md:mt-56 lg:mt-64">
             <div className="relative z-10">
               <p className="text-xl text-gray-800">
                 <em className="relative">
@@ -238,7 +236,7 @@ const UnitDetailPage = () => {
                   <Skeleton.Avatar active size="large" shape="circle" />
                 ) : (
                   <div
-                    className="w-20 h-20 rounded-full overflow-hidden"
+                    className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center"
                     style={{
                       boxShadow: `${color} 0 0 10px, ${color} 0 0 20px, ${color} 0 0 30px`,
                     }}
@@ -246,14 +244,14 @@ const UnitDetailPage = () => {
                     <AntImage
                       src={getImageUrl(unit?.profileImage || "")}
                       alt={`${unit?.title} Profile`}
-                      width={80}
-                      height={80}
+                      width={128}
+                      height={128}
                       className="w-full h-full object-cover rounded-full"
                       preview={false}
                     />
                   </div>
                 )}
-                <h2 className="text-xl font-iceberg text-white">
+                <h2 className="text-xl font-iceberg text-white mt-2">
                   {unit?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
                 </h2>
                 <Badge role={unit?.type || "DEFAULT"} />
@@ -267,7 +265,7 @@ const UnitDetailPage = () => {
                     <button
                       className={`flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-gray-700 hover:text-white ${
                         activeSection === "biographie"
-                          ? "border-l-4" // Bordure gauche prononcée
+                          ? "border-l-4"
                           : "text-gray-400"
                       }`}
                       onClick={() => handleMenuClick("biographie")}
@@ -325,21 +323,29 @@ const UnitDetailPage = () => {
               {relatedClasses.length > 0 && (
                 <div className="mt-8">
                   {relatedClasses.map((relatedClass) => (
-                    <div key={relatedClass.id} className="text-center mb-4">
+                    <div key={relatedClass.id} className="flex flex-col items-center mb-6">
                       {loadingUnit ? (
                         <MiniLoader />
                       ) : (
-                        <AntImage
-                          src={getImageUrl(relatedClass.profileImage)}
-                          alt={`Classe ${relatedClass.title} Profile`}
-                          width={200}
-                          height={200}
-                          className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
-                          style={{ minWidth: "16rem", minHeight: "16rem" }}
-                          preview={false}
-                        />
+                        <div
+                          className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center mb-2"
+                          style={{
+                            boxShadow: relatedClass.color
+                              ? `0 0 10px ${relatedClass.color}, 0 0 20px ${relatedClass.color}`
+                              : `0 0 10px ${color}, 0 0 20px ${color}`,
+                          }}
+                        >
+                          <AntImage
+                            src={getImageUrl(relatedClass.profileImage)}
+                            alt={`Classe ${relatedClass.title} Profile`}
+                            width={96}
+                            height={96}
+                            className="w-full h-full object-cover rounded-full"
+                            preview={false}
+                          />
+                        </div>
                       )}
-                      <h3 className="text-xl font-iceberg uppercase text-white">
+                      <h3 className="text-lg font-iceberg uppercase text-white">
                         {relatedClass.title}
                       </h3>
                     </div>
