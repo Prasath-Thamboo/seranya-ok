@@ -52,8 +52,8 @@ const PostsPage: React.FC = () => {
       <HeroSection
         backgroundImage="/images/backgrounds/GhostKnight.png"
         title="Bienvenue dans"
-        titleColor="teal"
-        strongTitle="L'Univers Spectral"
+        titleColor="white"
+        strongTitle="Extraits"
         strongTitleColor="teal"
         content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
         contentColor="teal"
