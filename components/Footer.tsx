@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 import BackgroundWrapper from "@/components/BackgroundWrapper";
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 
 interface FooterProps {
-  onLoad?: () => void; // Optional onLoad callback
+  onLoad?: () => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onLoad }) => {
@@ -19,6 +19,7 @@ const Footer: React.FC<FooterProps> = ({ onLoad }) => {
     const loadRandomBackgroundImage = async () => {
       try {
         const imageUrl: string = await fetchRandomBackground();
+        console.log('Footer - Image URL:', imageUrl); // Ajoutez cette ligne
         setBackgroundImage(imageUrl);
       } catch (error: any) {
         console.error("Failed to load random background image for footer:", error);

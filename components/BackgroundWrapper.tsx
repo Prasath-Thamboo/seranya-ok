@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 
 interface BackgroundWrapperProps {
   children: React.ReactNode;
-  backgroundImage?: string; // Optional prop for the background image
-  overlayOpacity?: number; // Optional prop to adjust overlay opacity
-  onLoad?: () => void; // Optional onLoad callback
+  backgroundImage?: string;
+  overlayOpacity?: number;
+  onLoad?: () => void;
 }
 
 const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
@@ -26,6 +26,7 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
       const loadRandomBackgroundImage = async () => {
         try {
           const imageUrl: string = await fetchRandomBackground();
+          console.log('BackgroundWrapper - Image URL:', imageUrl); // Ajoutez cette ligne
           setFinalBackgroundImage(imageUrl);
         } catch (error: any) {
           console.error("Failed to load random background image:", error);
@@ -51,6 +52,10 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
     );
   }
 
+  if (loadError) {
+    console.error("BackgroundWrapper encountered an error:", loadError); // Ajoutez cette ligne
+  }
+
   return (
     <div className="relative w-full">
       {/* Background image with overlay */}
@@ -66,7 +71,7 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
               priority={false}
               quality={75}
               className="opacity-50"
-              onLoadingComplete={onLoad} // Utiliser onLoadingComplete pour une meilleure compatibilité
+              onLoadingComplete={onLoad}
             />
             <div className="absolute inset-0 bg-black" style={{ opacity: overlayOpacity }}></div>
           </>
