@@ -15,7 +15,7 @@ import { FaCheck } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer"; // Import du Footer
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Import de la fonction mise à jour
+import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery"; // Import de la nouvelle fonction
 
 const includedFeatures: string[] = [
   "Accès aux nouvelles de chaque personnage",
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [loadedImagesCount, setLoadedImagesCount] = useState(0);
-  const totalImagesCount = 15; // Ajustez ce nombre en fonction du nombre total d'images à charger
+  const totalImagesCount = 12; // 5 (carousel) + 6 (section) + 1 (background)
 
   const handleImageLoad = () => {
     setLoadedImagesCount((prevCount) => {
@@ -74,17 +74,18 @@ const Home: React.FC = () => {
       try {
         const imageUrl: string = await fetchRandomBackground();
         setBackgroundImage(imageUrl);
+        handleImageLoad(); // Incrémente le compteur après avoir défini l'image
       } catch (error) {
         console.error("Failed to load background image:", error);
         // Vous pouvez définir une image de fallback ici si nécessaire
         setBackgroundImage("/images/backgrounds/default.jpg");
+        handleImageLoad(); // Incrémente le compteur même en cas d'erreur
       }
     };
 
     const loadCarouselImages = async () => {
       try {
-        const promises: Promise<string>[] = Array.from({ length: 5 }).map(() => fetchRandomBackground());
-        const data: string[] = await Promise.all(promises);
+        const data: string[] = await fetchRandomBackgrounds(5);
 
         setCarouselItems(
           data.map((imagePath: string, index: number) => ({
@@ -93,20 +94,35 @@ const Home: React.FC = () => {
             subtitle: "Sous-titre du carrousel",
           }))
         );
+
+        // Incrémente le compteur pour chaque image du carrousel
+        data.forEach(() => handleImageLoad());
       } catch (error) {
         console.error("Failed to load carousel images:", error);
         // Vous pouvez définir des images de fallback ici si nécessaire
+        setCarouselItems([]);
+        // Incrémente le compteur pour chaque image manquante
+        for (let i = 0; i < 5; i++) {
+          handleImageLoad();
+        }
       }
     };
 
     const loadSectionImages = async () => {
       try {
-        const promises: Promise<string>[] = Array.from({ length: 6 }).map(() => fetchRandomBackground());
-        const data: string[] = await Promise.all(promises);
+        const data: string[] = await fetchRandomBackgrounds(6);
         setSectionImages(data);
+
+        // Incrémente le compteur pour chaque image de section
+        data.forEach(() => handleImageLoad());
       } catch (error) {
         console.error("Failed to load section images:", error);
         // Vous pouvez définir des images de fallback ici si nécessaire
+        setSectionImages([]);
+        // Incrémente le compteur pour chaque image manquante
+        for (let i = 0; i < 6; i++) {
+          handleImageLoad();
+        }
       }
     };
 
@@ -114,17 +130,7 @@ const Home: React.FC = () => {
     fetchBackgroundImage();
     loadCarouselImages();
     loadSectionImages();
-
-    // Optionnel : Vous pouvez ajuster ou supprimer le timeout si vous gérez l'état de chargement dynamiquement
-    // const timeout = setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 2000);
-    // return () => clearTimeout(timeout);
   }, []);
-
-  if (!backgroundImage) {
-    return null;
-  }
 
   if (isLoading) {
     return <Loader />;
@@ -143,12 +149,18 @@ const Home: React.FC = () => {
           priority={true}
           quality={100}
           onLoad={handleImageLoad}
+          unoptimized={true} // Désactive l'optimisation si nécessaire
         />
         <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
       </div>
 
       {/* Carousel */}
-      <Carousel items={carouselItems} height="100vh" width="100vw" onLoad={handleImageLoad} /> {/* Passer handleImageLoad */}
+      <Carousel
+        items={carouselItems}
+        height="100vh"
+        width="100vw"
+        onLoad={handleImageLoad} // Passer handleImageLoad si nécessaire
+      /> {/* Passer handleImageLoad */}
 
       {/* Hero Section */}
       <motion.section
@@ -509,6 +521,9 @@ const Home: React.FC = () => {
 
       {/* Section FAQ */}
       <Accordion backgroundColor="bg-transparent" textColor="text-white" />
+
+      {/* Footer */}
+      <Footer onLoad={handleImageLoad} />
     </main>
   );
 };
