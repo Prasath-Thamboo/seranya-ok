@@ -1,4 +1,4 @@
-// spectralnext\lib\models\PostModels.ts
+// spectralnext/lib/models/PostModels.ts
 
 // Types pour les images
 export type FileType = File | string;
@@ -8,6 +8,7 @@ export enum PostType {
   SCIENCE = 'SCIENCE',
   PHILO = 'PHILO',
   UNIVERS = 'UNIVERS',
+  REGION = 'REGION', // Ajouté
 }
 
 // Interface pour les unités associées à un post
@@ -35,7 +36,7 @@ export interface Upload {
 export interface PostModel {
   id: number;
   title: string;
-  intro: string;
+  intro: string; // Utilisé au lieu de 'description'
   subtitle?: string;
   content?: string;
   isPublished: boolean;

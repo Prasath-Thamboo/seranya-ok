@@ -1,4 +1,4 @@
-// spectralnext\lib\queries\PostQueries.ts
+// spectralnext/lib/queries/PostQueries.ts
 
 import axios from 'axios';
 import { PostModel, CreatePostModel, UpdatePostModel } from '../models/PostModels';
@@ -8,15 +8,14 @@ const BASE_URL =
     ? process.env.NEXT_PUBLIC_API_URL_PROD
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
-
 console.log('BASE_URL:', BASE_URL);
 
 // Fonction pour récupérer tous les posts
 export const fetchPosts = async (): Promise<PostModel[]> => {
-    console.log('fetchPosts called');
-    const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`);
-    return response.data;
-  };
+  console.log('fetchPosts called');
+  const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`);
+  return response.data;
+};
 
 // Fonction pour récupérer un post par ID
 export const fetchPostById = async (id: number): Promise<PostModel> => {
