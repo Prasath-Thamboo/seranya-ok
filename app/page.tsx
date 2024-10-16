@@ -1,11 +1,13 @@
-"use client";
+// spectralnext/app/page.tsx
+
+'use client';
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "antd";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { UnitModel } from "@/lib/models/UnitModels";
+import { UnitModel, UnitType } from "@/lib/models/UnitModels";
 import HeroSection from "@/components/HeroSection";
 import Accordion from "@/components/Accordion";
 import Carousel from "@/components/Carousel";
@@ -20,29 +22,23 @@ const includedFeatures = [
   "T-shirt officiel des membres",
 ];
 
+// Animation settings
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
 const Home = () => {
-  const [carouselItems, setCarouselItems] = useState<Array<{ image: string; title: string; subtitle: string }>>([]);
+  const [carouselItems, setCarouselItems] = useState<
+    Array<{ image: string; title: string; subtitle: string }>
+  >([]);
   const [sectionImages, setSectionImages] = useState<string[]>([]);
   const [units, setUnits] = useState<UnitModel[]>([]);
   const [backgroundImage, setBackgroundImage] = useState<string>("");
 
-  const [isLoading, setIsLoading] = useState(true);  
-  const [loadedImagesCount, setLoadedImagesCount] = useState(0); 
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadedImagesCount, setLoadedImagesCount] = useState(0);
   const totalImagesCount = 15;
-
-  // Animation settings
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
-  }, []);
 
   const handleImageLoad = () => {
     setLoadedImagesCount((prevCount) => {
@@ -58,8 +54,6 @@ const Home = () => {
     const loadUnits = async () => {
       try {
         const fetchedUnits = await fetchUnits();
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
         const sortedUnits = fetchedUnits
           .sort(
@@ -84,18 +78,13 @@ const Home = () => {
       }
     };
 
-    loadUnits();
-    fetchBackgroundImage();
-  }, []);
-
-  useEffect(() => {
     const loadCarouselImages = async () => {
       try {
         const promises = Array.from({ length: 5 }).map(() =>
           fetch("/api/getRandomImage").then((res) => res.json())
         );
         const data = await Promise.all(promises);
-  
+
         setCarouselItems(
           data.map((item, index) => ({
             image: item.imagePath,
@@ -107,11 +96,7 @@ const Home = () => {
         console.error("Failed to load carousel images:", error);
       }
     };
-  
-    loadCarouselImages();
-  }, []);
 
-  useEffect(() => {
     const loadSectionImages = async () => {
       try {
         const promises = Array.from({ length: 6 }).map(() =>
@@ -123,8 +108,17 @@ const Home = () => {
         console.error("Failed to load section images:", error);
       }
     };
-  
+
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    loadUnits();
+    fetchBackgroundImage();
+    loadCarouselImages();
     loadSectionImages();
+
+    return () => clearTimeout(timeout);
   }, []);
 
   if (!backgroundImage) {
@@ -134,9 +128,9 @@ const Home = () => {
   if (isLoading) {
     return <Loader />;
   }
-  
+
   return (
-    <main className="flex flex-col items-center justify-start w-full font-kanit bg-black text-white relative">
+    <main className="flex flex-col items-center justify-start w-full font-kanit relative">
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
@@ -229,10 +223,12 @@ const Home = () => {
                         <div className="flex justify-center">
                           {units[0].profileImage ? (
                             <div className="w-24 h-24 relative rounded-full border border-gray-600 shadow-lg overflow-hidden">
-                              <img
+                              <Image
                                 src={units[0].profileImage}
                                 alt={units[0].title}
-                                className="object-cover w-full h-full"
+                                layout="fill"
+                                objectFit="cover"
+                                className="object-cover"
                                 onLoad={handleImageLoad}
                               />
                             </div>
@@ -272,7 +268,7 @@ const Home = () => {
                         className="relative w-full h-64 bg-cover bg-[center] transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                          backgroundPosition: "center", // Adjusted position
+                          backgroundPosition: "center",
                         }}
                       />
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
@@ -292,9 +288,6 @@ const Home = () => {
         </div>
       </motion.section>
 
-
-
-
       {/* Finisher Section */}
       <section className="pb-20 relative block w-full bg-transparent">
         {sectionImages[5] && (
@@ -313,7 +306,7 @@ const Home = () => {
         <div className="container mx-auto px-4 lg:pt-24 lg:pb-64 relative z-10">
           <div className="flex flex-wrap text-center justify-center">
             <div className="w-full lg:w-6/12 px-4">
-              <h2 className="text-4xl font-semibold text-white">
+              <h2 className="text-4xl font-semibold text-white mb-8 text-center font-iceberg uppercase">
                 Construisons Ensemble
               </h2>
               <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-300">
@@ -343,97 +336,97 @@ const Home = () => {
           style={{ height: "70px" }}
         >
           <svg
-  className="absolute bottom-0 overflow-hidden"
-  xmlns="http://www.w3.org/2000/svg"
-  preserveAspectRatio="none"
-  version="1.1"
-  viewBox="0 0 2560 100"
-  x="0"
-  y="0"
->
-  <polygon
-    className="fill-current text-transparent"
-    points="2560 0 2560 100 0 100"
-    style={{ fill: 'rgba(0, 0, 0, 0)' }} // Remplissage transparent
-  ></polygon>
-</svg>
-
+            className="absolute bottom-0 overflow-hidden"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            version="1.1"
+            viewBox="0 0 2560 100"
+            x="0"
+            y="0"
+          >
+            <polygon
+              className="fill-current text-transparent"
+              points="2560 0 2560 100 0 100"
+              style={{ fill: "rgba(0, 0, 0, 0)" }} // Remplissage transparent
+            ></polygon>
+          </svg>
         </div>
       </section>
 
-
-
-       {/* Pricing Section */}
- <motion.section
+      {/* Pricing Section */}
+      <motion.section
         className="relative z-20 bg-transparent py-24 sm:py-32 w-full"
         initial="hidden"
         whileInView="visible"
         variants={fadeInUp}
         viewport={{ once: true }}
       >
-  {/* Image de fond de la section */}
-  {sectionImages[4] && (
-    <div
-      className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0" // z-0 pour l'image de fond
-      style={{
-        backgroundImage: `url(${sectionImages[4]})`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        filter: "brightness(60%)",
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-    </div>
-  )}
+        {/* Image de fond de la section */}
+        {sectionImages[4] && (
+          <div
+            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0" // z-0 pour l'image de fond
+            style={{
+              backgroundImage: `url(${sectionImages[4]})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              filter: "brightness(60%)",
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+          </div>
+        )}
 
-  {/* Contenu de la section */}
-  <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 mb-40"> {/* z-10 pour le contenu */}
-    <div className="mx-auto max-w-2xl sm:text-center">
-      <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-iceberg">
-        Une tarification simple, sans surprise
-      </h2>
-      <p className="mt-6 text-lg leading-8 text-gray-300 font-kanit">
-        Découvrez notre offre transparente et adaptée à vos besoins, que vous soyez une personne ou une équipe.
-      </p>
-    </div>
-
-    <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
-      <div className="p-8 sm:p-10 lg:flex-auto">
-        <h3 className="text-2xl font-bold tracking-tight text-white font-iceberg">Abonnement à vie</h3>
-        <p className="mt-6 text-base leading-7 text-gray-300 font-kanit">
-          Profitez d&#39;un accès illimité à tous nos services pour une seule et unique fois.
-        </p>
-        <div className="mt-10 flex items-center gap-x-4">
-          <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">Ce qui est inclus</h4>
-          <div className="h-px flex-auto bg-gray-100" />
-        </div>
-        <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
-          {includedFeatures.map((feature) => (
-            <li key={feature} className="flex gap-x-3">
-              <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-        <div className="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
-          <div className="mx-auto max-w-xs px-8">
-            <p className="text-base font-semibold text-gray-600">Un paiement unique, pour un accès à vie</p>
-            <p className="mt-6 flex items-baseline justify-center gap-x-2">
-              <span className="text-5xl font-bold tracking-tight text-gray-900">5.00€</span>
-              <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">EUR</span>
+        {/* Contenu de la section */}
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 mb-40"> {/* z-10 pour le contenu */}
+          <div className="mx-auto max-w-2xl sm:text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-iceberg">
+              Une tarification simple, sans surprise
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-300 font-kanit">
+              Découvrez notre offre transparente et adaptée à vos besoins, que vous soyez une personne ou une équipe.
             </p>
-            <Link href="/subscription" className="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" passHref>
-                Obtenez l&#39;accès
-            </Link>
+          </div>
+
+          <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+            <div className="p-8 sm:p-10 lg:flex-auto">
+              <h3 className="text-2xl font-bold tracking-tight text-white font-iceberg">Abonnement à vie</h3>
+              <p className="mt-6 text-base leading-7 text-gray-300 font-kanit">
+                Profitez d&#39;un accès illimité à tous nos services pour une seule et unique fois.
+              </p>
+              <div className="mt-10 flex items-center gap-x-4">
+                <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">Ce qui est inclus</h4>
+                <div className="h-px flex-auto bg-gray-100" />
+              </div>
+              <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
+                {includedFeatures.map((feature) => (
+                  <li key={feature} className="flex gap-x-3">
+                    <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+              <div className="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
+                <div className="mx-auto max-w-xs px-8">
+                  <p className="text-base font-semibold text-gray-600">Un paiement unique, pour un accès à vie</p>
+                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
+                    <span className="text-5xl font-bold tracking-tight text-gray-900">5.00€</span>
+                    <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">EUR</span>
+                  </p>
+                  <Link
+                    href="/subscription"
+                    className="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    passHref
+                  >
+                    Obtenez l&#39;accès
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</motion.section>
-
+      </motion.section>
 
       {/* Contact Section */}
       <motion.section
