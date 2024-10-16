@@ -135,12 +135,12 @@ export default function Navbar() {
         <div className="flex-shrink-0 p-1"> {/* Réduction de p-2 à p-1 */}
           <Link href="/">
             <div className="hidden md:block">
-              <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent-1.png" // Utiliser le chemin correct vers votre logo (renommé sans espaces ni parenthèses)
+            <Image
+                src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
                 alt="Logo Spectral"
-                width={160} // Réduction de la largeur de 180 à 160
-                height={60} // Réduction de la hauteur de 70 à 60
-                className="object-contain max-h-14" // Réduction de max-h-16 à max-h-14 (3.5rem)
+                width={180} // Réduction de la largeur de 200 à 180
+                height={70} // Réduction de la hauteur de 80 à 70
+                className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
               />
             </div>
             <div className="block md:hidden">
