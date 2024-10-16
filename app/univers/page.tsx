@@ -8,20 +8,19 @@ import Link from "next/link";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
 import { fetchClasses } from "@/lib/queries/ClassQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
-import { ClassModel } from "@/lib/models/ClassModels"; // Assurez-vous d'avoir ce modèle
+import { ClassModel } from "@/lib/models/ClassModels";
 import BadgeComponent from "@/components/Badge";
 import HeroSection from "@/components/HeroSection";
 import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image";
-import Image from "next/image";
-import { motion } from "framer-motion"; // Importation de Framer Motion
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Nouvelle importation
+import { motion } from "framer-motion";
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 
 const UniversPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
   const [filteredUnits, setFilteredUnits] = useState<UnitModel[]>([]);
-  const [backgroundImage, setBackgroundImage] = useState<string>("");
-  const [heroBackgroundImage, setHeroBackgroundImage] = useState<string>(""); // Nouvel état
+  const [backgroundImage, setBackgroundImage] = useState<string>(""); // Aléatoire pour la page entière
+  const [heroBackgroundImage, setHeroBackgroundImage] = useState<string>(""); // Aléatoire pour la HeroSection
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("ALL");
   const [classes, setClasses] = useState<ClassModel[]>([]);
@@ -48,22 +47,22 @@ const UniversPage = () => {
     const loadRandomBackground = async () => {
       try {
         const image = await fetchRandomBackground();
-        console.log("Background image:", image); // Pour débogage
+        console.log("Background image:", image);
         setBackgroundImage(image);
       } catch (error) {
         console.error("Échec du chargement de l'image de fond aléatoire :", error);
-        setBackgroundImage("/images/backgrounds/default.jpg"); // Image de secours
+        setBackgroundImage("/images/backgrounds/default.jpg");
       }
     };
 
     const loadRandomHeroBackground = async () => {
       try {
         const image = await fetchRandomBackground();
-        console.log("Hero background image:", image); // Pour débogage
+        console.log("Hero background image:", image);
         setHeroBackgroundImage(image);
       } catch (error) {
         console.error("Échec du chargement de l'image de fond aléatoire pour HeroSection :", error);
-        setHeroBackgroundImage("/images/backgrounds/Bastion1.png"); // Image de secours
+        setHeroBackgroundImage("/images/backgrounds/Bastion1.png");
       }
     };
 
@@ -87,7 +86,6 @@ const UniversPage = () => {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    // La logique de filtrage est gérée dans useEffect
   };
 
   useEffect(() => {
@@ -122,12 +120,11 @@ const UniversPage = () => {
     .filter((unit) => unit.type.toUpperCase() === "UNIT")
     .sort((a, b) => a.title.localeCompare(b.title));
 
-  // Helper function to transformer les classes pour BadgeComponent
   const transformClasses = (classes: UnitModel["classes"]) => {
     if (!classes) return [];
     return classes.map((cls) => ({
       title: cls.title,
-      color: cls.color ?? '#000000', // Utilisation de l'opérateur de coalescence nulle
+      color: cls.color ?? '#000000',
     }));
   };
 
@@ -136,13 +133,11 @@ const UniversPage = () => {
       {/* Image de Fond Fixée et Proportionnée */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
-          <Image
+          {/* Utiliser la balise img pour l'image de fond au lieu de next/image */}
+          <img
             src={backgroundImage}
             alt="Background"
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-            priority={true}
-            quality={100}
+            style={{ objectFit: "cover", objectPosition: "center", width: "100%", height: "100%", position: "fixed" }}
             className="brightness-30"
           />
           {/* Overlay pour assombrir l'image */}
@@ -152,7 +147,7 @@ const UniversPage = () => {
 
       {/* Hero Section en Haut de la Page */}
       <HeroSection
-        backgroundImage={heroBackgroundImage || "/images/backgrounds/Bastion1.png"} // Utiliser l'image aléatoire pour HeroSection
+        backgroundImage={heroBackgroundImage}
         title="Explorez l'Univers"
         titleColor="#fff"
         strongTitle="de Spectral"
@@ -175,7 +170,7 @@ const UniversPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="lg:w-1/4 p-4 bg-black/80 rounded-lg shadow-lg sticky top-24 max-h-[85vh] overflow-y-auto mr-0 lg:mr-8 mb-8 lg:mb-0" // Ajustements de marge
+            className="lg:w-1/4 p-4 bg-black/80 rounded-lg shadow-lg sticky top-24 max-h-[85vh] overflow-y-auto mr-0 lg:mr-8 mb-8 lg:mb-0"
           >
             {/* Barre de Recherche dans la Sidebar */}
             <div className="mb-8 relative">
@@ -193,7 +188,6 @@ const UniversPage = () => {
             </div>
 
             {/* Filtres Dépliables */}
-            {/* Filtrage par Type */}
             <div className="mb-4">
               <button
                 onClick={() => setIsTypeFilterOpen(!isTypeFilterOpen)}
@@ -230,7 +224,6 @@ const UniversPage = () => {
               )}
             </div>
 
-            {/* Filtrage par Classe */}
             <div>
               <button
                 onClick={() => setIsClassFilterOpen(!isClassFilterOpen)}
@@ -248,11 +241,11 @@ const UniversPage = () => {
                       style={{
                         backgroundColor: selectedClasses.includes(classe.title)
                           ? classe.color ?? "#000000"
-                          : "#4B5563", // gris foncé ou couleur de la classe
+                          : "#4B5563",
                         color: "#FFFFFF",
                         boxShadow: selectedClasses.includes(classe.title)
                           ? `0 0 10px ${classe.color ?? "#000000"}`
-                          : "none", // Effet néon actif
+                          : "none",
                       }}
                     >
                       {classe.title}
@@ -263,7 +256,7 @@ const UniversPage = () => {
             </div>
           </motion.div>
 
-          {/* Contenu Principal des Unités */}
+          {/* Contenu Principal */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -295,12 +288,12 @@ const UniversPage = () => {
                       <img
                         alt={unit.title}
                         src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20" // z-20 pour être au-dessus du contenu
+                        className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20"
                       />
 
                       {/* Text Content */}
                       <div
-                        className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10" // Augmentation de pt de 8 à 10
+                        className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10"
                         style={{
                           backgroundImage: unit.footerImage
                             ? `url(${getImageUrl(unit.footerImage)})`
@@ -310,17 +303,14 @@ const UniversPage = () => {
                           backgroundRepeat: "no-repeat",
                         }}
                       >
-                        {/* Overlay pour assombrir l'image de footer */}
                         {unit.footerImage && (
                           <div className="absolute inset-0 bg-black opacity-70 rounded-b-lg"></div>
                         )}
 
-                        {/* Contenu Principal */}
                         <div className="relative z-10">
                           <span className="text-2xl font-iceberg uppercase mt-4">
                             {unit.title}
-                          </span> {/* Ajout de mt-4 */}
-                          {/* Badge des classes associées */}
+                          </span>
                           {unit.classes && unit.classes.length > 0 && (
                             <div className="mt-2">
                               <BadgeComponent classes={transformClasses(unit.classes)} />
@@ -331,14 +321,12 @@ const UniversPage = () => {
                           </p>
                         </div>
 
-                        {/* Intro */}
                         <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
                           <p className="text-white font-kanit p-3">
                             {unit.intro || "Aucune introduction disponible."}
                           </p>
                         </div>
 
-                        {/* Bouton Explorer */}
                         <div className="text-center mt-6 transition-all duration-300 relative z-10">
                           <Link href={`/univers/units/${unit.id}`}>
                             <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
@@ -378,12 +366,11 @@ const UniversPage = () => {
                       <img
                         alt={unit.title}
                         src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                        className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20" // z-20 pour être au-dessus du contenu
+                        className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20"
                       />
 
-                      {/* Text Content */}
                       <div
-                        className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10" // Augmentation de pt de 8 à 10
+                        className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10"
                         style={{
                           backgroundImage: unit.footerImage
                             ? `url(${getImageUrl(unit.footerImage)})`
@@ -393,17 +380,14 @@ const UniversPage = () => {
                           backgroundRepeat: "no-repeat",
                         }}
                       >
-                        {/* Overlay pour assombrir l'image de footer */}
                         {unit.footerImage && (
                           <div className="absolute inset-0 bg-black opacity-70 rounded-b-lg"></div>
                         )}
 
-                        {/* Contenu Principal */}
                         <div className="relative z-10">
                           <span className="text-2xl font-iceberg uppercase mt-4">
                             {unit.title}
-                          </span> {/* Ajout de mt-4 */}
-                          {/* Badge des classes associées */}
+                          </span>
                           {unit.classes && unit.classes.length > 0 && (
                             <div className="mt-2">
                               <BadgeComponent classes={transformClasses(unit.classes)} />
@@ -414,14 +398,12 @@ const UniversPage = () => {
                           </p>
                         </div>
 
-                        {/* Intro */}
                         <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
                           <p className="text-white font-kanit p-3">
                             {unit.intro || "Aucune introduction disponible."}
                           </p>
                         </div>
 
-                        {/* Bouton Explorer */}
                         <div className="text-center mt-6 transition-all duration-300 relative z-10">
                           <Link href={`/univers/units/${unit.id}`}>
                             <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
