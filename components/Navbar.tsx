@@ -113,7 +113,7 @@ export default function Navbar() {
 
   // Définition du sous-menu pour "Univers"
   const universSubMenu = (
-    <Menu className="font-kanit">
+    <Menu className="font-kanit custom-submenu">
       <Menu.Item key="1">
         <Link href="/univers">Encyclopédie</Link>
       </Menu.Item>
@@ -136,20 +136,20 @@ export default function Navbar() {
           <Link href="/">
             <div className="hidden md:block">
               <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent.png"
+                src="/logos/spectral-high-resolution-logo-white-transparent.png" // Remplacez par votre ancien logo si nécessaire
                 alt="Logo Spectral"
                 width={150}
                 height={50}
-                className="object-contain"
+                className="object-contain max-h-12" // Ajuster la hauteur maximale
               />
             </div>
             <div className="block md:hidden">
               <Image
-                src="/logos/spectral-favicon-color.png"
+                src="/logos/spectral-favicon-color.png" // Remplacez par votre ancien logo si nécessaire
                 alt="Logo Spectral"
                 width={50}
                 height={50}
-                className="object-contain"
+                className="object-contain max-h-10" // Ajuster la hauteur maximale
               />
             </div>
           </Link>
@@ -158,7 +158,12 @@ export default function Navbar() {
         {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
         <div className="hidden md:flex space-x-8 items-center">
           {/* Dropdown pour Univers */}
-          <Dropdown overlay={universSubMenu} trigger={["hover"]} placement="bottom">
+          <Dropdown
+            overlay={universSubMenu}
+            trigger={["hover"]}
+            placement="bottom"
+            overlayClassName="custom-submenu-dropdown"
+          >
             <button className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
               <span className="shadow-text">Univers</span>
               <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
@@ -263,7 +268,12 @@ export default function Navbar() {
           {/* Menu mobile */}
           <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-gray-700 bg-opacity-90 z-50 p-5 animate-slide-in">
             {/* Dropdown mobile pour Univers */}
-            <Dropdown overlay={universSubMenu} trigger={["click"]} placement="bottomLeft">
+            <Dropdown
+              overlay={universSubMenu}
+              trigger={["click"]}
+              placement="bottomLeft"
+              overlayClassName="custom-submenu-dropdown"
+            >
               <button className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
                 <span className="shadow-text">Univers</span>
                 <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
@@ -376,6 +386,38 @@ export default function Navbar() {
           box-shadow: 0 0 10px var(--neon-color, #008080),
                       0 0 20px var(--neon-color, #008080),
                       0 0 30px var(--neon-color, #008080);
+        }
+
+        /* Styles personnalisés pour les sous-menus */
+        .custom-submenu-dropdown .ant-dropdown-menu {
+          background-color: rgba(31, 41, 55, 0.75); /* bg-gray-800 bg-opacity-75 */
+          border: none;
+        }
+
+        .custom-submenu-dropdown .ant-dropdown-menu-item {
+          color: white;
+          transition: background-color 0.3s ease;
+        }
+
+        .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
+          background-color: #008080; /* teal */
+          color: white;
+        }
+
+        /* Styles personnalisés pour le sous-menu mobile */
+        .custom-submenu-dropdown .ant-dropdown-menu {
+          background-color: rgba(31, 41, 55, 0.75); /* bg-gray-800 bg-opacity-75 */
+          border: none;
+        }
+
+        .custom-submenu-dropdown .ant-dropdown-menu-item {
+          color: white;
+          transition: background-color 0.3s ease;
+        }
+
+        .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
+          background-color: #008080; /* teal */
+          color: white;
         }
       `}</style>
     </nav>
