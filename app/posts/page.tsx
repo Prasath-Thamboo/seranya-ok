@@ -8,7 +8,6 @@ import { fetchPosts } from '@/lib/queries/PostQueries';
 import { PostModel, PostType } from '@/lib/models/PostModels';
 import HeroSection from '@/components/HeroSection';
 import { fetchRandomBackground } from '@/lib/queries/RandomBackgroundQuery';
-import TestRandomBackground from '@/components/TestRandomBackground'; // Composant de test
 
 const PostsPage: React.FC = () => {
   const [posts, setPosts] = React.useState<PostModel[]>([]);
@@ -71,36 +70,44 @@ const PostsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Intégration du HeroSection */}
-      <HeroSection
-        backgroundImage={backgroundImage || "/images/backgrounds/GhostKnight.png"} // Utilisation de l'image dynamique
-        title="Bienvenue dans"
-        titleColor="#ffffff" // Blanc
-        strongTitle="L'Univers Spectral"
-        strongTitleColor="#ffffff" // Blanc
-        content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
-        contentColor="#ffffff" // Blanc
-        button1Text="Voir les Posts"
-        button1Url="/posts"
-        button1BgColor="#38b2ac" // Teal (Hex code)
-        button2Text="Découvrir"
-        button2Url="/discover"
-        button2BgColor="#38b2ac" // Teal (Hex code)
-      />
+    <div
+      className="min-h-screen relative bg-cover bg-center bg-fixed"
+      style={{
+        backgroundImage: `url(${backgroundImage || "/images/backgrounds/GhostKnight.png"})`,
+      }}
+    >
+      {/* Overlay pour obscurcir l'image de fond */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
 
-      {/* Composant de Test pour l'Image de Fond */}
-      <TestRandomBackground />
+      {/* Contenu de la page avec un z-index supérieur pour être au-dessus de l'overlay */}
+      <div className="relative z-10">
+        {/* Intégration du HeroSection */}
+        <HeroSection
+          // backgroundImage est déjà appliqué globalement, vous pouvez supprimer cette prop si non utilisée
+          title="Bienvenue dans"
+          titleColor="#ffffff" // Blanc
+          strongTitle="L'Univers Spectral"
+          strongTitleColor="#ffffff" // Blanc
+          content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
+          contentColor="#ffffff" // Blanc
+          button1Text="Voir les Posts"
+          button1Url="/posts"
+          button1BgColor="#38b2ac" // Teal (Hex code)
+          button2Text="Découvrir"
+          button2Url="/discover"
+          button2BgColor="#38b2ac" // Teal (Hex code)
+        />
 
-      {/* Section des Posts */}
-      <div className="py-10 px-5">
-        <h1 className="text-4xl font-bold text-center text-white mb-10 font-iceberg text-shadow-lg">
-          Exploration de l&apos;Univers
-        </h1>
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map(post => (
-            <PostCard key={post.id} post={post} />
-          ))}
+        {/* Section des Posts */}
+        <div className="py-10 px-5">
+          <h1 className="text-4xl font-bold text-center text-white mb-10 font-iceberg text-shadow-lg">
+            Exploration de l&apos;Univers
+          </h1>
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {posts.map(post => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
