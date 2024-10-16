@@ -16,6 +16,27 @@ import { useNotification } from "@/components/notifications/NotificationProvider
 import React from "react";
 import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
+// Fonction pour assombrir une couleur hexadécimale
+const shadeColor = (color: string, percent: number): string => {
+  let R = parseInt(color.substring(1, 3), 16);
+  let G = parseInt(color.substring(3, 5), 16);
+  let B = parseInt(color.substring(5, 7), 16);
+
+  R = Math.round((R * (100 + percent)) / 100);
+  G = Math.round((G * (100 + percent)) / 100);
+  B = Math.round((B * (100 + percent)) / 100);
+
+  R = R < 255 ? R : 255;
+  G = G < 255 ? G : 255;
+  B = B < 255 ? B : 255;
+
+  const RR = R.toString(16).padStart(2, '0');
+  const GG = G.toString(16).padStart(2, '0');
+  const BB = B.toString(16).padStart(2, '0');
+
+  return `#${RR}${GG}${BB}`;
+};
+
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<RegisterUserModel | null>(null);
@@ -125,17 +146,19 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${navbarBackground}`} // Ajout de padding-y et réduction de padding-x
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${navbarBackground}`}
       style={{
         "--neon-color": color || "#008080", // Définir la variable CSS pour la couleur néon
+        "--button-bg-color": color || "#008080", // Définir la variable CSS pour la couleur des boutons
+        "--button-hover-bg-color": shadeColor(color || "#008080", -10), // Assombrir la couleur des boutons de 10%
       } as React.CSSProperties}
     >
-      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 flex items-center justify-between h-16"> {/* Réduction de px-2 sm:px-4 lg:px-6 à px-1 sm:px-2 lg:px-4 */}
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 flex items-center justify-between h-16">
         {/* Logo */}
-        <div className="flex-shrink-0 p-1"> {/* Réduction de p-2 à p-1 */}
+        <div className="flex-shrink-0 p-1">
           <Link href="/">
             <div className="hidden md:block">
-            <Image
+              <Image
                 src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
                 alt="Logo Spectral"
                 width={180} // Réduction de la largeur de 200 à 180
@@ -156,7 +179,7 @@ export default function Navbar() {
         </div>
 
         {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
-        <div className="hidden md:flex space-x-6 items-center"> {/* Réduction de space-x-8 à space-x-6 */}
+        <div className="hidden md:flex space-x-6 items-center">
           {/* Dropdown pour Univers */}
           <Dropdown
             overlay={universSubMenu}
@@ -164,9 +187,9 @@ export default function Navbar() {
             placement="bottom"
             overlayClassName="custom-submenu-dropdown"
           >
-            <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center"> {/* Réduction de text-lg à text-base */}
+            <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
               <span className="shadow-text">Univers</span>
-              <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
+              <FaChevronDown className="ml-1" />
             </button>
           </Dropdown>
 
@@ -187,12 +210,12 @@ export default function Navbar() {
         </div>
 
         {/* Menu utilisateur pour grand écran */}
-        <div ref={userMenuRef} className="hidden md:flex items-center space-x-3"> {/* Réduction de space-x-4 à space-x-3 */}
+        <div ref={userMenuRef} className="hidden md:flex items-center space-x-3">
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer group">
                 {profileImageUrl ? (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300"> {/* Réduction de w-12 h-12 à w-10 h-10 */}
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
                     <Image
                       src={profileImageUrl}
                       alt="User Avatar"
@@ -202,7 +225,7 @@ export default function Navbar() {
                     />
                   </div>
                 ) : (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center"> {/* Réduction de w-12 h-12 à w-10 h-10 */}
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center">
                     <span className="text-white text-lg font-iceberg">
                       {user.pseudo.charAt(0).toUpperCase()}
                     </span>
@@ -221,14 +244,18 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="flex items-center relative group bg-teal-500 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg"> {/* Augmentation de py et px, text-base à text-lg */}
-                  <FiLogIn className="mr-2 w-5 h-5" /> {/* Icône de Connexion */}
+                <button
+                  className="flex items-center relative group bg-[var(--button-bg-color)] text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-[var(--button-hover-bg-color)] shadow-neon font-iceberg uppercase text-lg"
+                >
+                  <FiLogIn className="mr-2 w-5 h-5" />
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button className="flex items-center relative group bg-teal-500 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg"> {/* Augmentation de py et px, text-base à text-lg */}
-                  <FiUserPlus className="mr-2 w-5 h-5" /> {/* Icône d'Inscription */}
+                <button
+                  className="flex items-center relative group bg-[var(--button-bg-color)] text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-[var(--button-hover-bg-color)] shadow-neon font-iceberg uppercase text-lg"
+                >
+                  <FiUserPlus className="mr-2 w-5 h-5" />
                   Inscription
                 </button>
               </Link>
@@ -276,9 +303,9 @@ export default function Navbar() {
               placement="bottomLeft"
               overlayClassName="custom-submenu-dropdown"
             >
-              <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center"> {/* Réduction de text-lg à text-base */}
+              <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
                 <span className="shadow-text">Univers</span>
-                <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
+                <FaChevronDown className="ml-1" />
               </button>
             </Dropdown>
 
@@ -402,7 +429,7 @@ export default function Navbar() {
         }
 
         .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
-          background-color: #008080; /* teal */
+          background-color: var(--neon-color, #008080); /* Utilise la couleur néon */
           color: white;
         }
 
@@ -418,7 +445,7 @@ export default function Navbar() {
         }
 
         .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
-          background-color: #008080; /* teal */
+          background-color: var(--neon-color, #008080); /* Utilise la couleur néon */
           color: white;
         }
       `}</style>

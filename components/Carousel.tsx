@@ -1,6 +1,6 @@
 // spectralnext/components/Carousel.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
@@ -24,10 +24,6 @@ const Carousel: React.FC<CarouselProps> = ({
   onLoad,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-
-  useEffect(() => {
-    console.log('Carousel received items:', items);
-  }, [items]);
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -72,8 +68,7 @@ const Carousel: React.FC<CarouselProps> = ({
               }}
               unoptimized={true} // Désactive l'optimisation si nécessaire
             />
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black opacity-50"></div>
+            {/* Overlay supprimé */}
 
             {/* Optional Title and Subtitle */}
             {(item.title || item.subtitle) && (
