@@ -1,13 +1,15 @@
+// spectralnext/app/contact/page.tsx
+
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import axios from 'axios';
 import { useNotification } from '@/components/notifications/NotificationProvider'; // Notification system
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Nouvelle importation
 
 const { TextArea } = Input;
 
-// Définir le base URL en fonction de l'environnement
 const BASE_URL =
   process.env.NODE_ENV === 'production'
     ? process.env.NEXT_PUBLIC_API_URL_PROD
@@ -18,14 +20,14 @@ const ContactPage: React.FC = () => {
   const { addNotification } = useNotification(); // Notification system
 
   useEffect(() => {
-    // Charger une image de fond aléatoire
+    // Nouvelle méthode pour charger une image de fond aléatoire
     const loadRandomBackgroundImage = async () => {
       try {
-        const response = await fetch('/api/getRandomImage');
-        const data = await response.json();
-        setBackgroundImage(data.imagePath);
+        const image = await fetchRandomBackground();
+        setBackgroundImage(image);
       } catch (error) {
-        console.error("Failed to load random background image:", error);
+        console.error("Échec du chargement de l'image de fond aléatoire :", error);
+        setBackgroundImage("/images/backgrounds/default.jpg"); // Image de secours
       }
     };
 

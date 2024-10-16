@@ -1,3 +1,5 @@
+// spectralnext/app/univers/page.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -13,21 +15,7 @@ import DividersWithHeading from "@/components/DividersWhithHeading";
 import { getImageUrl } from "@/utils/image";
 import Image from "next/image";
 import { motion } from "framer-motion"; // Importation de Framer Motion
-
-// Fonction pour récupérer une image de fond aléatoire via l'API
-const fetchRandomImage = async () => {
-  try {
-    const res = await fetch("/api/getRandomImage");
-    if (!res.ok) {
-      throw new Error("Échec de la récupération de l'image de fond");
-    }
-    const data = await res.json();
-    return data.imagePath;
-  } catch (error) {
-    console.error(error);
-    return "/images/backgrounds/default.jpg"; // Image de secours
-  }
-};
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Nouvelle importation
 
 const UniversPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
@@ -57,8 +45,13 @@ const UniversPage = () => {
     };
 
     const loadRandomBackground = async () => {
-      const image = await fetchRandomImage();
-      setBackgroundImage(image);
+      try {
+        const image = await fetchRandomBackground();
+        setBackgroundImage(image);
+      } catch (error) {
+        console.error("Échec du chargement de l'image de fond aléatoire :", error);
+        setBackgroundImage("/images/backgrounds/default.jpg"); // Image de secours
+      }
     };
 
     fetchData();
