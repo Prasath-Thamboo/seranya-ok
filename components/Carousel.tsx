@@ -14,14 +14,16 @@ interface CarouselProps {
   items: CarouselItem[];
   height?: string;
   width?: string;
+  onLoad?: () => void; // Optional onLoad callback
 }
 
 const Carousel: React.FC<CarouselProps> = ({
   items,
   height = '100vh',
   width = '100vw',
+  onLoad,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -43,7 +45,7 @@ const Carousel: React.FC<CarouselProps> = ({
     <div className="relative overflow-hidden fixed top-0 left-0 z-40" style={{ width, height }}>
       {/* Carousel Wrapper */}
       <div className="relative overflow-hidden w-full h-full z-40">
-        {items.map((item, index) => (
+        {items.map((item: CarouselItem, index: number) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
@@ -56,6 +58,7 @@ const Carousel: React.FC<CarouselProps> = ({
               layout="fill"
               objectFit="cover"
               className="w-full h-full object-cover"
+              onLoad={onLoad} // Appel du callback onLoad
             />
             {/* Overlay */}
             <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -92,14 +95,14 @@ const Carousel: React.FC<CarouselProps> = ({
       {/* Slider Controls */}
       <button
         onClick={goToPrevious}
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 hover:bg-white transition-all duration-300 shadow-lg hover:shadow-neon focus:outline-none"
+        className="absolute top-1/2 left-4 transform -translate-y-1/2 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 hover:bg-white transition-all duration-300 shadow-lg focus:outline-none"
       >
         <AiOutlineLeft className="text-white hover:text-gray-800 transition-all duration-300 w-6 h-6" />
         <span className="sr-only">Previous</span>
       </button>
       <button
         onClick={goToNext}
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 hover:bg-white transition-all duration-300 shadow-lg hover:shadow-neon focus:outline-none"
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 hover:bg-white transition-all duration-300 shadow-lg focus:outline-none"
       >
         <AiOutlineRight className="text-white hover:text-gray-800 transition-all duration-300 w-6 h-6" />
         <span className="sr-only">Next</span>
@@ -107,7 +110,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
       {/* Slider Indicators */}
       <div className="absolute z-50 flex space-x-2 -translate-x-1/2 bottom-4 left-1/2">
-        {items.map((_, index) => (
+        {items.map((_, index: number) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

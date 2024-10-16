@@ -8,10 +8,12 @@ import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // 
 
 interface FooterProps {
   backgroundImage?: string; // Optional prop for the background image
+  onLoad?: () => void; // Optional onLoad callback
 }
 
-const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
+const Footer: React.FC<FooterProps> = ({ backgroundImage, onLoad }) => {
   const [randomBackgroundImage, setRandomBackgroundImage] = useState<string | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,7 +25,11 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
         } catch (error: any) {
           console.error("Failed to load random background image for footer:", error);
           setLoadError(error.message || 'Erreur inconnue');
+        } finally {
+          setIsLoading(false);
         }
+      } else {
+        setIsLoading(false);
       }
     };
 
@@ -33,8 +39,19 @@ const Footer: React.FC<FooterProps> = ({ backgroundImage }) => {
   // Use the provided backgroundImage or fallback to the randomBackgroundImage if no backgroundImage is provided
   const finalBackgroundImage: string | undefined = backgroundImage || randomBackgroundImage;
 
+  if (isLoading) {
+    return (
+      <footer className="relative block text-white font-iceberg uppercase">
+        {/* Loader ou placeholder */}
+        <div className="flex justify-center items-center h-20">
+          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8"></div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
-    <BackgroundWrapper backgroundImage={finalBackgroundImage} overlayOpacity={0.7}>
+    <BackgroundWrapper backgroundImage={finalBackgroundImage} overlayOpacity={0.7} onLoad={onLoad}>
       {/* Footer content */}
       <footer className="relative block text-white font-iceberg uppercase">
         <div className="relative z-10 py-16 md:py-20 mx-auto w-full max-w-7xl px-5 md:px-10 border-t-2 border-b-2 border-gray-800">
