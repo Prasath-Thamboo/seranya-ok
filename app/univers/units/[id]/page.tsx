@@ -145,7 +145,7 @@ const UniversPage = () => {
 
       {/* Hero Section avec image aléatoire */}
       <HeroSection
-        backgroundImage={heroBackgroundImage || "/images/backgrounds/default-hero.jpg"} // Utilisez une image de secours si nécessaire
+        backgroundImage={heroBackgroundImage} // Utilisez une image de secours si nécessaire
         title="Explorez l'Univers"
         titleColor="#fff"
         strongTitle="de Spectral"
