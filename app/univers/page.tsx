@@ -47,6 +47,7 @@ const UniversPage = () => {
     const loadRandomBackground = async () => {
       try {
         const image = await fetchRandomBackground();
+        console.log("Background image:", image); // Pour débogage
         setBackgroundImage(image);
       } catch (error) {
         console.error("Échec du chargement de l'image de fond aléatoire :", error);
@@ -136,23 +137,6 @@ const UniversPage = () => {
           <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
         </div>
       )}
-
-      {/* Hero Section */}
-      <HeroSection
-        backgroundImage="/images/backgrounds/Bastion1.png"
-        title="Explorez l'Univers"
-        titleColor="#fff"
-        strongTitle="de Spectral"
-        strongTitleColor="#ff6347"
-        content="Découvrez les personnages, leurs histoires et plongez dans l'univers spectaculaire de Spectral."
-        contentColor="#ddd"
-        button1Text="Commencer l'exploration"
-        button1Url="#"
-        button1BgColor="#ff6347"
-        button2Text="En savoir plus"
-        button2Url="#"
-        button2BgColor="#555"
-      />
 
       <section className="relative z-10 py-16 px-12 flex">
         {/* Barre Latérale des Filtres */}
@@ -246,6 +230,23 @@ const UniversPage = () => {
           transition={{ duration: 1 }}
           className="lg:w-3/4"
         >
+          {/* Hero Section avec Image Aléatoire */}
+          <HeroSection
+            backgroundImage={backgroundImage || "/images/backgrounds/Bastion1.png"} // Utiliser l'image aléatoire
+            title="Explorez l'Univers"
+            titleColor="#fff"
+            strongTitle="de Spectral"
+            strongTitleColor="#ff6347"
+            content="Découvrez les personnages, leurs histoires et plongez dans l'univers spectaculaire de Spectral."
+            contentColor="#ddd"
+            button1Text="Commencer l'exploration"
+            button1Url="#"
+            button1BgColor="#ff6347"
+            button2Text="En savoir plus"
+            button2Url="#"
+            button2BgColor="#555"
+          />
+
           {/* Section Champions */}
           {sortedChampions.length > 0 && (
             <>
