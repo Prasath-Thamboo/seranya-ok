@@ -125,14 +125,14 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 p-3 ${navbarBackground}`} // Réduction de p-5 à p-3
       style={{
         "--neon-color": color || "#008080", // Définir la variable CSS pour la couleur néon
       } as React.CSSProperties}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 flex items-center justify-between h-16"> {/* Réduction de px-4 sm:px-6 lg:px-8 à px-2 sm:px-4 lg:px-6 */}
         {/* Logo */}
-        <div className="flex-shrink-0 p-2"> {/* Ajout de padding */}
+        <div className="flex-shrink-0 p-2"> {/* Padding maintenu à p-2 */}
           <Link href="/">
             <div className="hidden md:block">
               <Image
