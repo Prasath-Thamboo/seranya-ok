@@ -11,6 +11,7 @@ import { RegisterUserModel } from "@/lib/models/AuthModels";
 import Badge from "@/components/Badge";
 import { Dropdown, Menu } from "antd";
 import { FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { FaChevronDown } from "react-icons/fa"; // Utilisation de FaChevronDown
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import React from "react";
 import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
@@ -110,6 +111,18 @@ export default function Navbar() {
       ? user.profileImage
       : null;
 
+  // Définition du sous-menu pour "Univers"
+  const universSubMenu = (
+    <Menu className="font-kanit">
+      <Menu.Item key="1">
+        <Link href="/univers">Encyclopédie</Link>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Link href="/univers/regions">Régions</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-colors duration-300 p-5 ${navbarBackground}`}
@@ -123,7 +136,7 @@ export default function Navbar() {
           <Link href="/">
             <div className="hidden md:block">
               <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent (1).png"
+                src="/logos/spectral-high-resolution-logo-white-transparent.png"
                 alt="Logo Spectral"
                 width={150}
                 height={50}
@@ -132,7 +145,7 @@ export default function Navbar() {
             </div>
             <div className="block md:hidden">
               <Image
-                src="/logos/spectral-favicon-color (1).png"
+                src="/logos/spectral-favicon-color.png"
                 alt="Logo Spectral"
                 width={50}
                 height={50}
@@ -142,17 +155,29 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Menus de navigation (Univers, Contact, Abonnement) */}
+        {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
         <div className="hidden md:flex space-x-8 items-center">
-          <Link href="/univers" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
-            <span className="stroke-text">Univers</span>
+          {/* Dropdown pour Univers */}
+          <Dropdown overlay={universSubMenu} trigger={["hover"]} placement="bottom">
+            <button className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
+              <span className="shadow-text">Univers</span>
+              <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
+            </button>
+          </Dropdown>
+
+          {/* Extraits */}
+          <Link href="/posts" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+            <span className="shadow-text">Extraits</span>
           </Link>
-          <Link href="/contact" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
-            <span className="stroke-text">Contact</span>
+
+          {/* Contact */}
+          <Link href="/contact" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+            <span className="shadow-text">Contact</span>
           </Link>
-          {/* Ajout du lien vers Abonnement */}
-          <Link href="/subscription" className="text-white text-lg font-iceberg hover:text-gray-300 transition-colors duration-200 uppercase">
-            <span className="stroke-text">Abonnement</span>
+
+          {/* Abonnement */}
+          <Link href="/subscription" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+            <span className="shadow-text">Abonnement</span>
           </Link>
         </div>
 
@@ -160,7 +185,7 @@ export default function Navbar() {
         <div ref={userMenuRef} className="hidden md:flex items-center space-x-4">
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
-              <div className="flex items-center cursor-pointer">
+              <div className="flex items-center cursor-pointer group">
                 {profileImageUrl ? (
                   <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
                     <Image
@@ -178,7 +203,9 @@ export default function Navbar() {
                     </span>
                   </div>
                 )}
-                <span className="ml-2 text-white font-iceberg">{user.pseudo}</span>
+                <span className="ml-2 text-white font-iceberg shadow-text group-hover:text-teal-500 transition-colors duration-200">
+                  {user.pseudo}
+                </span>
                 {user.role && (
                   <div className="ml-2">
                     <Badge role={user.role} />
@@ -189,12 +216,12 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="bg-transparent border border-white text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-lg font-iceberg uppercase text-lg">
+                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button className="bg-white text-black font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-gray-800 hover:text-white hover:border-white hover:shadow-lg font-iceberg uppercase text-lg">
+                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
                   Inscription
                 </button>
               </Link>
@@ -205,7 +232,7 @@ export default function Navbar() {
         {/* Menu hamburger pour mobile */}
         <div className="md:hidden z-50">
           <button
-            className="text-white focus:outline-none hover:text-gray-300 transition-all"
+            className="text-white focus:outline-none hover:text-teal-500 transition-all"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
@@ -235,24 +262,37 @@ export default function Navbar() {
 
           {/* Menu mobile */}
           <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-gray-700 bg-opacity-90 z-50 p-5 animate-slide-in">
-            <Link href="/univers" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-              Univers
+            {/* Dropdown mobile pour Univers */}
+            <Dropdown overlay={universSubMenu} trigger={["click"]} placement="bottomLeft">
+              <button className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
+                <span className="shadow-text">Univers</span>
+                <FaChevronDown className="ml-1" /> {/* Utilisation de FaChevronDown */}
+              </button>
+            </Dropdown>
+
+            {/* Extraits */}
+            <Link href="/posts" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+              <span className="shadow-text">Extraits</span>
             </Link>
-            <Link href="/contact" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-              Contact
+
+            {/* Contact */}
+            <Link href="/contact" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+              <span className="shadow-text">Contact</span>
             </Link>
-            {/* Ajout du lien vers Abonnement dans le menu mobile */}
-            <Link href="/subscription" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-              Abonnement
+
+            {/* Abonnement */}
+            <Link href="/subscription" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+              <span className="shadow-text">Abonnement</span>
             </Link>
+
             {isLoggedIn && user ? (
               <>
-                <Link href="/admin/me" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-                  Mon Profil
+                <Link href="/admin/me" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                  <span className="shadow-text">Mon Profil</span>
                 </Link>
                 {user.role === "ADMIN" && (
-                  <Link href="/admin" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
-                    Administration
+                  <Link href="/admin" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                    <span className="shadow-text">Administration</span>
                   </Link>
                 )}
                 <button
@@ -260,17 +300,17 @@ export default function Navbar() {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="text-red-500 font-iceberg text-lg hover:text-red-700"
+                  className="relative group text-lg font-iceberg uppercase text-red-500 hover:text-red-700 transition-colors duration-200"
                 >
                   Déconnexion
                 </button>
               </>
             ) : (
               <>
-                <Link href="/auth/login" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/login" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Connexion
                 </Link>
-                <Link href="/auth/register" className="text-white font-iceberg text-lg hover:text-gray-300" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/register" className="relative group text-lg font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   Inscription
                 </Link>
               </>
@@ -317,6 +357,25 @@ export default function Navbar() {
 
         .animate-slide-in {
           animation: slide-in 0.3s ease-out forwards;
+        }
+
+        /* Effet néon pour les textes */
+        .shadow-text {
+          text-shadow: 2px 2px 0px #000000;
+        }
+
+        /* Effet néon sur hover et actif */
+        .group:hover .shadow-text,
+        .active .shadow-text {
+          color: teal;
+          text-shadow: 0 0 10px teal, 0 0 20px teal, 0 0 30px teal;
+        }
+
+        /* Ombre néon pour les boutons */
+        .shadow-neon {
+          box-shadow: 0 0 10px var(--neon-color, #008080),
+                      0 0 20px var(--neon-color, #008080),
+                      0 0 30px var(--neon-color, #008080);
         }
       `}</style>
     </nav>
