@@ -1,5 +1,3 @@
-// spectralnext/app/univers/units/[id]/page.tsx
-
 "use client";
 
 import React, { useEffect, useState, useContext } from "react";
@@ -10,12 +8,12 @@ import Masonry from "react-masonry-css";
 import { FaBook, FaGithub, FaImage, FaInstagram, FaLock, FaNewspaper, FaTwitter } from "react-icons/fa";
 import Badge from "@/components/Badge";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
-import { Image as AntImage, Skeleton } from "antd"; // Importation du composant Skeleton
+import { Image as AntImage, Skeleton } from "antd";
 import { getImageUrl } from "@/utils/image";
 import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
 import Footer from "@/components/Footer"; 
-import MiniLoader from "@/components/MiniLoader"; // Importation du MiniLoader
-import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
+import MiniLoader from "@/components/MiniLoader";
+import { ColorContext } from "@/context/ColorContext";
 
 interface ClassModel {
   id: string;
@@ -32,14 +30,14 @@ const UnitDetailPage = () => {
       : params.id
     : null;
 
-  const { color, setColor } = useContext(ColorContext); // Utiliser le contexte
+  const { color, setColor } = useContext(ColorContext);
   const [unit, setUnit] = useState<UnitModel | null>(null);
   const [activeSection, setActiveSection] = useState("biographie");
   const [showContent, setShowContent] = useState(true);
   const [relatedClasses, setRelatedClasses] = useState<ClassModel[]>([]);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [loadingUser, setLoadingUser] = useState<boolean>(true);
-  const [loadingUnit, setLoadingUnit] = useState<boolean>(true); // État pour le chargement de l'unité
+  const [loadingUnit, setLoadingUnit] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchUnit = async () => {
@@ -75,7 +73,7 @@ const UnitDetailPage = () => {
         } catch (error) {
           console.error("Error fetching unit:", error);
         } finally {
-          setLoadingUnit(false); // Indique que le chargement de l'unité est terminé
+          setLoadingUnit(false);
         }
       }
     };
@@ -107,11 +105,10 @@ const UnitDetailPage = () => {
     }, 500);
   };
 
-  // Définir si les données sont en cours de chargement
   const loading = loadingUnit || loadingUser;
 
   return (
-    <div className="relative w-full min-h-screen text-white font-kanit">
+    <div className="relative w-full min-h-screen text-white font-iceberg">
       {/* Background Header */}
       <div
         className="fixed inset-0 bg-cover bg-center"
@@ -148,7 +145,7 @@ const UnitDetailPage = () => {
                 </h1>
                 <Badge role={unit?.type || "DEFAULT"} />
                 {unit?.subtitle ? (
-                  <p className="mt-4 text-xl font-kanit text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  <p className="mt-4 text-xl font-iceberg text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {unit.subtitle}
                   </p>
                 ) : (
@@ -190,12 +187,14 @@ const UnitDetailPage = () => {
             <Skeleton active paragraph={{ rows: 3 }} />
           </div>
         ) : unit?.quote ? (
-          <blockquote className="relative text-center max-w-lg mx-auto mt-48 md:mt-56 lg:mt-64">
+          <blockquote className="relative text-center max-w-lg
+
+ mx-auto mt-48 md:mt-56 lg:mt-64">
             <div className="relative z-10">
               <p className="text-xl text-gray-800">
                 <em className="relative">
                   <svg
-                    className="absolute -top-8 -left-8 size-16 text-gray-100 sm:h-24 sm:w-24 dark:text-neutral-700"
+                    className="absolute -top-8 -left-8 w-16 h-16 text-gray-100 sm:h-24 sm:w-24 dark:text-neutral-700"
                     width="16"
                     height="16"
                     viewBox="0 0 16 16"
@@ -233,71 +232,96 @@ const UnitDetailPage = () => {
           {/* Sidebar */}
           <div className="lg:w-1/4 p-4 lg:fixed top-0 w-full lg:max-w-sm lg:max-h-screen lg:h-auto flex justify-center z-10 lg:sticky lg:top-24">
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
-              <div className="flex items-center space-x-4">
+              {/* Profil Image et Titre */}
+              <div className="flex flex-col items-center space-y-4">
                 {loadingUnit ? (
                   <Skeleton.Avatar active size="large" shape="circle" />
                 ) : (
-                  <div className="flex-shrink-0">
+                  <div
+                    className="w-20 h-20 rounded-full overflow-hidden"
+                    style={{
+                      boxShadow: `${color} 0 0 10px, ${color} 0 0 20px, ${color} 0 0 30px`,
+                    }}
+                  >
                     <AntImage
                       src={getImageUrl(unit?.profileImage || "")}
                       alt={`${unit?.title} Profile`}
                       width={80}
                       height={80}
-                      className="w-20 h-20 object-cover rounded-full aspect-square"
+                      className="w-full h-full object-cover rounded-full"
                       preview={false}
                     />
                   </div>
                 )}
-                <h2 className="text-2xl font-oxanium text-white">
+                <h2 className="text-xl font-iceberg text-white">
                   {unit?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
                 </h2>
                 <Badge role={unit?.type || "DEFAULT"} />
               </div>
 
+              {/* Navigation des Onglets */}
               <nav className="mt-8">
                 <ul className="space-y-4">
+                  {/* Biographie */}
                   <li>
                     <button
-                      className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-white hover:text-black ${
+                      className={`flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-gray-700 hover:text-white ${
                         activeSection === "biographie"
-                          ? "bg-white text-black"
+                          ? "border-l-4" // Bordure gauche prononcée
                           : "text-gray-400"
                       }`}
                       onClick={() => handleMenuClick("biographie")}
+                      style={{
+                        borderLeftColor: activeSection === "biographie" ? color : "transparent",
+                        boxShadow: activeSection === "biographie" ? `0 0 10px ${color}` : "none",
+                      }}
                     >
                       <FaBook className="text-xl" />
-                      <span>Biographie</span>
+                      <span className="font-iceberg">Biographie</span>
                     </button>
                   </li>
+
+                  {/* Nouvelles */}
                   <li>
                     <button
-                      className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-white hover:text-black ${
-                        activeSection === "galerie"
-                          ? "bg-white text-black"
-                          : "text-gray-400"
-                      }`}
-                      onClick={() => handleMenuClick("galerie")}
-                    >
-                      <FaImage className="text-xl" />
-                      <span>Galerie</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className={`text-lg font-kanit flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-white hover:text-black ${
+                      className={`flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-gray-700 hover:text-white ${
                         activeSection === "nouvelles"
-                          ? "bg-white text-black"
+                          ? "border-l-4"
                           : "text-gray-400"
                       }`}
                       onClick={() => handleMenuClick("nouvelles")}
+                      style={{
+                        borderLeftColor: activeSection === "nouvelles" ? color : "transparent",
+                        boxShadow: activeSection === "nouvelles" ? `0 0 10px ${color}` : "none",
+                      }}
                     >
                       <FaNewspaper className="text-xl" />
-                      <span>Nouvelles</span>
+                      <span className="font-iceberg">Nouvelles</span>
+                    </button>
+                  </li>
+
+                  {/* Galerie */}
+                  <li>
+                    <button
+                      className={`flex items-center space-x-3 py-3 px-4 w-full text-left transition-colors duration-200 rounded hover:bg-gray-700 hover:text-white ${
+                        activeSection === "galerie"
+                          ? "border-l-4"
+                          : "text-gray-400"
+                      }`}
+                      onClick={() => handleMenuClick("galerie")}
+                      style={{
+                        borderLeftColor: activeSection === "galerie" ? color : "transparent",
+                        boxShadow: activeSection === "galerie" ? `0 0 10px ${color}` : "none",
+                      }}
+                    >
+                      <FaImage className="text-xl" />
+                      <span className="font-iceberg">Galerie</span>
                     </button>
                   </li>
                 </ul>
               </nav>
 
+              {/* Classes Liées */}
               {relatedClasses.length > 0 && (
                 <div className="mt-8">
                   {relatedClasses.map((relatedClass) => (
@@ -311,7 +335,7 @@ const UnitDetailPage = () => {
                           width={200}
                           height={200}
                           className="w-64 h-64 object-cover rounded-full mx-auto mb-4 hover:scale-105 transition-transform duration-300"
-                          style={{ minWidth: "16rem", minHeight: "16rem" }} // Assurer des dimensions minimales
+                          style={{ minWidth: "16rem", minHeight: "16rem" }}
                           preview={false}
                         />
                       )}
@@ -334,7 +358,7 @@ const UnitDetailPage = () => {
             {activeSection === "biographie" && (
               <div className="relative z-10">
                 <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
-                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
+                  <h2 className="text-3xl font-bold font-iceberg text-white mb-8">
                     Biographie
                   </h2>
                   {loadingUnit ? (
@@ -355,7 +379,7 @@ const UnitDetailPage = () => {
             {activeSection === "galerie" && (
               <div className="relative z-10">
                 <div className="mt-12 px-4 sm:px-8 lg:px-16">
-                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8 text-left">
+                  <h2 className="text-3xl font-bold font-iceberg text-white mb-8 text-left">
                     Galerie
                   </h2>
                   <Masonry
@@ -397,7 +421,7 @@ const UnitDetailPage = () => {
             {activeSection === "nouvelles" && (
               <div className="relative z-10">
                 <div className="mt-12 px-4 sm:px-8 lg:px-16 text-left">
-                  <h2 className="text-3xl font-bold font-oxanium text-white mb-8">
+                  <h2 className="text-3xl font-bold font-iceberg text-white mb-8">
                     Nouvelles
                   </h2>
 
@@ -453,9 +477,9 @@ const UnitDetailPage = () => {
               style={{ 
                 width: "100%", 
                 height: "100%", 
-                objectFit: "cover",   // Ensures the image covers the area without distortion
-                objectPosition: "center center",  // Centers the image
-                overflow: "hidden"    // Prevents image overflow
+                objectFit: "cover",
+                objectPosition: "center center",
+                overflow: "hidden"
               }}
             />
           )}
