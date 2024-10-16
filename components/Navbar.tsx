@@ -140,7 +140,7 @@ export default function Navbar() {
                 alt="Logo Spectral"
                 width={150}
                 height={50}
-                className="object-contain max-h-12" // Ajuster la hauteur maximale
+                className="object-contain max-h-12" // Ajuster la hauteur maximale pour éviter le débordement
               />
             </div>
             <div className="block md:hidden">
@@ -149,7 +149,7 @@ export default function Navbar() {
                 alt="Logo Spectral"
                 width={50}
                 height={50}
-                className="object-contain max-h-10" // Ajuster la hauteur maximale
+                className="object-contain max-h-10" // Ajuster la hauteur maximale pour éviter le débordement
               />
             </div>
           </Link>
