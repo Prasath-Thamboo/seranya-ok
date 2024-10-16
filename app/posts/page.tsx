@@ -8,7 +8,7 @@ import { fetchPosts } from '@/lib/queries/PostQueries';
 import { PostModel, PostType } from '@/lib/models/PostModels';
 import HeroSection from '@/components/HeroSection';
 import { fetchRandomBackground } from '@/lib/queries/RandomBackgroundQuery';
-import TestRandomBackground from '@/components/TestRandomBackground';// Import du composant de test
+import TestRandomBackground from '@/components/TestRandomBackground'; // Composant de test
 
 const PostsPage: React.FC = () => {
   const [posts, setPosts] = React.useState<PostModel[]>([]);

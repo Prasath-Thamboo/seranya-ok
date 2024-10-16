@@ -2,6 +2,7 @@
 
 export const fetchRandomBackground = async (): Promise<string> => {
     try {
+      console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL); // Vérification
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/random-background`);
       if (!response.ok) {
         throw new Error('Erreur lors de la récupération de l\'image de fond');
