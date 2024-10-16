@@ -138,18 +138,18 @@ export default function Navbar() {
               <Image
                 src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
                 alt="Logo Spectral"
-                width={200} // Augmentation de la largeur
-                height={80} // Augmentation de la hauteur
-                className="object-contain max-h-20" // Ajuster la hauteur maximale
+                width={180} // Réduction de la largeur de 200 à 180
+                height={70} // Réduction de la hauteur de 80 à 70
+                className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
               />
             </div>
             <div className="block md:hidden">
               <Image
                 src="/logos/spectral-favicon-color.png" // Assurez-vous que ce chemin est correct
                 alt="Logo Spectral"
-                width={70} // Augmentation de la largeur pour mobile
-                height={70} // Augmentation de la hauteur pour mobile
-                className="object-contain max-h-16" // Ajuster la hauteur maximale
+                width={60} // Réduction de la largeur de 70 à 60
+                height={60} // Réduction de la hauteur de 70 à 60
+                className="object-contain max-h-14" // Réduction de max-h-16 à max-h-14 (3.5rem)
               />
             </div>
           </Link>
