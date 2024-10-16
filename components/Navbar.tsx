@@ -132,24 +132,24 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 p-2"> {/* Ajout de padding */}
           <Link href="/">
             <div className="hidden md:block">
               <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent.png" // Remplacez par votre ancien logo si nécessaire
+                src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
                 alt="Logo Spectral"
-                width={150}
-                height={50}
-                className="object-contain max-h-12" // Ajuster la hauteur maximale pour éviter le débordement
+                width={200} // Augmentation de la largeur
+                height={80} // Augmentation de la hauteur
+                className="object-contain max-h-20" // Ajuster la hauteur maximale
               />
             </div>
             <div className="block md:hidden">
               <Image
-                src="/logos/spectral-favicon-color.png" // Remplacez par votre ancien logo si nécessaire
+                src="/logos/spectral-favicon-color.png" // Assurez-vous que ce chemin est correct
                 alt="Logo Spectral"
-                width={50}
-                height={50}
-                className="object-contain max-h-10" // Ajuster la hauteur maximale pour éviter le débordement
+                width={70} // Augmentation de la largeur pour mobile
+                height={70} // Augmentation de la hauteur pour mobile
+                className="object-contain max-h-16" // Ajuster la hauteur maximale
               />
             </div>
           </Link>
@@ -192,7 +192,7 @@ export default function Navbar() {
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer group">
                 {profileImageUrl ? (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300">
                     <Image
                       src={profileImageUrl}
                       alt="User Avatar"
@@ -202,17 +202,17 @@ export default function Navbar() {
                     />
                   </div>
                 ) : (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center">
-                    <span className="text-white text-lg font-iceberg">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center">
+                    <span className="text-white text-xl font-iceberg">
                       {user.pseudo.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
-                <span className="ml-2 text-white font-iceberg shadow-text group-hover:text-teal-500 transition-colors duration-200">
+                <span className="ml-3 text-white font-iceberg shadow-text group-hover:text-teal-500 transition-colors duration-200">
                   {user.pseudo}
                 </span>
                 {user.role && (
-                  <div className="ml-2">
+                  <div className="ml-3">
                     <Badge role={user.role} />
                   </div>
                 )}
@@ -221,12 +221,12 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
+                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-6 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
+                <button className="relative group bg-teal-500 text-white font-semibold py-2 px-6 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg">
                   Inscription
                 </button>
               </Link>
