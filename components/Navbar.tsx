@@ -10,7 +10,7 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { RegisterUserModel } from "@/lib/models/AuthModels";
 import Badge from "@/components/Badge";
 import { Dropdown, Menu } from "antd";
-import { FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { FiLogOut, FiMenu, FiX, FiLogIn, FiUserPlus } from "react-icons/fi"; // Import des icônes FiLogIn et FiUserPlus
 import { FaChevronDown } from "react-icons/fa"; // Utilisation de FaChevronDown
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import React from "react";
@@ -135,12 +135,12 @@ export default function Navbar() {
         <div className="flex-shrink-0 p-1"> {/* Réduction de p-2 à p-1 */}
           <Link href="/">
             <div className="hidden md:block">
-            <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
+              <Image
+                src="/logos/spectral-high-resolution-logo-white-transparent-1.png" // Utiliser un nom de fichier sans espaces ni parenthèses
                 alt="Logo Spectral"
-                width={180} // Réduction de la largeur de 200 à 180
-                height={70} // Réduction de la hauteur de 80 à 70
-                className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
+                width={160} // Réduction de la largeur de 180 à 160
+                height={60} // Réduction de la hauteur de 70 à 60
+                className="object-contain max-h-14" // Réduction de max-h-16 à max-h-14 (3.5rem)
               />
             </div>
             <div className="block md:hidden">
@@ -221,12 +221,14 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login">
-                <button className="relative group bg-teal-500 text-white font-semibold py-1 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-base"> {/* Réduction de py-2 px-6 à py-1 px-4 et text-lg à text-base */}
+                <button className="flex items-center relative group bg-teal-500 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg"> {/* Augmentation de py et px, text-base à text-lg */}
+                  <FiLogIn className="mr-2 w-5 h-5" /> {/* Icône de Connexion */}
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button className="relative group bg-teal-500 text-white font-semibold py-1 px-4 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-base"> {/* Réduction de py-2 px-6 à py-1 px-4 et text-lg à text-base */}
+                <button className="flex items-center relative group bg-teal-500 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-teal-600 shadow-neon font-iceberg uppercase text-lg"> {/* Augmentation de py et px, text-base à text-lg */}
+                  <FiUserPlus className="mr-2 w-5 h-5" /> {/* Icône d'Inscription */}
                   Inscription
                 </button>
               </Link>
@@ -318,10 +320,10 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/auth/login" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-                  Connexion
+                  <span className="shadow-text">Connexion</span>
                 </Link>
                 <Link href="/auth/register" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-                  Inscription
+                  <span className="shadow-text">Inscription</span>
                 </Link>
               </>
             )}
