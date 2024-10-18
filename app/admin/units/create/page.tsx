@@ -176,18 +176,20 @@ const CreateUnit = () => {
           </Form.Item>
 
           {/* Champ : Color Picker */}
-          <Form.Item
-            name="color"
-            label={<span className="font-kanit text-black">Couleur</span>}
-            rules={[
-              { required: true, message: "Veuillez sélectionner une couleur!" },
-              {
-                pattern: /^#([0-9A-F]{3}){1,2}$/i,
-                message: "Veuillez sélectionner une couleur valide.",
-              },
-            ]}
-          >
-            </Form.Item>
+{/* Champ : Color Picker */}
+<Form.Item
+  name="color"
+  label={<span className="font-kanit text-black">Couleur</span>}
+  rules={[
+    { required: true, message: "Veuillez sélectionner une couleur!" },
+    {
+      pattern: /^#([0-9A-F]{3}){1,2}$/i,
+      message: "Veuillez sélectionner une couleur valide.",
+    },
+  ]}
+>
+  <Input type="color" className="w-12 h-12 p-0 border-none" />
+</Form.Item>
 
           <Form.Item
             name="story"
