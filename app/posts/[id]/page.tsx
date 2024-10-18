@@ -8,9 +8,8 @@ import { Skeleton, Image as AntImage } from "antd";
 import Badge from "@/components/Badge";
 import Masonry from "react-masonry-css";
 import Footer from "@/components/Footer";
-import { FaLock, FaNewspaper } from "react-icons/fa";
 import Link from "next/link";
-import Image from 'next/image'; // Importez Next.js Image si vous l'utilisez
+import Image from 'next/image'; // Utilisez Next.js Image pour une meilleure optimisation
 
 const PostDetailPage = () => {
   const params = useParams();
@@ -60,43 +59,56 @@ const PostDetailPage = () => {
 
   return (
     <div className="relative w-full min-h-screen text-white font-iceberg bg-gray-900">
-      {/* Image Header Section */}
-      <div className="w-full flex justify-center p-6">
-        {loadingPost ? (
-          <Skeleton.Image style={{ width: '100%', maxWidth: '768px', height: 400 }} active />
-        ) : (
-          post?.headerImage ? (
-            <div className="w-full max-w-3xl rounded-lg overflow-hidden shadow-lg">
-              {/* Utilisez Next.js Image pour une meilleure optimisation */}
-              <Image
-                src={post.headerImage}
-                alt={`${post.title} Header Image`}
-                width={1200} // Ajustez selon vos besoins
-                height={400} // Ajustez selon vos besoins
-                layout="responsive"
-                className="object-cover"
-              />
-              {/* Si vous préférez utiliser AntImage, utilisez ce code à la place :
-              <AntImage
-                src={post.headerImage}
-                alt={`${post.title} Header Image`}
-                width={768}
-                height={400}
-                className="w-full max-w-3xl h-auto rounded-lg shadow-lg mx-auto object-cover"
-              />
-              */}
-            </div>
-          ) : (
-            <p className="text-gray-400 italic">Aucune image d&apos;en-tête disponible.</p>
-          )
-        )}
-      </div>
+      {/* Image de Fond Fixe */}
+      <div
+        className="fixed inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${post?.headerImage || ""})`,
+          backgroundAttachment: "fixed",
+          filter: "brightness(25%)",
+          zIndex: -1, // Assure que l'image de fond reste derrière tout le contenu
+        }}
+      />
 
       <div className="relative z-10">
-        {/* Main Content with Sidebar */}
+        {/* Main Content avec Sidebar */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
-          {/* Left Column: Sidebar */}
-          <div className="lg:w-1/4 p-4 lg:sticky lg:top-24 lg:max-h-screen overflow-auto">
+          {/* Colonne de Gauche : Sidebar */}
+          <div className="lg:w-1/4 p-4">
+            {/* Image Header dans la Sidebar */}
+            <div className="w-full mb-6">
+              {loadingPost ? (
+                <Skeleton.Image style={{ width: '100%', height: 200 }} active />
+              ) : (
+                post?.headerImage ? (
+                  <div className="w-full rounded-lg overflow-hidden shadow-lg">
+                    {/* Utilisez Next.js Image */}
+                    <Image
+                      src={post.headerImage}
+                      alt={`${post.title} Header Image`}
+                      width={400} // Ajustez selon vos besoins
+                      height={200} // Ajustez selon vos besoins
+                      layout="responsive"
+                      className="object-cover"
+                    />
+                    {/* Si vous préférez utiliser AntImage, commentez le composant Next.js Image ci-dessus et décommentez celui-ci :
+                    <AntImage
+                      src={post.headerImage}
+                      alt={`${post.title} Header Image`}
+                      width={400}
+                      height={200}
+                      className="w-full h-auto rounded-lg shadow-lg object-cover"
+                      preview={false}
+                    />
+                    */}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 italic">Aucune image d&apos;en-tête disponible.</p>
+                )
+              )}
+            </div>
+
+            {/* Sidebar : Posts Similaires */}
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
               <h2 className="text-xl font-iceberg text-white mb-4">Posts similaires</h2>
 
@@ -120,7 +132,7 @@ const PostDetailPage = () => {
             </div>
           </div>
 
-          {/* Right Column: Content */}
+          {/* Colonne de Droite : Contenu */}
           <div className="lg:w-3/4 p-6">
             {loadingPost ? (
               <Skeleton active paragraph={{ rows: 5 }} />
@@ -146,7 +158,7 @@ const PostDetailPage = () => {
               </div>
             )}
 
-            {/* Gallery Section */}
+            {/* Section Galerie */}
             {post?.gallery && post.gallery.length > 0 && (
               <div className="mt-12">
                 <h2 className="text-3xl font-bold font-iceberg text-white mb-8">Galerie</h2>
@@ -162,6 +174,7 @@ const PostDetailPage = () => {
                         alt={`${post.title} Gallery Image ${index + 1}`}
                         className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
                         style={{ objectFit: "cover", aspectRatio: "16/9" }}
+                        preview={false}
                       />
                     </div>
                   ))}
