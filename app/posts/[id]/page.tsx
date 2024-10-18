@@ -69,14 +69,14 @@ const PostDetailPage = () => {
         }}
       />
 
-      <div className="relative z-10 mt-16"> {/* Ajout de mt-16 pour laisser l'espace de la navbar */}
+      <div className="relative z-10 mt-28"> {/* Ajout de mt-16 pour laisser l'espace de la navbar */}
 
         {/* Header Section: Retiré pour éviter la duplication */}
 
         {/* Main Content with Sidebar */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
           {/* Left Column: Sidebar avec l'image header normale et les posts similaires */}
-          <div className="lg:w-1/4 p-4">
+          <div className="lg:w-2/5 p-4">
             {/* Image Header Normale dans la Sidebar */}
             <div className="mb-6">
               {loadingPost ? (
@@ -133,7 +133,7 @@ const PostDetailPage = () => {
           </div>
 
           {/* Right Column: Content */}
-          <div className="lg:w-3/4 p-6">
+          <div className="lg:w-3/5 p-6">
             {loadingPost ? (
               <Skeleton active paragraph={{ rows: 5 }} />
             ) : (
