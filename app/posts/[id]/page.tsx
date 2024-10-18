@@ -69,7 +69,8 @@ const PostDetailPage = () => {
         }}
       />
 
-      <div className="relative z-10">
+      <div className="relative z-10 mt-16"> {/* Ajout de mt-16 pour laisser l'espace de la navbar */}
+
         {/* Header Section: Retiré pour éviter la duplication */}
 
         {/* Main Content with Sidebar */}
@@ -79,16 +80,15 @@ const PostDetailPage = () => {
             {/* Image Header Normale dans la Sidebar */}
             <div className="mb-6">
               {loadingPost ? (
-                <Skeleton.Image style={{ width: '100%', height: 200 }} active />
+                <Skeleton.Image style={{ width: '100%', height: 300 }} active />
               ) : (
                 post?.headerImage ? (
                   <div className="w-full rounded-lg overflow-hidden shadow-lg">
                     {/* Utilisez Next.js Image pour une meilleure optimisation */}
                     <Image
                       src={post.headerImage}
-                      alt={`${post.title} Header Image`}
-                      width={768} // Ajustez selon vos besoins
-                      height={400} // Ajustez selon vos besoins
+                      alt={`${post.title} Header Image`} // Ajustez selon vos besoins
+                      height={600} // Ajustez selon vos besoins
                       layout="responsive"
                       className="object-cover"
                     />
