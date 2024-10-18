@@ -92,7 +92,7 @@ export interface UpdatePostModel {
   profileImage?: File | null;
   headerImage?: File | null;
   footerImage?: File | null;
-  gallery?: FileList | null;
+  gallery?: File[] | null;
   galleryImagesToDelete?: string[];
   unitIds?: string[];
   classIds?: string[];
