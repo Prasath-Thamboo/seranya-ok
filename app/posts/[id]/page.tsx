@@ -155,10 +155,7 @@ const PostDetailPage = () => {
                   className="prose prose-lg sm:prose-xl md:prose-2xl text-gray-300"
                   dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
                 />
-              </div>
-            )}
-
-            {/* Gallery Section */}
+                  {/* Gallery Section */}
             {post?.gallery && post.gallery.length > 0 && (
               <div className="mt-12">
                 <h2 className="text-3xl font-bold font-iceberg text-white mb-8">Galerie</h2>
@@ -180,6 +177,12 @@ const PostDetailPage = () => {
                 </Masonry>
               </div>
             )}
+              </div>
+
+              
+            )}
+
+          
           </div>
         </div>
       </div>
