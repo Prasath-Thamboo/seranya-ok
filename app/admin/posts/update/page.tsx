@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { PostModel, PostType, UpdatePostModel, ClassModel } from "@/lib/models/PostModels";
+import { FileType } from "@/lib/models/UnitModels"; // Ajout de l'import
 import type { UploadFile } from 'antd/es/upload/interface';
 import { fetchPostById } from "@/lib/queries/PostQueries";
 import dynamic from 'next/dynamic';
@@ -82,6 +83,11 @@ const UpdatePost = () => {
     }
   }, [numericId, form, addNotification, backendUrl]);
 
+  // Fonction de garde de type pour vérifier si un fichier est UploadFile avec originFileObj
+  const isUploadFile = (file: FileType): file is UploadFile & { originFileObj: File } => {
+    return typeof file !== 'string' && (file as UploadFile).originFileObj !== undefined;
+  };
+
   const handleSubmit = async (values: UpdatePostModel) => {
     setLoading(true);
     try {
@@ -104,22 +110,30 @@ const UpdatePost = () => {
         });
       }
 
-      if (values.profileImage && Array.isArray(values.profileImage) && values.profileImage[0]?.originFileObj) {
-        formData.append('profileImage', values.profileImage[0].originFileObj as Blob);
-      }
-      if (values.headerImage && Array.isArray(values.headerImage) && values.headerImage[0]?.originFileObj) {
-        formData.append('headerImage', values.headerImage[0].originFileObj as Blob);
-      }
-      if (values.footerImage && Array.isArray(values.footerImage) && values.footerImage[0]?.originFileObj) {
-        formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
-      }
+      // Fonction de garde de type utilisée pour les images
+      const appendFile = (fileField: FileType | undefined, fieldName: string) => {
+        if (fileField && Array.isArray(fileField)) {
+          const file = fileField[0];
+          if (isUploadFile(file) && file.originFileObj) {
+            formData.append(fieldName, file.originFileObj as Blob);
+          }
+        }
+      };
 
-      // Ajout des images de galerie à supprimer
-      if (galleryImagesToDelete.length > 0) {
-        galleryImagesToDelete.forEach((imageId, index) => {
-          formData.append(`galleryImagesToDelete[${index}]`, imageId);
+      appendFile(values.profileImage, 'profileImage');
+      appendFile(values.headerImage, 'headerImage');
+      appendFile(values.footerImage, 'footerImage');
+
+      // Ajout des nouvelles images de la galerie
+      if (values.gallery && values.gallery.length > 0) {
+        values.gallery.forEach((file) => {
+          if (isUploadFile(file) && file.originFileObj) {
+            formData.append('gallery', file.originFileObj as Blob);
+          }
         });
       }
+
+      // Ajout des images de galerie à supprimer (une seule fois)
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
@@ -127,7 +141,7 @@ const UpdatePost = () => {
       }
 
       // Log des données du formulaire envoyées (Optionnel, à retirer en production)
-      console.log("FormData sent:", formData);
+      console.log("FormData sent:", Array.from(formData.entries()));
 
       const response = await axios.patch(`${backendUrl}/posts/${id}`, formData, {
         headers: {
@@ -160,7 +174,7 @@ const UpdatePost = () => {
   const handleDeleteImage = (imageId: string) => {
     setGalleryImagesToDelete((prev) => [...prev, imageId]);
     setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
-    console.log("Images to delete (IDs):", galleryImagesToDelete);
+    console.log("Images to delete (IDs):", [...galleryImagesToDelete, imageId]);
   };
 
   return (

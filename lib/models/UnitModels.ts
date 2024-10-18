@@ -89,7 +89,7 @@ export interface UpdateUnitModel {
   profileImage?: FileType;
   headerImage?: FileType;
   footerImage?: FileType;
-  gallery?: FileType[];
+  gallery?: UploadFile[];
   galleryImagesToDelete?: string[];
   classIds?: string[];
 }

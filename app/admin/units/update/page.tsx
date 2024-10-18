@@ -141,6 +141,17 @@ const UpdateUnit = () => {
         formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
       }
 
+
+      if (values.gallery && values.gallery.length > 0) {
+        values.gallery.forEach((file: UploadFile) => {
+          if (file.originFileObj) {
+            formData.append('gallery', file.originFileObj as Blob);
+          }
+        });
+      }
+      
+
+
       // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
