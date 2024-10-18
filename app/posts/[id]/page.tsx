@@ -34,27 +34,12 @@ const PostDetailPage = () => {
       }
     };
 
-    const fetchRelatedPosts = async () => {
-      try {
-        const fetchedPosts = await fetchPosts();
-        const filteredPosts = fetchedPosts.filter(
-          (p) => p.type === post?.type && p.id !== post?.id
-        );
-        setRelatedPosts(filteredPosts);
-      } catch (error) {
-        console.error("Error fetching related posts:", error);
-      } finally {
-        setLoadingRelatedPosts(false);
-      }
-    };
-
     fetchPost();
-    // fetchRelatedPosts dépend de post?.type, donc on le déclenche après fetchPost
-  }, [id, post?.type]);
+  }, [id]);
 
   useEffect(() => {
-    if (post) {
-      const fetchRelatedPosts = async () => {
+    const fetchRelatedPosts = async () => {
+      if (post) {
         try {
           const fetchedPosts = await fetchPosts();
           const filteredPosts = fetchedPosts.filter(
@@ -66,36 +51,31 @@ const PostDetailPage = () => {
         } finally {
           setLoadingRelatedPosts(false);
         }
-      };
+      }
+    };
 
-      fetchRelatedPosts();
-    }
+    fetchRelatedPosts();
   }, [post]);
 
   return (
-    <div className="relative w-full min-h-screen text-white font-iceberg">
-      {/* Background Header */}
-      <div
-        className="fixed inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${post?.headerImage || ""})`,
-          backgroundAttachment: "fixed",
-          filter: "brightness(25%)",
-        }}
-      />
+    <div className="relative w-full min-h-screen text-white font-iceberg bg-gray-900">
+      {/* Image Header Section */}
+      <div className="w-full flex justify-center p-6">
+        {loadingPost ? (
+          <Skeleton.Image style={{ width: '100%', maxWidth: '768px', height: 400 }} active />
+        ) : (
+          post?.headerImage && (
+            <AntImage
+              src={post.headerImage}
+              alt="Header Image"
+              className="w-full max-w-3xl h-auto rounded-lg shadow-lg mx-auto"
+              preview={false}
+            />
+          )
+        )}
+      </div>
 
       <div className="relative z-10">
-        {/* Header Section */}
-        <div className="relative h-60 sm:h-80 md:h-96 flex items-center justify-center">
-          {loadingPost ? (
-            <Skeleton active paragraph={{ rows: 2 }} />
-          ) : (
-            <>
-              {/* Optionnel : Vous pouvez garder une image de fond ou un autre contenu ici */}
-            </>
-          )}
-        </div>
-
         {/* Main Content with Sidebar */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
           {/* Content Section */}
@@ -104,7 +84,7 @@ const PostDetailPage = () => {
               <Skeleton active paragraph={{ rows: 5 }} />
             ) : (
               <div className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
-                {/* Titre et Sous-titre déplacés ici */}
+                {/* Titre et Sous-titre */}
                 <div className="mb-6">
                   <h1 className="text-4xl sm:text-5xl md:text-6xl font-iceberg uppercase text-white drop-shadow-lg">
                     {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
@@ -117,7 +97,8 @@ const PostDetailPage = () => {
                   )}
                 </div>
                 {/* Contenu du post */}
-                <p
+                <div
+                  className="prose prose-lg sm:prose-xl md:prose-2xl text-gray-300"
                   dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
                 />
               </div>
@@ -173,6 +154,7 @@ const PostDetailPage = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };
