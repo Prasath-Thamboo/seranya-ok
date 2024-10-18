@@ -114,11 +114,20 @@ const UpdatePost = () => {
         formData.append('footerImage', values.footerImage[0].originFileObj as Blob);
       }
 
+      // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
         });
       }
+      if (galleryImagesToDelete.length > 0) {
+        galleryImagesToDelete.forEach((imageId, index) => {
+          formData.append(`galleryImagesToDelete[${index}]`, imageId);
+        });
+      }
+
+      // Log des données du formulaire envoyées (Optionnel, à retirer en production)
+      console.log("FormData sent:", formData);
 
       const response = await axios.patch(`${backendUrl}/posts/${id}`, formData, {
         headers: {
@@ -204,11 +213,10 @@ const UpdatePost = () => {
           <Form.Item
             name="color"
             label={<span className="text-black font-kanit">Couleur</span>}
-            rules={[{
-              required: true,
-              message: "Veuillez sélectionner une couleur !",
-              pattern: /^#([0-9A-F]{3}){1,2}$/i,
-            }]}
+            rules={[
+              { required: true, message: "Veuillez sélectionner une couleur !" }, // Validation requise
+              { pattern: /^#([0-9A-F]{3}){1,2}$/i, message: "Veuillez sélectionner une couleur valide." }, // Validation de format
+            ]}
           >
             <Input type="color" className="w-12 h-12" />
           </Form.Item>
@@ -225,6 +233,7 @@ const UpdatePost = () => {
               <Option value={PostType.SCIENCE}>Science</Option>
               <Option value={PostType.PHILO}>Philo</Option>
               <Option value={PostType.UNIVERS}>Univers</Option>
+              <Option value={PostType.REGION}>Région</Option>
             </Select>
           </Form.Item>
 
@@ -247,46 +256,94 @@ const UpdatePost = () => {
             </Select>
           </Form.Item>
 
-          {/* Profile Image */}
+          {/* Image de Profil */}
           <Form.Item label={<span className="text-black font-kanit">Image de profil</span>}>
-            <Form.Item
-              name="profileImage"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload name="profileImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                <Button icon={<UploadOutlined />}>Télécharger</Button>
-              </Upload>
-            </Form.Item>
+            <Row gutter={16} align="middle">
+              <Col xs={24} sm={12}>
+                {post?.profileImage && (
+                  <div className="w-full h-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={post.profileImage}
+                      alt="Profil actuel"
+                      className="w-full h-full object-cover"
+                      preview={false}
+                    />
+                  </div>
+                )}
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  name="profileImage"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload name="profileImage" listType="picture" maxCount={1} beforeUpload={() => false}>
+                    <Button icon={<UploadOutlined />}>Télécharger</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form.Item>
 
-          {/* Header Image */}
+          {/* Image Header */}
           <Form.Item label={<span className="text-black font-kanit">Image Header</span>}>
-            <Form.Item
-              name="headerImage"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload name="headerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                <Button icon={<UploadOutlined />}>Télécharger</Button>
-              </Upload>
-            </Form.Item>
+            <Row gutter={16} align="middle">
+              <Col xs={24} sm={12}>
+                {post?.headerImage && (
+                  <div className="w-full h-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={post.headerImage}
+                      alt="Header actuel"
+                      className="w-full h-full object-cover"
+                      preview={false}
+                    />
+                  </div>
+                )}
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  name="headerImage"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload name="headerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
+                    <Button icon={<UploadOutlined />}>Télécharger</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form.Item>
 
-          {/* Footer Image */}
+          {/* Image Footer */}
           <Form.Item label={<span className="text-black font-kanit">Image de pied de page</span>}>
-            <Form.Item
-              name="footerImage"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload name="footerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                <Button icon={<UploadOutlined />}>Télécharger</Button>
-              </Upload>
-            </Form.Item>
+            <Row gutter={16} align="middle">
+              <Col xs={24} sm={12}>
+                {post?.footerImage && (
+                  <div className="w-full h-48 overflow-hidden rounded-lg">
+                    <Image
+                      src={post.footerImage}
+                      alt="Pied de page actuel"
+                      className="w-full h-full object-cover"
+                      preview={false}
+                    />
+                  </div>
+                )}
+              </Col>
+              <Col xs={24} sm={12}>
+                <Form.Item
+                  name="footerImage"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload name="footerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
+                    <Button icon={<UploadOutlined />}>Télécharger</Button>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
           </Form.Item>
 
           {/* Galerie */}
