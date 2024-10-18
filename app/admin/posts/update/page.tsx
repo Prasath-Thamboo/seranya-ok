@@ -1,20 +1,20 @@
 "use client";
 
-import { Form, Input, Button, Select, Image, Row, Col, Card } from "antd";
+import { Form, Input, Button, Select, Image, Row, Col, Card, Upload } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { PostModel, PostType, UpdatePostModel, ClassModel } from "@/lib/models/PostModels";
-import { fetchPostById } from "@/lib/queries/PostQueries";
+import { fetchPostById, updatePost } from "@/lib/queries/PostQueries"; // Assurez-vous que 'updatePost' est bien exporté
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Importer le style de l'éditeur Quill
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const UpdatePost = () => {
+const UpdatePostComponent = () => {
   const [form] = Form.useForm<UpdatePostModel>();
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostModel | null>(null);
@@ -34,12 +34,12 @@ const UpdatePost = () => {
 
   useEffect(() => {
     if (numericId !== null) {
-      const loadPost = async () => {
+      const loadPostData = async () => {
         try {
           const data = await fetchPostById(numericId);
 
           if (data) {
-            // Chargement des images de la galerie
+            // Charger les images de la galerie
             const galleryUploads = data.uploads?.filter((upload) => upload.type === "GALERY") || [];
 
             const galleryUrls = galleryUploads.map((upload) => ({
@@ -67,7 +67,7 @@ const UpdatePost = () => {
         }
       };
 
-      const loadClasses = async () => {
+      const loadClassesData = async () => {
         try {
           const response = await axios.get<ClassModel[]>(`${backendUrl}/classes`);
           setClasses(response.data);
@@ -77,8 +77,8 @@ const UpdatePost = () => {
         }
       };
 
-      loadPost();
-      loadClasses();
+      loadPostData();
+      loadClassesData();
     }
   }, [numericId, form, addNotification, backendUrl]);
 
@@ -117,7 +117,7 @@ const UpdatePost = () => {
 
       // Ajouter les nouvelles images de la galerie
       if (values.gallery && values.gallery.length > 0) {
-        Array.from(values.gallery).forEach((file) => {
+        values.gallery.forEach((file) => {
           formData.append('gallery', file);
         });
       }
@@ -132,14 +132,9 @@ const UpdatePost = () => {
       // Log des données du formulaire envoyées (Optionnel, à retirer en production)
       console.log("FormData sent:", Array.from(formData.entries()));
 
-      const response = await axios.patch(`${backendUrl}/posts/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await updatePost(numericId!, values, token); // Utiliser la fonction updatePost de PostQueries.ts
 
-      if (response.data) {
+      if (response) {
         addNotification("success", "Post mis à jour avec succès !");
         router.push("/admin/posts");
       } else {
@@ -151,14 +146,6 @@ const UpdatePost = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Norme pour le fichier uploadé
-  const normFile = (e: any): FileList | null => {
-    if (e && e.target && e.target.files) {
-      return e.target.files;
-    }
-    return null;
   };
 
   // Gestion de la suppression d'une image de galerie
@@ -223,7 +210,7 @@ const UpdatePost = () => {
               { pattern: /^#([0-9A-F]{3}){1,2}$/i, message: "Veuillez sélectionner une couleur valide." }, // Validation de format
             ]}
           >
-            <Input type="color" className="w-12 h-12" />
+            <Input type="color" className="w-12 h-12 p-0 border-none" />
           </Form.Item>
 
           <Form.Item
@@ -358,9 +345,23 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Galerie */}
-          <div className="bg-gray-200 p-4 rounded-lg mb-4">
-            <h2 className="text-black mb-4">Galerie</h2>
-            {visibleGallery.length > 0 && (
+          <Form.Item label={<span className="text-black font-kanit">Galerie</span>}>
+            <Upload
+              multiple
+              beforeUpload={() => false} // Empêche l'upload automatique
+              onChange={(info) => {
+                const files = info.fileList.map(file => file.originFileObj).filter(file => file !== undefined) as File[];
+                form.setFieldsValue({ gallery: files });
+              }}
+              showUploadList={false} // Masque la liste d'uploads par défaut
+            >
+              <Button icon={<PlusOutlined />}>Ajouter des images</Button>
+            </Upload>
+          </Form.Item>
+
+          {visibleGallery.length > 0 && (
+            <div className="bg-gray-200 p-4 rounded-lg mb-4">
+              <h2 className="text-black mb-4">Galerie existante</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {visibleGallery.map((image, index) => (
                   <Card key={image.id} hoverable className="overflow-hidden">
@@ -378,21 +379,8 @@ const UpdatePost = () => {
                   </Card>
                 ))}
               </div>
-            )}
-            <Input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                const files = e.target.files;
-                if (files) {
-                  form.setFieldsValue({ gallery: files });
-                } else {
-                  form.setFieldsValue({ gallery: null });
-                }
-              }}
-            />
-          </div>
+            </div>
+          )}
 
           <Form.Item className="flex justify-center">
             <Button
@@ -410,4 +398,4 @@ const UpdatePost = () => {
   );
 };
 
-export default UpdatePost;
+export default UpdatePostComponent;
