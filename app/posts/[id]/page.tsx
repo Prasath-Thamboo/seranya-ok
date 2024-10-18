@@ -87,29 +87,31 @@ const PostDetailPage = () => {
       <div className="relative z-10">
         {/* Header Section */}
         <div className="relative h-60 sm:h-80 md:h-96 flex items-center justify-center">
-        {loadingPost ? (
-    <Skeleton.Image style={{ width: '100%', maxWidth: '768px', height: 400 }} active />
-  ) : (
-    post?.headerImage ? (
-      <div className="w-full max-w-3xl rounded-lg overflow-hidden shadow-lg">
-
-        <AntImage
-          src={post.headerImage}
-          alt={`${post.title} Header Image`}
+          {loadingPost ? (
+            <Skeleton active paragraph={{ rows: 2 }} />
+          ) : (
+            <>
+<AntImage
+          src={post?.headerImage}
+          alt={`${post?.title} Header Image`}
           width={768}
           height={400}
           className="w-full max-w-3xl h-auto rounded-lg shadow-lg mx-auto object-cover"
         />
-
-      </div>
-    ) : (
-      <p className="text-gray-400 italic">Aucune image d&apos;en-tête disponible.</p>
-    )
-  )}
+            </>
+          )}
         </div>
 
         {/* Main Content with Sidebar */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
+
+        <AntImage
+          src={post?.headerImage}
+          alt={`${post?.title} Header Image`}
+          width={768}
+          height={400}
+          className="w-full max-w-3xl h-auto rounded-lg shadow-lg mx-auto object-cover"
+        />
           {/* Content Section */}
           <div className="lg:w-3/4 p-6">
             {loadingPost ? (
