@@ -58,56 +58,57 @@ const PostDetailPage = () => {
   }, [post]);
 
   return (
-    <div className="w-full min-h-screen text-white font-iceberg">
-      {/* En-tête avec Image */}
-      <div className="w-full">
-        {loadingPost ? (
-          <Skeleton.Image active className="w-full h-60 sm:h-80 md:h-96 object-cover" />
-        ) : (
-          post?.headerImage && (
-            <AntImage
-              src={post.headerImage}
-              alt="Header Image"
-              className="w-full h-60 sm:h-80 md:h-96 object-cover"
-              preview={false}
-            />
-          )
-        )}
-      </div>
+    <div className="relative w-full min-h-screen text-white font-iceberg bg-gray-900">
+      {/* Background Image (Optionnel: si vous souhaitez une image de fond générale) */}
+      {/* <div
+        className="fixed inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url('/path/to/your/background-image.jpg')`,
+          backgroundAttachment: "fixed",
+          filter: "brightness(25%)",
+        }}
+      /> */}
 
-      <div className="relative z-10 px-4 sm:px-6 lg:px-8">
-        {/* Header Section (Titre et Sous-titre) */}
-        <div className="mt-6 mb-12">
+      <div className="relative z-10">
+        {/* Header Image */}
+        <div className="w-full flex justify-center p-6">
           {loadingPost ? (
-            <Skeleton active paragraph={{ rows: 2 }} />
+            <Skeleton.Image style={{ width: '100%', maxWidth: '768px', height: 400 }} active />
           ) : (
-            <>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-iceberg uppercase text-white drop-shadow-lg text-center">
-                {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
-              </h1>
-              <div className="flex justify-center mt-4">
-                <Badge role={post?.type || "DEFAULT"} />
-              </div>
-              {post?.subtitle && (
-                <p className="mt-4 text-2xl sm:text-3xl md:text-4xl font-iceberg text-gray-300 drop-shadow-lg text-center">
-                  {post.subtitle}
-                </p>
-              )}
-            </>
+            post?.headerImage && (
+              <AntImage
+                src={post.headerImage}
+                alt="Header Image"
+                className="w-full max-w-3xl h-auto rounded-lg shadow-lg"
+                preview={false}
+              />
+            )
           )}
         </div>
 
         {/* Main Content with Sidebar */}
-        <div className="lg:flex lg:items-start lg:justify-center">
+        <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
           {/* Content Section */}
           <div className="lg:w-3/4 p-6">
             {loadingPost ? (
               <Skeleton active paragraph={{ rows: 5 }} />
             ) : (
               <div className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                {/* Titre et Sous-titre déplacés ici */}
+                <div className="mb-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-iceberg uppercase text-white drop-shadow-lg">
+                    {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
+                  </h1>
+                  <Badge role={post?.type || "DEFAULT"} />
+                  {post?.subtitle && (
+                    <p className="mt-4 text-2xl sm:text-3xl md:text-4xl font-iceberg text-gray-300 drop-shadow-lg">
+                      {post.subtitle}
+                    </p>
+                  )}
+                </div>
                 {/* Contenu du post */}
                 <div
-                  className="prose prose-lg sm:prose-xl lg:prose-2xl"
+                  className="prose prose-lg sm:prose-xl md:prose-2xl text-gray-300"
                   dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
                 />
               </div>
@@ -163,8 +164,6 @@ const PostDetailPage = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
