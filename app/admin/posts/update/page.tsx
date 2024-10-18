@@ -1,14 +1,12 @@
 "use client";
 
-import { Form, Input, Button, Upload, Select, Image, Row, Col, Card } from "antd";
-import { UploadOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Select, Image, Row, Col, Card } from "antd";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { PostModel, PostType, UpdatePostModel, ClassModel } from "@/lib/models/PostModels";
-import { FileType } from "@/lib/models/UnitModels"; // Ajout de l'import
-import type { UploadFile } from 'antd/es/upload/interface';
 import { fetchPostById } from "@/lib/queries/PostQueries";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Importer le style de l'éditeur Quill
@@ -60,6 +58,7 @@ const UpdatePost = () => {
               type: data.type || PostType.SCIENCE,
               classIds: data.postClasses?.map((c) => c.classId.toString()) || [],
               color: data.color || '#FFFFFF',
+              // Note: Les fichiers ne peuvent pas être pré-remplis dans les inputs de type file pour des raisons de sécurité
             });
           }
         } catch (error) {
@@ -83,11 +82,6 @@ const UpdatePost = () => {
     }
   }, [numericId, form, addNotification, backendUrl]);
 
-  // Fonction de garde de type pour vérifier si un fichier est UploadFile avec originFileObj
-  const isUploadFile = (file: FileType): file is UploadFile & { originFileObj: File } => {
-    return typeof file !== 'string' && (file as UploadFile).originFileObj !== undefined;
-  };
-
   const handleSubmit = async (values: UpdatePostModel) => {
     setLoading(true);
     try {
@@ -110,30 +104,25 @@ const UpdatePost = () => {
         });
       }
 
-      // Fonction de garde de type utilisée pour les images
-      const appendFile = (fileField: FileType | undefined, fieldName: string) => {
-        if (fileField && Array.isArray(fileField)) {
-          const file = fileField[0];
-          if (isUploadFile(file) && file.originFileObj) {
-            formData.append(fieldName, file.originFileObj as Blob);
-          }
+      // Ajouter les images de profil, header, footer
+      const appendFile = (fileField: File | null, fieldName: string) => {
+        if (fileField) {
+          formData.append(fieldName, fileField);
         }
       };
 
-      appendFile(values.profileImage, 'profileImage');
-      appendFile(values.headerImage, 'headerImage');
-      appendFile(values.footerImage, 'footerImage');
+      appendFile(values.profileImage || null, 'profileImage');
+      appendFile(values.headerImage || null, 'headerImage');
+      appendFile(values.footerImage || null, 'footerImage');
 
-      // Ajout des nouvelles images de la galerie
+      // Ajouter les nouvelles images de la galerie
       if (values.gallery && values.gallery.length > 0) {
-        values.gallery.forEach((file) => {
-          if (isUploadFile(file) && file.originFileObj) {
-            formData.append('gallery', file.originFileObj as Blob);
-          }
+        Array.from(values.gallery).forEach((file) => {
+          formData.append('gallery', file);
         });
       }
 
-      // Ajout des images de galerie à supprimer (une seule fois)
+      // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
@@ -164,13 +153,15 @@ const UpdatePost = () => {
     }
   };
 
-  const normFile = (e: any): UploadFile<any>[] => {
-    if (Array.isArray(e)) {
-      return e;
+  // Norme pour le fichier uploadé
+  const normFile = (e: any): FileList | null => {
+    if (e && e.target && e.target.files) {
+      return e.target.files;
     }
-    return e?.fileList || [];
+    return null;
   };
 
+  // Gestion de la suppression d'une image de galerie
   const handleDeleteImage = (imageId: string) => {
     setGalleryImagesToDelete((prev) => [...prev, imageId]);
     setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
@@ -286,16 +277,18 @@ const UpdatePost = () => {
                 )}
               </Col>
               <Col xs={24} sm={12}>
-                <Form.Item
-                  name="profileImage"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                  noStyle
-                >
-                  <Upload name="profileImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                    <Button icon={<UploadOutlined />}>Télécharger</Button>
-                  </Upload>
-                </Form.Item>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
+                      form.setFieldsValue({ profileImage: files[0] });
+                    } else {
+                      form.setFieldsValue({ profileImage: null });
+                    }
+                  }}
+                />
               </Col>
             </Row>
           </Form.Item>
@@ -316,16 +309,18 @@ const UpdatePost = () => {
                 )}
               </Col>
               <Col xs={24} sm={12}>
-                <Form.Item
-                  name="headerImage"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                  noStyle
-                >
-                  <Upload name="headerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                    <Button icon={<UploadOutlined />}>Télécharger</Button>
-                  </Upload>
-                </Form.Item>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
+                      form.setFieldsValue({ headerImage: files[0] });
+                    } else {
+                      form.setFieldsValue({ headerImage: null });
+                    }
+                  }}
+                />
               </Col>
             </Row>
           </Form.Item>
@@ -346,16 +341,18 @@ const UpdatePost = () => {
                 )}
               </Col>
               <Col xs={24} sm={12}>
-                <Form.Item
-                  name="footerImage"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                  noStyle
-                >
-                  <Upload name="footerImage" listType="picture" maxCount={1} beforeUpload={() => false}>
-                    <Button icon={<UploadOutlined />}>Télécharger</Button>
-                  </Upload>
-                </Form.Item>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
+                      form.setFieldsValue({ footerImage: files[0] });
+                    } else {
+                      form.setFieldsValue({ footerImage: null });
+                    }
+                  }}
+                />
               </Col>
             </Row>
           </Form.Item>
@@ -366,7 +363,7 @@ const UpdatePost = () => {
             {visibleGallery.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {visibleGallery.map((image, index) => (
-                  <Card key={index} hoverable className="overflow-hidden">
+                  <Card key={image.id} hoverable className="overflow-hidden">
                     <div className="relative w-full h-48">
                       <Image
                         src={image.url}
@@ -382,14 +379,19 @@ const UpdatePost = () => {
                 ))}
               </div>
             )}
-            <Form.Item name="gallery" valuePropName="fileList" getValueFromEvent={normFile}>
-              <Upload name="gallery" listType="picture-card" multiple beforeUpload={() => false}>
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Télécharger</div>
-                </div>
-              </Upload>
-            </Form.Item>
+            <Input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files) {
+                  form.setFieldsValue({ gallery: files });
+                } else {
+                  form.setFieldsValue({ gallery: null });
+                }
+              }}
+            />
           </div>
 
           <Form.Item className="flex justify-center">
@@ -397,7 +399,6 @@ const UpdatePost = () => {
               type="primary"
               htmlType="submit"
               className="bg-teal-500 text-white font-kanit text-lg uppercase p-3 focus:ring-teal-500 focus:border-teal-500"
-              icon={<PlusOutlined />}
               loading={loading}
             >
               Mettre à jour

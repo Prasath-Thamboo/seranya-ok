@@ -44,10 +44,8 @@ export const createPost = async (data: CreatePostModel, token: string): Promise<
     formData.append('footerImage', data.footerImage as File);
   }
   if (data.gallery && data.gallery.length > 0) {
-    data.gallery.forEach((image) => {
-      if (typeof image !== 'string') {
-        formData.append('gallery', image as File);
-      }
+    Array.from(data.gallery).forEach((image) => {
+      formData.append('gallery', image);
     });
   }
 
@@ -101,10 +99,8 @@ export const updatePost = async (
 
   // Gestion des images de galerie ajoutées
   if (data.gallery && data.gallery.length > 0) {
-    data.gallery.forEach((image) => {
-      if (typeof image !== 'string') {
-        formData.append('gallery', image as File);
-      }
+    Array.from(data.gallery).forEach((image) => {
+      formData.append('gallery', image);
     });
   }
 

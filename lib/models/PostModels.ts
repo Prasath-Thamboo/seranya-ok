@@ -1,6 +1,8 @@
 // spectralnext/lib/models/PostModels.ts
 
-import { FileType } from "./UnitModels";
+// Import nécessaire pour les types de fichiers
+// Importer uniquement si FileType est utilisé ailleurs, sinon supprimer
+import type { UploadFile } from 'antd/es/upload/interface';
 
 // Enum pour le type de post (réplique du type utilisé dans Prisma)
 export enum PostType {
@@ -46,7 +48,7 @@ export interface PostModel {
   subtitle?: string;
   content?: string;
   isPublished: boolean;
-  color?:string;
+  color?: string;
   type: PostType;
   createdAt: Date;
   updatedAt: Date;
@@ -70,10 +72,10 @@ export interface CreatePostModel {
   color?: string;
   isPublished?: boolean;
   type: PostType;
-  profileImage?: FileType;
-  headerImage?: FileType;
-  footerImage?: FileType;
-  gallery?: FileType[];
+  profileImage?: File | null;
+  headerImage?: File | null;
+  footerImage?: File | null;
+  gallery?: FileList | null;
   unitIds?: string[];
   classIds?: string[];
 }
@@ -87,10 +89,10 @@ export interface UpdatePostModel {
   color?: string;
   isPublished?: boolean;
   type?: PostType;
-  profileImage?: FileType;
-  headerImage?: FileType;
-  footerImage?: FileType;
-  gallery?: FileType[];
+  profileImage?: File | null;
+  headerImage?: File | null;
+  footerImage?: File | null;
+  gallery?: FileList | null;
   galleryImagesToDelete?: string[];
   unitIds?: string[];
   classIds?: string[];
