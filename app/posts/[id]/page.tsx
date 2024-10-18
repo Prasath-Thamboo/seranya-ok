@@ -87,7 +87,7 @@ const PostDetailPage = () => {
               */}
             </div>
           ) : (
-            <p className="text-gray-400 italic">Aucune image d'en-tête disponible.</p>
+            <p className="text-gray-400 italic">Aucune image d&apos;en-tête disponible.</p>
           )
         )}
       </div>
