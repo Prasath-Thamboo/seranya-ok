@@ -51,13 +51,13 @@ export const createPost = async (data: CreatePostModel, token: string): Promise<
 
   if (data.unitIds && data.unitIds.length > 0) {
     data.unitIds.forEach((unitId) => {
-      formData.append('unitIds', unitId);
+      formData.append('unitIds[]', unitId); // Note: Append 'unitIds[]' pour indiquer un tableau
     });
   }
 
   if (data.classIds && data.classIds.length > 0) {
     data.classIds.forEach((classId) => {
-      formData.append('classIds', classId);
+      formData.append('classIds[]', classId); // Note: Append 'classIds[]' pour indiquer un tableau
     });
   }
 
@@ -106,20 +106,20 @@ export const updatePost = async (
 
   // Gestion des images de galerie supprimées
   if (data.galleryImagesToDelete && data.galleryImagesToDelete.length > 0) {
-    data.galleryImagesToDelete.forEach((imageId) => {
-      formData.append('galleryImagesToDelete', imageId);
+    data.galleryImagesToDelete.forEach((imageId, index) => {
+      formData.append(`galleryImagesToDelete[${index}]`, imageId);
     });
   }
 
   if (data.unitIds && data.unitIds.length > 0) {
     data.unitIds.forEach((unitId) => {
-      formData.append('unitIds', unitId);
+      formData.append('unitIds[]', unitId); // Note: Append 'unitIds[]' pour indiquer un tableau
     });
   }
 
   if (data.classIds && data.classIds.length > 0) {
     data.classIds.forEach((classId) => {
-      formData.append('classIds', classId);
+      formData.append('classIds[]', classId); // Note: Append 'classIds[]' pour indiquer un tableau
     });
   }
 

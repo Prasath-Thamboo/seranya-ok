@@ -7,14 +7,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { PostModel, PostType, UpdatePostModel, ClassModel } from "@/lib/models/PostModels";
-import { fetchPostById, updatePost } from "@/lib/queries/PostQueries"; // Assurez-vous que 'updatePost' est bien exporté
+import { fetchPostById } from "@/lib/queries/PostQueries";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Importer le style de l'éditeur Quill
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-const UpdatePostComponent = () => {
+const UpdatePost = () => {
   const [form] = Form.useForm<UpdatePostModel>();
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostModel | null>(null);
@@ -23,6 +23,7 @@ const UpdatePostComponent = () => {
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
   const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string }[]>([]);
+  const [newGalleryFiles, setNewGalleryFiles] = useState<File[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams?.get("id");
@@ -34,12 +35,12 @@ const UpdatePostComponent = () => {
 
   useEffect(() => {
     if (numericId !== null) {
-      const loadPostData = async () => {
+      const loadPost = async () => {
         try {
           const data = await fetchPostById(numericId);
 
           if (data) {
-            // Charger les images de la galerie
+            // Charger les images de la galerie existante
             const galleryUploads = data.uploads?.filter((upload) => upload.type === "GALERY") || [];
 
             const galleryUrls = galleryUploads.map((upload) => ({
@@ -67,7 +68,7 @@ const UpdatePostComponent = () => {
         }
       };
 
-      const loadClassesData = async () => {
+      const loadClasses = async () => {
         try {
           const response = await axios.get<ClassModel[]>(`${backendUrl}/classes`);
           setClasses(response.data);
@@ -77,8 +78,8 @@ const UpdatePostComponent = () => {
         }
       };
 
-      loadPostData();
-      loadClassesData();
+      loadPost();
+      loadClasses();
     }
   }, [numericId, form, addNotification, backendUrl]);
 
@@ -116,13 +117,13 @@ const UpdatePostComponent = () => {
       appendFile(values.footerImage || null, 'footerImage');
 
       // Ajouter les nouvelles images de la galerie
-      if (values.gallery && values.gallery.length > 0) {
-        values.gallery.forEach((file) => {
+      if (newGalleryFiles.length > 0) {
+        newGalleryFiles.forEach((file) => {
           formData.append('gallery', file);
         });
       }
 
-      // Ajout des images de galerie à supprimer
+      // Ajouter les images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
@@ -132,9 +133,14 @@ const UpdatePostComponent = () => {
       // Log des données du formulaire envoyées (Optionnel, à retirer en production)
       console.log("FormData sent:", Array.from(formData.entries()));
 
-      const response = await updatePost(numericId!, values, token); // Utiliser la fonction updatePost de PostQueries.ts
+      const response = await axios.patch<PostModel>(`${backendUrl}/posts/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-      if (response) {
+      if (response.data) {
         addNotification("success", "Post mis à jour avec succès !");
         router.push("/admin/posts");
       } else {
@@ -153,6 +159,12 @@ const UpdatePostComponent = () => {
     setGalleryImagesToDelete((prev) => [...prev, imageId]);
     setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
     console.log("Images to delete (IDs):", [...galleryImagesToDelete, imageId]);
+  };
+
+  // Gestion des nouvelles images de galerie via Upload component
+  const handleGalleryChange = ({ fileList }: any) => {
+    const files = fileList.map((file: any) => file.originFileObj).filter((file: null) => file != null) as File[];
+    setNewGalleryFiles(files);
   };
 
   return (
@@ -210,7 +222,7 @@ const UpdatePostComponent = () => {
               { pattern: /^#([0-9A-F]{3}){1,2}$/i, message: "Veuillez sélectionner une couleur valide." }, // Validation de format
             ]}
           >
-            <Input type="color" className="w-12 h-12 p-0 border-none" />
+            <Input type="color" className="w-12 h-12" />
           </Form.Item>
 
           <Form.Item
@@ -345,42 +357,54 @@ const UpdatePostComponent = () => {
           </Form.Item>
 
           {/* Galerie */}
-          <Form.Item label={<span className="text-black font-kanit">Galerie</span>}>
-            <Upload
-              multiple
-              beforeUpload={() => false} // Empêche l'upload automatique
-              onChange={(info) => {
-                const files = info.fileList.map(file => file.originFileObj).filter(file => file !== undefined) as File[];
-                form.setFieldsValue({ gallery: files });
-              }}
-              showUploadList={false} // Masque la liste d'uploads par défaut
-            >
-              <Button icon={<PlusOutlined />}>Ajouter des images</Button>
-            </Upload>
-          </Form.Item>
-
-          {visibleGallery.length > 0 && (
+          <Form.Item
+            label={<span className="text-black font-kanit">Galerie</span>}
+          >
             <div className="bg-gray-200 p-4 rounded-lg mb-4">
-              <h2 className="text-black mb-4">Galerie existante</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {visibleGallery.map((image, index) => (
-                  <Card key={image.id} hoverable className="overflow-hidden">
-                    <div className="relative w-full h-48">
-                      <Image
-                        src={image.url}
-                        alt={`Galerie Image ${index + 1}`}
-                        className="w-full h-full object-cover"
-                        preview={false}
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
-                        <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
+              {/* Affichage des images de galerie existantes */}
+              {visibleGallery.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {visibleGallery.map((image) => (
+                    <Card key={image.id} hoverable className="overflow-hidden">
+                      <div className="relative w-full h-48">
+                        <Image
+                          src={image.url}
+                          alt={`Galerie Image ${image.id}`}
+                          className="w-full h-full object-cover"
+                          preview={false}
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
+                          <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+
+              {/* Composant Upload pour les nouvelles images de galerie */}
+              <Upload
+                name="gallery"
+                listType="picture-card"
+                multiple
+                beforeUpload={() => false} // Empêche le téléchargement automatique
+                onChange={handleGalleryChange}
+                fileList={newGalleryFiles.map((file, index) => ({
+                  uid: `new-gallery-${index}`,
+                  name: file.name,
+                  status: 'done',
+                  url: URL.createObjectURL(file),
+                }))}
+              >
+                {newGalleryFiles.length >= 10 ? null : (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Télécharger</div>
+                  </div>
+                )}
+              </Upload>
             </div>
-          )}
+          </Form.Item>
 
           <Form.Item className="flex justify-center">
             <Button
@@ -398,4 +422,4 @@ const UpdatePostComponent = () => {
   );
 };
 
-export default UpdatePostComponent;
+export default UpdatePost;
