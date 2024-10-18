@@ -34,12 +34,27 @@ const PostDetailPage = () => {
       }
     };
 
+    const fetchRelatedPosts = async () => {
+      try {
+        const fetchedPosts = await fetchPosts();
+        const filteredPosts = fetchedPosts.filter(
+          (p) => p.type === post?.type && p.id !== post?.id
+        );
+        setRelatedPosts(filteredPosts);
+      } catch (error) {
+        console.error("Error fetching related posts:", error);
+      } finally {
+        setLoadingRelatedPosts(false);
+      }
+    };
+
     fetchPost();
-  }, [id]);
+    // fetchRelatedPosts dépend de post?.type, donc on le déclenche après fetchPost
+  }, [id, post?.type]);
 
   useEffect(() => {
-    const fetchRelatedPosts = async () => {
-      if (post) {
+    if (post) {
+      const fetchRelatedPosts = async () => {
         try {
           const fetchedPosts = await fetchPosts();
           const filteredPosts = fetchedPosts.filter(
@@ -51,63 +66,58 @@ const PostDetailPage = () => {
         } finally {
           setLoadingRelatedPosts(false);
         }
-      }
-    };
+      };
 
-    fetchRelatedPosts();
+      fetchRelatedPosts();
+    }
   }, [post]);
 
   return (
-    <div className="w-full min-h-screen text-white font-iceberg">
-      {/* En-tête avec Image */}
-      <div className="w-full">
-        {loadingPost ? (
-          <Skeleton.Image active className="w-full h-60 sm:h-80 md:h-96 object-cover" />
-        ) : (
-          post?.headerImage && (
-            <AntImage
-              src={post.headerImage}
-              alt="Header Image"
-              className="w-full h-60 sm:h-80 md:h-96 object-cover"
-              preview={false}
-            />
-          )
-        )}
-      </div>
+    <div className="relative w-full min-h-screen text-white font-iceberg">
+      {/* Background Header */}
+      <div
+        className="fixed inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${post?.headerImage || ""})`,
+          backgroundAttachment: "fixed",
+          filter: "brightness(25%)",
+        }}
+      />
 
-      <div className="relative z-10 px-4 sm:px-6 lg:px-8">
-        {/* Header Section (Titre et Sous-titre) */}
-        <div className="mt-6 mb-12">
+      <div className="relative z-10">
+        {/* Header Section */}
+        <div className="relative h-60 sm:h-80 md:h-96 flex items-center justify-center">
           {loadingPost ? (
             <Skeleton active paragraph={{ rows: 2 }} />
           ) : (
             <>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-iceberg uppercase text-white drop-shadow-lg text-center">
-                {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
-              </h1>
-              <div className="flex justify-center mt-4">
-                <Badge role={post?.type || "DEFAULT"} />
-              </div>
-              {post?.subtitle && (
-                <p className="mt-4 text-2xl sm:text-3xl md:text-4xl font-iceberg text-gray-300 drop-shadow-lg text-center">
-                  {post.subtitle}
-                </p>
-              )}
+              {/* Optionnel : Vous pouvez garder une image de fond ou un autre contenu ici */}
             </>
           )}
         </div>
 
         {/* Main Content with Sidebar */}
-        <div className="lg:flex lg:items-start lg:justify-center">
+        <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
           {/* Content Section */}
           <div className="lg:w-3/4 p-6">
             {loadingPost ? (
               <Skeleton active paragraph={{ rows: 5 }} />
             ) : (
               <div className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
+                {/* Titre et Sous-titre déplacés ici */}
+                <div className="mb-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-iceberg uppercase text-white drop-shadow-lg">
+                    {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
+                  </h1>
+                  <Badge role={post?.type || "DEFAULT"} />
+                  {post?.subtitle && (
+                    <p className="mt-4 text-2xl sm:text-3xl md:text-4xl font-iceberg text-gray-300 drop-shadow-lg">
+                      {post.subtitle}
+                    </p>
+                  )}
+                </div>
                 {/* Contenu du post */}
-                <div
-                  className="prose prose-lg sm:prose-xl lg:prose-2xl"
+                <p
                   dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
                 />
               </div>
@@ -163,8 +173,6 @@ const PostDetailPage = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
