@@ -153,8 +153,6 @@ const PostDetailPage = () => {
         </div>
       </div>
 
-      {/* Footer Section */}
-      <Footer />
     </div>
   );
 };
