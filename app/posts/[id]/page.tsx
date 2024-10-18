@@ -9,7 +9,7 @@ import Badge from "@/components/Badge";
 import Masonry from "react-masonry-css";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import Image from 'next/image'; // Utilisez Next.js Image pour une meilleure optimisation
+import Image from 'next/image'; // Importez Next.js Image si vous l'utilisez
 
 const PostDetailPage = () => {
   const params = useParams();
@@ -58,47 +58,47 @@ const PostDetailPage = () => {
   }, [post]);
 
   return (
-    <div className="relative w-full min-h-screen text-white font-iceberg bg-gray-900">
-      {/* Image de Fond Fixe */}
+    <div className="relative w-full min-h-screen text-white font-iceberg">
+      {/* Background Header Fixe */}
       <div
         className="fixed inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url(${post?.headerImage || ""})`,
           backgroundAttachment: "fixed",
           filter: "brightness(25%)",
-          zIndex: -1, // Assure que l'image de fond reste derrière tout le contenu
         }}
       />
 
       <div className="relative z-10">
-        {/* Main Content avec Sidebar */}
+        {/* Header Section: Retiré pour éviter la duplication */}
+
+        {/* Main Content with Sidebar */}
         <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
-          {/* Colonne de Gauche : Sidebar */}
+          {/* Left Column: Sidebar avec l'image header normale et les posts similaires */}
           <div className="lg:w-1/4 p-4">
-            {/* Image Header dans la Sidebar */}
-            <div className="w-full mb-6">
+            {/* Image Header Normale dans la Sidebar */}
+            <div className="mb-6">
               {loadingPost ? (
                 <Skeleton.Image style={{ width: '100%', height: 200 }} active />
               ) : (
                 post?.headerImage ? (
                   <div className="w-full rounded-lg overflow-hidden shadow-lg">
-                    {/* Utilisez Next.js Image */}
+                    {/* Utilisez Next.js Image pour une meilleure optimisation */}
                     <Image
                       src={post.headerImage}
                       alt={`${post.title} Header Image`}
-                      width={400} // Ajustez selon vos besoins
-                      height={200} // Ajustez selon vos besoins
+                      width={768} // Ajustez selon vos besoins
+                      height={400} // Ajustez selon vos besoins
                       layout="responsive"
                       className="object-cover"
                     />
-                    {/* Si vous préférez utiliser AntImage, commentez le composant Next.js Image ci-dessus et décommentez celui-ci :
+                    {/* Si vous préférez utiliser AntImage, utilisez ce code à la place :
                     <AntImage
                       src={post.headerImage}
                       alt={`${post.title} Header Image`}
-                      width={400}
-                      height={200}
-                      className="w-full h-auto rounded-lg shadow-lg object-cover"
-                      preview={false}
+                      width={768}
+                      height={400}
+                      className="w-full max-w-3xl h-auto rounded-lg shadow-lg mx-auto object-cover"
                     />
                     */}
                   </div>
@@ -108,7 +108,7 @@ const PostDetailPage = () => {
               )}
             </div>
 
-            {/* Sidebar : Posts Similaires */}
+            {/* Posts Similaires */}
             <div className="bg-black p-6 rounded-lg shadow-lg w-full">
               <h2 className="text-xl font-iceberg text-white mb-4">Posts similaires</h2>
 
@@ -132,7 +132,7 @@ const PostDetailPage = () => {
             </div>
           </div>
 
-          {/* Colonne de Droite : Contenu */}
+          {/* Right Column: Content */}
           <div className="lg:w-3/4 p-6">
             {loadingPost ? (
               <Skeleton active paragraph={{ rows: 5 }} />
@@ -158,7 +158,7 @@ const PostDetailPage = () => {
               </div>
             )}
 
-            {/* Section Galerie */}
+            {/* Gallery Section */}
             {post?.gallery && post.gallery.length > 0 && (
               <div className="mt-12">
                 <h2 className="text-3xl font-bold font-iceberg text-white mb-8">Galerie</h2>
@@ -174,7 +174,6 @@ const PostDetailPage = () => {
                         alt={`${post.title} Gallery Image ${index + 1}`}
                         className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
                         style={{ objectFit: "cover", aspectRatio: "16/9" }}
-                        preview={false}
                       />
                     </div>
                   ))}
