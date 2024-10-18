@@ -208,7 +208,6 @@ const UpdatePost = () => {
               required: true,
               message: "Veuillez sélectionner une couleur !",
               pattern: /^#([0-9A-F]{3}){1,2}$/i,
-              message: "Veuillez sélectionner une couleur valide."
             }]}
           >
             <Input type="color" className="w-12 h-12" />

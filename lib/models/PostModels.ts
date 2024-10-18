@@ -1,7 +1,6 @@
 // spectralnext/lib/models/PostModels.ts
 
-// Types pour les images
-export type FileType = File | string;
+import { FileType } from "./UnitModels";
 
 // Enum pour le type de post (réplique du type utilisé dans Prisma)
 export enum PostType {
@@ -32,6 +31,13 @@ export interface Upload {
   type: string;
 }
 
+// Interface pour la relation Post-Class
+export interface PostClass {
+  postId: number;
+  classId: string;
+  class: ClassModel;
+}
+
 // Interface pour le modèle de post (données complètes)
 export interface PostModel {
   id: number;
@@ -40,6 +46,7 @@ export interface PostModel {
   subtitle?: string;
   content?: string;
   isPublished: boolean;
+  color?:string;
   type: PostType;
   createdAt: Date;
   updatedAt: Date;
@@ -49,8 +56,9 @@ export interface PostModel {
   gallery: string[];
   units: UnitModel[];
   classes: ClassModel[];
-  galleryUploadIds?: number[];
+  postClasses: PostClass[]; // Ajout de la relation PostClass
   uploads?: Upload[];
+  galleryUploadIds?: number[];
 }
 
 // Interface pour le modèle de création de post
@@ -59,6 +67,7 @@ export interface CreatePostModel {
   intro: string;
   subtitle?: string;
   content?: string;
+  color?: string;
   isPublished?: boolean;
   type: PostType;
   profileImage?: FileType;
@@ -69,12 +78,13 @@ export interface CreatePostModel {
   classIds?: string[];
 }
 
-// Interface pour le modèle de mise à jour d'un post
+// Interface pour le modèle de mise à jour de post
 export interface UpdatePostModel {
   title?: string;
   intro?: string;
   subtitle?: string;
   content?: string;
+  color?: string;
   isPublished?: boolean;
   type?: PostType;
   profileImage?: FileType;
