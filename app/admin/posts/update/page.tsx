@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button, Select, Image, Row, Col, Card, Upload } from "antd";
+import { Form, Input, Button, Select, Image, Row, Col, Card } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,7 +23,6 @@ const UpdatePost = () => {
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
   const [galleryImagesToDelete, setGalleryImagesToDelete] = useState<string[]>([]);
   const [visibleGallery, setVisibleGallery] = useState<{ id: string; url: string }[]>([]);
-  const [newGalleryFiles, setNewGalleryFiles] = useState<File[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams?.get("id");
@@ -40,7 +39,7 @@ const UpdatePost = () => {
           const data = await fetchPostById(numericId);
 
           if (data) {
-            // Charger les images de la galerie existante
+            // Chargement des images de la galerie
             const galleryUploads = data.uploads?.filter((upload) => upload.type === "GALERY") || [];
 
             const galleryUrls = galleryUploads.map((upload) => ({
@@ -117,13 +116,13 @@ const UpdatePost = () => {
       appendFile(values.footerImage || null, 'footerImage');
 
       // Ajouter les nouvelles images de la galerie
-      if (newGalleryFiles.length > 0) {
-        newGalleryFiles.forEach((file) => {
+      if (values.gallery && values.gallery.length > 0) {
+        Array.from(values.gallery).forEach((file) => {
           formData.append('gallery', file);
         });
       }
 
-      // Ajouter les images de galerie à supprimer
+      // Ajout des images de galerie à supprimer
       if (galleryImagesToDelete.length > 0) {
         galleryImagesToDelete.forEach((imageId, index) => {
           formData.append(`galleryImagesToDelete[${index}]`, imageId);
@@ -133,7 +132,7 @@ const UpdatePost = () => {
       // Log des données du formulaire envoyées (Optionnel, à retirer en production)
       console.log("FormData sent:", Array.from(formData.entries()));
 
-      const response = await axios.patch<PostModel>(`${backendUrl}/posts/${id}`, formData, {
+      const response = await axios.patch(`${backendUrl}/posts/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -154,17 +153,19 @@ const UpdatePost = () => {
     }
   };
 
+  // Norme pour le fichier uploadé
+  const normFile = (e: any): FileList | null => {
+    if (e && e.target && e.target.files) {
+      return e.target.files;
+    }
+    return null;
+  };
+
   // Gestion de la suppression d'une image de galerie
   const handleDeleteImage = (imageId: string) => {
     setGalleryImagesToDelete((prev) => [...prev, imageId]);
     setVisibleGallery(visibleGallery.filter((image) => image.id !== imageId));
     console.log("Images to delete (IDs):", [...galleryImagesToDelete, imageId]);
-  };
-
-  // Gestion des nouvelles images de galerie via Upload component
-  const handleGalleryChange = ({ fileList }: any) => {
-    const files = fileList.map((file: any) => file.originFileObj).filter((file: null) => file != null) as File[];
-    setNewGalleryFiles(files);
   };
 
   return (
@@ -357,54 +358,41 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Galerie */}
-          <Form.Item
-            label={<span className="text-black font-kanit">Galerie</span>}
-          >
-            <div className="bg-gray-200 p-4 rounded-lg mb-4">
-              {/* Affichage des images de galerie existantes */}
-              {visibleGallery.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {visibleGallery.map((image) => (
-                    <Card key={image.id} hoverable className="overflow-hidden">
-                      <div className="relative w-full h-48">
-                        <Image
-                          src={image.url}
-                          alt={`Galerie Image ${image.id}`}
-                          className="w-full h-full object-cover"
-                          preview={false}
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
-                          <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
-                        </div>
+          <div className="bg-gray-200 p-4 rounded-lg mb-4">
+            <h2 className="text-black mb-4">Galerie</h2>
+            {visibleGallery.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {visibleGallery.map((image, index) => (
+                  <Card key={image.id} hoverable className="overflow-hidden">
+                    <div className="relative w-full h-48">
+                      <Image
+                        src={image.url}
+                        alt={`Galerie Image ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        preview={false}
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity">
+                        <DeleteOutlined onClick={() => handleDeleteImage(image.id)} style={{ color: "white", fontSize: "24px" }} />
                       </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-
-              {/* Composant Upload pour les nouvelles images de galerie */}
-              <Upload
-                name="gallery"
-                listType="picture-card"
-                multiple
-                beforeUpload={() => false} // Empêche le téléchargement automatique
-                onChange={handleGalleryChange}
-                fileList={newGalleryFiles.map((file, index) => ({
-                  uid: `new-gallery-${index}`,
-                  name: file.name,
-                  status: 'done',
-                  url: URL.createObjectURL(file),
-                }))}
-              >
-                {newGalleryFiles.length >= 10 ? null : (
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Télécharger</div>
-                  </div>
-                )}
-              </Upload>
-            </div>
-          </Form.Item>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+            <Input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files) {
+                  form.setFieldsValue({ gallery: files });
+                } else {
+                  form.setFieldsValue({ gallery: null });
+                }
+              }}
+            />
+          </div>
 
           <Form.Item className="flex justify-center">
             <Button
