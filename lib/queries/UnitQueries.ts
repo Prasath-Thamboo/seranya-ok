@@ -89,7 +89,7 @@ export const updateUnit = async (
   // Gestion des images de galerie ajoutées
   if (data.gallery && data.gallery.length > 0) {
     data.gallery.forEach((image, index) => {
-      formData.append(`gallery[${index}]`, image as File);
+      formData.append(`gallery[${index}]`, image as unknown as File);
     });
   }
 
