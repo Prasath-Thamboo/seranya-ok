@@ -234,7 +234,8 @@ const Home: React.FC = () => {
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[#171717A3] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)]
+ border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -292,7 +293,8 @@ const Home: React.FC = () => {
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[#171717A3] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)]
+ border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -350,7 +352,8 @@ const Home: React.FC = () => {
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-6 bg-[#171717A3] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-6 bg-[rgb(23_23_23/_81%)]
+ border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -429,7 +432,7 @@ const Home: React.FC = () => {
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       {/* Image de Fond */}
                       <div
-                        className="relative w-full h-80 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Augmenté de h-64 à h-80
+                        className="relative w-full h-[35rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Augmenté de h-64 à h-80
                         style={{
                           backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
                           backgroundPosition: "center",
@@ -479,7 +482,7 @@ const Home: React.FC = () => {
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       {/* Image de Fond */}
                       <div
-                        className="relative w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Augmenté de h-32 à h-48
+                        className="relative w-full h-[17rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Augmenté de h-32 à h-48
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
                           backgroundPosition: "center",
