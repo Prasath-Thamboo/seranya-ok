@@ -232,18 +232,18 @@ const Home: React.FC = () => {
           {/* Cartes Statistiques */}
           <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
             {/* Grid des cartes statistiques */}
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 bg-black bg-opacity-50 p-4 rounded-lg">
-              {/* Première Petite Carte */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+              {/* Première Carte Statistique */}
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400">
+                  <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
                     Unités
                   </span>
                 </div>
 
                 <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-iceberg">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white dark:text-neutral-200 font-iceberg">
                     {inView ? (
                       <CountUp
                         start={0}
@@ -257,9 +257,9 @@ const Home: React.FC = () => {
                   </h3>
                 </div>
 
-                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
+                <dl className="flex justify-center items-center divide-x divide-gray-300 dark:divide-neutral-800">
                   <dt className="pe-3">
-                    <span className="text-green-600">
+                    <span className="text-green-600 flex items-center">
                       <svg
                         className="inline-block size-4 self-center"
                         xmlns="http://www.w3.org/2000/svg"
@@ -273,35 +273,35 @@ const Home: React.FC = () => {
                           d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"
                         />
                       </svg>
-                      <span className="inline-block text-sm">1.7%</span>
+                      <span className="ml-1 text-sm">1.7%</span>
                     </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">
+                    <span className="block text-sm text-gray-300 dark:text-neutral-500 pl-3">
                       change
                     </span>
                   </dt>
-                  <dd className="text-start ps-3">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">
+                  <dd className="text-start pl-3">
+                    <span className="text-sm font-semibold text-white dark:text-neutral-200">
                       5
                     </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">
+                    <span className="block text-sm text-gray-300 dark:text-neutral-500">
                       last week
                     </span>
                   </dd>
                 </dl>
               </div>
-              {/* Fin Première Petite Carte */}
+              {/* Fin Première Carte Statistique */}
 
-              {/* Deuxième Petite Carte */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              {/* Deuxième Carte Statistique */}
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400">
+                  <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
                     Champions
                   </span>
                 </div>
 
                 <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-iceberg">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white dark:text-neutral-200 font-iceberg">
                     {inView ? (
                       <CountUp
                         start={0}
@@ -315,9 +315,9 @@ const Home: React.FC = () => {
                   </h3>
                 </div>
 
-                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
+                <dl className="flex justify-center items-center divide-x divide-gray-300 dark:divide-neutral-800">
                   <dt className="pe-3">
-                    <span className="text-green-600">
+                    <span className="text-green-600 flex items-center">
                       <svg
                         className="inline-block size-4 self-center"
                         xmlns="http://www.w3.org/2000/svg"
@@ -331,35 +331,35 @@ const Home: React.FC = () => {
                           d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"
                         />
                       </svg>
-                      <span className="inline-block text-sm">5.6%</span>
+                      <span className="ml-1 text-sm">5.6%</span>
                     </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">
+                    <span className="block text-sm text-gray-300 dark:text-neutral-500 pl-3">
                       change
                     </span>
                   </dt>
-                  <dd className="text-start ps-3">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">
+                  <dd className="text-start pl-3">
+                    <span className="text-sm font-semibold text-white dark:text-neutral-200">
                       7
                     </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">
+                    <span className="block text-sm text-gray-300 dark:text-neutral-500">
                       last week
                     </span>
                   </dd>
                 </dl>
               </div>
-              {/* Fin Deuxième Petite Carte */}
+              {/* Fin Deuxième Carte Statistique */}
 
-              {/* Grande Carte */}
-              <div className="flex flex-col gap-y-3 p-6 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-2 lg:col-span-2">
+              {/* Troisième Carte Statistique */}
+              <div className="flex flex-col gap-y-3 p-6 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400">
+                  <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
                     Classes
                   </span>
                 </div>
 
                 <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-iceberg">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white dark:text-neutral-200 font-iceberg">
                     {inView ? (
                       <CountUp
                         start={0}
@@ -373,9 +373,9 @@ const Home: React.FC = () => {
                   </h3>
                 </div>
 
-                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
+                <dl className="flex justify-center items-center divide-x divide-gray-300 dark:divide-neutral-800">
                   <dt className="pe-3">
-                    <span className="text-red-600">
+                    <span className="text-red-600 flex items-center">
                       <svg
                         className="inline-block size-4 self-center"
                         xmlns="http://www.w3.org/2000/svg"
@@ -389,97 +389,97 @@ const Home: React.FC = () => {
                           d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
                         />
                       </svg>
-                      <span className="inline-block text-sm">5.6%</span>
+                      <span className="ml-1 text-sm">5.6%</span>
                     </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">
+                    <span className="block text-sm text-gray-300 dark:text-neutral-500 pl-3">
                       change
                     </span>
                   </dt>
-                  <dd className="text-start ps-3">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">
+                  <dd className="text-start pl-3">
+                    <span className="text-sm font-semibold text-white dark:text-neutral-200">
                       4
                     </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">
+                    <span className="block text-sm text-gray-300 dark:text-neutral-500">
                       last week
                     </span>
                   </dd>
                 </dl>
               </div>
-              {/* Fin Grande Carte */}
+              {/* Fin Troisième Carte Statistique */}
             </div>
           </div>
+        </div>
 
-          {/* Cartes des Unités Récentes */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 w-full">
-            {/* Grande Carte à Gauche */}
+        {/* Cartes des Unités Récentes */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 w-full">
+          {/* Grande Carte à Gauche */}
+          {units[0] && (
             <div className="lg:col-span-2">
-              {units.map((unit: UnitModel) => (
-                <Link href={`/univers/units/${unit.id}`} key={unit.id}>
-                  <a className="border-gray-900 shadow-lg block">
-                    <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
-                      <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
-                        <div
-                          className="relative w-full h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                          style={{
-                            backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                            backgroundPosition: "center",
-                          }}
-                        />
-                        <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
-                          <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
-                            {unit.title || "No Title"}
-                          </h3>
-                          <p className="text-sm text-gray-300 font-kanit">
-                            {unit.subtitle || "No Description"}
-                          </p>
-                        </div>
+              <Link href={`/univers/units/${units[0].id}`} key={units[0].id}>
+                <a className="border-gray-900 shadow-lg block">
+                  <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+                    <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
+                      <div
+                        className="relative w-full h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundPosition: "center",
+                        }}
+                      />
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+                        <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
+                          {units[0].title || "No Title"}
+                        </h3>
+                        <p className="text-sm text-gray-300 font-kanit">
+                          {units[0].subtitle || "No Description"}
+                        </p>
                       </div>
-                    </Badge.Ribbon>
-                  </a>
-                </Link>
-              ))}
+                    </div>
+                  </Badge.Ribbon>
+                </a>
+              </Link>
             </div>
-            {/* Fin Grande Carte à Gauche */}
+          )}
+          {/* Fin Grande Carte à Gauche */}
 
-            {/* Deux Petites Cartes à Droite */}
-            <div className="flex flex-col gap-8">
-              {units.slice(0, 2).map((unit: UnitModel) => (
-                <Link href={`/univers/units/${unit.id}`} key={unit.id}>
-                  <a className="border-gray-900 shadow-lg block">
-                    <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
-                      <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
-                        <div
-                          className="relative w-full h-32 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                          style={{
-                            backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                            backgroundPosition: "center",
-                          }}
-                        />
-                        <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2">
-                          <h3 className="text-xl font-bold text-white font-iceberg uppercase">
-                            {unit.title || "No Title"}
-                          </h3>
-                          <p className="text-sm text-gray-300 font-kanit">
-                            {unit.subtitle || "No Description"}
-                          </p>
-                        </div>
+          {/* Deux Petites Cartes à Droite */}
+          <div className="flex flex-col gap-8">
+            {units.slice(1, 3).map((unit: UnitModel) => (
+              <Link href={`/univers/units/${unit.id}`} key={unit.id}>
+                <a className="border-gray-900 shadow-lg block">
+                  <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+                    <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
+                      <div
+                        className="relative w-full h-32 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundPosition: "center",
+                        }}
+                      />
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2">
+                        <h3 className="text-xl font-bold text-white font-iceberg uppercase">
+                          {unit.title || "No Title"}
+                        </h3>
+                        <p className="text-sm text-gray-300 font-kanit">
+                          {unit.subtitle || "No Description"}
+                        </p>
                       </div>
-                    </Badge.Ribbon>
-                  </a>
-                </Link>
-              ))}
-            </div>
-            {/* Fin Deux Petites Cartes à Droite */}
+                    </div>
+                  </Badge.Ribbon>
+                </a>
+              </Link>
+            ))}
           </div>
+          {/* Fin Deux Petites Cartes à Droite */}
+        </div>
 
-          {/* CTA Centré */}
-          <div className="text-center mt-12">
-            <Link href="/univers">
-              <a className="inline-block bg-teal-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-teal-500 transition-colors duration-300">
-                Explorer
-              </a>
-            </Link>
-          </div>
+        {/* CTA Centré */}
+        <div className="text-center mt-12">
+          <Link href="/univers">
+            <a className="inline-block bg-teal-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-teal-500 transition-colors duration-300">
+              Explorer
+            </a>
+          </Link>
         </div>
       </motion.section>
 
