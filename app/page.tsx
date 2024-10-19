@@ -234,7 +234,7 @@ const Home: React.FC = () => {
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgba(23,23,23,0.64)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[#171717A3] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -292,7 +292,7 @@ const Home: React.FC = () => {
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgba(23,23,23,0.64)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[#171717A3] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -350,7 +350,7 @@ const Home: React.FC = () => {
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-6 bg-[rgba(23,23,23,0.64)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-6 bg-[#171717A3] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -444,7 +444,7 @@ const Home: React.FC = () => {
                             alt={`${units[0].title} Profile`}
                             width={100}
                             height={100}
-                            className="rounded-full shadow-lg border-4 border-white"
+                            className="rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-4 border-black" // Ombre noire et bordure noire
                           />
                         </div>
                         <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
@@ -494,7 +494,7 @@ const Home: React.FC = () => {
                             alt={`${unit.title} Profile`}
                             width={60}
                             height={60}
-                            className="rounded-full shadow-lg border-2 border-white"
+                            className="rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-2 border-black" // Ombre noire et bordure noire
                           />
                         </div>
                         <h3 className="text-xl font-bold text-white font-iceberg uppercase">
