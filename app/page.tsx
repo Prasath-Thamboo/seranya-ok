@@ -234,8 +234,7 @@ const Home: React.FC = () => {
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)]
- border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -293,8 +292,7 @@ const Home: React.FC = () => {
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)]
- border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -352,8 +350,7 @@ const Home: React.FC = () => {
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-6 bg-[rgb(23_23_23/_81%)]
- border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-6 bg-[rgb(23_23_23/_81%)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -432,7 +429,7 @@ const Home: React.FC = () => {
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       {/* Image de Fond */}
                       <div
-                        className="relative w-full h-[35rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Augmenté de h-64 à h-80
+                        className="relative w-full h-[35rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Hauteur de 35 rem
                         style={{
                           backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
                           backgroundPosition: "center",
@@ -441,12 +438,12 @@ const Home: React.FC = () => {
                       {/* Contenu de la Carte */}
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
                         {/* Image de Profil */}
-                        <div className="mb-4">
+                        <div className="mb-6"> {/* Augmenté de mb-4 à mb-6 */}
                           <Image
                             src={units[0].profileImage || "/images/profile-placeholder.png"}
                             alt={`${units[0].title} Profile`}
-                            width={100}
-                            height={100}
+                            width={120} // Augmenté de 100 à 120
+                            height={120} // Augmenté de 100 à 120
                             className="rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-4 border-black" // Ombre noire et bordure noire
                           />
                         </div>
@@ -482,7 +479,7 @@ const Home: React.FC = () => {
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       {/* Image de Fond */}
                       <div
-                        className="relative w-full h-[17rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Augmenté de h-32 à h-48
+                        className="relative w-full h-[17rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Hauteur de 17 rem
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
                           backgroundPosition: "center",
@@ -491,12 +488,12 @@ const Home: React.FC = () => {
                       {/* Contenu de la Carte */}
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2">
                         {/* Image de Profil */}
-                        <div className="mb-2">
+                        <div className="mb-4"> {/* Augmenté de mb-2 à mb-4 */}
                           <Image
                             src={unit.profileImage || "/images/profile-placeholder.png"}
                             alt={`${unit.title} Profile`}
-                            width={60}
-                            height={60}
+                            width={80} // Augmenté de 60 à 80
+                            height={80} // Augmenté de 60 à 80
                             className="rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-2 border-black" // Ombre noire et bordure noire
                           />
                         </div>
