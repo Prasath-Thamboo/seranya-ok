@@ -234,7 +234,7 @@ const Home: React.FC = () => {
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1 min-h-[200px]">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -292,7 +292,7 @@ const Home: React.FC = () => {
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1 min-h-[200px]">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -350,7 +350,7 @@ const Home: React.FC = () => {
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-6 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-3 p-6 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1 min-h-[200px]">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -417,8 +417,22 @@ const Home: React.FC = () => {
             <div className="lg:col-span-2">
               <Link href={`/univers/units/${units[0].id}`} key={units[0].id}>
                 <a className="border-gray-900 shadow-lg block">
-                  <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+                  <Badge.Ribbon
+                    text="NEW"
+                    color="red"
+                    className="font-iceberg z-30 neon-glow"
+                  >
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
+                      {/* Image de l'unité */}
+                      <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                        <Image
+                          src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
+                          alt={units[0].title || "Unit Profile"}
+                          width={100}
+                          height={100}
+                          className="rounded-full shadow-lg border-4 border-white"
+                        />
+                      </div>
                       <div
                         className="relative w-full h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
@@ -426,7 +440,7 @@ const Home: React.FC = () => {
                           backgroundPosition: "center",
                         }}
                       />
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4 pt-24">
                         <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
                           {units[0].title || "No Title"}
                         </h3>
@@ -447,8 +461,22 @@ const Home: React.FC = () => {
             {units.slice(1, 3).map((unit: UnitModel) => (
               <Link href={`/univers/units/${unit.id}`} key={unit.id}>
                 <a className="border-gray-900 shadow-lg block">
-                  <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
+                  <Badge.Ribbon
+                    text="NEW"
+                    color="red"
+                    className="font-iceberg z-30 neon-glow"
+                  >
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
+                      {/* Image de l'unité */}
+                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <Image
+                          src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                          alt={unit.title || "Unit Profile"}
+                          width={80}
+                          height={80}
+                          className="rounded-full shadow-lg border-4 border-white"
+                        />
+                      </div>
                       <div
                         className="relative w-full h-32 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
@@ -456,7 +484,7 @@ const Home: React.FC = () => {
                           backgroundPosition: "center",
                         }}
                       />
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2">
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2 pt-16">
                         <h3 className="text-xl font-bold text-white font-iceberg uppercase">
                           {unit.title || "No Title"}
                         </h3>
