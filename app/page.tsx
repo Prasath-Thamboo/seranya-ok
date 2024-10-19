@@ -7,22 +7,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "antd";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { UnitModel, UnitType } from "@/lib/models/UnitModels";
+import { UnitModel } from "@/lib/models/UnitModels";
 import HeroSection from "@/components/HeroSection";
 import Accordion from "@/components/Accordion";
 import Carousel from "@/components/Carousel";
 import { FaCheck } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import { motion } from "framer-motion";
-import Footer from "@/components/Footer"; // Import du Footer
-import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery"; // Import de la nouvelle fonction
-
-const includedFeatures: string[] = [
-  "Accès aux nouvelles de chaque personnage",
-  "Ressources des membres",
-  "Inscription à la newsletter",
-  "T-shirt officiel des membres",
-];
+import Footer from "@/components/Footer";
+import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery";
 
 // Animation settings
 const fadeInUp = {
@@ -177,10 +170,10 @@ const Home: React.FC = () => {
           <div className="items-center flex flex-wrap">
             <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
               <div className="pr-12">
-                <h1 className="text-white font-semibold text-5xl">
+                <h1 className="text-white font-semibold text-5xl font-iceberg">
                   Votre aventure commence ici.
                 </h1>
-                <p className="mt-4 text-lg text-gray-300">
+                <p className="mt-4 text-lg text-gray-300 font-kanit">
                   Plongez dans le monde fascinant de Spectral, où chaque choix
                   peut transformer votre destinée.
                 </p>
@@ -190,9 +183,9 @@ const Home: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* Section des Unités récentes */}
+      {/* Section des Unités récentes (Encyclopédie) */}
       <motion.section
-        className="relative py-16 px-8 w-full z-20"
+        className="relative py-16 px-8 w-full z-20 mt-16" // Ajout de mt-16 pour la marge supérieure
         initial="hidden"
         whileInView="visible"
         variants={fadeInUp}
@@ -211,10 +204,133 @@ const Home: React.FC = () => {
         )}
 
         <div className="relative z-10 container mx-auto">
+          {/* Ajout de la section de cartes */}
+          <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+            {/* Grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {/* Card 1 */}
+              <div className="flex flex-col gap-y-3 lg:gap-y-5 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800">
+                <div className="inline-flex justify-center items-center">
+                  <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
+                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400 font-iceberg">
+                    Unités
+                  </span>
+                </div>
+
+                <div className="text-center">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
+                    {units.length} unités
+                  </h3>
+                </div>
+
+                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
+                  <dt className="pe-3">
+                    <span className="text-green-600">
+                      <svg className="inline-block size-4 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fillRule="evenodd" d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                      </svg>
+                      <span className="inline-block text-sm">
+                        1.7%
+                      </span>
+                    </span>
+                    <span className="block text-sm text-gray-500 dark:text-neutral-500">change</span>
+                  </dt>
+                  <dd className="text-start ps-3">
+                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">5</span>
+                    <span className="block text-sm text-gray-500 dark:text-neutral-500">last week</span>
+                  </dd>
+                </dl>
+              </div>
+              {/* End Card */}
+
+              {/* Card 2 */}
+              <div className="flex flex-col gap-y-3 lg:gap-y-5 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800">
+                <div className="inline-flex justify-center items-center">
+                  <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
+                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400 font-iceberg">
+                    Champions
+                  </span>
+                </div>
+
+                <div className="text-center">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
+                    25 champions
+                  </h3>
+                </div>
+
+                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
+                  <dt className="pe-3">
+                    <span className="text-green-600">
+                      <svg className="inline-block size-4 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fillRule="evenodd" d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                      </svg>
+                      <span className="inline-block text-sm">
+                        5.6%
+                      </span>
+                    </span>
+                    <span className="block text-sm text-gray-500 dark:text-neutral-500">change</span>
+                  </dt>
+                  <dd className="text-start ps-3">
+                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">7</span>
+                    <span className="block text-sm text-gray-500 dark:text-neutral-500">last week</span>
+                  </dd>
+                </dl>
+              </div>
+              {/* End Card */}
+
+              {/* Card 3 */}
+              <div className="flex flex-col gap-y-3 lg:gap-y-5 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800">
+                <div className="inline-flex justify-center items-center">
+                  <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
+                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400 font-iceberg">
+                    Autres
+                  </span>
+                </div>
+
+                <div className="text-center">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
+                    4 éléments
+                  </h3>
+                </div>
+
+                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
+                  <dt className="pe-3">
+                    <span className="text-red-600">
+                      <svg className="inline-block size-4 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fillRule="evenodd" d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                      </svg>
+                      <span className="inline-block text-sm">
+                        5.6%
+                      </span>
+                    </span>
+                    <span className="block text-sm text-gray-500 dark:text-neutral-500">change</span>
+                  </dt>
+                  <dd className="text-start ps-3">
+                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">7</span>
+                    <span className="block text-sm text-gray-500 dark:text-neutral-500">last week</span>
+                  </dd>
+                </dl>
+              </div>
+              {/* End Card */}
+            </div>
+            {/* End Grid */}
+          </div>
+          {/* End Card Section */}
+
+          {/* Bouton CTA "Explorer" */}
+          <div className="text-center mt-8">
+            <Link href="/univers">
+              <a className="inline-block bg-indigo-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-indigo-500 transition-colors duration-300">
+                Explorer
+              </a>
+            </Link>
+          </div>
+
+          {/* Titre et Sous-titre */}
           <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
             Explorer l&apos;encyclopédie
           </h2>
-          <p className="text-lg text-gray-300 mb-12 text-center">
+          <p className="text-lg text-gray-300 mb-12 text-center font-kanit">
             Plongez dans le bestiaire de Spectral.
           </p>
 
@@ -283,7 +399,7 @@ const Home: React.FC = () => {
                         className="relative w-full h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
                           backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                          backgroundPosition: "center", // Ajustement de la position
+                          backgroundPosition: "center",
                         }}
                       />
                       <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
@@ -324,7 +440,7 @@ const Home: React.FC = () => {
               <h2 className="text-4xl font-semibold text-white mb-8 text-center font-iceberg uppercase">
                 Construisons Ensemble
               </h2>
-              <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-300">
+              <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-300 font-kanit">
                 Nous offrons des services d&apos;excellence pour vous aider à
                 concrétiser vos projets.
               </p>
@@ -335,10 +451,10 @@ const Home: React.FC = () => {
               <div className="text-gray-900 p-3 w-12 h-12 shadow-lg rounded-full bg-white inline-flex items-center justify-center">
                 <i className="fas fa-medal text-xl"></i>
               </div>
-              <h6 className="text-xl mt-5 font-semibold text-white">
+              <h6 className="text-xl mt-5 font-semibold text-white font-iceberg">
                 Excellence Garantie
               </h6>
-              <p className="mt-2 mb-4 text-gray-300">
+              <p className="mt-2 mb-4 text-gray-300 font-kanit">
                 Nos services sont conçus pour garantir le succès de votre
                 projet.
               </p>
@@ -413,7 +529,12 @@ const Home: React.FC = () => {
                 <div className="h-px flex-auto bg-gray-100" />
               </div>
               <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
-                {includedFeatures.map((feature: string) => (
+                {[
+                  "Accès aux nouvelles de chaque personnage",
+                  "Ressources des membres",
+                  "Inscription à la newsletter",
+                  "T-shirt officiel des membres",
+                ].map((feature: string) => (
                   <li key={feature} className="flex gap-x-3">
                     <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />
                     {feature}
@@ -523,6 +644,9 @@ const Home: React.FC = () => {
 
       {/* Section FAQ */}
       <Accordion backgroundColor="bg-transparent" textColor="text-white" />
+
+      {/* Footer */}
+      <Footer />
     </main>
   );
 };
