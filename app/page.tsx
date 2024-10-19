@@ -7,7 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "antd";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
+import { fetchClasses } from "@/lib/queries/ClassQueries"; // Importation de fetchClasses
 import { UnitModel } from "@/lib/models/UnitModels";
+import { ClassModel } from "@/lib/models/ClassModels"; // Assurez-vous d'avoir ce modèle
 import HeroSection from "@/components/HeroSection";
 import Accordion from "@/components/Accordion";
 import Carousel from "@/components/Carousel";
@@ -16,6 +18,8 @@ import Loader from "@/components/Loader";
 import { motion } from "framer-motion";
 import Footer from "@/components/Footer";
 import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery";
+import { useInView } from "react-intersection-observer"; // Pour détecter la visibilité de la section
+import CountUp from 'react-countup'; // Importation de CountUp
 
 // Animation settings
 const fadeInUp = {
@@ -29,6 +33,7 @@ const Home: React.FC = () => {
   >([]);
   const [sectionImages, setSectionImages] = useState<string[]>([]);
   const [units, setUnits] = useState<UnitModel[]>([]);
+  const [classes, setClasses] = useState<ClassModel[]>([]); // État pour les classes
   const [backgroundImage, setBackgroundImage] = useState<string>("");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -45,38 +50,56 @@ const Home: React.FC = () => {
     });
   };
 
+  // Contrôle pour l'animation des nombres
+  const [ref, inView] = useInView({
+    threshold: 0.2, // Déclenche lorsque 20% de la section est visible
+    triggerOnce: true, // Une seule fois
+  });
+
+  const [unitCount, setUnitCount] = useState(0);
+  const [championCount, setChampionCount] = useState(0);
+  const [classCount, setClassCount] = useState(0);
+
   useEffect(() => {
-    const loadUnits = async () => {
+    const loadData = async () => {
       try {
+        // Charger les unités
         const fetchedUnits: UnitModel[] = await fetchUnits();
 
+        // Trier et prendre les 3 unités récentes
         const sortedUnits = fetchedUnits
           .sort(
             (a, b) =>
               new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           )
-          .slice(0, 3); // Prendre les 3 unités récentes
+          .slice(0, 3);
 
         setUnits(sortedUnits);
-      } catch (error) {
-        console.error("Failed to load units:", error);
-      }
-    };
+        setUnitCount(fetchedUnits.filter(unit => unit.type === "UNIT").length);
+        setChampionCount(fetchedUnits.filter(unit => unit.type === "CHAMPION").length);
 
-    const fetchBackgroundImage = async () => {
+        // Charger les classes
+        const fetchedClasses: ClassModel[] = await fetchClasses();
+        setClasses(fetchedClasses);
+        setClassCount(fetchedClasses.length);
+        handleImageLoad(); // Incrémente le compteur après avoir défini les classes
+      } catch (error) {
+        console.error("Failed to load data:", error);
+      }
+
+      // Charger l'image de fond
       try {
         const imageUrl: string = await fetchRandomBackground();
         setBackgroundImage(imageUrl);
         handleImageLoad(); // Incrémente le compteur après avoir défini l'image
       } catch (error) {
         console.error("Failed to load background image:", error);
-        // Vous pouvez définir une image de fallback ici si nécessaire
+        // Image de fallback
         setBackgroundImage("/images/backgrounds/default.jpg");
-        handleImageLoad(); // Incrémente le compteur même en cas d'erreur
+        handleImageLoad();
       }
-    };
 
-    const loadCarouselImages = async () => {
+      // Charger les images du carousel
       try {
         const data: string[] = await fetchRandomBackgrounds(5);
 
@@ -87,23 +110,20 @@ const Home: React.FC = () => {
         }));
 
         setCarouselItems(formattedCarouselItems);
-
-        console.log('Carousel Items:', formattedCarouselItems); // Ajoutez cette ligne
+        console.log('Carousel Items:', formattedCarouselItems);
 
         // Incrémente le compteur pour chaque image du carrousel
         data.forEach(() => handleImageLoad());
       } catch (error) {
         console.error("Failed to load carousel images:", error);
-        // Vous pouvez définir des images de fallback ici si nécessaire
         setCarouselItems([]);
         // Incrémente le compteur pour chaque image manquante
         for (let i = 0; i < 5; i++) {
           handleImageLoad();
         }
       }
-    };
 
-    const loadSectionImages = async () => {
+      // Charger les images de la section
       try {
         const data: string[] = await fetchRandomBackgrounds(6);
         setSectionImages(data);
@@ -112,7 +132,6 @@ const Home: React.FC = () => {
         data.forEach(() => handleImageLoad());
       } catch (error) {
         console.error("Failed to load section images:", error);
-        // Vous pouvez définir des images de fallback ici si nécessaire
         setSectionImages([]);
         // Incrémente le compteur pour chaque image manquante
         for (let i = 0; i < 6; i++) {
@@ -121,11 +140,15 @@ const Home: React.FC = () => {
       }
     };
 
-    loadUnits();
-    fetchBackgroundImage();
-    loadCarouselImages();
-    loadSectionImages();
+    loadData();
   }, []);
+
+  // Démarrer l'animation des nombres lorsque la section est en vue
+  useEffect(() => {
+    if (inView) {
+      // Ici, react-countup gère l'animation automatiquement
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loader />;
@@ -183,13 +206,14 @@ const Home: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* Section des Unités récentes (Encyclopédie) */}
+      {/* Section Encyclopédie */}
       <motion.section
-        className="relative py-16 px-8 w-full z-20 mt-16" // Ajout de mt-16 pour la marge supérieure
+        className="relative py-16 px-8 w-full z-20 mt-16"
         initial="hidden"
         whileInView="visible"
         variants={fadeInUp}
         viewport={{ once: true }}
+        ref={ref} // Référence pour l'intersection observer
       >
         {sectionImages[1] && (
           <div
@@ -204,129 +228,7 @@ const Home: React.FC = () => {
         )}
 
         <div className="relative z-10 container mx-auto">
-          {/* Ajout de la section de cartes */}
-          <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-            {/* Grid */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {/* Card 1 */}
-              <div className="flex flex-col gap-y-3 lg:gap-y-5 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800">
-                <div className="inline-flex justify-center items-center">
-                  <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400 font-iceberg">
-                    Unités
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
-                    {units.length} unités
-                  </h3>
-                </div>
-
-                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
-                  <dt className="pe-3">
-                    <span className="text-green-600">
-                      <svg className="inline-block size-4 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path fillRule="evenodd" d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      </svg>
-                      <span className="inline-block text-sm">
-                        1.7%
-                      </span>
-                    </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">change</span>
-                  </dt>
-                  <dd className="text-start ps-3">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">5</span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">last week</span>
-                  </dd>
-                </dl>
-              </div>
-              {/* End Card */}
-
-              {/* Card 2 */}
-              <div className="flex flex-col gap-y-3 lg:gap-y-5 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800">
-                <div className="inline-flex justify-center items-center">
-                  <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400 font-iceberg">
-                    Champions
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
-                    25 champions
-                  </h3>
-                </div>
-
-                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
-                  <dt className="pe-3">
-                    <span className="text-green-600">
-                      <svg className="inline-block size-4 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path fillRule="evenodd" d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      </svg>
-                      <span className="inline-block text-sm">
-                        5.6%
-                      </span>
-                    </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">change</span>
-                  </dt>
-                  <dd className="text-start ps-3">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">7</span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">last week</span>
-                  </dd>
-                </dl>
-              </div>
-              {/* End Card */}
-
-              {/* Card 3 */}
-              <div className="flex flex-col gap-y-3 lg:gap-y-5 p-4 md:p-5 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800">
-                <div className="inline-flex justify-center items-center">
-                  <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-600 dark:text-neutral-400 font-iceberg">
-                    Autres
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
-                    4 éléments
-                  </h3>
-                </div>
-
-                <dl className="flex justify-center items-center divide-x divide-gray-200 dark:divide-neutral-800">
-                  <dt className="pe-3">
-                    <span className="text-red-600">
-                      <svg className="inline-block size-4 self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path fillRule="evenodd" d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      </svg>
-                      <span className="inline-block text-sm">
-                        5.6%
-                      </span>
-                    </span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">change</span>
-                  </dt>
-                  <dd className="text-start ps-3">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-neutral-200">7</span>
-                    <span className="block text-sm text-gray-500 dark:text-neutral-500">last week</span>
-                  </dd>
-                </dl>
-              </div>
-              {/* End Card */}
-            </div>
-            {/* End Grid */}
-          </div>
-          {/* End Card Section */}
-
-          {/* Bouton CTA "Explorer" */}
-          <div className="text-center mt-8">
-            <Link href="/univers">
-              <a className="inline-block bg-indigo-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-indigo-500 transition-colors duration-300">
-                Explorer
-              </a>
-            </Link>
-          </div>
-
-          {/* Titre et Sous-titre */}
+          {/* Titre de la section */}
           <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
             Explorer l&apos;encyclopédie
           </h2>
@@ -334,65 +236,74 @@ const Home: React.FC = () => {
             Plongez dans le bestiaire de Spectral.
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {units[0] && (
-              <div className="lg:col-span-1 border rounded border-gray-900 shadow-lg">
-                <Link href={`/univers/units/${units[0].id}`}>
-                  <Badge.Ribbon
-                    text="NEW"
-                    color="red"
-                    className="font-iceberg z-30"
-                  >
-                    <div className="relative group overflow-hidden rounded-lg shadow-lg">
-                      <div
-                        className="relative w-full h-[30rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                        style={{
-                          backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                        }}
-                      />
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
-                        <div className="flex justify-center">
-                          {units[0].profileImage ? (
-                            <div className="w-24 h-24 relative rounded-full border border-gray-600 shadow-lg overflow-hidden">
-                              <Image
-                                src={units[0].profileImage}
-                                alt={units[0].title}
-                                layout="fill"
-                                objectFit="cover"
-                                className="object-cover"
-                                onLoad={handleImageLoad}
-                              />
-                            </div>
-                          ) : (
-                            <Image
-                              src="/images/backgrounds/placeholder.jpg"
-                              alt="Placeholder"
-                              width={100}
-                              height={100}
-                              className="rounded-full border border-gray-600 object-cover shadow-lg"
-                              onLoad={handleImageLoad}
-                            />
-                          )}
-                        </div>
-
-                        <div className="flex flex-col justify-center items-center text-center mt-4">
-                          <h3 className="text-4xl font-bold text-white font-iceberg uppercase">
-                            {units[0].title}
-                          </h3>
-                          <p className="text-lg text-gray-300 font-kanit">
-                            {units[0].subtitle || "Aucune description"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </Link>
+          {/* Cartes Statistiques */}
+          <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+            {/* Grid des cartes statistiques */}
+            <div className="grid sm:grid-cols-3 gap-6">
+              {/* Carte Unités */}
+              <div className="flex flex-col gap-y-3 p-6 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 text-center">
+                <span className="text-teal-500 text-3xl font-iceberg">🛡️</span>
+                <h3 className="text-2xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
+                  {inView ? (
+                    <CountUp
+                      start={0}
+                      end={unitCount}
+                      duration={2}
+                      delay={0}
+                    />
+                  ) : (
+                    0
+                  )}{" "}
+                  Unités
+                </h3>
               </div>
-            )}
+              {/* Fin Carte Unités */}
 
-            <div className="lg:col-span-1 grid grid-rows-2 gap-4">
-              {units.slice(1, 3).map((unit: UnitModel) => (
-                <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg">
+              {/* Carte Champions */}
+              <div className="flex flex-col gap-y-3 p-6 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 text-center">
+                <span className="text-teal-500 text-3xl font-iceberg">🏹</span>
+                <h3 className="text-2xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
+                  {inView ? (
+                    <CountUp
+                      start={0}
+                      end={championCount}
+                      duration={2}
+                      delay={0}
+                    />
+                  ) : (
+                    0
+                  )}{" "}
+                  Champions
+                </h3>
+              </div>
+              {/* Fin Carte Champions */}
+
+              {/* Carte Classes */}
+              <div className="flex flex-col gap-y-3 p-6 bg-white border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 text-center">
+                <span className="text-teal-500 text-3xl font-iceberg">📚</span>
+                <h3 className="text-2xl font-semibold text-gray-800 dark:text-neutral-200 font-kanit">
+                  {inView ? (
+                    <CountUp
+                      start={0}
+                      end={classCount}
+                      duration={2}
+                      delay={0}
+                    />
+                  ) : (
+                    0
+                  )}{" "}
+                  Classes
+                </h3>
+              </div>
+              {/* Fin Carte Classes */}
+            </div>
+          </div>
+
+          {/* Cartes des Unités Récentes */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {units.map((unit: UnitModel) => (
+              <Link href={`/univers/units/${unit.id}`} key={unit.id}>
+                <a className="border-gray-900 shadow-lg">
                   <Badge.Ribbon text="NEW" color="red" className="font-iceberg z-30">
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
                       <div
@@ -412,9 +323,18 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </Badge.Ribbon>
-                </Link>
-              ))}
-            </div>
+                </a>
+              </Link>
+            ))}
+          </div>
+
+          {/* CTA Centré */}
+          <div className="text-center mt-12">
+            <Link href="/univers">
+              <a className="inline-block bg-teal-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-teal-500 transition-colors duration-300">
+                Explorer
+              </a>
+            </Link>
           </div>
         </div>
       </motion.section>
@@ -459,7 +379,7 @@ const Home: React.FC = () => {
                 projet.
               </p>
             </div>
-            {/* Répétez pour d'autres caractéristiques */}
+            {/* Répétez pour d'autres caractéristiques si nécessaire */}
           </div>
         </div>
         <div
@@ -495,7 +415,7 @@ const Home: React.FC = () => {
         {/* Image de fond de la section */}
         {sectionImages[4] && (
           <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0" // z-0 pour l'image de fond
+            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
             style={{
               backgroundImage: `url(${sectionImages[4]})`,
               backgroundSize: "cover",
@@ -508,7 +428,7 @@ const Home: React.FC = () => {
         )}
 
         {/* Contenu de la section */}
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 mb-40"> {/* z-10 pour le contenu */}
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 mb-40">
           <div className="mx-auto max-w-2xl sm:text-center">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-iceberg">
               Une tarification simple, sans surprise
@@ -645,8 +565,6 @@ const Home: React.FC = () => {
       {/* Section FAQ */}
       <Accordion backgroundColor="bg-transparent" textColor="text-white" />
 
-      {/* Footer */}
-      <Footer />
     </main>
   );
 };
