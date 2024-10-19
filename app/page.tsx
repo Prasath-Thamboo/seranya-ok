@@ -234,7 +234,7 @@ const Home: React.FC = () => {
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1 min-h-[200px]">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -292,7 +292,7 @@ const Home: React.FC = () => {
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1 min-h-[200px]">
+              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -350,7 +350,7 @@ const Home: React.FC = () => {
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-6 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1 min-h-[200px]">
+              <div className="flex flex-col gap-y-3 p-6 bg-black bg-opacity-50 border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
@@ -420,19 +420,14 @@ const Home: React.FC = () => {
                   <Badge.Ribbon
                     text="NEW"
                     color="red"
-                    className="font-iceberg z-30 neon-glow"
+                    className="font-iceberg z-30"
+                    style={{
+                      boxShadow: '0 0 10px rgba(255, 0, 0, 0.6)', // Effet halo néon rouge
+                      borderRadius: '5px',
+                    }}
                   >
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
-                      {/* Image de l'unité */}
-                      <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
-                        <Image
-                          src={units[0].profileImage || "/images/backgrounds/placeholder.jpg"}
-                          alt={units[0].title || "Unit Profile"}
-                          width={100}
-                          height={100}
-                          className="rounded-full shadow-lg border-4 border-white"
-                        />
-                      </div>
+                      {/* Image de Fond */}
                       <div
                         className="relative w-full h-64 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
@@ -440,8 +435,19 @@ const Home: React.FC = () => {
                           backgroundPosition: "center",
                         }}
                       />
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4 pt-24">
-                        <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
+                      {/* Image de Profil */}
+                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <Image
+                          src={units[0].profileImage || "/images/profile-placeholder.png"} // Assurez-vous que chaque unité a une `profileImage`
+                          alt={`${units[0].title} Profile`}
+                          width={100}
+                          height={100}
+                          className="rounded-full shadow-lg border-4 border-white"
+                        />
+                      </div>
+                      {/* Contenu de la Carte */}
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
+                        <h3 className="text-2xl font-bold text-white font-iceberg uppercase mt-16">
                           {units[0].title || "No Title"}
                         </h3>
                         <p className="text-sm text-gray-300 font-kanit">
@@ -464,19 +470,14 @@ const Home: React.FC = () => {
                   <Badge.Ribbon
                     text="NEW"
                     color="red"
-                    className="font-iceberg z-30 neon-glow"
+                    className="font-iceberg z-30"
+                    style={{
+                      boxShadow: '0 0 10px rgba(255, 0, 0, 0.6)', // Effet halo néon rouge
+                      borderRadius: '5px',
+                    }}
                   >
                     <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
-                      {/* Image de l'unité */}
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                        <Image
-                          src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
-                          alt={unit.title || "Unit Profile"}
-                          width={80}
-                          height={80}
-                          className="rounded-full shadow-lg border-4 border-white"
-                        />
-                      </div>
+                      {/* Image de Fond */}
                       <div
                         className="relative w-full h-32 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
@@ -484,8 +485,19 @@ const Home: React.FC = () => {
                           backgroundPosition: "center",
                         }}
                       />
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2 pt-16">
-                        <h3 className="text-xl font-bold text-white font-iceberg uppercase">
+                      {/* Image de Profil */}
+                      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <Image
+                          src={unit.profileImage || "/images/profile-placeholder.png"} // Assurez-vous que chaque unité a une `profileImage`
+                          alt={`${unit.title} Profile`}
+                          width={60}
+                          height={60}
+                          className="rounded-full shadow-lg border-2 border-white"
+                        />
+                      </div>
+                      {/* Contenu de la Carte */}
+                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2">
+                        <h3 className="text-xl font-bold text-white font-iceberg uppercase mt-12">
                           {unit.title || "No Title"}
                         </h3>
                         <p className="text-sm text-gray-300 font-kanit">
@@ -736,6 +748,7 @@ const Home: React.FC = () => {
 
       {/* Section FAQ */}
       <Accordion backgroundColor="bg-transparent" textColor="text-white" />
+
 
     </main>
   );
