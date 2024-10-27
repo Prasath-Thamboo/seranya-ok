@@ -80,7 +80,6 @@ const CreateUnit = () => {
       formData.append('type', createUnitData.type);
       formData.append('quote', createUnitData.quote);
       formData.append('color', createUnitData.color);
-      formData.append('isPublished', String(createUnitData.isPublished));
 
       if (createUnitData.classIds && createUnitData.classIds.length > 0) {
         createUnitData.classIds.forEach((classId) => {
