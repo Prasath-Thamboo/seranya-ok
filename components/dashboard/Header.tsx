@@ -41,11 +41,11 @@ export default function Header() {
 
   return (
     <header className="z-10 py-4 bg-white shadow-md font-kanit">
-      <div className="container mx-auto px-6 flex items-center justify-between h-full">
+      <div className="container mx-auto px-6 flex items-center justify-between">
         {/* Section Profil et Notifications */}
-        <div className="flex items-center space-x-6">
+        <ul className="flex items-center space-x-6">
           {/* Profil Utilisateur */}
-          <div className="flex items-center space-x-3">
+          <li className="flex items-center space-x-3">
             <Link href={`/dashboard/users/viewUser/${user.pseudo}`} className="block shrink-0">
               <span className="sr-only">Profile</span>
               <Image
@@ -53,32 +53,33 @@ export default function Header() {
                 src={profileImageUrl}
                 width={48}
                 height={48}
-                className="h-12 w-12 rounded-full object-cover border border-gray-200"
+                className="h-12 w-12 rounded-full object-cover border border-gray-200 hover:border-gray-400 transition-colors duration-300"
               />
             </Link>
+            {/* Nom d'utilisateur et Badge */}
             <div className="flex items-center space-x-2">
-              <h1 className="text-lg font-iceberg font-bold text-gray-900">
-                {user.pseudo}
-              </h1>
+              <h1 className="text-lg font-iceberg font-bold text-gray-900">{user.pseudo}</h1>
               <Badge role={user.role || UserRole.USER} />
             </div>
-          </div>
-          {/* Icône de Notifications */}
-          <button className="relative p-2 rounded-full hover:bg-gray-100 focus:outline-none">
-            <FiBell className="w-5 h-5 text-black" />
-            <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 border-2 border-white rounded-full"></span>
-          </button>
-        </div>
+          </li>
+          {/* Notifications */}
+          <li className="relative">
+            <button className="relative flex items-center justify-center p-2 rounded-full hover:bg-gray-100 transition-colors duration-300">
+              <FiBell className="w-5 h-5 text-black" />
+              <span className="absolute top-0 right-0 inline-block w-3 h-3 bg-red-600 border-2 border-white rounded-full"></span>
+            </button>
+          </li>
+        </ul>
 
         {/* Séparateur Vertical */}
         <div className="hidden md:block h-8 w-px bg-gray-300"></div>
 
-        {/* Champ de Recherche */}
-        <div className="flex-1 max-w-xl ml-6">
+        {/* Barre de Recherche */}
+        <div className="flex-1 max-w-xl">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-5 h-5 text-gray-500"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -90,7 +91,7 @@ export default function Header() {
               </svg>
             </div>
             <input
-              className="w-full h-10 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border border-transparent rounded-md focus:border-gray-300 focus:bg-white focus:ring-2 focus:ring-black focus:outline-none"
+              className="w-full h-12 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 border border-transparent rounded-md shadow-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-black"
               type="text"
               placeholder="Rechercher..."
               aria-label="Rechercher"
