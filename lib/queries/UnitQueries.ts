@@ -34,6 +34,7 @@ export const fetchUnitsByClass = async (classId: number): Promise<UnitModel[]> =
 };
 
 // Fonction pour créer une nouvelle unité
+// Fonction pour créer une nouvelle unité
 export const createUnit = async (data: CreateUnitModel, token: string): Promise<UnitModel> => {
   const formData = new FormData();
 
@@ -42,15 +43,23 @@ export const createUnit = async (data: CreateUnitModel, token: string): Promise<
   if (data.subtitle) formData.append('subtitle', data.subtitle);
   if (data.story) formData.append('story', data.story);
   if (data.bio) formData.append('bio', data.bio);
+  if (data.quote) formData.append('quote', data.quote);
+  if (data.color) formData.append('color', data.color);
   if (data.isPublished !== undefined) formData.append('isPublished', String(data.isPublished));
   formData.append('type', data.type);
 
-  if (data.profileImage) formData.append('profileImage', data.profileImage as File);
-  if (data.headerImage) formData.append('headerImage', data.headerImage as File);
-  if (data.footerImage) formData.append('footerImage', data.footerImage as File);
+  if (data.classIds && data.classIds.length > 0) {
+    data.classIds.forEach((classId) => {
+      formData.append('classIds[]', classId);
+    });
+  }
+
+  if (data.profileImage) formData.append('profileImage', data.profileImage);
+  if (data.headerImage) formData.append('headerImage', data.headerImage);
+  if (data.footerImage) formData.append('footerImage', data.footerImage);
   if (data.gallery && data.gallery.length > 0) {
-    data.gallery.forEach((image, index) => {
-      formData.append(`gallery[${index}]`, image as File);
+    data.gallery.forEach((image) => {
+      formData.append('gallery', image);
     });
   }
 
@@ -63,6 +72,7 @@ export const createUnit = async (data: CreateUnitModel, token: string): Promise<
 
   return response.data;
 };
+
 
 // Fonction pour mettre à jour une unité
 // Fonction pour mettre à jour une unité existante

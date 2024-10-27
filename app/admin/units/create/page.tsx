@@ -8,8 +8,8 @@ import axios from "axios";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Import Quill's CSS
+import { CreateUnitModel, UnitModel, UnitType } from "@/lib/models/UnitModels";
 
-// Définir le type pour une classe
 interface ClassModel {
   id: number;
   title: string;
@@ -18,11 +18,16 @@ interface ClassModel {
 const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000'; // Assurez-vous que cette URL est correcte
+
 const CreateUnit = () => {
   const [loading, setLoading] = useState(false);
   const [bioValue, setBioValue] = useState('');
   const [storyValue, setStoryValue] = useState('');
-  const [classes, setClasses] = useState<ClassModel[]>([]); // Utiliser un type explicite pour les classes
+  const [classes, setClasses] = useState<ClassModel[]>([]);
   const router = useRouter();
   const { addNotification } = useNotification();
 
@@ -30,8 +35,8 @@ const CreateUnit = () => {
     // Charger les classes disponibles
     const loadClasses = async () => {
       try {
-        const response = await axios.get(`https://api.spectralunivers.com/classes`);
-        setClasses(response.data); // Assurez-vous que response.data correspond bien à un tableau d'objets ClassModel
+        const response = await axios.get<ClassModel[]>(`${BASE_URL}/classes`);
+        setClasses(response.data);
       } catch (error) {
         console.error("Error fetching classes:", error);
       }
@@ -46,57 +51,71 @@ const CreateUnit = () => {
       if (!token) {
         throw new Error("Token not found");
       }
-  
+
+      const createUnitData: CreateUnitModel = {
+        title: values.title,
+        intro: values.intro,
+        subtitle: values.subtitle,
+        story: storyValue || "",
+        bio: bioValue || "",
+        type: values.type,
+        quote: values.quote || "",
+        color: values.color || "#FFFFFF",
+        isPublished: values.isPublished || false,
+        classIds: values.classIds,
+        profileImage: values.profileImage ? values.profileImage[0].originFileObj : undefined,
+        headerImage: values.headerImage ? values.headerImage[0].originFileObj : undefined,
+        footerImage: values.footerImage ? values.footerImage[0].originFileObj : undefined,
+        gallery: values.gallery ? values.gallery.map((file: any) => file.originFileObj) : [],
+      };
+
+      // Envoi du formulaire au backend avec Axios
       const formData = new FormData();
-  
-      // Ajout des champs texte au formulaire
-      formData.append('title', values.title);
-      formData.append('intro', values.intro);
-      if (values.subtitle) formData.append('subtitle', values.subtitle);
-      formData.append('story', storyValue);
-      formData.append('bio', bioValue);
-      formData.append('type', values.type);
-      formData.append("quote", values.quote || "");
-      formData.append("color", values.color || "#FFFFFF");
-  
-      values.classIds.forEach((classId: string | number) => {
-        formData.append('classIds[]', classId.toString()); // Convertir en string pour éviter l'erreur
-      });
-      
 
+      formData.append('title', createUnitData.title);
+      formData.append('intro', createUnitData.intro);
+      if (createUnitData.subtitle) formData.append('subtitle', createUnitData.subtitle);
+      formData.append('story', createUnitData.story);
+      formData.append('bio', createUnitData.bio);
+      formData.append('type', createUnitData.type);
+      formData.append('quote', createUnitData.quote);
+      formData.append('color', createUnitData.color);
+      formData.append('isPublished', String(createUnitData.isPublished));
 
-
-  
-      // Ajout des fichiers au formulaire avec vérification
-      if (values.profileImage && values.profileImage.length > 0) {
-        formData.append('profileImage', values.profileImage[0].originFileObj);
-      }
-      if (values.headerImage && values.headerImage.length > 0) {
-        formData.append('headerImage', values.headerImage[0].originFileObj);
-      }
-      if (values.footerImage && values.footerImage.length > 0) {
-        formData.append('footerImage', values.footerImage[0].originFileObj);
-      }
-      if (values.gallery && values.gallery.length > 0) {
-        values.gallery.forEach((file: any) => {
-          formData.append('gallery', file.originFileObj);
+      if (createUnitData.classIds && createUnitData.classIds.length > 0) {
+        createUnitData.classIds.forEach((classId) => {
+          formData.append('classIds[]', classId);
         });
       }
-  
-      // Envoi du formulaire au backend avec Axios
-      const response = await axios.post(`https://api.spectralunivers.com/units`, formData, {
+
+      if (createUnitData.profileImage) {
+        formData.append('profileImage', createUnitData.profileImage);
+      }
+      if (createUnitData.headerImage) {
+        formData.append('headerImage', createUnitData.headerImage);
+      }
+      if (createUnitData.footerImage) {
+        formData.append('footerImage', createUnitData.footerImage);
+      }
+      if (createUnitData.gallery && createUnitData.gallery.length > 0) {
+        createUnitData.gallery.forEach((image) => {
+          formData.append('gallery', image);
+        });
+      }
+
+      const response = await axios.post<UnitModel>(`${BASE_URL}/units`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-     
-  
+
       addNotification("success", "Unité créée avec succès!");
       router.push("/admin/units");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during unit creation:", error);
-      addNotification("critical", "Erreur lors de la création de l'unité.");
+      const errorMessage = error.response?.data?.message || "Erreur lors de la création de l'unité.";
+      addNotification("critical", errorMessage);
     } finally {
       setLoading(false);
     }
@@ -159,8 +178,8 @@ const CreateUnit = () => {
             />
           </Form.Item>
 
-           {/* Champ : Quote */}
-           <Form.Item
+          {/* Champ : Quote */}
+          <Form.Item
             name="quote"
             label={<span className="font-kanit text-black">Citation</span>}
             rules={[
@@ -171,25 +190,23 @@ const CreateUnit = () => {
             <Input.TextArea
               placeholder="Citation de l'unité"
               className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
-              // Retirer le déclencheur de changement de step ici
             />
           </Form.Item>
 
           {/* Champ : Color Picker */}
-{/* Champ : Color Picker */}
-<Form.Item
-  name="color"
-  label={<span className="font-kanit text-black">Couleur</span>}
-  rules={[
-    { required: true, message: "Veuillez sélectionner une couleur!" },
-    {
-      pattern: /^#([0-9A-F]{3}){1,2}$/i,
-      message: "Veuillez sélectionner une couleur valide.",
-    },
-  ]}
->
-  <Input type="color" className="w-12 h-12 p-0 border-none" />
-</Form.Item>
+          <Form.Item
+            name="color"
+            label={<span className="font-kanit text-black">Couleur</span>}
+            rules={[
+              { required: true, message: "Veuillez sélectionner une couleur!" },
+              {
+                pattern: /^#([0-9A-F]{3}){1,2}$/i,
+                message: "Veuillez sélectionner une couleur valide.",
+              },
+            ]}
+          >
+            <Input type="color" className="w-12 h-12 p-0 border-none" />
+          </Form.Item>
 
           <Form.Item
             name="story"
@@ -214,36 +231,39 @@ const CreateUnit = () => {
               placeholder="Sélectionnez le type"
               className="bg-white text-black font-kanit"
             >
-              <Option value="UNIT">UNIT</Option>
-              <Option value="CHAMPION">CHAMPION</Option>
+              <Option value={UnitType.UNIT}>UNIT</Option>
+              <Option value={UnitType.CHAMPION}>CHAMPION</Option>
             </Select>
           </Form.Item>
 
           {/* Sélection des classes associées */}
           <Form.Item
-  name="classIds"
-  label={<span className="font-kanit text-black">Classes associées</span>}
->
-  <Select
-    mode="multiple"
-    placeholder="Sélectionnez des classes"
-    showSearch
-    optionFilterProp="children"
-  >
-    {classes.map((classItem: ClassModel) => (
-      <Option key={classItem.id} value={classItem.id}>
-        {classItem.title}
-      </Option>
-    ))}
-  </Select>
-</Form.Item>
-
+            name="classIds"
+            label={<span className="font-kanit text-black">Classes associées</span>}
+            rules={[{ required: true, message: "Veuillez sélectionner au moins une classe!" }]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Sélectionnez des classes"
+              showSearch
+              optionFilterProp="children"
+            >
+              {classes.map((classItem: ClassModel) => (
+                <Option key={classItem.id} value={classItem.id.toString()}>
+                  {classItem.title}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
           <Form.Item
             name="profileImage"
             label={<span className="font-kanit text-black">Image de profil</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
+            rules={[
+              { required: true, message: "Veuillez télécharger une image de profil!" },
+            ]}
           >
             <Upload
               name="profileImage"
@@ -260,6 +280,9 @@ const CreateUnit = () => {
             label={<span className="font-kanit text-black">Image Header</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
+            rules={[
+              { required: true, message: "Veuillez télécharger une image header!" },
+            ]}
           >
             <Upload
               name="headerImage"
@@ -276,6 +299,9 @@ const CreateUnit = () => {
             label={<span className="font-kanit text-black">Image de pied de page</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
+            rules={[
+              { required: true, message: "Veuillez télécharger une image de pied de page!" },
+            ]}
           >
             <Upload
               name="footerImage"

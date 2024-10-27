@@ -62,10 +62,10 @@ export interface CreateUnitModel {
   title: string;
   intro: string;
   subtitle?: string;
-  story?: string;
-  bio?: string;
-  quote?: string; // Ajout de la propriété quote
-  color?: string; // Ajout de la propriété color
+  story: string;
+  bio: string;
+  quote: string; // Ajout de la propriété quote
+  color: string; // Ajout de la propriété color
   isPublished?: boolean;
   type: UnitType;
   profileImage?: FileType;
