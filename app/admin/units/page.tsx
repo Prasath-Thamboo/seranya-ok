@@ -78,23 +78,8 @@ const UnitsPage = () => {
         ),
       },
       {
-        Header: 'Introduction',
-        accessor: 'intro',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
-      },
-      {
         Header: 'Sous-titre',
         accessor: 'subtitle',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
-      },
-      {
-        Header: 'Histoire',
-        accessor: 'story',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
-      },
-      {
-        Header: 'Biographie',
-        accessor: 'bio',
         Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
       },
       {
