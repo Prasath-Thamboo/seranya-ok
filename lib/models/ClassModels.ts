@@ -38,6 +38,7 @@ export interface ClassModel {
   subtitle?: string | null;
   story?: string | null;
   bio?: string | null;
+  quote?: string | null;
   isPublished: boolean;
   createdAt: string;
   updatedAt: string;

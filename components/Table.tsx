@@ -3,7 +3,19 @@
 import axios from 'axios';
 import { useTable, useGlobalFilter, useSortBy, usePagination, Column } from 'react-table';
 import { useMemo, useCallback, useState } from 'react';
-import { FaSearch, FaChevronDown, FaCheck, FaChevronLeft, FaChevronRight, FaSortUp, FaSortDown, FaEdit, FaEye, FaTrash, FaPlus, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
+import {
+  FaSearch,
+  FaChevronLeft,
+  FaChevronRight,
+  FaSortUp,
+  FaSortDown,
+  FaEdit,
+  FaEye,
+  FaTrash,
+  FaPlus,
+  FaCheck,
+  FaChevronDown,
+} from 'react-icons/fa';
 import { Image } from 'antd';
 import Badge from './Badge';
 import CustomModal from './CustomModal';
@@ -58,7 +70,8 @@ function InputGroup7({
   disabled = false,
 }: InputGroup7Props) {
   return (
-    <div className={`flex flex-row-reverse items-stretch w-full rounded-xl overflow-hidden bg-white shadow-sm ${className}`}>
+    <div className={`flex bg-gray-50 items-center p-2 gap-3 rounded-full border border-gray-900/10 ${className}`}>
+      {decoration}
       <input
         id={name}
         name={name}
@@ -67,12 +80,9 @@ function InputGroup7({
         placeholder={label}
         aria-label={label}
         onChange={onChange}
-        className={`peer block w-full p-4 text-base text-gray-600 focus:outline-none focus:ring-0 appearance-none ${disabled ? 'bg-gray-200' : ''} ${inputClassName}`}
+        className={`bg-gray-50 outline-none block font-kanit placeholder:font-kanit rounded-full w-full ${disabled ? 'bg-gray-200' : ''} ${inputClassName}`}
         disabled={disabled}
       />
-      <div className={`flex items-center pl-4 py-4 text-gray-600 ${disabled ? 'bg-gray-200' : ''} ${decorationClassName}`}>
-        {decoration}
-      </div>
     </div>
   );
 }
@@ -89,8 +99,8 @@ function GlobalSearchFilter1({ globalFilter, setGlobalFilter, className = '' }: 
       name="search"
       value={globalFilter || ''}
       onChange={(e) => setGlobalFilter(e.target.value)}
-      label="Recherche"
-      decoration={<FaSearch size="1.25rem" className="text-gray-400" />}
+      label="Recherche..."
+      decoration={<FaSearch className="h-5 w-5 text-gray-400" />}
       className={className}
     />
   );
@@ -116,11 +126,11 @@ function SelectMenu1({ value, setValue, options, className = '', disabled = fals
   return (
     <div className={`relative w-full ${className}`}>
       <button
-        className={`relative w-full rounded-xl py-4 pl-4 pr-10 text-base text-gray-700 text-left shadow-sm focus:outline-none ${disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-white cursor-default'}`}
+        className={`relative w-full rounded-full py-3 px-4 text-base text-gray-700 text-left shadow-sm focus:outline-none ${disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-white cursor-default'}`}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className="block truncate">{selectedOption?.caption}</span>
+        <span className="block truncate font-kanit">{selectedOption?.caption}</span>
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <FaChevronDown size="1rem" className="text-gray-400" aria-hidden="true" />
         </span>
@@ -136,7 +146,7 @@ function SelectMenu1({ value, setValue, options, className = '', disabled = fals
                 setIsOpen(false);
               }}
             >
-              <span className={`block truncate ${option.id === value ? 'font-medium' : 'font-normal'} text-black`}>
+              <span className={`block truncate ${option.id === value ? 'font-medium' : 'font-normal'} text-black font-kanit`}>
                 {option.caption}
               </span>
               {option.id === value && (
@@ -157,12 +167,13 @@ interface Button2Props {
   onClick: () => void;
   active?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
-function Button2({ content, onClick, active, disabled }: Button2Props) {
+function Button2({ content, onClick, active, disabled, className = '' }: Button2Props) {
   return (
     <button
-      className={`flex cursor-pointer items-center justify-center w-10 h-10 rounded-full text-base text-gray-700 shadow-sm focus:outline-none hover:bg-black hover:text-white ${active ? 'bg-black text-white' : 'bg-white text-black'}`}
+      className={`flex items-center justify-center px-4 py-2 rounded-full shadow-md hover:shadow-teal-500/50 transform transition-transform duration-300 hover:scale-105 font-kanit uppercase ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -177,47 +188,37 @@ interface PaginationNav1Props {
   canNextPage: boolean;
   pageCount: number;
   pageIndex: number;
+  pageOptions: number[];
+  pageSize: number;
+  totalItems: number;
 }
 
-function PaginationNav1({ gotoPage, canPreviousPage, canNextPage, pageCount, pageIndex }: PaginationNav1Props) {
-  const renderPageLinks = useCallback(() => {
-    if (pageCount === 0) return null;
-    const visiblePageButtonCount = 3;
-    let numberOfButtons = pageCount < visiblePageButtonCount ? pageCount : visiblePageButtonCount;
-    const pageIndices = [pageIndex];
-    numberOfButtons--;
-    [...Array(numberOfButtons)].forEach((_item, itemIndex) => {
-      const pageNumberBefore = pageIndices[0] - 1;
-      const pageNumberAfter = pageIndices[pageIndices.length - 1] + 1;
-      if (pageNumberBefore >= 0 && (itemIndex < numberOfButtons / 2 || pageNumberAfter > pageCount - 1)) {
-        pageIndices.unshift(pageNumberBefore);
-      } else {
-        pageIndices.push(pageNumberAfter);
-      }
-    });
-    return pageIndices.map((pageIndexToMap) => (
-      <li key={pageIndexToMap}>
-        <Button2 content={pageIndexToMap + 1} onClick={() => gotoPage(pageIndexToMap)} active={pageIndex === pageIndexToMap} disabled={false} />
-      </li>
-    ));
-  }, [pageCount, pageIndex, gotoPage]);
+function PaginationNav1({ gotoPage, canPreviousPage, canNextPage, pageCount, pageIndex, pageOptions, pageSize, totalItems }: PaginationNav1Props) {
+  const startItem = pageIndex * pageSize + 1;
+  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
 
   return (
-    <ul className="flex gap-2 items-center">
-      <li>
-        <Button2 content={<FaAngleDoubleLeft />} onClick={() => gotoPage(0)} disabled={!canPreviousPage} active={false} />
-      </li>
-      <li>
-        <Button2 content={<FaChevronLeft />} onClick={() => gotoPage(pageIndex - 1)} disabled={!canPreviousPage} active={false} />
-      </li>
-      {renderPageLinks()}
-      <li>
-        <Button2 content={<FaChevronRight />} onClick={() => gotoPage(pageIndex + 1)} disabled={!canNextPage} active={false} />
-      </li>
-      <li>
-        <Button2 content={<FaAngleDoubleRight />} onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} active={false} />
-      </li>
-    </ul>
+    <div className="flex justify-between items-center mt-4">
+      <div>
+        <Button2
+          content={<><FaChevronLeft /> Précédent</>}
+          onClick={() => gotoPage(pageIndex - 1)}
+          disabled={!canPreviousPage}
+          className="bg-teal-500 text-white hover:bg-teal-600"
+        />
+      </div>
+      <div className="text-sm text-gray-700 font-kanit">
+        Page {pageIndex + 1} sur {pageCount}
+      </div>
+      <div>
+        <Button2
+          content={<>Suivant <FaChevronRight /></>}
+          onClick={() => gotoPage(pageIndex + 1)}
+          disabled={!canNextPage}
+          className="bg-teal-500 text-white hover:bg-teal-600"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -232,26 +233,26 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
     <div className="flex gap-2 justify-center">
       {viewUrl && (
         <button
-          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+          className="bg-teal-500 text-white px-4 py-2 rounded-full flex items-center gap-2 font-kanit hover:bg-teal-600 hover:shadow-teal-500/50 transition"
           onClick={() => window.location.href = viewUrl}
         >
-          <FaEye className='h-5 w-5' />
+          <FaEye /> Voir
         </button>
       )}
       {editUrl && (
         <button
-          className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+          className="bg-teal-500 text-white px-4 py-2 rounded-full flex items-center gap-2 font-kanit hover:bg-teal-600 hover:shadow-teal-500/50 transition"
           onClick={() => window.location.href = editUrl}
         >
-          <FaEdit className='h-4 w-4' />
+          <FaEdit /> Modifier
         </button>
       )}
       {onDelete && (
         <button
-          className="bg-red-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border hover:border-red"
+          className="bg-red-500 text-white px-4 py-2 rounded-full flex items-center gap-2 font-kanit hover:bg-red-600 hover:shadow-red-500/50 transition"
           onClick={onDelete}
         >
-          <FaTrash className='h-4 w-4' />
+          <FaTrash /> Supprimer
         </button>
       )}
     </div>
@@ -294,7 +295,7 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
         });
         
         onDelete(itemToDelete);
-        addNotification("success", `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} supprimée avec succès.`);
+        addNotification("success", `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} supprimé(e) avec succès.`);
       } catch (error) {
         console.error('Erreur lors de la suppression :', error);
         addNotification("critical", `Erreur lors de la suppression de la ${itemType}.`);
@@ -305,7 +306,7 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
   };
 
   return (
-    <div className="w-full overflow-x-auto bg-white rounded-xl shadow-sm max-w-full px-4">
+    <div className="mt-6 shadow-sm border rounded-lg overflow-x-auto">
       <CustomModal
         visible={isDeleteModalVisible}
         onCancel={() => setDeleteModalVisible(false)}
@@ -317,41 +318,30 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
         iconType="delete"
       />
       <div className="relative inline-block min-w-full">
-        <table {...getTableProps()} className="min-w-full table-auto">
-          <thead>
+        <table {...getTableProps()} className="w-full table-auto text-sm text-left">
+          <thead className="bg-gray-50 text-gray-600 font-medium border-b">
             {headerGroups.map((headerGroup: any) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
                 {headerGroup.headers.map((column: any) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap bg-gray-800 text-white"
+                    className="py-3 px-6 font-iceberg cursor-pointer"
                     style={{ width: column.width }}
                     key={column.id}
                   >
-                    <div className="flex gap-2 items-center">
-                      <div className="text-white">{column.render('Header')}</div>
-                      <div className="flex flex-col">
-                        <FaSortUp
-                          className={`text-base translate-y-1/2 ${column.isSorted && !column.isSortedDesc ? 'text-yellow-400' : 'text-gray-300'}`}
-                        />
-                        <FaSortDown
-                          className={`text-base -translate-y-1/2 ${column.isSortedDesc ? 'text-yellow-400' : 'text-gray-300'}`}
-                        />
-                      </div>
-                    </div>
+                    {column.render('Header')}
                   </th>
                 ))}
-                {/* Modification de la colonne "Actions" */}
                 <th
-                  className="sticky right-0 bg-gray-800 px-3 py-2 text-start text-sm font-medium uppercase cursor-pointer whitespace-nowrap text-white"
-                  style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)', zIndex: 2 }} // Ombre gauche personnalisée et z-index élevé
+                  className="py-3 px-6 font-iceberg"
+                  key="actions"
                 >
                   Actions
                 </th>
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
+          <tbody {...getTableBodyProps()} className="text-gray-600 divide-y">
             {rows.map((row: any) => {
               prepareRow(row);
               return (
@@ -360,23 +350,14 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                     <td
                       {...cell.getCellProps()}
                       key={cell.id}
-                      className={`px-3 py-2 text-sm font-normal text-gray-700 whitespace-nowrap first:rounded-l-lg last:rounded-r-lg max-w-xs overflow-hidden text-ellipsis`}
+                      className="px-6 py-4 whitespace-nowrap font-kanit"
                     >
-                      {cell.column.id === 'story' || cell.column.id === 'bio' ? (
-                        <div title={cell.value}>
-                          {cell.value.length > 30 ? `${cell.value.slice(0, 30)}...` : cell.value}
-                        </div>
-                      ) : cell.column.id === 'type' ? (
-                        <Badge type={cell.value} />
-                      ) : (
-                        cell.render('Cell')
-                      )}
+                      {cell.render('Cell')}
                     </td>
                   ))}
-                  {/* Modification de la cellule "Actions" */}
                   <td
-                    className="sticky right-0 bg-gray-800 px-3 py-2 text-sm font-normal text-white whitespace-nowrap flex items-center justify-center shadow-inset-left h-full"
-                    style={{ boxShadow: 'inset 5px 0 5px -5px rgba(0,0,0,0.5)', zIndex: 1 }} // Ombre gauche personnalisée et z-index inférieur pour ne pas couvrir le header
+                    className="px-6 py-4 whitespace-nowrap"
+                    key={`actions-${row.id}`}
                   >
                     <ActionButtons
                       viewUrl={`/${baseRoute}/${row.original.id}`}
@@ -419,6 +400,7 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
     pageCount,
     gotoPage,
     setPageSize,
+    pageOptions,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -433,23 +415,24 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
 
   return (
     <div className="flex flex-col gap-4 font-kanit w-full">
-      <div className="flex flex-col sm:flex-row justify-between gap-2">
-        <GlobalSearchFilter1 className="sm:w-64" globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
-        <div className="flex gap-2 items-center sm:w-auto">
-          {createUrl && (
-            <button
-              className="flex items-center justify-center rounded-xl py-3 px-5 text-lg text-gray-700 shadow-sm focus:outline-none hover:bg-black hover:text-white bg-white text-black sm:w-auto min-w-[240px]"
-              onClick={() => window.location.href = createUrl}
-            >
-              <FaPlus className="mr-2" />
-              <span className="uppercase">{createButtonText}</span>
-            </button>
-          )}
-          <SelectMenu1 value={pageSize} setValue={setPageSize} options={[
-            { id: 5, caption: '5 éléments par page' },
-            { id: 10, caption: '10 éléments par page' },
-            { id: 20, caption: '20 éléments par page' },
-          ]} />
+      <div className="container mx-auto py-6 sm:px-6">
+        <div className="px-4 py-4 -mx-4 sm:-mx-6 sm:px-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold leading-tight font-iceberg">
+              Liste des {itemType.charAt(0).toUpperCase() + itemType.slice(1)}s
+            </h2>
+            <div className="flex items-center gap-3">
+              <GlobalSearchFilter1 className="sm:w-64" globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
+              {createUrl && (
+                <button
+                  className="bg-teal-500 text-white px-5 py-2 rounded-full shadow-md hover:shadow-teal-500/50 transform transition-transform duration-300 hover:scale-105 font-kanit flex items-center gap-2"
+                  onClick={() => window.location.href = createUrl}
+                >
+                  <FaPlus /> {createButtonText}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       <TableComponent
@@ -463,9 +446,16 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
         apiRoute={apiRoute}
         itemType={itemType}
       />
-      <div className="flex justify-center">
-        <PaginationNav1 gotoPage={gotoPage} canPreviousPage={canPreviousPage} canNextPage={canNextPage} pageCount={pageCount} pageIndex={pageIndex} />
-      </div>
+      <PaginationNav1
+        gotoPage={gotoPage}
+        canPreviousPage={canPreviousPage}
+        canNextPage={canNextPage}
+        pageCount={pageCount}
+        pageIndex={pageIndex}
+        pageOptions={pageOptions}
+        pageSize={pageSize}
+        totalItems={data.length}
+      />
     </div>
   );
 }

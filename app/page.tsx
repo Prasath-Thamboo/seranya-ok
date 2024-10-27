@@ -230,20 +230,21 @@ const Home: React.FC = () => {
           </p>
 
           {/* Cartes Statistiques */}
+          {/* Cartes Statistiques */}
           <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
-                  <span className="size-2 inline-block bg-gray-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
+                  <span className="w-4 h-4 bg-gray-500 rounded-full mr-2"></span>
+                  <span className="text-xs font-semibold uppercase text-gray-300">
                     Unités
                   </span>
                 </div>
 
                 <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white dark:text-neutral-200 font-iceberg">
+                  <h3 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white font-iceberg">
                     {inView ? (
                       <CountUp
                         start={0}
@@ -256,52 +257,20 @@ const Home: React.FC = () => {
                     )}
                   </h3>
                 </div>
-
-                <dl className="flex justify-center items-center divide-x divide-gray-300 dark:divide-neutral-800">
-                  <dt className="pe-3">
-                    <span className="text-green-600 flex items-center">
-                      <svg
-                        className="inline-block size-4 self-center"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"
-                        />
-                      </svg>
-                      <span className="ml-1 text-sm">1.7%</span>
-                    </span>
-                    <span className="block text-sm text-gray-300 dark:text-neutral-500 pl-3">
-                      change
-                    </span>
-                  </dt>
-                  <dd className="text-start pl-3">
-                    <span className="text-sm font-semibold text-white dark:text-neutral-200">
-                      5
-                    </span>
-                    <span className="block text-sm text-gray-300 dark:text-neutral-500">
-                      last week
-                    </span>
-                  </dd>
-                </dl>
               </div>
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-4 md:p-5 bg-[rgb(23_23_23/_81%)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
-                  <span className="size-2 inline-block bg-green-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
+                  <span className="w-4 h-4 bg-green-500 rounded-full mr-2"></span>
+                  <span className="text-xs font-semibold uppercase text-gray-300">
                     Champions
                   </span>
                 </div>
 
                 <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white dark:text-neutral-200 font-iceberg">
+                  <h3 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white font-iceberg">
                     {inView ? (
                       <CountUp
                         start={0}
@@ -314,52 +283,20 @@ const Home: React.FC = () => {
                     )}
                   </h3>
                 </div>
-
-                <dl className="flex justify-center items-center divide-x divide-gray-300 dark:divide-neutral-800">
-                  <dt className="pe-3">
-                    <span className="text-green-600 flex items-center">
-                      <svg
-                        className="inline-block size-4 self-center"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"
-                        />
-                      </svg>
-                      <span className="ml-1 text-sm">5.6%</span>
-                    </span>
-                    <span className="block text-sm text-gray-300 dark:text-neutral-500 pl-3">
-                      change
-                    </span>
-                  </dt>
-                  <dd className="text-start pl-3">
-                    <span className="text-sm font-semibold text-white dark:text-neutral-200">
-                      7
-                    </span>
-                    <span className="block text-sm text-gray-300 dark:text-neutral-500">
-                      last week
-                    </span>
-                  </dd>
-                </dl>
               </div>
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-3 p-6 bg-[rgb(23_23_23/_81%)] border shadow-sm rounded-xl dark:bg-neutral-900 dark:border-neutral-800 flex-1">
+              <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
-                  <span className="size-2 inline-block bg-red-500 rounded-full me-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-300 dark:text-neutral-400">
+                  <span className="w-4 h-4 bg-red-500 rounded-full mr-2"></span>
+                  <span className="text-xs font-semibold uppercase text-gray-300">
                     Classes
                   </span>
                 </div>
 
                 <div className="text-center">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white dark:text-neutral-200 font-iceberg">
+                  <h3 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white font-iceberg">
                     {inView ? (
                       <CountUp
                         start={0}
@@ -372,38 +309,6 @@ const Home: React.FC = () => {
                     )}
                   </h3>
                 </div>
-
-                <dl className="flex justify-center items-center divide-x divide-gray-300 dark:divide-neutral-800">
-                  <dt className="pe-3">
-                    <span className="text-red-600 flex items-center">
-                      <svg
-                        className="inline-block size-4 self-center"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-                        />
-                      </svg>
-                      <span className="ml-1 text-sm">5.6%</span>
-                    </span>
-                    <span className="block text-sm text-gray-300 dark:text-neutral-500 pl-3">
-                      change
-                    </span>
-                  </dt>
-                  <dd className="text-start pl-3">
-                    <span className="text-sm font-semibold text-white dark:text-neutral-200">
-                      4
-                    </span>
-                    <span className="block text-sm text-gray-300 dark:text-neutral-500">
-                      last week
-                    </span>
-                  </dd>
-                </dl>
               </div>
               {/* Fin Troisième Carte Statistique */}
             </div>
@@ -415,8 +320,8 @@ const Home: React.FC = () => {
           {/* Grande Carte à Gauche */}
           {units[0] && (
             <div className="lg:col-span-2">
-              <Link href={`/univers/units/${units[0].id}`} key={units[0].id}>
-                <a className="border-gray-900 shadow-lg block">
+              <Link href={`/univers/units/${units[0].id}`} key={units[0].id} className="border-gray-900 shadow-lg block">
+                
                   <Badge.Ribbon
                     text="NEW"
                     color="red"
@@ -456,7 +361,6 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </Badge.Ribbon>
-                </a>
               </Link>
             </div>
           )}
@@ -465,8 +369,8 @@ const Home: React.FC = () => {
           {/* Deux Petites Cartes à Droite */}
           <div className="flex flex-col gap-8">
             {units.slice(1, 3).map((unit: UnitModel) => (
-              <Link href={`/univers/units/${unit.id}`} key={unit.id}>
-                <a className="border-gray-900 shadow-lg block">
+              <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg block">
+              
                   <Badge.Ribbon
                     text="NEW"
                     color="red"
@@ -506,7 +410,6 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </Badge.Ribbon>
-                </a>
               </Link>
             ))}
           </div>
@@ -515,10 +418,9 @@ const Home: React.FC = () => {
 
         {/* CTA Centré */}
         <div className="text-center mt-12">
-          <Link href="/univers">
-            <a className="inline-block bg-teal-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-teal-500 transition-colors duration-300">
+          <Link href="/univers" className="inline-block bg-teal-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-teal-500 transition-colors duration-300">
+            
               Explorer
-            </a>
           </Link>
         </div>
       </motion.section>

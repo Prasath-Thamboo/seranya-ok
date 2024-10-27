@@ -66,19 +66,19 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
   };
 
   if (isMobile) {
-    // Adjusted layout to position the logo in the center with 2 icons on each side
+    // Layout pour mobile
     return (
       <nav className="fixed bottom-0 left-0 w-full h-20 bg-black text-white flex items-center justify-between z-50 shadow-lg px-4">
-        {/* Left Side Icons */}
+        {/* Icônes à gauche */}
         <div className="flex items-center space-x-6">
-          <FaUsers className="w-6 h-6" onClick={() => router.push('/admin/users')} />
-          <FaCubes className="w-6 h-6" onClick={() => router.push('/admin/units')} />
+          <FaUsers className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/users')} />
+          <FaCubes className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/units')} />
         </div>
 
-        {/* Center Logo */}
+        {/* Logo central */}
         <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/admin')}>
           <Image
-            src="/logos/favicon.ico" // Utilisation du logo du site
+            src="/logos/spectral-favicon-white.png" // Utilisation du logo simplifié en mobile
             alt="Home"
             width={40}
             height={40}
@@ -86,10 +86,10 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           />
         </div>
 
-        {/* Right Side Icons */}
+        {/* Icônes à droite */}
         <div className="flex items-center space-x-6">
-          <FaBook className="w-6 h-6" onClick={() => router.push('/admin/classes')} />
-          <FaComments className="w-6 h-6" onClick={() => router.push('/admin/discussion')} />
+          <FaBook className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/classes')} />
+          <FaComments className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/discussion')} />
         </div>
       </nav>
     );
@@ -121,8 +121,8 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         className={`flex items-center justify-center my-10 cursor-pointer ${collapsed ? 'justify-center' : ''}`}
         onClick={handleLogoClick} // Redirection au clic sur le logo
       >
-        <img
-          src="/logos/spectral-high-resolution-logo-white-transparent.png"
+        <Image
+          src={collapsed ? "/logos/spectral-favicon-white.png" : "/logos/spectral-high-resolution-logo-white-transparent.png"} // Changement du logo en fonction de l'état
           alt="Spectral Logo"
           width={collapsed ? 35 : 180} // Ajuster la taille du logo en fonction du statut collapsed
           height={50}

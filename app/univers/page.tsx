@@ -1,5 +1,3 @@
-// spectralnext/app/univers/page.tsx
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -19,14 +17,19 @@ import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 const UniversPage = () => {
   const [units, setUnits] = useState<UnitModel[]>([]);
   const [filteredUnits, setFilteredUnits] = useState<UnitModel[]>([]);
-  const [backgroundImage, setBackgroundImage] = useState<string>(""); // Aléatoire pour la page entière
-  const [heroBackgroundImage, setHeroBackgroundImage] = useState<string>(""); // Aléatoire pour la HeroSection
+  const [latestClasses, setLatestClasses] = useState<ClassModel[]>([]);
+  const [backgroundImage, setBackgroundImage] = useState<string>("");
+  const [heroBackgroundImage, setHeroBackgroundImage] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<string>("ALL");
   const [classes, setClasses] = useState<ClassModel[]>([]);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [isTypeFilterOpen, setIsTypeFilterOpen] = useState<boolean>(true);
-  const [isClassFilterOpen, setIsClassFilterOpen] = useState<boolean>(true); // Déplié par défaut
+  const [isClassFilterOpen, setIsClassFilterOpen] = useState<boolean>(true);
+  const [showMoreClasses, setShowMoreClasses] = useState<boolean>(false);
+  const [searchClassesQuery, setSearchClassesQuery] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const classesPerPage = 6;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,9 +41,22 @@ const UniversPage = () => {
         );
         setUnits(unitsWithImages);
         setFilteredUnits(unitsWithImages);
+
+        // Stocker toutes les classes
         setClasses(fetchedClasses);
+
+        // Obtenir les trois dernières classes pour la section "Dernières infos disponibles"
+        const latestClasses = fetchedClasses
+          .sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+          .slice(0, 3);
+        setLatestClasses(latestClasses);
       } catch (error) {
-        console.error("Erreur lors de la récupération des unités ou des classes :", error);
+        console.error(
+          "Erreur lors de la récupération des unités ou des classes :",
+          error
+        );
       }
     };
 
@@ -50,7 +66,10 @@ const UniversPage = () => {
         console.log("Background image:", image);
         setBackgroundImage(image);
       } catch (error) {
-        console.error("Échec du chargement de l'image de fond aléatoire :", error);
+        console.error(
+          "Échec du chargement de l'image de fond aléatoire :",
+          error
+        );
         setBackgroundImage("/images/backgrounds/default.jpg");
       }
     };
@@ -61,7 +80,10 @@ const UniversPage = () => {
         console.log("Hero background image:", image);
         setHeroBackgroundImage(image);
       } catch (error) {
-        console.error("Échec du chargement de l'image de fond aléatoire pour HeroSection :", error);
+        console.error(
+          "Échec du chargement de l'image de fond aléatoire pour HeroSection :",
+          error
+        );
         setHeroBackgroundImage("/images/backgrounds/Bastion1.png");
       }
     };
@@ -92,7 +114,9 @@ const UniversPage = () => {
     let filtered = units;
 
     if (activeFilter !== "ALL") {
-      filtered = filtered.filter((unit) => unit.type.toUpperCase() === activeFilter);
+      filtered = filtered.filter(
+        (unit) => unit.type.toUpperCase() === activeFilter
+      );
     }
 
     if (selectedClasses.length > 0) {
@@ -124,8 +148,27 @@ const UniversPage = () => {
     if (!classes) return [];
     return classes.map((cls) => ({
       title: cls.title,
-      color: cls.color ?? '#000000',
+      color: cls.color ?? "#000000",
     }));
+  };
+
+  // Gestion de la pagination des classes
+  const indexOfLastClass = currentPage * classesPerPage;
+  const indexOfFirstClass = indexOfLastClass - classesPerPage;
+  const currentClasses = classes
+    .filter((classe) =>
+      classe.title.toLowerCase().includes(searchClassesQuery.toLowerCase())
+    )
+    .slice(indexOfFirstClass, indexOfLastClass);
+  const totalPages = Math.ceil(
+    classes.filter((classe) =>
+      classe.title.toLowerCase().includes(searchClassesQuery.toLowerCase())
+    ).length / classesPerPage
+  );
+
+  const handleClassesSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchClassesQuery(event.target.value);
+    setCurrentPage(1);
   };
 
   return (
@@ -133,15 +176,26 @@ const UniversPage = () => {
       {/* Image de Fond Fixée et Proportionnée */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
-          {/* Utiliser la balise img pour l'image de fond au lieu de next/image */}
           <img
             src={backgroundImage}
             alt="Background"
-            style={{ objectFit: "cover", objectPosition: "center", width: "100%", height: "100%", position: "fixed" }}
-            className="brightness-30"
+            style={{
+              objectFit: "cover",
+              objectPosition: "center",
+              width: "100%",
+              height: "100%",
+              position: "fixed",
+            }}
+            className="brightness-50"
           />
-          {/* Overlay pour assombrir l'image */}
-          <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+          {/* Overlay pour obscurcir davantage l'image vers le bas */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9))",
+            }}
+          ></div>
         </div>
       )}
 
@@ -161,6 +215,220 @@ const UniversPage = () => {
         button2Url="#"
         button2BgColor="#555"
       />
+
+      {/* Section "Dernières infos disponibles" */}
+      <motion.section
+        className="relative z-10 py-16 px-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <h2 className="text-3xl font-bold text-white text-center font-iceberg mb-8">
+          Dernières infos disponibles
+        </h2>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Grande carte à gauche */}
+          {latestClasses[0] && (
+            <Link
+              href={`/univers/classes/${latestClasses[0].id}`}
+              className="lg:w-2/3"
+            >
+              <div className="relative group overflow-hidden rounded-lg shadow-lg border border-gray-700">
+                {/* Image de fond */}
+                <div
+                  className="w-full h-96 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                  style={{
+                    backgroundImage: `url(${
+                      getImageUrl(
+                        latestClasses[0].uploads.find(
+                          (upload) => upload.type === "HEADERIMAGE"
+                        )?.path
+                      ) || "/images/backgrounds/placeholder.jpg"
+                    })`,
+                  }}
+                >
+                  {/* Overlay pour obscurcir l'image vers le bas */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8))",
+                    }}
+                  ></div>
+                </div>
+                {/* Contenu */}
+                <div className="absolute inset-0 flex flex-col justify-end items-center p-4">
+                  <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
+                    {latestClasses[0].title}
+                  </h3>
+                  <p className="text-sm text-gray-300 font-kanit">
+                    {latestClasses[0].subtitle || "Aucune description"}
+                  </p>
+                </div>
+              </div>
+            </Link>
+          )}
+          {/* Deux petites cartes à droite */}
+          <div className="flex flex-col gap-8 lg:w-1/3">
+            {latestClasses.slice(1, 3).map((classe) => (
+              <Link href={`/univers/classes/${classe.id}`} key={classe.id}>
+                <div className="relative group overflow-hidden rounded-lg shadow-lg border border-gray-700">
+                  {/* Image de fond */}
+                  <div
+                    className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    style={{
+                      backgroundImage: `url(${
+                        getImageUrl(
+                          classe.uploads.find(
+                            (upload) => upload.type === "HEADERIMAGE"
+                          )?.path
+                        ) || "/images/backgrounds/placeholder.jpg"
+                      })`,
+                    }}
+                  >
+                    {/* Overlay pour obscurcir l'image vers le bas */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8))",
+                      }}
+                    ></div>
+                  </div>
+                  {/* Contenu */}
+                  <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
+                    <h3 className="text-xl font-bold text-white font-iceberg uppercase">
+                      {classe.title}
+                    </h3>
+                    <p className="text-sm text-gray-300 font-kanit">
+                      {classe.subtitle || "Aucune description"}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Bouton "Voir plus" */}
+        <div className="text-center mt-8">
+          <button
+            onClick={() => setShowMoreClasses(!showMoreClasses)}
+            className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-6 rounded transition-all duration-300 shadow-lg uppercase font-iceberg"
+          >
+            {showMoreClasses ? "Voir moins" : "Voir plus"}
+          </button>
+        </div>
+
+        {/* Liste des classes supplémentaires */}
+        {showMoreClasses && (
+          <div className="mt-8">
+            {/* Barre de recherche pour les classes */}
+            <div className="mb-4 flex justify-center">
+              <div className="relative w-full max-w-md">
+                <input
+                  className="w-full h-12 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-white border-0 rounded-md shadow focus:placeholder-gray-600 focus:bg-gray-100 focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  placeholder="Rechercher une classe..."
+                  aria-label="Rechercher"
+                  value={searchClassesQuery}
+                  onChange={handleClassesSearch}
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                  <SearchOutlined className="text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            {/* Liste des classes avec pagination */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {currentClasses.map((classe) => (
+                <Link href={`/univers/classes/${classe.id}`} key={classe.id}>
+                  <div className="relative group overflow-hidden rounded-lg shadow-lg border border-gray-700">
+                    {/* Image de fond */}
+                    <div
+                      className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(${
+                          getImageUrl(
+                            classe.uploads.find(
+                              (upload) => upload.type === "HEADERIMAGE"
+                            )?.path
+                          ) || "/images/backgrounds/placeholder.jpg"
+                        })`,
+                      }}
+                    >
+                      {/* Overlay pour obscurcir l'image vers le bas */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background:
+                            "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8))",
+                        }}
+                      ></div>
+                    </div>
+                    {/* Contenu */}
+                    <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
+                      <h3 className="text-xl font-bold text-white font-iceberg uppercase">
+                        {classe.title}
+                      </h3>
+                      <p className="text-sm text-gray-300 font-kanit">
+                        {classe.subtitle || "Aucune description"}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 mx-1 rounded ${
+                  currentPage === 1
+                    ? "bg-gray-500 cursor-not-allowed"
+                    : "bg-white text-black hover:bg-gray-700 hover:text-white"
+                }`}
+              >
+                Précédent
+              </button>
+              <span className="px-4 py-2 mx-1">
+                Page {currentPage} sur {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && setCurrentPage(currentPage + 1)
+                }
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 mx-1 rounded ${
+                  currentPage === totalPages
+                    ? "bg-gray-500 cursor-not-allowed"
+                    : "bg-white text-black hover:bg-gray-700 hover:text-white"
+                }`}
+              >
+                Suivant
+              </button>
+            </div>
+          </div>
+        )}
+      </motion.section>
+
+      {/* Titre et Texte d'accroche pour l'Encyclopédie */}
+      <motion.section
+        className="relative z-10 py-8 px-8 text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        <h2 className="text-3xl font-bold text-white font-iceberg">
+          L&apos;Encyclopédie de Spectral
+        </h2>
+        <p className="mt-4 text-lg text-gray-300 font-kanit">
+          Explorez les fiches des personnages et unités de Spectral.
+        </p>
+      </motion.section>
 
       {/* Section Principale avec Sidebar et Contenu */}
       <section className="relative z-10 py-16 px-12">
@@ -278,16 +546,20 @@ const UniversPage = () => {
                       <div
                         className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
-                          backgroundImage: `url(${getImageUrl(
-                            unit.headerImage
-                          ) || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundImage: `url(${
+                            getImageUrl(unit.headerImage) ||
+                            "/images/backgrounds/placeholder.jpg"
+                          })`,
                         }}
                       ></div>
 
                       {/* Profile Image */}
                       <img
                         alt={unit.title}
-                        src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                        src={
+                          unit.profileImage ||
+                          "/images/backgrounds/placeholder.jpg"
+                        }
                         className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20"
                       />
 
@@ -313,7 +585,9 @@ const UniversPage = () => {
                           </span>
                           {unit.classes && unit.classes.length > 0 && (
                             <div className="mt-2">
-                              <BadgeComponent classes={transformClasses(unit.classes)} />
+                              <BadgeComponent
+                                classes={transformClasses(unit.classes)}
+                              />
                             </div>
                           )}
                           <p className="text-white font-kanit mt-2">
@@ -356,16 +630,20 @@ const UniversPage = () => {
                       <div
                         className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                         style={{
-                          backgroundImage: `url(${getImageUrl(
-                            unit.headerImage
-                          ) || "/images/backgrounds/placeholder.jpg"})`,
+                          backgroundImage: `url(${
+                            getImageUrl(unit.headerImage) ||
+                            "/images/backgrounds/placeholder.jpg"
+                          })`,
                         }}
                       ></div>
 
                       {/* Profile Image */}
                       <img
                         alt={unit.title}
-                        src={unit.profileImage || "/images/backgrounds/placeholder.jpg"}
+                        src={
+                          unit.profileImage ||
+                          "/images/backgrounds/placeholder.jpg"
+                        }
                         className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20"
                       />
 
@@ -390,7 +668,9 @@ const UniversPage = () => {
                           </span>
                           {unit.classes && unit.classes.length > 0 && (
                             <div className="mt-2">
-                              <BadgeComponent classes={transformClasses(unit.classes)} />
+                              <BadgeComponent
+                                classes={transformClasses(unit.classes)}
+                              />
                             </div>
                           )}
                           <p className="text-white font-kanit mt-2">

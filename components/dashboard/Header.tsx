@@ -42,7 +42,7 @@ export default function Header() {
   return (
     <header className="z-10 py-4 bg-white shadow-md font-kanit">
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-black">
-        <ul className="flex items-center space-x-6">
+        <ul className="flex items-center space-x-6 m-0">
           <li className="flex items-center space-x-3">
             {/* Lien vers le profil utilisateur */}
             <Link href={`/dashboard/users/viewUser/${user.pseudo}`} className="block shrink-0">
@@ -58,7 +58,7 @@ export default function Header() {
             </Link>
             {/* Affichage du nom d'utilisateur et du badge de rôle */}
             <div className="flex items-center space-x-2">
-              <h1 className="text-lg font-iceberg font-bold text-gray-900">
+              <h1 className="text-lg font-iceberg font-bold text-gray-900 m-0">
                 {user.pseudo}
               </h1>
               <Badge role={user.role || UserRole.USER} />
