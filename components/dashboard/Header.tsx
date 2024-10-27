@@ -41,44 +41,44 @@ export default function Header() {
 
   return (
     <header className="z-10 py-4 bg-white shadow-md font-kanit">
-      <div className="container flex items-center justify-between h-full px-6 mx-auto text-black">
-        <ul className="flex items-center space-x-6">
-          <li className="flex items-center space-x-3">
-            {/* Lien vers le profil utilisateur */}
+      <div className="container mx-auto px-6 flex items-center justify-between h-full">
+        {/* Section Profil et Notifications */}
+        <div className="flex items-center space-x-6">
+          {/* Profil Utilisateur */}
+          <div className="flex items-center space-x-3">
             <Link href={`/dashboard/users/viewUser/${user.pseudo}`} className="block shrink-0">
               <span className="sr-only">Profile</span>
-              {/* Image de profil avec vérification du type et fallback */}
               <Image
                 alt={user.pseudo}
-                src={profileImageUrl}  // L'URL de l'image est validée pour éviter l'erreur TypeScript
+                src={profileImageUrl}
                 width={48}
                 height={48}
                 className="h-12 w-12 rounded-full object-cover border border-gray-200"
               />
             </Link>
-            {/* Affichage du nom d'utilisateur et du badge de rôle */}
             <div className="flex items-center space-x-2">
               <h1 className="text-lg font-iceberg font-bold text-gray-900">
                 {user.pseudo}
               </h1>
               <Badge role={user.role || UserRole.USER} />
             </div>
-          </li>
-          <li className="relative">
-            {/* Icone de notifications */}
-            <button className="relative align-middle rounded-md focus:outline-none">
-              <FiBell className="w-5 h-5 text-black" />
-              <span className="absolute top-0 right-0 inline-block w-3 h-3 transform bg-red-600 border-2 border-white rounded-full"></span>
-            </button>
-          </li>
-        </ul>
-        {/* Séparateur vertical */}
-        <div className="h-8 w-px bg-gray-300 mx-6"></div>
-        <div className="flex flex-1">
-          <div className="relative w-full max-w-xl mr-6">
-            <div className="absolute inset-y-0 flex items-center pl-2">
+          </div>
+          {/* Icône de Notifications */}
+          <button className="relative p-2 rounded-full hover:bg-gray-100 focus:outline-none">
+            <FiBell className="w-5 h-5 text-black" />
+            <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 border-2 border-white rounded-full"></span>
+          </button>
+        </div>
+
+        {/* Séparateur Vertical */}
+        <div className="hidden md:block h-8 w-px bg-gray-300"></div>
+
+        {/* Champ de Recherche */}
+        <div className="flex-1 max-w-xl ml-6">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
-                className="w-4 h-4 text-black"
+                className="w-5 h-5 text-gray-400"
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -89,9 +89,8 @@ export default function Header() {
                 <path d="M21 21l-6-6M5 11a7 7 0 1114 0A7 7 0 015 11z" />
               </svg>
             </div>
-            {/* Champ de recherche */}
             <input
-              className="w-full h-12 pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md shadow focus:placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-black form-input"
+              className="w-full h-10 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border border-transparent rounded-md focus:border-gray-300 focus:bg-white focus:ring-2 focus:ring-black focus:outline-none"
               type="text"
               placeholder="Rechercher..."
               aria-label="Rechercher"
