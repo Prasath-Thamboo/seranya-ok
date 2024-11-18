@@ -51,4 +51,3 @@ git push -u origin main
 
 
 
-git clone https://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@github.com/AKnight95/SpectralNext.git
