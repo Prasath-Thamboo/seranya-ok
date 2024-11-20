@@ -105,8 +105,8 @@ const Home: React.FC = () => {
 
         const formattedCarouselItems = data.map((imagePath: string, index: number) => ({
           image: imagePath,
-          title: `Image ${index + 1}`,
-          subtitle: "Sous-titre du carrousel",
+          title: `La méditation est la clé du bonheur.`,
+          subtitle: "L'instant présent en est la porte.",
         }));
 
         setCarouselItems(formattedCarouselItems);

@@ -361,27 +361,7 @@ export default function Navbar() {
       {/* Styles supplémentaires pour l'effet néon et les animations */}
       <style jsx>{`
         /* Effet néon pour la barre de progression */
-        .neon-effect {
-          box-shadow: 0 0 10px var(--neon-color, #2ecc40),
-                      0 0 20px var(--neon-color, #2ecc40),
-                      0 0 30px var(--neon-color, #2ecc40);
-          animation: neon-glow 1.5s ease-in-out infinite alternate;
-          background-color: var(--neon-color, #2ecc40);
-        }
-
-        @keyframes neon-glow {
-          from {
-            box-shadow: 0 0 10px var(--neon-color, #2ecc40),
-                        0 0 20px var(--neon-color, #2ecc40),
-                        0 0 30px var(--neon-color, #2ecc40);
-          }
-          to {
-            box-shadow: 0 0 20px var(--neon-color, #2ecc40),
-                        0 0 30px var(--neon-color, #2ecc40),
-                        0 0 40px var(--neon-color, #2ecc40);
-          }
-        }
-
+  
         /* Animation pour le menu mobile */
         @keyframes slide-in {
           from {
@@ -410,13 +390,6 @@ export default function Navbar() {
           text-shadow: 0 0 10px green, 0 0 20px green, 0 0 30px green;
         }
 
-        /* Ombre néon pour les boutons */
-        .shadow-neon {
-          box-shadow: 0 0 10px var(--neon-color, #2ecc40),
-                      0 0 20px var(--neon-color, #2ecc40),
-                      0 0 30px var(--neon-color, #2ecc40);
-        }
-
         /* Styles personnalisés pour les sous-menus */
         .custom-submenu-dropdown .ant-dropdown-menu {
           background-color: rgba(31, 41, 55, 0.75); /* bg-gray-800 bg-opacity-75 */
@@ -426,11 +399,6 @@ export default function Navbar() {
         .custom-submenu-dropdown .ant-dropdown-menu-item {
           color: white;
           transition: background-color 0.3s ease;
-        }
-
-        .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
-          background-color: var(--neon-color, #2ecc40); /* Utilise la couleur néon */
-          color: white;
         }
 
         /* Styles personnalisés pour le sous-menu mobile */
@@ -444,10 +412,6 @@ export default function Navbar() {
           transition: background-color 0.3s ease;
         }
 
-        .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
-          background-color: var(--neon-color, #2ecc40); /* Utilise la couleur néon */
-          color: white;
-        }
       `}</style>
     </nav>
   );

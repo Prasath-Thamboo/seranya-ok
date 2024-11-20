@@ -1,20 +1,18 @@
-// spectralnext/components/Carousel.tsx
-
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
 interface CarouselItem {
-  image: string;
-  title?: string;
-  subtitle?: string;
+  image: string; // Chemin de l'image
+  title?: string; // Titre facultatif
+  subtitle?: string; // Sous-titre facultatif
 }
 
 interface CarouselProps {
-  items: CarouselItem[];
-  height?: string;
-  width?: string;
-  onLoad?: () => void; // Optional onLoad callback
+  items: CarouselItem[]; // Liste des éléments du carrousel
+  height?: string; // Hauteur du carrousel
+  width?: string; // Largeur du carrousel
+  onLoad?: () => void; // Callback pour le chargement
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -57,8 +55,8 @@ const Carousel: React.FC<CarouselProps> = ({
             }`}
           >
             <Image
-              src={item.image}
-              alt={`Slide ${index + 1}`}
+              src={item.image} // Chemin de l'image
+              alt={item.title || `Slide ${index + 1}`}
               layout="fill"
               objectFit="cover"
               className="w-full h-full object-cover"
@@ -68,8 +66,6 @@ const Carousel: React.FC<CarouselProps> = ({
               }}
               unoptimized={true} // Désactive l'optimisation si nécessaire
             />
-            {/* Overlay supprimé */}
-
             {/* Optional Title and Subtitle */}
             {(item.title || item.subtitle) && (
               <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-center z-50">

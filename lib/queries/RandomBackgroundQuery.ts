@@ -1,29 +1,26 @@
-// spectralnext/lib/queries/RandomBackgroundQuery.ts
+export const fetchRandomBackgrounds = async (count: number): Promise<string[]> => {
+  const images = [
+    "/images/backgrounds/bouddhisme.jpg",
+    "/images/backgrounds/yoga.jpg",
+    "/images/backgrounds/seranyayoga.jpg",
+    "/images/backgrounds/seranyayoga1.jpg",
+    "/images/backgrounds/yogaismee.jpg",
+    "/images/backgrounds/yogaisme.jpg",
+  ];
+
+  // Retourne un sous-ensemble aléatoire des images locales
+  return images.sort(() => 0.5 - Math.random()).slice(0, count);
+};
 
 export const fetchRandomBackground = async (): Promise<string> => {
-    try {
-      // Utilisation de l'URL du backend en dur
-      const response = await fetch('https://api.spectralunivers.com/api/random-background');
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération de l\'image de fond');
-      }
-      const data = await response.json();
-      return data.imageUrl;
-    } catch (error: any) {
-      throw new Error(error.message || 'Erreur inconnue lors de la récupération de l\'image de fond');
-    }
-  };
-  
+  const images = [
+    "/images/backgrounds/bouddhisme.jpg",
+    "/images/backgrounds/yoga.jpg",
+    "/images/backgrounds/image3.jpg",
+    "/images/backgrounds/yogaismee.jpg",
+    "/images/backgrounds/yogaisme.jpg",
+  ];
 
-export const fetchRandomBackgrounds = async (count: number = 5): Promise<string[]> => {
-    try {
-      const response = await fetch(`https://api.spectralunivers.com/api/random-backgrounds?count=${count}`);
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des images de fond');
-      }
-      const data = await response.json();
-      return data.imageUrls;
-    } catch (error: any) {
-      throw new Error(error.message || 'Erreur inconnue lors de la récupération des images de fond');
-    }
-  };
+  // Retourne une image au hasard parmi celles disponibles localement
+  return images[Math.floor(Math.random() * images.length)];
+};

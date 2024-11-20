@@ -1,4 +1,4 @@
-// spectralnext/app/loader/page.tsx
+// seranyanext/app/loader/page.tsx
 
 import React from "react";
 import Loader from "@/components/Loader"; // Importe ton composant Loader
