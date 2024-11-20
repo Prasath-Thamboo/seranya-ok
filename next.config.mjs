@@ -3,7 +3,10 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['api.spectralunivers.com', 'spectralbucket95.s3.amazonaws.com'],
+    domains: [
+      'api.spectralunivers.com',
+      'seranya.s3.amazonaws.com', // Ajout de l'hôte manquant
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -18,7 +21,7 @@ const nextConfig = {
   },
 };
 
-// Activation de l'analyse de bundle lorsque la variable d'environnement ANALYZE est définie
+// Activation de l’analyse de bundle lorsque la variable d’environnement ANALYZE est définie
 const bundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })(nextConfig);

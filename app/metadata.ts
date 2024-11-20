@@ -33,14 +33,14 @@ export const metadata: Metadata = {
   themeColor: "#000000",
   // Icons for the site (favicons and Apple icons)
   icons: {
-    icon: "/logos/spectral-favicon-color (1).png",
-    apple: "/logos/spectral-favicon-color (1).png",
+    icon: "/logos/seranyaicon.png",
+    apple: "/logos/seranyaicon.png",
   },
   // Alternative URLs for other languages
   alternates: {
-    canonical: "https://www.spectralunivers.com",
+    canonical: "http://seranya.fr/",
     languages: {
-      fr: "https://www.spectralunivers.com/fr",
+      fr: "http://seranya.fr/",
     },
   },
 };

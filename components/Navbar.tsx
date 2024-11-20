@@ -148,9 +148,9 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${navbarBackground}`}
       style={{
-        "--neon-color": color || "#008080", // Définir la variable CSS pour la couleur néon
-        "--button-bg-color": color || "#008080", // Définir la variable CSS pour la couleur des boutons
-        "--button-hover-bg-color": shadeColor(color || "#008080", -10), // Assombrir la couleur des boutons de 10%
+        "--neon-color": color || "#2ecc40", // Définir la variable CSS pour la couleur néon
+        "--button-bg-color": color || "#2ecc40", // Définir la variable CSS pour la couleur des boutons
+        "--button-hover-bg-color": shadeColor(color || "#2ecc40", -10), // Assombrir la couleur des boutons de 10%
       } as React.CSSProperties}
     >
       <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 flex items-center justify-between h-16">
@@ -159,7 +159,7 @@ export default function Navbar() {
           <Link href="/">
             <div className="hidden md:block">
               <Image
-                src="/logos/spectral-high-resolution-logo-white-transparent (1).png" // Utiliser le chemin correct vers votre logo
+                src="/logos/seranyaicon.png" // Utiliser le chemin correct vers votre logo
                 alt="Logo Spectral"
                 width={180} // Réduction de la largeur de 200 à 180
                 height={70} // Réduction de la hauteur de 80 à 70
@@ -187,24 +187,24 @@ export default function Navbar() {
             placement="bottom"
             overlayClassName="custom-submenu-dropdown"
           >
-            <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
+            <button className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center">
               <span className="shadow-text">Univers</span>
               <FaChevronDown className="ml-1" />
             </button>
           </Dropdown>
 
           {/* Extraits */}
-          <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+          <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Extraits</span>
           </Link>
 
           {/* Contact */}
-          <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+          <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Contact</span>
           </Link>
 
           {/* Abonnement */}
-          <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200">
+          <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Abonnement</span>
           </Link>
         </div>
@@ -231,7 +231,7 @@ export default function Navbar() {
                     </span>
                   </div>
                 )}
-                <span className="ml-2 text-white font-iceberg shadow-text group-hover:text-teal-500 transition-colors duration-200">
+                <span className="ml-2 text-white font-iceberg shadow-text group-hover:text-green-500 transition-colors duration-200">
                   {user.pseudo}
                 </span>
                 {user.role && (
@@ -266,7 +266,7 @@ export default function Navbar() {
         {/* Menu hamburger pour mobile */}
         <div className="md:hidden z-50">
           <button
-            className="text-white focus:outline-none hover:text-teal-500 transition-all"
+            className="text-white focus:outline-none hover:text-green-500 transition-all"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
@@ -303,34 +303,34 @@ export default function Navbar() {
               placement="bottomLeft"
               overlayClassName="custom-submenu-dropdown"
             >
-              <button className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200 flex items-center">
+              <button className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center">
                 <span className="shadow-text">Univers</span>
                 <FaChevronDown className="ml-1" />
               </button>
             </Dropdown>
 
             {/* Extraits */}
-            <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
               <span className="shadow-text">Extraits</span>
             </Link>
 
             {/* Contact */}
-            <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
               <span className="shadow-text">Contact</span>
             </Link>
 
             {/* Abonnement */}
-            <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
               <span className="shadow-text">Abonnement</span>
             </Link>
 
             {isLoggedIn && user ? (
               <>
-                <Link href="/admin/me" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/admin/me" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   <span className="shadow-text">Mon Profil</span>
                 </Link>
                 {user.role === "ADMIN" && (
-                  <Link href="/admin" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                  <Link href="/admin" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                     <span className="shadow-text">Administration</span>
                   </Link>
                 )}
@@ -346,10 +346,10 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/auth/login" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/login" className="relative group text-base font-iceberg text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   <span className="shadow-text">Connexion</span>
                 </Link>
-                <Link href="/auth/register" className="relative group text-base font-iceberg uppercase text-white hover:text-teal-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/auth/register" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
                   <span className="shadow-text">Inscription</span>
                 </Link>
               </>
@@ -362,23 +362,23 @@ export default function Navbar() {
       <style jsx>{`
         /* Effet néon pour la barre de progression */
         .neon-effect {
-          box-shadow: 0 0 10px var(--neon-color, #008080),
-                      0 0 20px var(--neon-color, #008080),
-                      0 0 30px var(--neon-color, #008080);
+          box-shadow: 0 0 10px var(--neon-color, #2ecc40),
+                      0 0 20px var(--neon-color, #2ecc40),
+                      0 0 30px var(--neon-color, #2ecc40);
           animation: neon-glow 1.5s ease-in-out infinite alternate;
-          background-color: var(--neon-color, #008080);
+          background-color: var(--neon-color, #2ecc40);
         }
 
         @keyframes neon-glow {
           from {
-            box-shadow: 0 0 10px var(--neon-color, #008080),
-                        0 0 20px var(--neon-color, #008080),
-                        0 0 30px var(--neon-color, #008080);
+            box-shadow: 0 0 10px var(--neon-color, #2ecc40),
+                        0 0 20px var(--neon-color, #2ecc40),
+                        0 0 30px var(--neon-color, #2ecc40);
           }
           to {
-            box-shadow: 0 0 20px var(--neon-color, #008080),
-                        0 0 30px var(--neon-color, #008080),
-                        0 0 40px var(--neon-color, #008080);
+            box-shadow: 0 0 20px var(--neon-color, #2ecc40),
+                        0 0 30px var(--neon-color, #2ecc40),
+                        0 0 40px var(--neon-color, #2ecc40);
           }
         }
 
@@ -406,15 +406,15 @@ export default function Navbar() {
         /* Effet néon sur hover et actif */
         .group:hover .shadow-text,
         .active .shadow-text {
-          color: teal;
-          text-shadow: 0 0 10px teal, 0 0 20px teal, 0 0 30px teal;
+          color: #2ecc40;
+          text-shadow: 0 0 10px green, 0 0 20px green, 0 0 30px green;
         }
 
         /* Ombre néon pour les boutons */
         .shadow-neon {
-          box-shadow: 0 0 10px var(--neon-color, #008080),
-                      0 0 20px var(--neon-color, #008080),
-                      0 0 30px var(--neon-color, #008080);
+          box-shadow: 0 0 10px var(--neon-color, #2ecc40),
+                      0 0 20px var(--neon-color, #2ecc40),
+                      0 0 30px var(--neon-color, #2ecc40);
         }
 
         /* Styles personnalisés pour les sous-menus */
@@ -429,7 +429,7 @@ export default function Navbar() {
         }
 
         .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
-          background-color: var(--neon-color, #008080); /* Utilise la couleur néon */
+          background-color: var(--neon-color, #2ecc40); /* Utilise la couleur néon */
           color: white;
         }
 
@@ -445,7 +445,7 @@ export default function Navbar() {
         }
 
         .custom-submenu-dropdown .ant-dropdown-menu-item:hover {
-          background-color: var(--neon-color, #008080); /* Utilise la couleur néon */
+          background-color: var(--neon-color, #2ecc40); /* Utilise la couleur néon */
           color: white;
         }
       `}</style>

@@ -68,7 +68,7 @@ export default function ClientLayout({
         <div
           className="back-to-top-button"
           style={{
-            "--neon-color": color || "#008080",
+            "--neon-color": color || "#2ecc40",
           } as React.CSSProperties}
         >
           <FaArrowUp className="text-2xl" />
@@ -96,9 +96,9 @@ export default function ClientLayout({
           width: 48px;  /* Ajustez la taille selon vos besoins */
           background-color: #000; /* Couleur de fond noire */
           border-radius: 50%;
-          box-shadow: 0 0 10px var(--neon-color, #008080),
-                      0 0 20px var(--neon-color, #008080),
-                      0 0 30px var(--neon-color, #008080);
+          box-shadow: 0 0 10px var(--neon-color, #2ecc40),
+                      0 0 20px var(--neon-color, #2ecc40),
+                      0 0 30px var(--neon-color, #2ecc40);
           animation: pulse-neon 2s infinite;
           transition: opacity 0.3s;
           cursor: pointer;
@@ -118,38 +118,38 @@ export default function ClientLayout({
         /* Effet pulsant néon pour le bouton Back to Top */
         @keyframes pulse-neon {
           0% {
-            box-shadow: 0 0 10px var(--neon-color, #008080),
-                        0 0 20px var(--neon-color, #008080),
-                        0 0 30px var(--neon-color, #008080);
+            box-shadow: 0 0 10px var(--neon-color, #2ecc40),
+                        0 0 20px var(--neon-color, #2ecc40),
+                        0 0 30px var(--neon-color, #2ecc40);
           }
           50% {
-            box-shadow: 0 0 20px var(--neon-color, #008080),
-                        0 0 30px var(--neon-color, #008080),
-                        0 0 40px var(--neon-color, #008080);
+            box-shadow: 0 0 20px var(--neon-color, #2ecc40),
+                        0 0 30px var(--neon-color, #2ecc40),
+                        0 0 40px var(--neon-color, #2ecc40);
           }
           100% {
-            box-shadow: 0 0 10px var(--neon-color, #008080),
-                        0 0 20px var(--neon-color, #008080),
-                        0 0 30px var(--neon-color, #008080);
+            box-shadow: 0 0 10px var(--neon-color, #2ecc40),
+                        0 0 20px var(--neon-color, #2ecc40),
+                        0 0 30px var(--neon-color, #2ecc40);
           }
         }
 
         /* Stylisation du contenu du BackTop */
         .back-to-top-button > svg {
-          color: var(--neon-color, #008080); /* Couleur de l'icône basée sur la couleur néon */
+          color: var(--neon-color, #2ecc40); /* Couleur de l'icône basée sur la couleur néon */
           transition: color 0.3s;
         }
 
         /* Animation optionnelle pour l'icône */
         @keyframes neon-pulse {
           0% {
-            color: var(--neon-color, #008080);
+            color: var(--neon-color, #2ecc40);
           }
           50% {
-            color: lighten(var(--neon-color, #008080), 20%);
+            color: lighten(var(--neon-color, #2ecc40), 20%);
           }
           100% {
-            color: var(--neon-color, #008080);
+            color: var(--neon-color, #2ecc40);
           }
         }
 

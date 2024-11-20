@@ -152,7 +152,7 @@ const Home: React.FC = () => {
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
-          src={backgroundImage}
+          src="/images/backgrounds/placeholder.jpg"
           alt="Background"
           layout="fill"
           objectFit="cover"
@@ -187,11 +187,10 @@ const Home: React.FC = () => {
             <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
               <div className="pr-12">
                 <h1 className="text-white font-semibold text-5xl font-iceberg">
-                  Votre aventure commence ici.
+                  Un monde de paix vous attend
                 </h1>
                 <p className="mt-4 text-lg text-gray-300 font-kanit">
-                  Plongez dans le monde fascinant de Spectral, où chaque choix
-                  peut transformer votre destinée.
+                  Atteignez le nirvana en fusionnant avec votre vous intérieur
                 </p>
               </div>
             </div>
@@ -212,7 +211,7 @@ const Home: React.FC = () => {
           <div
             className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
             style={{
-              backgroundImage: `url(${sectionImages[1]})`,
+              backgroundImage: `/images/backgrounds/placeholder.jpg`,
               filter: "brightness(70%)",
             }}
           >
@@ -223,10 +222,10 @@ const Home: React.FC = () => {
         <div className="relative z-10 container mx-auto">
           {/* Titre de la section */}
           <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
-            Explorer l&apos;encyclopédie
+            Consultez nos articles pour connaître davantage sur le meilleur du yoga
           </h2>
           <p className="text-lg text-gray-300 mb-12 text-center font-kanit">
-            Plongez dans le bestiaire de Spectral.
+            Plongez dans lunivers bouddhiste yoga 
           </p>
 
           {/* Cartes Statistiques */}
@@ -290,7 +289,7 @@ const Home: React.FC = () => {
               <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
                   <span className="w-4 h-4 bg-red-500 rounded-full mr-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-300">
+                  <span className="text-xs font-semibold uppercase text-green-300">
                     Classes
                   </span>
                 </div>
@@ -431,7 +430,7 @@ const Home: React.FC = () => {
           <div
             className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover"
             style={{
-              backgroundImage: `url(${sectionImages[5]})`,
+              backgroundImage: `/images/backgrounds/placeholder.jpg`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               filter: "brightness(70%)",
@@ -444,7 +443,7 @@ const Home: React.FC = () => {
           <div className="flex flex-wrap text-center justify-center">
             <div className="w-full lg:w-6/12 px-4">
               <h2 className="text-4xl font-semibold text-white mb-8 text-center font-iceberg uppercase">
-                Construisons Ensemble
+                Avançons ensemble
               </h2>
               <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-300 font-kanit">
                 Nous offrons des services d&apos;excellence pour vous aider à
