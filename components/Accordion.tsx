@@ -94,8 +94,8 @@ const Accordion: React.FC<AccordionProps> = ({
         <div className="-mx-4 flex flex-wrap">
           <div className="w-full px-4 lg:w-1/2">
             <AccordionItem
-              header="Qu&apos;est-ce que Spectral?"
-              text="Spectral est un univers de dark fantasy où chaque choix peut changer le cours de votre histoire. C&apos;est une plateforme immersive qui vous permet de vivre des aventures épiques."
+              header="Qu&apos;est-ce que le yoga bouddhiste ?"
+              text="Le yoga bouddhiste est une pratique spirituelle alliant méditation, mouvements conscients et enseignements bouddhistes pour cultiver la paix intérieure et l&apos;éveil spirituel."
               textColor={textColor}
               backgroundColor={backgroundColor}
             />
@@ -106,8 +106,8 @@ const Accordion: React.FC<AccordionProps> = ({
               backgroundColor={backgroundColor}
             />
             <AccordionItem
-              header="Quels sont les projets en cours?"
-              text="Nous avons plusieurs projets en cours, chacun offrant une expérience unique dans le monde de Spectral. Consultez notre section Projets pour en savoir plus."
+              header="Comment élever son niveau d&apos;esprit ?"
+              text="Élevez votre niveau d&apos;esprit grâce à nos pratiques guidées, à la méditation quotidienne et à l&apos;apprentissage des principes bouddhistes."
               textColor={textColor}
               backgroundColor={backgroundColor}
             />
@@ -120,14 +120,14 @@ const Accordion: React.FC<AccordionProps> = ({
               backgroundColor={backgroundColor}
             />
             <AccordionItem
-              header="Quels sont les avantages de rejoindre Spectral?"
-              text="En rejoignant Spectral, vous accédez à un monde riche en contenu, une communauté active, et des projets innovants qui évoluent constamment."
+              header="Quels sont les avantages de rejoindre Seranya?"
+              text="Rejoindre Seranya, c&apos;est accéder à des ressources exclusives, une communauté bienveillante et un soutien personnalisé pour votre cheminement spirituel."
               textColor={textColor}
               backgroundColor={backgroundColor}
             />
             <AccordionItem
-              header="Comment suivre les mises à jour de Spectral?"
-              text="Suivez-nous sur nos réseaux sociaux et inscrivez-vous à notre newsletter pour recevoir les dernières nouvelles et mises à jour."
+              header="Comment suivre les mises à jour de Seranya?"
+              text="Abonnez-vous à notre newsletter ou suivez-nous sur nos réseaux sociaux pour rester informé des actualités et des nouveautés."
               textColor={textColor}
               backgroundColor={backgroundColor}
             />
