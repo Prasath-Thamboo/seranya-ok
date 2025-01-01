@@ -53,14 +53,14 @@ export default function RootLayout({
         />
         <meta
           name="keywords"
-          content="Spectral, aventure, univers, expérience immersive, découverte"
+          content="Seranya, aventure, univers, expérience immersive, découverte"
         />
         <meta name="robots" content="index, follow" />
 
         {/* Open Graph pour les réseaux sociaux */}
         <meta
           property="og:title"
-          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
+          content={String(metadata.title) ?? "Seranya"} // Conversion en chaîne
         />
         <meta
           property="og:description"
