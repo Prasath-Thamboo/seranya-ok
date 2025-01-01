@@ -1,4 +1,4 @@
-// spectralnext/components/Navbar.tsx
+// seranyanext/components/Navbar.tsx
 
 "use client";
 
@@ -160,7 +160,7 @@ export default function Navbar() {
             <div className="hidden md:block">
               <Image
                 src="/logos/seranyaicon.png" // Utiliser le chemin correct vers votre logo
-                alt="Logo Spectral"
+                alt="Logo Seranya"
                 width={180} // Réduction de la largeur de 200 à 180
                 height={70} // Réduction de la hauteur de 80 à 70
                 className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
@@ -168,8 +168,8 @@ export default function Navbar() {
             </div>
             <div className="block md:hidden">
               <Image
-                src="/logos/spectral-favicon-color.png" // Assurez-vous que ce chemin est correct
-                alt="Logo Spectral"
+                src="/logos//seranyaicon.png" // Assurez-vous que ce chemin est correct
+                alt="Logo Seranya"
                 width={50} // Réduction de la largeur de 60 à 50
                 height={50} // Réduction de la hauteur de 60 à 50
                 className="object-contain max-h-12" // Réduction de max-h-14 à max-h-12 (3rem)

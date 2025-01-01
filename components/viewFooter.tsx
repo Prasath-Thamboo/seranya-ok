@@ -1,4 +1,4 @@
-// spectralnext/components/ViewFooter.tsx
+// seranyanext/components/ViewFooter.tsx
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -54,8 +54,8 @@ const ViewFooter: React.FC<ViewFooterProps> = ({ backgroundImage }) => {
           {/* Logo */}
           <a href="#" className="mb-8 inline-block max-w-full">
             <Image
-              src="/logos/spectral-high-resolution-logo-white-transparent.png"
-              alt="Logo Spectral"
+              src="/logos/seranyaicon.png"
+              alt="Logo Seranya"
               width={160}
               height={40}
               className="inline-block object-contain"

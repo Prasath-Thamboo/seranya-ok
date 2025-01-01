@@ -1,4 +1,4 @@
-// spectralnext/components/HeroSection.tsx
+// seranyanext/components/HeroSection.tsx
 
 import React from "react";
 

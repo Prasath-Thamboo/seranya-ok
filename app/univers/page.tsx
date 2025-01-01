@@ -204,9 +204,9 @@ const UniversPage = () => {
         backgroundImage={heroBackgroundImage}
         title="Explorez l'Univers"
         titleColor="#fff"
-        strongTitle="de Spectral"
+        strongTitle="de Seranya"
         strongTitleColor="#ffffff"
-        content="Découvrez les personnages, leurs histoires et plongez dans l'univers spectaculaire de Spectral."
+        content="Découvrez les blogs, tutos et autres sur Seranya."
         contentColor="#ddd"
         button1Text="Commencer l'exploration"
         button1Url="#"
@@ -423,10 +423,10 @@ const UniversPage = () => {
         transition={{ duration: 1 }}
       >
         <h2 className="text-3xl font-bold text-white font-iceberg">
-          L&apos;Encyclopédie de Spectral
+          L&apos;Encyclopédie de Seranya
         </h2>
         <p className="mt-4 text-lg text-gray-300 font-kanit">
-          Explorez les fiches des personnages et unités de Spectral.
+          Explorez les blogs de Seranya .
         </p>
       </motion.section>
 

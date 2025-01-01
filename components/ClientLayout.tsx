@@ -1,4 +1,4 @@
-// spectralnext/components/ClientLayout.tsx
+// seranyanext/components/ClientLayout.tsx
 
 "use client";
 

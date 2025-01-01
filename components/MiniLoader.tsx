@@ -1,4 +1,4 @@
-// spectralnext/components/MiniLoader.tsx
+// seranyanext/components/MiniLoader.tsx
 
 import Image from 'next/image';
 
@@ -7,7 +7,7 @@ export default function MiniLoader() {
     <div className="flex justify-center items-center h-full">
       <div className="animate-pulse">
         <Image
-          src="/logos/spectral-favicon-black (1).png" // Assure-toi que le chemin est correct
+          src="/logos/seranyaicon.png" // Assure-toi que le chemin est correct
           alt="Loading..."
           width={50}
           height={50}

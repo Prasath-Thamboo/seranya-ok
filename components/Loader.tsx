@@ -1,4 +1,4 @@
-// spectralnext/components/Loader.tsx
+// seranyanext/components/Loader.tsx
 "use client";
 
 import React from "react";

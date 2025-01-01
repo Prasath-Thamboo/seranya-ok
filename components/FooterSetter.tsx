@@ -1,4 +1,4 @@
-// spectralnext/components/FooterSetter.tsx
+// seranyanext/components/FooterSetter.tsx
 "use client";
 
 import React, { useEffect } from "react";

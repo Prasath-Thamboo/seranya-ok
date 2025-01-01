@@ -1,4 +1,4 @@
-// spectralnext/context/ColorContext.tsx
+// seranyanext/context/ColorContext.tsx
 
 import React, { createContext, useState, ReactNode } from "react";
 

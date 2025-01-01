@@ -1,4 +1,4 @@
-// spectralnext/components/BackgroundWrapper.tsx
+// seranyanext/components/BackgroundWrapper.tsx
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";

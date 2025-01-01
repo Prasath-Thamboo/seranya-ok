@@ -1,4 +1,4 @@
-// spectralnext/components/LoadingContext.tsx
+// seranyanext/components/LoadingContext.tsx
 "use client";
 
 import React, { createContext, useState, useContext, ReactNode } from "react";

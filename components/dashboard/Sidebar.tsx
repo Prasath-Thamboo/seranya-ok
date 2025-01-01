@@ -83,7 +83,7 @@ export default function Sidebar() {
         {/* Logo central */}
         <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/admin')}>
           <Image
-            src="/logos/spectral-favicon-white.png" // Utilisation du logo simplifié en mobile
+            src="/logos/seranyaicon.png" // Utilisation du logo simplifié en mobile
             alt="Home"
             width={40}
             height={40}
@@ -127,8 +127,8 @@ export default function Sidebar() {
         onClick={handleLogoClick}
       >
         <Image
-          src={collapsed ? "/logos/spectral-favicon-white.png" : "/logos/spectral-high-resolution-logo-white-transparent.png"}
-          alt="Spectral Logo"
+          src={collapsed ? "/logos/seranyaicon.png" : "/logos/seranyaicon.png"}
+          alt="Seranya Logo"
           width={collapsed ? 35 : 180}
           height={50}
           className="mx-auto"

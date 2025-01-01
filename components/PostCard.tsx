@@ -1,4 +1,4 @@
-// spectralnext/components/PostCard.tsx
+// seranyanext/components/PostCard.tsx
 
 'use client';
 

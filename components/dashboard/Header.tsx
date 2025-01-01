@@ -1,4 +1,4 @@
-// spectralnext\components\dashboard\Header.tsx
+// seranyanext\components\dashboard\Header.tsx
 
 import React, { useState, useEffect } from 'react';
 import { FiBell } from 'react-icons/fi';

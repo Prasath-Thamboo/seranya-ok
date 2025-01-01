@@ -1,4 +1,4 @@
-// spectralnext/components/TestRandomBackground.tsx
+// seranyanext/components/TestRandomBackground.tsx
 
 'use client';
 
