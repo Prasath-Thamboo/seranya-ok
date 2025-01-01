@@ -1,4 +1,4 @@
-// spectralnext/app/posts/page.tsx
+// Seranyanext/app/posts/page.tsx
 
 'use client';
 
@@ -44,7 +44,7 @@ const PostsPage: React.FC = () => {
         console.error('Erreur lors de la récupération de l\'image de fond:', err);
         setBgError(err.message || 'Erreur inconnue.');
         // Optionnellement, définir une image de fond par défaut
-        setBackgroundImage('/images/backgrounds/GhostKnight.png');
+        setBackgroundImage('/images/backgrounds/bouddhisme.jpg');
         setBgLoading(false);
       }
     };
@@ -73,7 +73,7 @@ const PostsPage: React.FC = () => {
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed"
       style={{
-        backgroundImage: `url(${backgroundImage || "/images/backgrounds/GhostKnight.png"})`,
+        backgroundImage: `url(${backgroundImage || "/images/backgrounds/bouddhisme.jpg"})`,
       }}
     >
       {/* Overlay pour obscurcir l'image de fond */}
@@ -83,10 +83,10 @@ const PostsPage: React.FC = () => {
       <div className="relative z-10">
         {/* Intégration du HeroSection */}
         <HeroSection
-backgroundImage={backgroundImage || "/images/backgrounds/GhostKnight.png"} 
+          backgroundImage={backgroundImage || "/images/backgrounds/bouddhisme.jpg"} 
           title="Bienvenue dans"
           titleColor="#ffffff" // Blanc
-          strongTitle="L'Univers Spectral"
+          strongTitle="L'Univers Seranya"
           strongTitleColor="#ffffff" // Blanc
           content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
           contentColor="#ffffff" // Blanc

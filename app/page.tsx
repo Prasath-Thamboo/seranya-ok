@@ -1,4 +1,4 @@
-// spectralnext/app/page.tsx
+// seranyanext/app/page.tsx
 
 'use client';
 
