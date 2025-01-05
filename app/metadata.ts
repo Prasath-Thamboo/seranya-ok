@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Spectral - Découvrez un Univers Fascinant",
-  description: "Plongez dans le monde fascinant de Spectral",
-  keywords: ["Spectral", "Fantasy", "Immersive Experience", "Aventure", "Découverte", "Univers interactif"],
+  title: "Seranya - Découvrez un Univers Fascinant",
+  description: "Plongez dans le monde fascinant de Seranya",
+  keywords: ["Seranya", "Fantasy", "Immersive Experience", "Aventure", "Découverte", "Univers interactif"],
   robots: "index, follow",
   // Open Graph metadata for social media sharing
   openGraph: {
-    title: "SpectralNext - Découvrez un Univers Fascinant",
-    description: "Plongez dans le monde fascinant de Spectral, une expérience immersive inédite.",
-    url: "https://www.spectralunivers.com",
-    siteName: "SpectralNext",
+    title: "SeranyaNext - Découvrez un Univers Fascinant",
+    description: "Plongez dans le monde fascinant de Seranya, une expérience immersive inédite.",
+    url: "https://www.seranya.fr",
+    siteName: "SeranyaNext",
     images: [
       {
         url: "https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png",

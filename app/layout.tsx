@@ -64,11 +64,11 @@ export default function RootLayout({
         />
         <meta
           property="og:description"
-          content={String(metadata.description) ?? "Plongez dans le monde fascinant de Spectral."} // Conversion en chaîne
+          content={String(metadata.description) ?? "Plongez dans le monde fascinant de Seranya."} // Conversion en chaîne
         />
-        <meta property="og:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
+        <meta property="og:image" content="https://seranya.fr/logos/favicon.ico" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.spectralunivers.com/" />
+        <meta property="og:url" content="https://seranya.fr/" />
 
         <meta name="geo.region" content="FR" /> 
         <meta name="geo.placename" content="Paris" />
@@ -80,13 +80,13 @@ export default function RootLayout({
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content={String(metadata.title) ?? "Spectral"} // Conversion en chaîne
+          content={String(metadata.title) ?? "Seranya"} // Conversion en chaîne
         />
         <meta
           name="twitter:description"
           content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
         />
-        <meta name="twitter:image" content="https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png" />
+        <meta name="twitter:image" content="https://seranya.fr/logos/favicon.ico" />
 
       
 

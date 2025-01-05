@@ -73,7 +73,7 @@ const PostsPage: React.FC = () => {
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed"
       style={{
-        backgroundImage: `url(${backgroundImage || "/images/backgrounds/bouddhisme.jpg"})`,
+        backgroundImage: "/images/backgrounds/bouddhisme.jpg",
       }}
     >
       {/* Overlay pour obscurcir l'image de fond */}
@@ -83,7 +83,7 @@ const PostsPage: React.FC = () => {
       <div className="relative z-10">
         {/* Intégration du HeroSection */}
         <HeroSection
-          backgroundImage={backgroundImage || "/images/backgrounds/bouddhisme.jpg"} 
+          backgroundImage="/images/backgrounds/bouddhisme.jpg" 
           title="Bienvenue dans"
           titleColor="#ffffff" // Blanc
           strongTitle="L'Univers Seranya"
