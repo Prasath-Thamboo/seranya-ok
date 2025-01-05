@@ -40,7 +40,7 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/logos/favicon.ico" type="image/x-icon" />
 
         <link rel="manifest" href="/manifest.json" />
 
