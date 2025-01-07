@@ -50,7 +50,7 @@ export default function LoginPage() {
       {/* Background image section */}
       <div className="relative w-full lg:w-2/3 h-64 lg:h-screen">
         <Image
-          src="/images/backgrounds/THEDarkSlayer.png"
+          src="/images/backgrounds/seranyayoga1.jpg"
           alt="Background"
           fill
           style={{ objectFit: "cover" }}
@@ -65,8 +65,8 @@ export default function LoginPage() {
           {/* Logo centré en haut */}
           <div className="mb-6 lg:mb-10">
             <Image
-              src="/logos/spectral-high-resolution-logo-white-transparent (1).png"
-              alt="Spectral Logo"
+              src="/logos/seranyaicon.png"
+              alt="Seranya Logo"
               width={300} // Ajuster la taille du logo
               height={100}
               className="mx-auto"
@@ -120,11 +120,11 @@ export default function LoginPage() {
             <Form.Item className="flex justify-center mt-6">
               {/* Bouton Connexion avec style personnalisé */}
               <button
-                className="bg-black text-white w-full h-16 text-xl font-bold flex items-center justify-center border border-black transition-all hover:bg-white hover:text-black border-md p-5 hover:scale-105 uppercase font-iceberg"
+                className="bg-green-400 text-white w-full h-16 text-xl font-bold flex items-center justify-center border border-black transition-all hover:bg-white hover:text-black border-md p-5 hover:scale-105 uppercase font-iceberg"
                 style={{ transition: "all .15s ease" }}
                 type="submit" // Utilisation de type "submit" pour exécuter le onFinish du formulaire
               >
-                <CgLogIn className="mr-2 w-6 h-6" />
+                <CgLogIn className="mr-2 w-6 h-6 " />
                 Connexion
               </button>
             </Form.Item>

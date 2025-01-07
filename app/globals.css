@@ -380,7 +380,7 @@ html ::-moz-scrollbar-thumb:hover {
 
 /* Classes personnalisées pour les ombres de texte */
 .text-shadow-lg {
-  text-shadow: 2px 2px 5px black;
+  text-shadow: 1px 1px 5px black;
 }
 
 .text-shadow-sm {

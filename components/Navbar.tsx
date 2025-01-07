@@ -187,24 +187,24 @@ export default function Navbar() {
             placement="bottom"
             overlayClassName="custom-submenu-dropdown"
           >
-            <button className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center">
+            <button className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center">
               <span className="shadow-text">Univers</span>
               <FaChevronDown className="ml-1" />
             </button>
           </Dropdown>
 
           {/* Extraits */}
-          <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
+          <Link href="/posts" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Extraits</span>
           </Link>
 
           {/* Contact */}
-          <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
+          <Link href="/contact" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Contact</span>
           </Link>
 
           {/* Abonnement */}
-          <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
+          <Link href="/subscription" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Abonnement</span>
           </Link>
         </div>
@@ -245,7 +245,7 @@ export default function Navbar() {
             <>
               <Link href="/auth/login">
                 <button
-                  className="flex items-center relative group bg-[var(--button-bg-color)] text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-[var(--button-hover-bg-color)] shadow-neon font-iceberg uppercase text-lg"
+                  className="flex items-center relative group bg-green-400 hover:bg-green-600 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 font-iceberg uppercase text-lg"
                 >
                   <FiLogIn className="mr-2 w-5 h-5" />
                   Connexion
@@ -253,7 +253,7 @@ export default function Navbar() {
               </Link>
               <Link href="/auth/register">
                 <button
-                  className="flex items-center relative group bg-[var(--button-bg-color)] text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 hover:bg-[var(--button-hover-bg-color)] shadow-neon font-iceberg uppercase text-lg"
+                  className="flex items-center relative group bg-green-400 hover:bg-green-600 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 font-iceberg uppercase text-lg"
                 >
                   <FiUserPlus className="mr-2 w-5 h-5" />
                   Inscription
@@ -380,7 +380,7 @@ export default function Navbar() {
 
         /* Effet néon pour les textes */
         .shadow-text {
-          text-shadow: 2px 2px 0px #000000;
+          text-shadow: 1px 1px 0px #000000;
         }
 
         /* Effet néon sur hover et actif */
