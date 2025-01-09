@@ -4,7 +4,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 const nextConfig = {
   images: {
     domains: [
-      'api.spectralunivers.com',
+      'https://back.seranya.fr/',
       'seranya.s3.amazonaws.com', // Ajout de l'hôte manquant
     ],
     remotePatterns: [

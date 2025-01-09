@@ -17,7 +17,7 @@ You need to link your local project to the GitHub repository. Add the remote URL
 
 bash
 Copier le code
-git remote add origin https://github.com/AKnight95/spectralAPI.git
+git remote add origin https://github.com/Prasath-Thamboo/seranya-back
 3. Add Your Files to the Git Index
 Stage all the files in your project for the first commit:
 

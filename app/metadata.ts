@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     siteName: "SeranyaNext",
     images: [
       {
-        url: "https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png",
+        url: "https://seranya.fr/logos/seranyaicon.png",
         width: 1200,
         height: 630,
-        alt: "Spectral Logo",
+        alt: "Seranya Logo",
       },
     ],
     locale: "fr_FR",
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   // Twitter Card metadata
   twitter: {
     card: "summary_large_image",
-    title: "Spectral - Découvrez un Univers Fascinant",
+    title: "Seranya - Découvrez un Univers Fascinant",
     description: "Votre aventure commence ici avec des expériences immersives fascinantes.",
-    images: ["https://www.spectralunivers.com/logos/spectral-favicon-color%20(1).png"],
+    images: ["https://seranya.fr/logos/seranyaicon.png"],
   },
   // Information about the theme color for mobile devices and PWA
   themeColor: "#000000",

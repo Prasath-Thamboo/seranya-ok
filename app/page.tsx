@@ -435,7 +435,7 @@ const Home: React.FC = () => {
               filter: "brightness(70%)",
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+            <div className="absolute inset-0"></div>
           </div>
         )}
         <div className="container mx-auto px-4 lg:pt-24 lg:pb-50 relative z-10">

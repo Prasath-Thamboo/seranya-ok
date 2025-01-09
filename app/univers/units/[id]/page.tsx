@@ -501,8 +501,8 @@ const UnitDetailPage = () => {
                 <Skeleton.Avatar active size="large" shape="square" />
               ) : (
                 <AntImage
-                  src="/logos/spectral-high-resolution-logo-white-transparent.png"
-                  alt="Logo Spectral"
+                  src="/logos/seranyaicon.png"
+                  alt="Logo Seranya"
                   width={160}
                   height={40}
                   className="inline-block object-contain"
