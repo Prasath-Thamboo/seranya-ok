@@ -139,7 +139,7 @@ export default function Navbar() {
         <Link href="/univers">Encyclopédie</Link>
       </Menu.Item>
       <Menu.Item key="2">
-        <Link href="/univers/regions">Régions</Link>
+        <Link href="/univers/regions">Tutoriels</Link>
       </Menu.Item>
     </Menu>
   );
@@ -195,7 +195,7 @@ export default function Navbar() {
 
           {/* Extraits */}
           <Link href="/posts" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
-            <span className="shadow-text">Extraits</span>
+            <span className="shadow-text">Blogs</span>
           </Link>
 
           {/* Contact */}

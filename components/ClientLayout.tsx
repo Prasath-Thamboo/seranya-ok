@@ -68,7 +68,7 @@ export default function ClientLayout({
         <div
           className="back-to-top-button"
           style={{
-            "--neon-color": color || "#2ecc40",
+            "--neon-color": color || "bg-white",
           } as React.CSSProperties}
         >
           <FaArrowUp className="text-2xl" />

@@ -175,8 +175,8 @@ const Home: React.FC = () => {
 
       {/* Hero Section */}
       <motion.section
-        className="relative pt-16 pb-32 flex content-center items-center justify-center w-full bg-transparent z-10"
-        style={{ minHeight: "75vh" }}
+        className="relative pt-16 pb-22 flex content-center items-center justify-center w-full bg-transparent z-10"
+        style={{ minHeight: "35vh" }}
         initial="hidden"
         whileInView="visible"
         variants={fadeInUp}
@@ -185,7 +185,7 @@ const Home: React.FC = () => {
         <div className="container relative mx-auto z-10">
           <div className="items-center flex flex-wrap">
             <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
-              <div className="pr-12">
+              <div className="pr-0">
                 <h1 className="text-white font-semibold text-5xl font-iceberg">
                   Un monde de paix vous attend
                 </h1>
@@ -238,7 +238,7 @@ const Home: React.FC = () => {
                 <div className="inline-flex justify-center items-center">
                   <span className="w-4 h-4 bg-gray-500 rounded-full mr-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300">
-                    Unités
+                    Articles
                   </span>
                 </div>
 
@@ -264,7 +264,7 @@ const Home: React.FC = () => {
                 <div className="inline-flex justify-center items-center">
                   <span className="w-4 h-4 bg-green-500 rounded-full mr-2"></span>
                   <span className="text-xs font-semibold uppercase text-gray-300">
-                    Champions
+                    Tutoriels
                   </span>
                 </div>
 
@@ -416,10 +416,9 @@ const Home: React.FC = () => {
         </div>
 
         {/* CTA Centré */}
-        <div className="text-center mt-12">
-          <Link href="/univers" className="inline-block bg-teal-600 text-white font-iceberg font-semibold px-6 py-3 rounded-md shadow-md hover:bg-teal-500 transition-colors duration-300">
+        <div className="text-center mt-0">
+          <Link href="/univers" className="">
             
-              Explorer
           </Link>
         </div>
       </motion.section>
@@ -439,7 +438,7 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
           </div>
         )}
-        <div className="container mx-auto px-4 lg:pt-24 lg:pb-64 relative z-10">
+        <div className="container mx-auto px-4 lg:pt-24 lg:pb-50 relative z-10">
           <div className="flex flex-wrap text-center justify-center">
             <div className="w-full lg:w-6/12 px-4">
               <h2 className="text-4xl font-semibold text-white mb-8 text-center font-iceberg uppercase">
