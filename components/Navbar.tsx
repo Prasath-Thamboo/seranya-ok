@@ -79,7 +79,7 @@ export default function Navbar() {
     // Gestion du scroll pour l'arrière-plan de la navbar
     const handleNavbarScroll = () => {
       if (window.scrollY > 0) {
-        setNavbarBackground("bg-gray-800 bg-opacity-75 backdrop-blur-md");
+        setNavbarBackground("bg-green-400 bg-opacity-75 backdrop-blur-md");
       } else {
         setNavbarBackground("bg-transparent"); // Remplace bg-gray-700 par bg-transparent
       }
@@ -215,7 +215,7 @@ export default function Navbar() {
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer group">
                 {profileImageUrl ? (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-green-400">
                     <Image
                       src={profileImageUrl}
                       alt="User Avatar"
@@ -225,7 +225,7 @@ export default function Navbar() {
                     />
                   </div>
                 ) : (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-gray-500 flex items-center justify-center">
+                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-green-400 flex items-center justify-center">
                     <span className="text-white text-lg font-iceberg">
                       {user.pseudo.charAt(0).toUpperCase()}
                     </span>
@@ -392,7 +392,7 @@ export default function Navbar() {
 
         /* Styles personnalisés pour les sous-menus */
         .custom-submenu-dropdown .ant-dropdown-menu {
-          background-color: rgba(31, 41, 55, 0.75); /* bg-gray-800 bg-opacity-75 */
+          background-color: rgba(31, 41, 55, 0.75); /* bg-green-400 bg-opacity-75 */
           border: none;
         }
 
@@ -403,7 +403,7 @@ export default function Navbar() {
 
         /* Styles personnalisés pour le sous-menu mobile */
         .custom-submenu-dropdown .ant-dropdown-menu {
-          background-color: rgba(31, 41, 55, 0.75); /* bg-gray-800 bg-opacity-75 */
+          background-color: rgba(31, 41, 55, 0.75); /* bg-green-400 bg-opacity-75 */
           border: none;
         }
 
