@@ -162,7 +162,7 @@ const Home: React.FC = () => {
           onLoad={handleImageLoad}
           unoptimized={true} // Désactive l'optimisation si nécessaire
         />
-        <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
+        <div className="absolute inset-0 bg-black opacity-30 z-10"></div>
       </div>
 
       {/* Carousel */}
@@ -215,7 +215,7 @@ const Home: React.FC = () => {
               filter: "brightness(70%)",
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-b"></div>
           </div>
         )}
 
@@ -507,7 +507,7 @@ const Home: React.FC = () => {
               filter: "brightness(60%)",
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-b backdrop-blur-md"></div>
           </div>
         )}
 
@@ -534,10 +534,10 @@ const Home: React.FC = () => {
               </div>
               <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
                 {[
-                  "Accès aux nouvelles de chaque personnage",
+                  "Rediger de nouveaux posts",
                   "Ressources des membres",
                   "Inscription à la newsletter",
-                  "T-shirt officiel des membres",
+                  "T-shirt officiel des membres (bientôt disponible)",
                 ].map((feature: string) => (
                   <li key={feature} className="flex gap-x-3">
                     <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />

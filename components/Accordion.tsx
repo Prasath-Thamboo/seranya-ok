@@ -70,7 +70,7 @@ const Accordion: React.FC<AccordionProps> = ({
 }) => {
   return (
     <section
-      className={`relative z-20 overflow-hidden pb-12 pt-20 ${backgroundColor} lg:pb-[90px] lg:pt-[120px]`}
+      className={`relative z-20 overflow-hidden pb-12 pt-20 ${backgroundColor} lg:pb-[90px] lg:pt-[9                             0px]`}
     >
       <div className="container mx-auto">
         <div className="-mx-4 flex flex-wrap">

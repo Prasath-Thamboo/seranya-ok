@@ -1,4 +1,4 @@
-// spectralnext/lib/queries/PostQueries.ts
+// Seranyanext/lib/queries/PostQueries.ts
 
 import axios from 'axios';
 import { PostModel, CreatePostModel, UpdatePostModel } from '../models/PostModels';

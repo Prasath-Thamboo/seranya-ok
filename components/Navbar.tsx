@@ -136,10 +136,10 @@ export default function Navbar() {
   const universSubMenu = (
     <Menu className="font-kanit custom-submenu">
       <Menu.Item key="1">
-        <Link href="/univers">Encyclopédie</Link>
+        <Link href="/univers">Tutoriels</Link>
       </Menu.Item>
       <Menu.Item key="2">
-        <Link href="/univers/regions">Tutoriels</Link>
+        <Link href="/univers/regions">Encyclopédie</Link>
       </Menu.Item>
     </Menu>
   );
@@ -148,8 +148,8 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${navbarBackground}`}
       style={{
-        "--neon-color": color || "#2ecc40", // Définir la variable CSS pour la couleur néon
-        "--button-bg-color": color || "#2ecc40", // Définir la variable CSS pour la couleur des boutons
+        "--neon-color": "#2ecc40", // Définir la variable CSS pour la couleur néon
+        "--button-bg-color": "#2ecc40", // Définir la variable CSS pour la couleur des boutons
         "--button-hover-bg-color": shadeColor(color || "#2ecc40", -10), // Assombrir la couleur des boutons de 10%
       } as React.CSSProperties}
     >
@@ -168,7 +168,7 @@ export default function Navbar() {
             </div>
             <div className="block md:hidden">
               <Image
-                src="/logos//seranyaicon.png" // Assurez-vous que ce chemin est correct
+                src="/logos/seranyaicon.png" // Assurez-vous que ce chemin est correct
                 alt="Logo Seranya"
                 width={50} // Réduction de la largeur de 60 à 50
                 height={50} // Réduction de la hauteur de 60 à 50

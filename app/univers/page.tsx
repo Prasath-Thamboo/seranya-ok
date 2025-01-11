@@ -84,7 +84,7 @@ const UniversPage = () => {
           "Échec du chargement de l'image de fond aléatoire pour HeroSection :",
           error
         );
-        setHeroBackgroundImage("/images/backgrounds/Bastion1.png");
+        setHeroBackgroundImage("/images/backgrounds/bouddhisme.jpg");
       }
     };
 

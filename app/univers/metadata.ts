@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Spectral - Univers",
+    title: "Seranya - Univers",
     description: "Explorer l'univers",
   };

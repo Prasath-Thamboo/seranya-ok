@@ -1,4 +1,4 @@
-// spectralnext/app/univers/units/[id]/layout.tsx
+// Seranyanext/app/univers/units/[id]/layout.tsx
 
 import FooterSetter from "@/components/FooterSetter"; // Importez FooterSetter
 import { fetchUnitById } from "@/lib/queries/UnitQueries";

@@ -1,14 +1,14 @@
 {
-    "name": "SpectralNext",
-    "short_name": "Spectral",
+    "name": "SeranyaNext",
+    "short_name": "Seranya",
     "icons": [
       {
-        "src": "/logos/spectral-favicon-color-192.png",
+        "src": "/logos/seranyaicon.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/logos/spectral-favicon-color-512.png",
+        "src": "/logos/seranyaicon.png",
         "type": "image/png",
         "sizes": "512x512"
       }

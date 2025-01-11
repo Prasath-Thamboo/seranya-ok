@@ -82,8 +82,8 @@ export default function RegisterPage() {
         {/* Enlarged logo at the top */}
         <div className="mb-6 lg:mb-10">
           <Image
-            src="/logos/spectral-high-resolution-logo-black-transparent (1).png"
-            alt="Spectral Logo"
+            src="/logos/seranyaicon.png"
+            alt="Seranya Logo"
             width={300} // Adjust logo size
             height={100}
             className="mx-auto"
@@ -182,7 +182,7 @@ export default function RegisterPage() {
       {/* Right section with the background image */}
       <div className="hidden lg:block relative w-1/2 h-full">
         <Image
-          src="/images/backgrounds/a.knight_httpss.mj.runoTkVu9yakdo_An_angelic_female_knight_wi_0a74cee9-5949-4fac-bf6c-5346ac9cda3f_2.png"
+          src="/images/backgrounds/seranyayoga.jpg"
           alt="Background Image"
           fill
           style={{ objectFit: 'cover' }}

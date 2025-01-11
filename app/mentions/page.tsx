@@ -43,7 +43,7 @@ const MentionsLegalesPage = () => {
 
         <div className="max-w-4xl mx-auto bg-black/50 p-6 md:p-12 rounded-lg shadow-lg">
           <p className="mb-6 leading-relaxed">
-            Conformément aux dispositions des articles 6-III et 19 de la Loi n°2004-575 du 21 juin 2004 pour la Confiance dans l&apos;Économie Numérique, dite L.C.E.N., il est porté à la connaissance des utilisateurs et visiteurs du site <strong>Spectral</strong> les présentes mentions légales.
+            Conformément aux dispositions des articles 6-III et 19 de la Loi n°2004-575 du 21 juin 2004 pour la Confiance dans l&apos;Économie Numérique, dite L.C.E.N., il est porté à la connaissance des utilisateurs et visiteurs du site <strong>Seranya</strong> les présentes mentions légales.
           </p>
 
           <h2 className="text-2xl font-bold mb-4">Données personnelles</h2>
@@ -56,7 +56,7 @@ const MentionsLegalesPage = () => {
             <li>Les informations de paiement pour vos achats</li>
           </ul>
           <p className="mb-6 leading-relaxed">
-            Ces données sont collectées dans le respect du Règlement Général sur la Protection des Données (RGPD) et vous pouvez exercer votre droit d&apos;accès, de rectification ou de suppression en nous contactant à l&apos;adresse <strong>spectral5.0.95@gmail.com</strong>.
+            Ces données sont collectées dans le respect du Règlement Général sur la Protection des Données (RGPD) et vous pouvez exercer votre droit d&apos;accès, de rectification ou de suppression en nous contactant à l&apos;adresse <strong>prasath.thamb@gmail.com</strong>.
           </p>
 
           <h2 className="text-2xl font-bold mb-4">Politique de Confidentialité</h2>
@@ -64,7 +64,7 @@ const MentionsLegalesPage = () => {
             Nous nous engageons à protéger la vie privée de nos utilisateurs conformément aux exigences du RGPD. Vos données personnelles ne seront utilisées que pour les besoins du site et pour améliorer l&apos;expérience utilisateur. Elles ne seront jamais vendues à des tiers sans votre consentement explicite.
           </p>
           <p className="mb-6 leading-relaxed">
-            Vous avez le droit de demander l&apos;accès, la rectification ou la suppression de vos données personnelles à tout moment. Pour exercer ces droits, vous pouvez nous contacter à <strong>spectral5.0.95@gmail.com</strong>.
+            Vous avez le droit de demander l&apos;accès, la rectification ou la suppression de vos données personnelles à tout moment. Pour exercer ces droits, vous pouvez nous contacter à <strong>prasath.thamb@gmail.com</strong>.
           </p>
 
           <h2 className="text-2xl font-bold mb-4">Google Analytics</h2>
@@ -89,7 +89,7 @@ const MentionsLegalesPage = () => {
 
           <h2 className="text-2xl font-bold mb-4">Contact</h2>
           <p className="mb-6 leading-relaxed">
-            Pour toute question ou réclamation, vous pouvez nous contacter à <strong>spectral5.0.95@gmail.com</strong>.
+            Pour toute question ou réclamation, vous pouvez nous contacter à <strong>prasath.thamb@gmail.com</strong>.
           </p>
         </div>
       </div>

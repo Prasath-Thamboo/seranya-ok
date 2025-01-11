@@ -67,7 +67,7 @@ export const Pricing = () => {
     <div className="px-4 py-12 mx-auto max-w-full md:px-12 lg:px-24 lg:py-20">
       <div className="max-w-4xl mb-8 md:mx-auto sm:text-center lg:w-full">
         <div>
-          <p className="inline-block px-4 py-1 mb-4 text-xs font-semibold tracking-wider text-white uppercase rounded-full bg-teal-500 text-iceberg">
+          <p className="inline-block px-4 py-1 mb-4 text-xs font-semibold tracking-wider text-white uppercase rounded-full bg-green-500 text-iceberg">
             Nouveau
           </p>
         </div>

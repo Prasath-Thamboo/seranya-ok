@@ -1,4 +1,4 @@
-// spectralnext/lib/models/PostModels.ts
+// Seranyanext/lib/models/PostModels.ts
 
 // Import nécessaire pour les types de fichiers
 // Importer uniquement si FileType est utilisé ailleurs, sinon supprimer
