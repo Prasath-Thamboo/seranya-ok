@@ -67,7 +67,7 @@ const UnitDetailPage = () => {
             if (fetchedUnit.color) {
               setColor(fetchedUnit.color);
             } else {
-              setColor("#008080"); // Teal par défaut
+              setColor("#008000"); // Teal par défaut
             }
           }
         } catch (error) {

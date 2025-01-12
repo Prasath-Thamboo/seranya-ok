@@ -8,12 +8,12 @@ interface ColorContextType {
 }
 
 export const ColorContext = createContext<ColorContextType>({
-  color: "#008080", // Couleur par défaut (teal)
+  color: "#008000", // Couleur par défaut (teal)
   setColor: () => {},
 });
 
 export const ColorProvider = ({ children }: { children: ReactNode }) => {
-  const [color, setColor] = useState<string>("#008080"); // Teal par défaut
+  const [color, setColor] = useState<string>("#008000"); // Teal par défaut
 
   return (
     <ColorContext.Provider value={{ color, setColor }}>

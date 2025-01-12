@@ -64,7 +64,7 @@ const ClassDetailPage = () => {
             if (fetchedClasse.color) {
               setColor(fetchedClasse.color);
             } else {
-              setColor("#008080"); // Couleur par défaut
+              setColor("#008000"); // Couleur par défaut
             }
           }
         } catch (error) {

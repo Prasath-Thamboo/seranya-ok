@@ -43,7 +43,7 @@ export const Pricing = () => {
     }
 
     try {
-      const response = await fetch('https://api.spectralunivers.com/payment/create-subscription', {
+      const response = await fetch('https://back.seranya.fr/payment/create-subscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

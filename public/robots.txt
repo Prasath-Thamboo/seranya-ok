@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://www.spectralunivers.com
+Host: https://seranya.fr/
 
 # Sitemaps
-Sitemap: https://www.spectralunivers.com/sitemap.xml
+Sitemap: https://seranya.fr/sitemap.xml

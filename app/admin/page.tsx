@@ -127,7 +127,7 @@ export default function DashboardHome() {
           <div className="flex justify-between items-center h-full">
             {totalUnits !== null ? (
               <div>
-                <h3 className="text-lg font-iceberg">Total des Unités</h3>
+                <h3 className="text-lg font-iceberg">Total des Posts</h3>
                 <p className="text-4xl font-bold font-kanit">{totalUnits}</p>
               </div>
             ) : (
@@ -163,7 +163,7 @@ export default function DashboardHome() {
           {/* Carte Répartition des Unités */}
           <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300" hoverable>
             <div className='h-full'>
-              <h3 className="text-lg font-iceberg text-center">Répartition des Unités</h3>
+              <h3 className="text-lg font-iceberg text-center">Répartition des Posts</h3>
               {renderPieChart(unitDistribution, UNIT_COLORS)}
             </div>
           </Card>

@@ -34,7 +34,7 @@ const CreatePost = () => {
     // Charger les classes disponibles
     const loadClasses = async () => {
       try {
-        const response = await axios.get(`https://api.spectralunivers.com/classes`);
+        const response = await axios.get(`https://back.seranya.fr/classes`);
         setClasses(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des classes:", error);
@@ -44,7 +44,7 @@ const CreatePost = () => {
     // Charger les unités disponibles
     const loadUnits = async () => {
       try {
-        const response = await axios.get(`https://api.spectralunivers.com/units`);
+        const response = await axios.get(`https://back.seranya.fr/units`);
         setUnits(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des unités:", error);
@@ -101,7 +101,7 @@ const CreatePost = () => {
       }
 
       // Envoi du formulaire au backend avec Axios
-      await axios.post(`https://api.spectralunivers.com/posts`, formData, {
+      await axios.post(`https://back.seranya.fr/posts`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
