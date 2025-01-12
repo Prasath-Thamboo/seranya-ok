@@ -317,7 +317,7 @@ export const Pricing = () => {
           </div>
           <div>
             <button
-              className={`inline-flex items-center justify-center w-full h-12 px-6 mb-4 font-medium tracking-wide text-white transition duration-200 rounded-lg shadow-md font-kanit uppercase ${isSubscribed ? 'bg-gray-600 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'}`}
+              className={`inline-flex items-center justify-center w-full h-12 px-6 mb-4 font-medium tracking-wide text-white transition duration-200 rounded-lg shadow-md font-kanit uppercase ${isSubscribed ? 'bg-gray-600 cursor-not-allowed' : 'bg-green-600 hover:bg-green-500'}`}
               onClick={handleSubscription}
               disabled={isSubscribed}
             >

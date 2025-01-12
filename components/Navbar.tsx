@@ -275,7 +275,7 @@ export default function Navbar() {
       </div>
 
       {/* Barre de progression fixe en bas */}
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-gray-700 z-50">
+      <div className="fixed bottom-0 left-0 w-full h-1 bg-green-400 z-50">
         <div
           className="h-full neon-effect transition-all duration-500"
           style={{

@@ -230,15 +230,15 @@ const Home: React.FC = () => {
 
           {/* Cartes Statistiques */}
           {/* Cartes Statistiques */}
-          <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+          <div className="max-w-[55rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
             {/* Grid des cartes statistiques */}
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
+              <div className="flex flex-col gap-y-4 p-6 bg-green-400/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
-                  <span className="w-4 h-4 bg-gray-500 rounded-full mr-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-300">
-                    Articles
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+                  <span className="text-xs font-semibold uppercase text-white">
+                    Posts
                   </span>
                 </div>
 
@@ -260,10 +260,10 @@ const Home: React.FC = () => {
               {/* Fin Première Carte Statistique */}
 
               {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
+              <div className="flex flex-col gap-y-4 p-6 bg-green-400/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
-                  <span className="w-4 h-4 bg-green-500 rounded-full mr-2"></span>
-                  <span className="text-xs font-semibold uppercase text-gray-300">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  <span className="text-xs font-semibold uppercase text-white">
                     Tutoriels
                   </span>
                 </div>
@@ -286,11 +286,11 @@ const Home: React.FC = () => {
               {/* Fin Deuxième Carte Statistique */}
 
               {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-4 p-6 bg-gray-800/60 border border-gray-700 shadow-sm rounded-xl flex-1">
+              <div className="flex flex-col gap-y-4 p-6 bg-green-400/60 border border-gray-700 shadow-sm rounded-xl flex-1">
                 <div className="inline-flex justify-center items-center">
-                  <span className="w-4 h-4 bg-red-500 rounded-full mr-2"></span>
+                  <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
                   <span className="text-xs font-semibold uppercase text-green-300">
-                    Classes
+                    T-shirt*
                   </span>
                 </div>
 
@@ -529,7 +529,7 @@ const Home: React.FC = () => {
                 Profitez d&#39;un accès illimité à tous nos services pour une seule et unique fois.
               </p>
               <div className="mt-10 flex items-center gap-x-4">
-                <h4 className="flex-none text-sm font-semibold leading-6 text-indigo-600">Ce qui est inclus</h4>
+                <h4 className="flex-none text-sm font-semibold leading-6 text-green-400">Ce qui est inclus</h4>
                 <div className="h-px flex-auto bg-gray-100" />
               </div>
               <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
@@ -540,7 +540,7 @@ const Home: React.FC = () => {
                   "T-shirt officiel des membres (bientôt disponible)",
                 ].map((feature: string) => (
                   <li key={feature} className="flex gap-x-3">
-                    <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-indigo-600" />
+                    <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-green-800" />
                     {feature}
                   </li>
                 ))}
@@ -556,7 +556,7 @@ const Home: React.FC = () => {
                   </p>
                   <Link
                     href="/subscription"
-                    className="mt-10 block w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    className="mt-10 block w-full rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500"
                     passHref
                   >
                     Obtenez l&#39;accès
