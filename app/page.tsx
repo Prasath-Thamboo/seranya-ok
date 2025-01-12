@@ -524,7 +524,7 @@ const Home: React.FC = () => {
 
           <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
             <div className="p-8 sm:p-10 lg:flex-auto">
-              <h3 className="text-2xl font-bold tracking-tight text-white font-iceberg">Abonnement à vie</h3>
+              <h3 className="text-2xl font-bold tracking-tight text-white text-center font-iceberg">Abonnement à vie</h3>
               <p className="mt-6 text-base leading-7 text-gray-300 font-kanit">
                 Profitez d&#39;un accès illimité à tous nos services pour une seule et unique fois.
               </p>
@@ -536,7 +536,6 @@ const Home: React.FC = () => {
                 {[
                   "Rediger de nouveaux posts",
                   "Ressources des membres",
-                  "Inscription à la newsletter",
                   "T-shirt officiel des membres (bientôt disponible)",
                 ].map((feature: string) => (
                   <li key={feature} className="flex gap-x-3">
@@ -549,10 +548,10 @@ const Home: React.FC = () => {
             <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
               <div className="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
                 <div className="mx-auto max-w-xs px-8">
-                  <p className="text-base font-semibold text-gray-600">Un paiement unique, pour un accès à vie</p>
+                  <p className="text-base font-semibold text-gray-600">Un paiement mensuel</p>
                   <p className="mt-6 flex items-baseline justify-center gap-x-2">
                     <span className="text-5xl font-bold tracking-tight text-gray-900">5.00€</span>
-                    <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">EUR</span>
+                    <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600"> EUR/MOIS</span>
                   </p>
                   <Link
                     href="/subscription"

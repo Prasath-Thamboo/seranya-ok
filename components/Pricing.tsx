@@ -137,7 +137,7 @@ export const Pricing = () => {
                       />
                     </svg>
                   </div>
-                  <p className="font-medium text-white font-kanit">Accès aux biographies</p>
+                  <p className="font-medium text-white font-kanit">Accès aux posts</p>
                 </li>
                 <li className="flex items-center">
                   <div className="mr-3">
@@ -161,7 +161,7 @@ export const Pricing = () => {
                       />
                     </svg>
                   </div>
-                  <p className="font-medium text-white font-kanit">Accès aux galeries</p>
+                  <p className="font-medium text-white font-kanit">Présentation du yoga bouddhiste</p>
                 </li>
                 <li className="flex items-center">
                   <div className="mr-3">
@@ -186,7 +186,7 @@ export const Pricing = () => {
                     </svg>
                   </div>
                   <p className="font-medium text-white font-kanit">
-                    Création de profil pour commenter et noter
+                    Création de profil pour débuter l&apos;abonnement
                   </p>
                 </li>
               </ul>
@@ -260,7 +260,7 @@ export const Pricing = () => {
                       />
                     </svg>
                   </div>
-                  <p className="font-medium text-white font-kanit">Accès aux biographies</p>
+                  <p className="font-medium text-white font-kanit">Edition de posts</p>
                 </li>
                 <li className="flex items-center">
                   <div className="mr-3">
@@ -285,7 +285,7 @@ export const Pricing = () => {
                     </svg>
                   </div>
                   <p className="font-medium text-white font-kanit">
-                    Accès aux galeries
+                    Statut d&apos;éditeur
                   </p>
                 </li>
                 <li className="flex items-center">
@@ -310,7 +310,7 @@ export const Pricing = () => {
                       />
                     </svg>
                   </div>
-                  <p className="font-medium text-white font-kanit">Commenter et noter</p>
+                  <p className="font-medium text-white font-kanit">Accès aux paramètres de compte Editeur</p>
                 </li>
               </ul>
             </div>
