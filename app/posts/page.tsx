@@ -73,7 +73,7 @@ const PostsPage: React.FC = () => {
     <div
       className="min-h-screen relative bg-cover bg-center bg-fixed"
       style={{
-        backgroundImage: "/images/backgrounds/bouddhisme.jpg",
+        backgroundImage: `url(${backgroundImage || '/images/backgrounds/bouddhisme.jpg'})`,
       }}
     >
       {/* Overlay pour obscurcir l'image de fond */}

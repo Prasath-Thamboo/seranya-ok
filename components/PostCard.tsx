@@ -31,11 +31,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <div className="p-6">
         <h2 className="text-2xl font-iceberg font-semibold text-gray-800 mb-2">{post.title}</h2>
         <p className="text-gray-600 mb-4">{post.intro}</p> {/* Utilisation de 'intro' */}
-        <Link href={`/posts/${post.id}`}>
-          <a className="inline-flex items-center text-teal-500 hover:text-teal-700 font-semibold">
-            Lire Plus
-            <FiChevronRight className="ml-2" />
-          </a>
+        <Link href={`/posts/${post.id}`} className="inline-flex items-center text-teal-500 hover:text-teal-700 font-semibold">
+          Lire Plus
+          <FiChevronRight className="ml-2" />
         </Link>
       </div>
     </div>
