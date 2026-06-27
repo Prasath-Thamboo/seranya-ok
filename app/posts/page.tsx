@@ -91,15 +91,15 @@ const PostsPage: React.FC = () => {
           content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
           contentColor="#ffffff" // Blanc
           button1Text="Voir les Posts"
-          button1Url="/posts"
-          button1BgColor="#38b2ac" // Teal (Hex code)
+          button1Url="#posts-section"
+          button1BgColor="#38b2ac"
           button2Text="Découvrir"
-          button2Url="/discover"
+          button2Url="/univers"
           button2BgColor="#38b2ac" // Teal (Hex code)
         />
 
         {/* Section des Posts */}
-        <div className="py-10 px-5">
+        <div id="posts-section" className="py-10 px-5">
           <h1 className="text-4xl font-bold text-center text-white mb-10 font-iceberg text-shadow-lg">
             Exploration de l&apos;Univers
           </h1>

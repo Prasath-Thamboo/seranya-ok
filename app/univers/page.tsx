@@ -329,7 +329,7 @@ const UniversPage = () => {
                 <input
                   className="w-full h-12 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-white border-0 rounded-md shadow focus:placeholder-gray-600 focus:bg-gray-100 focus:ring-2 focus:ring-blue-500"
                   type="text"
-                  placeholder="Rechercher une classe..."
+                  placeholder="Rechercher une famille..."
                   aria-label="Rechercher"
                   value={searchClassesQuery}
                   onChange={handleClassesSearch}
@@ -483,7 +483,7 @@ const UniversPage = () => {
                         className="block text-sm font-medium text-white"
                       >
                         {type === "ALL"
-                          ? "Toutes les Unités"
+                          ? "Toutes les Entités"
                           : type.charAt(0) + type.slice(1).toLowerCase()}
                       </label>
                     </li>
@@ -497,7 +497,7 @@ const UniversPage = () => {
                 onClick={() => setIsClassFilterOpen(!isClassFilterOpen)}
                 className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-black/70 rounded-b-lg focus:outline-none"
               >
-                Filtrage par classe
+                Filtrage par famille
               </button>
               {isClassFilterOpen && (
                 <div className="flex flex-wrap gap-2 p-4 bg-black/70 rounded-lg mt-2">

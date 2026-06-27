@@ -136,10 +136,13 @@ export default function Navbar() {
   const universSubMenu = (
     <Menu className="font-kanit custom-submenu">
       <Menu.Item key="1">
-        <Link href="/univers">Tutoriels</Link>
+        <Link href="/tutoriels">Tutoriels</Link>
       </Menu.Item>
       <Menu.Item key="2">
-        <Link href="/univers/regions">Encyclopédie</Link>
+        <Link href="/univers">Univers</Link>
+      </Menu.Item>
+      <Menu.Item key="3">
+        <Link href="/encyclopedie">Encyclopédie</Link>
       </Menu.Item>
     </Menu>
   );
