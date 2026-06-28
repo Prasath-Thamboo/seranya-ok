@@ -47,7 +47,7 @@ const CreateDefinition = () => {
           onFinish={handleSubmit}
           layout="vertical"
           className="text-black font-kanit"
-          initialValues={{ isPublished: false }}
+          initialValues={{ isPublished: true }}
         >
           <Form.Item
             name="term"

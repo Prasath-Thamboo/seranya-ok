@@ -1,12 +1,13 @@
-// Seranyanext/app/contact/page.tsx
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input } from 'antd';
 import axios from 'axios';
-import { useNotification } from '@/components/notifications/NotificationProvider'; // Notification system
-import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery"; // Nouvelle importation
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { FiSend, FiMail, FiMessageSquare, FiTag } from 'react-icons/fi';
+import { useNotification } from '@/components/notifications/NotificationProvider';
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 
 const { TextArea } = Input;
 
@@ -15,119 +16,174 @@ const BASE_URL =
     ? process.env.NEXT_PUBLIC_API_URL_PROD
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
-const ContactPage: React.FC = () => {
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
-  const { addNotification } = useNotification(); // Notification system
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+export default function ContactPage() {
+  const [backgroundImage, setBackgroundImage] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const { addNotification } = useNotification();
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    // Nouvelle méthode pour charger une image de fond aléatoire
-    const loadRandomBackgroundImage = async () => {
-      try {
-        const image = await fetchRandomBackground();
-        setBackgroundImage(image);
-      } catch (error) {
-        console.error("Échec du chargement de l'image de fond aléatoire :", error);
-        setBackgroundImage("/images/backgrounds/default.jpg"); // Image de secours
-      }
-    };
-
-    loadRandomBackgroundImage();
+    fetchRandomBackground()
+      .then(setBackgroundImage)
+      .catch(() => setBackgroundImage('/images/backgrounds/placeholder.jpg'));
   }, []);
 
   const onFinish = async (values: any) => {
+    setLoading(true);
     try {
-      // Appel au backend pour envoyer le message via BASE_URL
-      await axios.post(`${BASE_URL}/mailer/contact`, values); 
-      addNotification('success', 'Votre message a été envoyé avec succès!');
-    } catch (error) {
-      console.error('Error sending message:', error);
-      addNotification('critical', 'Erreur lors de l\'envoi du message.');
+      await axios.post(`${BASE_URL}/mailer/contact`, values);
+      addNotification('success', 'Votre message a été envoyé avec succès !');
+      form.resetFields();
+    } catch {
+      addNotification('critical', "Erreur lors de l'envoi du message.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
-    <section
-      className="bg-white dark:bg-gray-900 flex justify-center items-center min-h-screen relative"
-      style={{
-        backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
-        backgroundSize: 'cover',
-        backgroundAttachment: 'fixed',
-        backgroundPosition: 'center',
-      }}
-    >
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+    <div className="relative min-h-screen bg-black text-white font-kanit overflow-hidden">
+      {/* Background */}
+      {backgroundImage && (
+        <Image
+          src={backgroundImage}
+          alt="Background"
+          fill
+          style={{ objectFit: 'cover' }}
+          className="opacity-20"
+          priority
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-black pointer-events-none" />
 
-      <div className="py-8 lg:py-16 px-4 mx-auto max-w-screen-md w-full relative z-10">
-        <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-white uppercase font-iceberg">
-          Contact
-        </h2>
-        <p className="mb-8 lg:mb-16 font-light text-center text-gray-300 sm:text-xl">
-          Un problème technique? Une question sur l&apos;univers? Contactez-nous!
-        </p>
+      <div className="relative z-10 flex flex-col lg:flex-row min-h-screen">
 
-        <Form
-          name="contact"
-          layout="vertical"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          className="space-y-4"
+        {/* Panneau gauche — infos */}
+        <motion.div
+          className="flex flex-col justify-center px-10 py-20 lg:w-2/5 lg:border-r border-gray-800"
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
         >
-          <Form.Item
-            label="Votre email"
-            name="email"
-            className="font-kanit text-black"
-            rules={[{ required: true, message: 'Veuillez entrer votre email!' }, { type: 'email', message: 'Email invalide' }]}
-          >
-            <Input
-              placeholder="name@domain.com"
-              className="font-kanit bg-black bg-opacity-70 text-white placeholder-gray-500 hover:bg-black focus:bg-black"
-              style={{ height: "3rem" }}
-            />
-          </Form.Item>
+          <motion.div variants={fadeUp} className="mb-10">
+            <Image src="/logos/seranyaicon.png" alt="Seranya" width={140} height={50} />
+          </motion.div>
 
-          <Form.Item
-            label="Sujet"
-            name="subject"
-            className="font-kanit text-black"
-            rules={[{ required: true, message: 'Veuillez entrer le sujet!' }]}
-          >
-            <Input
-              placeholder="Quel est le sujet de votre message?"
-              className="font-kanit bg-black bg-opacity-70 text-white placeholder-gray-500 hover:bg-black focus:bg-black"
-              style={{ height: "3rem" }}
-            />
-          </Form.Item>
+          <motion.p variants={fadeUp} className="text-green-400 font-iceberg uppercase tracking-widest text-sm mb-3">
+            Contact
+          </motion.p>
+          <motion.h1 variants={fadeUp} className="text-4xl lg:text-5xl font-iceberg uppercase tracking-wide text-white mb-6 leading-tight">
+            Parlons-nous
+          </motion.h1>
+          <motion.p variants={fadeUp} className="text-gray-400 text-base leading-relaxed mb-12 max-w-sm">
+            Un problème technique, une question sur l&apos;univers Seranya, ou simplement une idée à partager ? Nous vous répondrons dans les plus brefs délais.
+          </motion.p>
 
-          <Form.Item
-            label="Votre message"
-            name="message"
-            className="font-kanit text-black"
-            rules={[{ required: true, message: 'Veuillez entrer votre message!' }]}
-          >
-            <TextArea
-              rows={6}
-              placeholder="Décrivez votre problème ou votre question ici..."
-              className="font-kanit bg-black bg-opacity-70 text-white placeholder-gray-500 hover:bg-black focus:bg-black"
-            />
-          </Form.Item>
+          <div className="space-y-6">
+            {[
+              { icon: <FiMail className="w-5 h-5 text-green-400" />, label: 'Email', value: 'contact@seranya.fr' },
+              { icon: <FiMessageSquare className="w-5 h-5 text-green-400" />, label: 'Réponse', value: 'Sous 24 heures' },
+            ].map((item) => (
+              <motion.div key={item.label} variants={fadeUp} className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center flex-shrink-0">
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-widest font-iceberg">{item.label}</p>
+                  <p className="text-white text-sm">{item.value}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="w-full font-kanit h-12 uppercase font-bold bg-black text-white hover:bg-gray-800 shadow-[0px_0px_15px_3px_rgba(255,255,255,0.8)] border-none"
-            >
-              Envoyer le message
-            </Button>
-          </Form.Item>
-        </Form>
+        {/* Panneau droit — formulaire */}
+        <motion.div
+          className="flex items-center justify-center flex-1 px-8 py-20 lg:px-16"
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+        >
+          <div className="w-full max-w-lg">
+            <motion.h2 variants={fadeUp} className="text-2xl font-iceberg uppercase tracking-wide text-white mb-8">
+              Envoyer un message
+            </motion.h2>
+
+            <Form form={form} layout="vertical" onFinish={onFinish}>
+              <motion.div variants={fadeUp}>
+                <Form.Item
+                  name="email"
+                  rules={[{ required: true, message: 'Requis' }, { type: 'email', message: 'Email invalide' }]}
+                  label={
+                    <span className="flex items-center gap-2 text-gray-300 font-kanit text-sm">
+                      <FiMail className="w-4 h-4 text-green-400" /> Email
+                    </span>
+                  }
+                >
+                  <Input
+                    placeholder="votre@email.com"
+                    className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400 focus:border-green-400"
+                    style={{ height: '2.75rem', borderRadius: '0.375rem' }}
+                  />
+                </Form.Item>
+              </motion.div>
+
+              <motion.div variants={fadeUp}>
+                <Form.Item
+                  name="subject"
+                  rules={[{ required: true, message: 'Requis' }]}
+                  label={
+                    <span className="flex items-center gap-2 text-gray-300 font-kanit text-sm">
+                      <FiTag className="w-4 h-4 text-green-400" /> Sujet
+                    </span>
+                  }
+                >
+                  <Input
+                    placeholder="De quoi s'agit-il ?"
+                    className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400 focus:border-green-400"
+                    style={{ height: '2.75rem', borderRadius: '0.375rem' }}
+                  />
+                </Form.Item>
+              </motion.div>
+
+              <motion.div variants={fadeUp}>
+                <Form.Item
+                  name="message"
+                  rules={[{ required: true, message: 'Requis' }]}
+                  label={
+                    <span className="flex items-center gap-2 text-gray-300 font-kanit text-sm">
+                      <FiMessageSquare className="w-4 h-4 text-green-400" /> Message
+                    </span>
+                  }
+                >
+                  <TextArea
+                    rows={6}
+                    placeholder="Décrivez votre question ou votre message..."
+                    className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400 focus:border-green-400 resize-none"
+                    style={{ borderRadius: '0.375rem' }}
+                  />
+                </Form.Item>
+              </motion.div>
+
+              <motion.div variants={fadeUp}>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-12 flex items-center justify-center gap-2 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95 disabled:opacity-60"
+                >
+                  <FiSend className="w-4 h-4" />
+                  {loading ? 'Envoi...' : 'Envoyer'}
+                </button>
+              </motion.div>
+            </Form>
+          </div>
+        </motion.div>
       </div>
-    </section>
+    </div>
   );
-};
-
-export default ContactPage;
+}

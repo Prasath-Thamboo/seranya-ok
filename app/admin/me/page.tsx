@@ -26,10 +26,7 @@ const ProfilePage = () => {
     const fetchUser = async () => {
       try {
         const currentUser = await fetchCurrentUser();
-        setUser({
-          ...currentUser,
-          profileImage: `${backendUrl}/uploads/users/${currentUser.id}/ProfileImage.png`,
-        });
+        setUser({ ...currentUser });
         form.setFieldsValue(currentUser); // Préremplit le formulaire avec les infos utilisateur
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -67,10 +64,7 @@ const ProfilePage = () => {
       });
 
       const updatedUser = await fetchCurrentUser();
-      setUser({
-        ...updatedUser,
-        profileImage: `${backendUrl}/uploads/users/${updatedUser.id}/ProfileImage.png`,
-      });
+      setUser({ ...updatedUser });
 
       addNotification('success', 'Profil mis à jour avec succès!');
     } catch (error) {

@@ -62,11 +62,7 @@ export default function Navbar() {
     if (token) {
       fetchCurrentUser()
         .then((userData) => {
-          const profileImageUrl = `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/users/${userData.id}/ProfileImage.png`;
-          setUser({
-            ...userData,
-            profileImage: profileImageUrl,
-          });
+          setUser({ ...userData });
           setIsLoggedIn(true);
         })
         .catch(() => {
@@ -183,6 +179,11 @@ export default function Navbar() {
 
         {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
         <div className="hidden md:flex space-x-6 items-center">
+          {/* Accueil */}
+          <Link href="/" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
+            <span className="shadow-text">Accueil</span>
+          </Link>
+
           {/* Dropdown pour Univers */}
           <Dropdown
             overlay={universSubMenu}
@@ -299,6 +300,11 @@ export default function Navbar() {
 
           {/* Menu mobile */}
           <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-gray-700 bg-opacity-90 z-50 p-5 animate-slide-in">
+            {/* Accueil */}
+            <Link href="/" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
+              <span className="shadow-text">Accueil</span>
+            </Link>
+
             {/* Dropdown mobile pour Univers */}
             <Dropdown
               overlay={universSubMenu}

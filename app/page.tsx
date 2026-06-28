@@ -1,654 +1,437 @@
-// seranyanext/app/page.tsx
-
 'use client';
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "antd";
-import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { fetchClasses } from "@/lib/queries/ClassQueries"; // Importation de fetchClasses
-import { UnitModel } from "@/lib/models/UnitModels";
-import { ClassModel } from "@/lib/models/ClassModels"; // Assurez-vous d'avoir ce modèle
-import HeroSection from "@/components/HeroSection";
-import Accordion from "@/components/Accordion";
-import Carousel from "@/components/Carousel";
-import { FaCheck } from "react-icons/fa";
-import Loader from "@/components/Loader";
 import { motion } from "framer-motion";
-import Footer from "@/components/Footer";
+import { useInView } from "react-intersection-observer";
+import CountUp from "react-countup";
+import { FaCheck, FaArrowRight } from "react-icons/fa";
+import { HiOutlineBookOpen, HiOutlineUsers, HiOutlineSparkles } from "react-icons/hi2";
+import Loader from "@/components/Loader";
+import { fetchUnits } from "@/lib/queries/UnitQueries";
+import { fetchClasses } from "@/lib/queries/ClassQueries";
 import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery";
-import { useInView } from "react-intersection-observer"; // Pour détecter la visibilité de la section
-import CountUp from 'react-countup'; // Importation de CountUp
+import { getAccessToken, fetchCurrentUser } from "@/lib/queries/AuthQueries";
+import { UnitModel } from "@/lib/models/UnitModels";
+import { ClassModel } from "@/lib/models/ClassModels";
 
-// Animation settings
-const fadeInUp = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
 };
 
-const Home: React.FC = () => {
-  const [carouselItems, setCarouselItems] = useState<
-    Array<{ image: string; title: string; subtitle: string }>
-  >([]);
-  const [sectionImages, setSectionImages] = useState<string[]>([]);
+const stagger = {
+  visible: { transition: { staggerChildren: 0.15 } },
+};
+
+export default function Home() {
   const [units, setUnits] = useState<UnitModel[]>([]);
-  const [classes, setClasses] = useState<ClassModel[]>([]); // État pour les classes
-  const [backgroundImage, setBackgroundImage] = useState<string>("");
-
+  const [classes, setClasses] = useState<ClassModel[]>([]);
+  const [backgroundImage, setBackgroundImage] = useState("");
+  const [sectionImages, setSectionImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadedImagesCount, setLoadedImagesCount] = useState(0);
-  const totalImagesCount = 12; // 5 (carousel) + 6 (section) + 1 (background)
-
-  const handleImageLoad = () => {
-    setLoadedImagesCount((prevCount) => {
-      const newCount = prevCount + 1;
-      if (newCount >= totalImagesCount) {
-        setIsLoading(false);
-      }
-      return newCount;
-    });
-  };
-
-  // Contrôle pour l'animation des nombres
-  const [ref, inView] = useInView({
-    threshold: 0.2, // Déclenche lorsque 20% de la section est visible
-    triggerOnce: true, // Une seule fois
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const [unitCount, setUnitCount] = useState(0);
   const [championCount, setChampionCount] = useState(0);
   const [classCount, setClassCount] = useState(0);
 
+  const [statsRef, statsInView] = useInView({ threshold: 0.2, triggerOnce: true });
+
   useEffect(() => {
-    const loadData = async () => {
+    const load = async () => {
       try {
-        // Charger les unités
-        const fetchedUnits: UnitModel[] = await fetchUnits();
+        const token = getAccessToken();
+        setIsLoggedIn(!!token);
 
-        // Trier et prendre les 3 unités récentes
-        const sortedUnits = fetchedUnits
-          .sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
-          .slice(0, 3);
+        const [fetchedUnits, fetchedClasses, bgImage, secImages, currentUser] = await Promise.allSettled([
+          fetchUnits(),
+          fetchClasses(),
+          fetchRandomBackground(),
+          fetchRandomBackgrounds(4),
+          token ? fetchCurrentUser() : Promise.reject("no token"),
+        ]);
 
-        setUnits(sortedUnits);
-        setUnitCount(fetchedUnits.filter(unit => unit.type === "UNIT").length);
-        setChampionCount(fetchedUnits.filter(unit => unit.type === "CHAMPION").length);
-
-        // Charger les classes
-        const fetchedClasses: ClassModel[] = await fetchClasses();
-        setClasses(fetchedClasses);
-        setClassCount(fetchedClasses.length);
-        handleImageLoad(); // Incrémente le compteur après avoir défini les classes
-      } catch (error) {
-        console.error("Failed to load data:", error);
-      }
-
-      // Charger l'image de fond
-      try {
-        const imageUrl: string = await fetchRandomBackground();
-        setBackgroundImage(imageUrl);
-        handleImageLoad(); // Incrémente le compteur après avoir défini l'image
-      } catch (error) {
-        console.error("Failed to load background image:", error);
-        // Image de fallback
-        setBackgroundImage("/images/backgrounds/default.jpg");
-        handleImageLoad();
-      }
-
-      // Charger les images du carousel
-      try {
-        const data: string[] = await fetchRandomBackgrounds(5);
-
-        const formattedCarouselItems = data.map((imagePath: string, index: number) => ({
-          image: imagePath,
-          title: `La méditation est la clé du bonheur.`,
-          subtitle: "L'instant présent en est la porte.",
-        }));
-
-        setCarouselItems(formattedCarouselItems);
-        console.log('Carousel Items:', formattedCarouselItems);
-
-        // Incrémente le compteur pour chaque image du carousel
-        data.forEach(() => handleImageLoad());
-      } catch (error) {
-        console.error("Failed to load carousel images:", error);
-        setCarouselItems([]);
-        // Incrémente le compteur pour chaque image manquante
-        for (let i = 0; i < 5; i++) {
-          handleImageLoad();
+        if (fetchedUnits.status === "fulfilled") {
+          const u = fetchedUnits.value as UnitModel[];
+          setUnits(u.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3));
+          setUnitCount(u.filter(x => x.type === "UNIT").length);
+          setChampionCount(u.filter(x => x.type === "CHAMPION").length);
         }
-      }
-
-      // Charger les images de la section
-      try {
-        const data: string[] = await fetchRandomBackgrounds(6);
-        setSectionImages(data);
-
-        // Incrémente le compteur pour chaque image de section
-        data.forEach(() => handleImageLoad());
-      } catch (error) {
-        console.error("Failed to load section images:", error);
-        setSectionImages([]);
-        // Incrémente le compteur pour chaque image manquante
-        for (let i = 0; i < 6; i++) {
-          handleImageLoad();
+        if (fetchedClasses.status === "fulfilled") {
+          const c = fetchedClasses.value as ClassModel[];
+          setClasses(c);
+          setClassCount(c.length);
         }
+        if (bgImage.status === "fulfilled") setBackgroundImage(bgImage.value as string);
+        else setBackgroundImage("/images/backgrounds/placeholder.jpg");
+        if (secImages.status === "fulfilled") setSectionImages((secImages.value as string[]).slice(0, 4));
+        if (currentUser.status === "fulfilled") setIsSubscribed(!!(currentUser.value as any)?.isSubscribed);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
     };
-
-    loadData();
+    load();
   }, []);
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  if (isLoading) return <Loader />;
 
   return (
-    <main className="flex flex-col items-center justify-start w-full font-kanit relative">
-      {/* Background Image */}
-      <div className="fixed inset-0 z-0">
-        <Image
-          src="/images/backgrounds/placeholder.jpg"
-          alt="Background"
-          layout="fill"
-          objectFit="cover"
-          objectPosition="center"
-          priority={true}
-          quality={100}
-          onLoad={handleImageLoad}
-          unoptimized={true} // Désactive l'optimisation si nécessaire
-        />
-        <div className="absolute inset-0 bg-black opacity-30 z-10"></div>
-      </div>
+    <main className="bg-black text-white font-kanit">
 
-      {/* Carousel */}
-      <Carousel
-        items={carouselItems}
-        height="100vh"
-        width="100vw"
-        onLoad={handleImageLoad} // Passer handleImageLoad si nécessaire
-      /> {/* Passer handleImageLoad */}
-
-      {/* Hero Section */}
-      <motion.section
-        className="relative pt-16 pb-22 flex content-center items-center justify-center w-full bg-transparent z-10"
-        style={{ minHeight: "35vh" }}
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        viewport={{ once: true }}
-      >
-        <div className="container relative mx-auto z-10">
-          <div className="items-center flex flex-wrap">
-            <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
-              <div className="pr-0">
-                <h1 className="text-white font-semibold text-5xl font-iceberg">
-                  Un monde de paix vous attend
-                </h1>
-                <p className="mt-4 text-lg text-gray-300 font-kanit">
-                  Atteignez le nirvana en fusionnant avec votre vous intérieur
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Section Encyclopédie */}
-      <motion.section
-        className="relative py-16 px-8 w-full z-20 mt-16"
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        viewport={{ once: true }}
-        ref={ref} // Référence pour l'intersection observer
-      >
-        {sectionImages[1] && (
-          <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
-            style={{
-              backgroundImage: `/images/backgrounds/placeholder.jpg`,
-              filter: "brightness(70%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b"></div>
-          </div>
+      {/* ── HERO ── */}
+      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+        {backgroundImage && (
+          <Image
+            src={backgroundImage}
+            alt="Seranya"
+            fill
+            style={{ objectFit: "cover" }}
+            priority
+            className="scale-105"
+          />
         )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black" />
 
-        <div className="relative z-10 container mx-auto">
-          {/* Titre de la section */}
-          <h2 className="text-3xl font-bold text-white mb-8 text-center font-iceberg uppercase">
-            Consultez nos articles pour connaître davantage sur le meilleur du yoga
-          </h2>
-          <p className="text-lg text-gray-300 mb-12 text-center font-kanit">
-            Plongez dans lunivers bouddhiste yoga 
-          </p>
-
-          {/* Cartes Statistiques */}
-          {/* Cartes Statistiques */}
-          <div className="max-w-[55rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-            {/* Grid des cartes statistiques */}
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-              {/* Première Carte Statistique */}
-              <div className="flex flex-col gap-y-4 p-6 bg-green-400/60 border border-gray-700 shadow-sm rounded-xl flex-1">
-                <div className="inline-flex justify-center items-center">
-                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
-                  <span className="text-xs font-semibold uppercase text-white">
-                    Posts
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <h3 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white font-iceberg">
-                    {inView ? (
-                      <CountUp
-                        start={0}
-                        end={unitCount}
-                        duration={2}
-                        delay={0}
-                      />
-                    ) : (
-                      0
-                    )}
-                  </h3>
-                </div>
-              </div>
-              {/* Fin Première Carte Statistique */}
-
-              {/* Deuxième Carte Statistique */}
-              <div className="flex flex-col gap-y-4 p-6 bg-green-400/60 border border-gray-700 shadow-sm rounded-xl flex-1">
-                <div className="inline-flex justify-center items-center">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                  <span className="text-xs font-semibold uppercase text-white">
-                    Tutoriels
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <h3 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white font-iceberg">
-                    {inView ? (
-                      <CountUp
-                        start={0}
-                        end={championCount}
-                        duration={2}
-                        delay={0}
-                      />
-                    ) : (
-                      0
-                    )}
-                  </h3>
-                </div>
-              </div>
-              {/* Fin Deuxième Carte Statistique */}
-
-              {/* Troisième Carte Statistique */}
-              <div className="flex flex-col gap-y-4 p-6 bg-green-400/60 border border-gray-700 shadow-sm rounded-xl flex-1">
-                <div className="inline-flex justify-center items-center">
-                  <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                  <span className="text-xs font-semibold uppercase text-green-300">
-                    T-shirt*
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <h3 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white font-iceberg">
-                    {inView ? (
-                      <CountUp
-                        start={0}
-                        end={classCount}
-                        duration={2}
-                        delay={0}
-                      />
-                    ) : (
-                      0
-                    )}
-                  </h3>
-                </div>
-              </div>
-              {/* Fin Troisième Carte Statistique */}
-            </div>
-          </div>
-        </div>
-
-        {/* Cartes des Unités Récentes */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 w-full">
-          {/* Grande Carte à Gauche */}
-          {units[0] && (
-            <div className="lg:col-span-2">
-              <Link href={`/univers/units/${units[0].id}`} key={units[0].id} className="border-gray-900 shadow-lg block">
-                
-                  <Badge.Ribbon
-                    text="NEW"
-                    color="red"
-                    className="font-iceberg z-30"
-                    style={{
-                      boxShadow: '0 0 10px rgba(255, 0, 0, 0.6)', // Effet halo néon rouge
-                      borderRadius: '5px',
-                    }}
-                  >
-                    <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
-                      {/* Image de Fond */}
-                      <div
-                        className="relative w-full h-[35rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Hauteur de 35 rem
-                        style={{
-                          backgroundImage: `url(${units[0].headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                          backgroundPosition: "center",
-                        }}
-                      />
-                      {/* Contenu de la Carte */}
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-4">
-                        {/* Image de Profil */}
-                        <div className="mb-6"> {/* Augmenté de mb-4 à mb-6 */}
-                          <Image
-                            src={units[0].profileImage || "/images/profile-placeholder.png"}
-                            alt={`${units[0].title} Profile`}
-                            width={120} // Augmenté de 100 à 120
-                            height={120} // Augmenté de 100 à 120
-                            className="rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-4 border-black" // Ombre noire et bordure noire
-                          />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
-                          {units[0].title || "No Title"}
-                        </h3>
-                        <p className="text-sm text-gray-300 font-kanit">
-                          {units[0].subtitle || "No Description"}
-                        </p>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-              </Link>
-            </div>
-          )}
-          {/* Fin Grande Carte à Gauche */}
-
-          {/* Deux Petites Cartes à Droite */}
-          <div className="flex flex-col gap-8">
-            {units.slice(1, 3).map((unit: UnitModel) => (
-              <Link href={`/univers/units/${unit.id}`} key={unit.id} className="border-gray-900 shadow-lg block">
-              
-                  <Badge.Ribbon
-                    text="NEW"
-                    color="red"
-                    className="font-iceberg z-30"
-                    style={{
-                      boxShadow: '0 0 10px rgba(255, 0, 0, 0.6)', // Effet halo néon rouge
-                      borderRadius: '5px',
-                    }}
-                  >
-                    <div className="relative group overflow-hidden rounded-lg border-gray-900 shadow-lg">
-                      {/* Image de Fond */}
-                      <div
-                        className="relative w-full h-[17rem] bg-cover bg-center transition-transform duration-500 group-hover:scale-110" // Hauteur de 17 rem
-                        style={{
-                          backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})`,
-                          backgroundPosition: "center",
-                        }}
-                      />
-                      {/* Contenu de la Carte */}
-                      <div className="absolute inset-0 flex flex-col justify-end items-center z-20 bg-gradient-to-b from-transparent to-black/70 p-2">
-                        {/* Image de Profil */}
-                        <div className="mb-4"> {/* Augmenté de mb-2 à mb-4 */}
-                          <Image
-                            src={unit.profileImage || "/images/profile-placeholder.png"}
-                            alt={`${unit.title} Profile`}
-                            width={80} // Augmenté de 60 à 80
-                            height={80} // Augmenté de 60 à 80
-                            className="rounded-full shadow-[0_4px_6px_rgba(0,0,0,0.5)] border-2 border-black" // Ombre noire et bordure noire
-                          />
-                        </div>
-                        <h3 className="text-xl font-bold text-white font-iceberg uppercase">
-                          {unit.title || "No Title"}
-                        </h3>
-                        <p className="text-sm text-gray-300 font-kanit">
-                          {unit.subtitle || "No Description"}
-                        </p>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-              </Link>
-            ))}
-          </div>
-          {/* Fin Deux Petites Cartes à Droite */}
-        </div>
-
-        {/* CTA Centré */}
-        <div className="text-center mt-0">
-          <Link href="/univers" className="">
-            
-          </Link>
-        </div>
-      </motion.section>
-
-      {/* Finisher Section */}
-      <section className="pb-20 relative block w-full bg-transparent">
-        {sectionImages[5] && (
-          <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage: `/images/backgrounds/placeholder.jpg`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(70%)",
-            }}
-          >
-            <div className="absolute inset-0"></div>
-          </div>
-        )}
-        <div className="container mx-auto px-4 lg:pt-24 lg:pb-50 relative z-10">
-          <div className="flex flex-wrap text-center justify-center">
-            <div className="w-full lg:w-6/12 px-4">
-              <h2 className="text-4xl font-semibold text-white mb-8 text-center font-iceberg uppercase">
-                Avançons ensemble
-              </h2>
-              <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-300 font-kanit">
-                Nous offrons des services d&apos;excellence pour vous aider à
-                concrétiser vos projets.
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap mt-12 justify-center">
-            <div className="w-full lg:w-3/12 px-4 text-center">
-              <div className="text-gray-900 p-3 w-12 h-12 shadow-lg rounded-full bg-white inline-flex items-center justify-center">
-                <i className="fas fa-medal text-xl"></i>
-              </div>
-              <h6 className="text-xl mt-5 font-semibold text-white font-iceberg">
-                Excellence Garantie
-              </h6>
-              <p className="mt-2 mb-4 text-gray-300 font-kanit">
-                Nos services sont conçus pour garantir le succès de votre
-                projet.
-              </p>
-            </div>
-            {/* Répétez pour d'autres caractéristiques si nécessaire */}
-          </div>
-        </div>
-        <div
-          className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
-          style={{ height: "70px" }}
+        <motion.div
+          className="relative z-10 text-center px-6 max-w-3xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={stagger}
         >
-          <svg
-            className="absolute bottom-0 overflow-hidden"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-            version="1.1"
-            viewBox="0 0 2560 100"
-            x="0"
-            y="0"
+          <motion.div variants={fadeUp} className="mb-8">
+            <Image
+              src="/logos/seranyaicon.png"
+              alt="Seranya"
+              width={160}
+              height={58}
+              className="mx-auto drop-shadow-2xl"
+            />
+          </motion.div>
+
+          <motion.h1
+            variants={fadeUp}
+            className="font-iceberg uppercase text-5xl md:text-7xl font-bold tracking-widest mb-4 text-white drop-shadow-lg"
           >
-            <polygon
-              className="fill-current text-transparent"
-              points="2560 0 2560 100 0 100"
-              style={{ fill: "rgba(0, 0, 0, 0)" }} // Remplissage transparent
-            ></polygon>
-          </svg>
-        </div>
+            Seranya
+          </motion.h1>
+
+          <motion.p variants={fadeUp} className="text-lg md:text-xl text-gray-300 mb-10 max-w-xl mx-auto">
+            Un univers bouddhiste et yogique. Atteignez la paix intérieure et fusionnez avec votre être profond.
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-4 justify-center">
+            <Link
+              href="/univers"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95"
+            >
+              Explorer <FaArrowRight className="w-4 h-4" />
+            </Link>
+            {!isLoggedIn && (
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/40 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:border-green-400 hover:text-green-400 transition-all duration-200 backdrop-blur-sm"
+              >
+                Rejoindre
+              </Link>
+            )}
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+        >
+          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center pt-1.5">
+            <div className="w-1.5 h-2.5 bg-white/60 rounded-full" />
+          </div>
+        </motion.div>
       </section>
 
-      {/* Pricing Section */}
+      {/* ── STATS ── */}
       <motion.section
-        className="relative z-20 bg-transparent py-24 sm:py-32 w-full"
+        ref={statsRef}
+        className="relative z-10 py-20 px-6 overflow-hidden"
         initial="hidden"
         whileInView="visible"
-        variants={fadeInUp}
         viewport={{ once: true }}
+        variants={stagger}
       >
-        {/* Image de fond de la section */}
-        {sectionImages[4] && (
-          <div
-            className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-center bg-cover z-0"
-            style={{
-              backgroundImage: `url(${sectionImages[4]})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              filter: "brightness(60%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b backdrop-blur-md"></div>
-          </div>
+        {sectionImages[0] && (
+          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="opacity-15" />
         )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/60 to-black pointer-events-none" />
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
+            L&apos;univers en chiffres
+          </motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-16">
+            Ce que nous avons construit
+          </motion.h2>
 
-        {/* Contenu de la section */}
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 mb-40">
-          <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl font-iceberg">
-              Une tarification simple, sans surprise
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-300 font-kanit">
-              Découvrez notre offre transparente et adaptée à vos besoins, que vous soyez une personne ou une équipe.
-            </p>
-          </div>
-
-          <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
-            <div className="p-8 sm:p-10 lg:flex-auto">
-              <h3 className="text-2xl font-bold tracking-tight text-white text-center font-iceberg">Abonnement à vie</h3>
-              <p className="mt-6 text-base leading-7 text-gray-300 font-kanit">
-                Profitez d&#39;un accès illimité à tous nos services pour une seule et unique fois.
-              </p>
-              <div className="mt-10 flex items-center gap-x-4">
-                <h4 className="flex-none text-sm font-semibold leading-6 text-green-400">Ce qui est inclus</h4>
-                <div className="h-px flex-auto bg-gray-100" />
-              </div>
-              <ul role="list" className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-300 sm:grid-cols-2 sm:gap-6">
-                {[
-                  "Rediger de nouveaux posts",
-                  "Ressources des membres",
-                  "T-shirt officiel des membres (bientôt disponible)",
-                ].map((feature: string) => (
-                  <li key={feature} className="flex gap-x-3">
-                    <FaCheck aria-hidden="true" className="h-6 w-5 flex-none text-green-800" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-              <div className="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
-                <div className="mx-auto max-w-xs px-8">
-                  <p className="text-base font-semibold text-gray-600">Un paiement mensuel</p>
-                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
-                    <span className="text-5xl font-bold tracking-tight text-gray-900">5.00€</span>
-                    <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600"> EUR/MOIS</span>
-                  </p>
-                  <Link
-                    href="/subscription"
-                    className="mt-10 block w-full rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500"
-                    passHref
-                  >
-                    Obtenez l&#39;accès
-                  </Link>
-                </div>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { icon: <HiOutlineSparkles className="w-7 h-7" />, label: "Entités", value: unitCount },
+              { icon: <HiOutlineUsers className="w-7 h-7" />, label: "Champions", value: championCount },
+              { icon: <HiOutlineBookOpen className="w-7 h-7" />, label: "Familles", value: classCount },
+            ].map((stat) => (
+              <motion.div
+                key={stat.label}
+                variants={fadeUp}
+                className="flex flex-col items-center gap-3 p-8 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+              >
+                <div className="text-green-400">{stat.icon}</div>
+                <span className="text-5xl font-bold font-iceberg text-white">
+                  {statsInView ? <CountUp end={stat.value} duration={2} /> : 0}
+                </span>
+                <span className="text-gray-400 font-kanit uppercase text-xs tracking-widest">{stat.label}</span>
+              </motion.div>
+            ))}
           </div>
         </div>
       </motion.section>
 
-      {/* Contact Section */}
+      {/* ── RECENT UNITS ── */}
+      {units.length > 0 && (
+        <motion.section
+          className="relative py-20 px-6 overflow-hidden"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={stagger}
+        >
+          {sectionImages[1] && (
+            <Image src={sectionImages[1]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10" />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-black pointer-events-none" />
+          <div className="relative z-10 max-w-6xl mx-auto">
+            <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
+              Découverte
+            </motion.p>
+            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-4">
+              Dernières entités
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-gray-400 text-center mb-16 max-w-xl mx-auto">
+              Plongez dans notre encyclopédie et découvrez les entités de l&apos;univers Seranya.
+            </motion.p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {units.map((unit, i) => (
+                <motion.div key={unit.id} variants={fadeUp}>
+                  <Link href={`/univers/units/${unit.id}`} className="group block relative rounded-2xl overflow-hidden aspect-[3/4] border border-gray-800 hover:border-green-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-green-500/10">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                      style={{ backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+
+                    {i === 0 && (
+                      <div className="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-xs font-iceberg uppercase tracking-widest rounded-full">
+                        Nouveau
+                      </div>
+                    )}
+
+                    <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col items-center text-center">
+                      {unit.profileImage && (
+                        <Image
+                          src={unit.profileImage}
+                          alt={unit.title}
+                          width={64}
+                          height={64}
+                          className="rounded-full ring-2 ring-green-400/50 mb-3 object-cover"
+                        />
+                      )}
+                      <h3 className="font-iceberg uppercase text-white font-bold text-lg">{unit.title}</h3>
+                      <p className="text-gray-400 text-sm mt-1 line-clamp-2">{unit.subtitle}</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div variants={fadeUp} className="text-center mt-12">
+              <Link
+                href="/univers"
+                className="inline-flex items-center gap-2 px-8 py-3.5 border border-gray-700 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:border-green-400 hover:text-green-400 transition-all duration-200"
+              >
+                Voir tout l&apos;univers <FaArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </div>
+        </motion.section>
+      )}
+
+      {/* ── FEATURES ── */}
       <motion.section
-        className="relative block py-24 lg:pt-0 w-full bg-transparent-mt-32 z-20"
+        className="relative py-20 px-6 overflow-hidden border-t border-gray-900"
         initial="hidden"
         whileInView="visible"
-        variants={fadeInUp}
         viewport={{ once: true }}
+        variants={stagger}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center lg:-mt-64 -mt-48">
-            <div className="w-full lg:w-6/12 px-4">
-              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-300 z-20">
-                <div className="flex-auto p-5 lg:p-10">
-                  <h4 className="text-2xl font-semibold">Travaillons Ensemble</h4>
-                  <p className="leading-relaxed mt-1 mb-4 text-gray-600">
-                    Remplissez ce formulaire et nous vous répondrons sous 24
-                    heures.
-                  </p>
-                  <div className="relative w-full mb-3 mt-8">
-                    <label
-                      className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                      htmlFor="full-name"
-                    >
-                      Nom complet
-                    </label>
-                    <input
-                      type="text"
-                      className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                      placeholder="Nom complet"
-                      style={{ transition: "all .15s ease" }}
-                    />
-                  </div>
+        {sectionImages[2] && (
+          <Image src={sectionImages[2]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/65 to-black pointer-events-none" />
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
+            Pourquoi Seranya
+          </motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-16">
+            Notre engagement
+          </motion.h2>
 
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                      htmlFor="email"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                      placeholder="Email"
-                      style={{ transition: "all .15s ease" }}
-                    />
-                  </div>
-
-                  <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-gray-700 text-xs font-bold mb-2"
-                      htmlFor="message"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      rows={4}
-                      cols={80}
-                      className="border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
-                      placeholder="Tapez un message..."
-                    />
-                  </div>
-                  <div className="text-center mt-6">
-                    <button
-                      className="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                      type="button"
-                      style={{ transition: "all .15s ease" }}
-                    >
-                      Envoyer le message
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Sérénité",
+                desc: "Un espace pensé pour la paix intérieure et le ressourcement, loin du bruit du monde.",
+                icon: "✦",
+              },
+              {
+                title: "Connaissance",
+                desc: "Une encyclopédie vivante de l'univers bouddhiste et yogique, enrichie en permanence.",
+                icon: "◈",
+              },
+              {
+                title: "Communauté",
+                desc: "Des membres partageant les mêmes valeurs, unis par la quête du bonheur authentique.",
+                icon: "❋",
+              },
+            ].map((f) => (
+              <motion.div
+                key={f.title}
+                variants={fadeUp}
+                className="p-6 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+              >
+                <div className="text-green-400 text-2xl mb-4">{f.icon}</div>
+                <h3 className="font-iceberg uppercase text-white text-lg mb-3">{f.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </motion.section>
 
-      {/* Section FAQ */}
-      <Accordion backgroundColor="bg-transparent" textColor="text-white" />
+      {/* ── PRICING ── */}
+      {!isSubscribed && <motion.section
+        className="py-20 px-6 border-t border-gray-900"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={stagger}
+      >
+        <div className="max-w-3xl mx-auto">
+          <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
+            Accès
+          </motion.p>
+          <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-16">
+            Une tarification simple
+          </motion.h2>
+
+          <motion.div
+            variants={fadeUp}
+            className="rounded-2xl border border-gray-800 bg-gray-950 overflow-hidden flex flex-col md:flex-row"
+          >
+            <div className="flex-1 p-8 md:p-10">
+              <h3 className="font-iceberg uppercase text-xl text-white mb-4">Abonnement mensuel</h3>
+              <p className="text-gray-400 text-sm mb-8">
+                Accédez à l&apos;intégralité du contenu exclusif : articles, ressources membres, et plus encore.
+              </p>
+              <div className="space-y-3">
+                {[
+                  "Accès à tous les articles",
+                  "Ressources exclusives des membres",
+                  "T-shirt officiel (bientôt)",
+                ].map((f) => (
+                  <div key={f} className="flex items-center gap-3 text-sm text-gray-300">
+                    <FaCheck className="text-green-400 flex-shrink-0" />
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center p-8 md:p-10 bg-gray-900 md:min-w-[220px]">
+              <span className="text-gray-400 text-sm font-kanit mb-2">Par mois</span>
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className="text-5xl font-bold font-iceberg text-white">5€</span>
+                <span className="text-gray-400 text-sm">/mois</span>
+              </div>
+              <Link
+                href="/subscription"
+                className="w-full text-center px-6 py-3 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95"
+              >
+                Commencer
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>}
+
+      {/* ── CTA FINAL ── */}
+      <motion.section
+        className="relative py-32 px-6 overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={stagger}
+      >
+        {sectionImages[3] && (
+          <Image src={sectionImages[3]} alt="" fill style={{ objectFit: "cover" }} className="opacity-20" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+
+        <div className="relative z-10 max-w-2xl mx-auto text-center">
+          <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-iceberg uppercase text-white mb-6">
+            {isLoggedIn ? "Continuez l'exploration" : "Prêt à commencer ?"}
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-gray-300 text-lg mb-10">
+            {isSubscribed
+              ? "Merci pour votre soutien. Profitez de tout le contenu exclusif Seranya."
+              : "Rejoignez la communauté Seranya et entamez votre voyage vers la paix intérieure."}
+          </motion.p>
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-4 justify-center">
+            {!isLoggedIn && (
+              <Link
+                href="/auth/register"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
+              >
+                Créer un compte <FaArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+            {isLoggedIn && !isSubscribed && (
+              <Link
+                href="/subscription"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
+              >
+                S&apos;abonner <FaArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+            {isSubscribed && (
+              <Link
+                href="/univers"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200"
+              >
+                Explorer l&apos;univers <FaArrowRight className="w-4 h-4" />
+              </Link>
+            )}
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/30 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:border-green-400 hover:text-green-400 transition-all duration-200"
+            >
+              Nous contacter
+            </Link>
+          </motion.div>
+        </div>
+      </motion.section>
+
     </main>
   );
-};
-
-export default Home;
+}

@@ -33,10 +33,8 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
     if (token) {
       fetchCurrentUser()
         .then((userData) => {
-          const profileImageUrl = `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/users/${userData.id}/ProfileImage.png`;
           setUser({
             ...userData,
-            profileImage: profileImageUrl,
             role: userData.role || UserRole.USER,
           });
         })

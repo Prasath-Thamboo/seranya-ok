@@ -43,7 +43,7 @@ const CreateTutoriel = () => {
           onFinish={handleSubmit}
           layout="vertical"
           className="text-black font-kanit"
-          initialValues={{ isPublished: false }}
+          initialValues={{ isPublished: true }}
         >
           <Form.Item
             name="title"

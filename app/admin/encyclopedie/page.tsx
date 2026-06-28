@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { Switch } from 'antd';
 import Table from '@/components/Table';
-import { fetchDefinitions } from '@/lib/queries/DefinitionQueries';
+import { fetchDefinitions, updateDefinition } from '@/lib/queries/DefinitionQueries';
 import { DefinitionModel } from '@/lib/models/DefinitionModels';
 import { useNotification } from '@/components/notifications/NotificationProvider';
 
@@ -46,10 +47,16 @@ const EncyclopedieAdminPage = () => {
       {
         Header: 'Publié',
         accessor: 'isPublished',
-        Cell: ({ value }: any) => (
-          <span className={`px-2 py-1 rounded text-xs font-bold ${value ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}`}>
-            {value ? 'Oui' : 'Non'}
-          </span>
+        Cell: ({ value, row }: any) => (
+          <Switch
+            checked={value}
+            onChange={async (checked) => {
+              await updateDefinition(row.original.id, { isPublished: checked });
+              loadDefinitions();
+            }}
+            checkedChildren="Oui"
+            unCheckedChildren="Non"
+          />
         ),
       },
       {

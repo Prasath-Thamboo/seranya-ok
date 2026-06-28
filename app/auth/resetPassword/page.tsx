@@ -3,6 +3,7 @@
 import { Form, Input, Button } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import axios from "axios";
 import { useState, useEffect, Suspense } from "react";
 import { useNotification } from "@/components/notifications/NotificationProvider";
@@ -95,6 +96,17 @@ export default function ResetPasswordPage() {
 
       <div className="flex w-full lg:w-1/3 h-auto lg:h-screen justify-center items-center bg-white">
         <div className="max-w-md w-full text-black p-8">
+          <div className="mb-6">
+            <Link href="/">
+              <Image
+                src="/logos/seranyaicon.png"
+                alt="Seranya Logo"
+                width={180}
+                height={65}
+                className="mx-auto hover:opacity-80 transition-opacity cursor-pointer"
+              />
+            </Link>
+          </div>
           <h1 className="text-4xl font-bold mb-8 text-center font-oxanium uppercase text-black">
             Réinitialiser le mot de passe
           </h1>

@@ -1,707 +1,326 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { fetchClasses } from "@/lib/queries/ClassQueries";
-import { UnitModel } from "@/lib/models/UnitModels";
-import { ClassModel } from "@/lib/models/ClassModels";
-import BadgeComponent from "@/components/Badge";
-import HeroSection from "@/components/HeroSection";
-import DividersWithHeading from "@/components/DividersWhithHeading";
-import { getImageUrl } from "@/utils/image";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { SearchOutlined } from "@ant-design/icons";
+import { FaPlay, FaBookOpen, FaNewspaper, FaLayerGroup } from "react-icons/fa";
+import { fetchPosts } from "@/lib/queries/PostQueries";
+import { fetchPublishedTutorials } from "@/lib/queries/TutorialQueries";
+import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
+import { PostModel } from "@/lib/models/PostModels";
+import { TutorialModel } from "@/lib/models/TutorialModels";
+import { DefinitionModel } from "@/lib/models/DefinitionModels";
 
-const UniversPage = () => {
-  const [units, setUnits] = useState<UnitModel[]>([]);
-  const [filteredUnits, setFilteredUnits] = useState<UnitModel[]>([]);
-  const [latestClasses, setLatestClasses] = useState<ClassModel[]>([]);
-  const [backgroundImage, setBackgroundImage] = useState<string>("");
-  const [heroBackgroundImage, setHeroBackgroundImage] = useState<string>("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState<string>("ALL");
-  const [classes, setClasses] = useState<ClassModel[]>([]);
-  const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
-  const [isTypeFilterOpen, setIsTypeFilterOpen] = useState<boolean>(true);
-  const [isClassFilterOpen, setIsClassFilterOpen] = useState<boolean>(true);
-  const [showMoreClasses, setShowMoreClasses] = useState<boolean>(false);
-  const [searchClassesQuery, setSearchClassesQuery] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const classesPerPage = 6;
+/* ── Types ── */
+type ContentType = "all" | "posts" | "tutorials" | "definitions";
+
+type UnifiedItem =
+  | { kind: "post"; data: PostModel }
+  | { kind: "tutorial"; data: TutorialModel }
+  | { kind: "definition"; data: DefinitionModel };
+
+/* ── Helpers ── */
+const getYouTubeThumbnail = (url: string) => {
+  const match = url.match(/(?:youtu\.be\/|v=|embed\/)([^#&?]{11})/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+};
+
+const FILTERS: { key: ContentType; label: string; icon: React.ReactNode }[] = [
+  { key: "all",         label: "Tout",        icon: <FaLayerGroup className="w-4 h-4" /> },
+  { key: "posts",       label: "Articles",    icon: <FaNewspaper  className="w-4 h-4" /> },
+  { key: "tutorials",   label: "Tutoriels",   icon: <FaPlay       className="w-4 h-4" /> },
+  { key: "definitions", label: "Définitions", icon: <FaBookOpen   className="w-4 h-4" /> },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
+/* ── Cards ── */
+function PostCard({ post }: { post: PostModel }) {
+  return (
+    <Link href={`/posts/${post.id}`}>
+      <motion.div
+        variants={fadeUp}
+        className="group flex flex-col bg-black/60 border border-gray-700 rounded-xl overflow-hidden hover:border-green-500/50 transition-all duration-300 h-full"
+      >
+        <div className="relative w-full h-44 overflow-hidden">
+          {post.headerImage ? (
+            <Image
+              src={post.headerImage}
+              alt={post.title}
+              fill
+              style={{ objectFit: "cover" }}
+              className="group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+              <FaNewspaper className="w-10 h-10 text-gray-700" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <span className="absolute top-3 left-3 px-2 py-0.5 bg-green-500/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
+            {post.type}
+          </span>
+        </div>
+        <div className="p-5 flex flex-col flex-grow">
+          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors">
+            {post.title}
+          </h3>
+          <p className="text-gray-400 font-kanit text-sm flex-grow line-clamp-3">{post.intro}</p>
+          <p className="text-gray-600 font-kanit text-xs mt-3">
+            {new Date(post.createdAt).toLocaleDateString("fr-FR")}
+          </p>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}
+
+function TutorialCard({ tutorial }: { tutorial: TutorialModel }) {
+  const thumb = getYouTubeThumbnail(tutorial.videoUrl);
+  return (
+    <a href={tutorial.videoUrl} target="_blank" rel="noopener noreferrer">
+      <motion.div
+        variants={fadeUp}
+        className="group flex flex-col bg-black/60 border border-gray-700 rounded-xl overflow-hidden hover:border-green-500/50 transition-all duration-300 h-full"
+      >
+        <div className="relative w-full h-44 overflow-hidden">
+          {thumb ? (
+            <Image
+              src={thumb}
+              alt={tutorial.title}
+              fill
+              style={{ objectFit: "cover" }}
+              className="group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+              <FaPlay className="w-10 h-10 text-gray-700" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-green-500/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <FaPlay className="w-4 h-4 text-white ml-1" />
+            </div>
+          </div>
+          <span className="absolute top-3 left-3 px-2 py-0.5 bg-red-600/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
+            Tutoriel
+          </span>
+        </div>
+        <div className="p-5 flex flex-col flex-grow">
+          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors">
+            {tutorial.title}
+          </h3>
+          {tutorial.description && (
+            <p className="text-gray-400 font-kanit text-sm flex-grow line-clamp-3">{tutorial.description}</p>
+          )}
+          <p className="text-gray-600 font-kanit text-xs mt-3">
+            {new Date(tutorial.createdAt).toLocaleDateString("fr-FR")}
+          </p>
+        </div>
+      </motion.div>
+    </a>
+  );
+}
+
+function DefinitionCard({ def }: { def: DefinitionModel }) {
+  return (
+    <motion.div
+      variants={fadeUp}
+      className="flex flex-col bg-black/60 border border-gray-700 rounded-xl overflow-hidden hover:border-green-500/50 transition-all duration-300 h-full"
+    >
+      <div className="relative w-full h-20 bg-gradient-to-r from-green-950/60 to-black/60 flex items-center px-5">
+        <span className="text-5xl font-iceberg text-green-500/30 font-bold select-none">
+          {def.term[0]?.toUpperCase()}
+        </span>
+        <span className="absolute top-3 right-3 px-2 py-0.5 bg-green-500/20 border border-green-500/40 text-green-400 text-xs font-iceberg uppercase tracking-widest rounded">
+          {def.category || "Définition"}
+        </span>
+      </div>
+      <div className="p-5 flex flex-col flex-grow">
+        <h3 className="text-white font-iceberg uppercase text-base mb-2">{def.term}</h3>
+        <p className="text-gray-400 font-kanit text-sm flex-grow line-clamp-4">{def.definition}</p>
+        <p className="text-gray-600 font-kanit text-xs mt-3">
+          {new Date(def.createdAt).toLocaleDateString("fr-FR")}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ── Page ── */
+export default function UniversPage() {
+  const [backgroundImage, setBackgroundImage] = useState("");
+  const [posts, setPosts] = useState<PostModel[]>([]);
+  const [tutorials, setTutorials] = useState<TutorialModel[]>([]);
+  const [definitions, setDefinitions] = useState<DefinitionModel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState<ContentType>("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fetchedUnits = await fetchUnits();
-        const fetchedClasses = await fetchClasses();
-        const unitsWithImages: UnitModel[] = fetchedUnits.sort((a, b) =>
-          a.title.localeCompare(b.title)
-        );
-        setUnits(unitsWithImages);
-        setFilteredUnits(unitsWithImages);
-
-        // Stocker toutes les classes
-        setClasses(fetchedClasses);
-
-        // Obtenir les trois dernières classes pour la section "Dernières infos disponibles"
-        const latestClasses = fetchedClasses
-          .sort(
-            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
-          .slice(0, 3);
-        setLatestClasses(latestClasses);
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des unités ou des classes :",
-          error
-        );
-      }
-    };
-
-    const loadRandomBackground = async () => {
-      try {
-        const image = await fetchRandomBackground();
-        console.log("Background image:", image);
-        setBackgroundImage(image);
-      } catch (error) {
-        console.error(
-          "Échec du chargement de l'image de fond aléatoire :",
-          error
-        );
-        setBackgroundImage("/images/backgrounds/default.jpg");
-      }
-    };
-
-    const loadRandomHeroBackground = async () => {
-      try {
-        const image = await fetchRandomBackground();
-        console.log("Hero background image:", image);
-        setHeroBackgroundImage(image);
-      } catch (error) {
-        console.error(
-          "Échec du chargement de l'image de fond aléatoire pour HeroSection :",
-          error
-        );
-        setHeroBackgroundImage("/images/backgrounds/bouddhisme.jpg");
-      }
-    };
-
-    fetchData();
-    loadRandomBackground();
-    loadRandomHeroBackground();
+    Promise.allSettled([
+      fetchPosts(),
+      fetchPublishedTutorials(),
+      fetchPublishedDefinitions(),
+      fetchRandomBackground(),
+    ]).then(([p, t, d, bg]) => {
+      if (p.status === "fulfilled") setPosts(p.value);
+      if (t.status === "fulfilled") setTutorials(t.value);
+      if (d.status === "fulfilled") setDefinitions(d.value);
+      if (bg.status === "fulfilled") setBackgroundImage(bg.value);
+      setLoading(false);
+    });
   }, []);
 
-  const handleFilterClick = (filterType: string) => {
-    setActiveFilter(filterType);
-  };
+  const items = useMemo<UnifiedItem[]>(() => {
+    const q = search.toLowerCase();
 
-  const handleClassFilter = (classe: string) => {
-    if (selectedClasses.includes(classe)) {
-      setSelectedClasses(selectedClasses.filter((c) => c !== classe));
-    } else {
-      setSelectedClasses([...selectedClasses, classe]);
-    }
-  };
+    const filteredPosts: UnifiedItem[] = (activeFilter === "all" || activeFilter === "posts")
+      ? posts
+          .filter((p) =>
+            !q || p.title.toLowerCase().includes(q) || p.intro?.toLowerCase().includes(q)
+          )
+          .map((p) => ({ kind: "post", data: p }))
+      : [];
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value.toLowerCase();
-    setSearchQuery(query);
-  };
+    const filteredTuts: UnifiedItem[] = (activeFilter === "all" || activeFilter === "tutorials")
+      ? tutorials
+          .filter((t) =>
+            !q || t.title.toLowerCase().includes(q) || t.description?.toLowerCase().includes(q)
+          )
+          .map((t) => ({ kind: "tutorial", data: t }))
+      : [];
 
-  useEffect(() => {
-    let filtered = units;
+    const filteredDefs: UnifiedItem[] = (activeFilter === "all" || activeFilter === "definitions")
+      ? definitions
+          .filter((d) =>
+            !q || d.term.toLowerCase().includes(q) || d.definition.toLowerCase().includes(q)
+          )
+          .map((d) => ({ kind: "definition", data: d }))
+      : [];
 
-    if (activeFilter !== "ALL") {
-      filtered = filtered.filter(
-        (unit) => unit.type.toUpperCase() === activeFilter
-      );
-    }
+    return [...filteredPosts, ...filteredTuts, ...filteredDefs];
+  }, [posts, tutorials, definitions, activeFilter, search]);
 
-    if (selectedClasses.length > 0) {
-      filtered = filtered.filter(
-        (unit) =>
-          unit.classes &&
-          unit.classes.some((cls) => selectedClasses.includes(cls.title))
-      );
-    }
+  const counts = useMemo(() => ({
+    all:         posts.length + tutorials.length + definitions.length,
+    posts:       posts.length,
+    tutorials:   tutorials.length,
+    definitions: definitions.length,
+  }), [posts, tutorials, definitions]);
 
-    if (searchQuery) {
-      filtered = filtered.filter((unit) =>
-        unit.title.toLowerCase().includes(searchQuery)
-      );
-    }
-
-    setFilteredUnits(filtered);
-  }, [activeFilter, selectedClasses, searchQuery, units]);
-
-  const sortedChampions = filteredUnits
-    .filter((unit) => unit.type.toUpperCase() === "CHAMPION")
-    .sort((a, b) => a.title.localeCompare(b.title));
-
-  const sortedBestiaire = filteredUnits
-    .filter((unit) => unit.type.toUpperCase() === "UNIT")
-    .sort((a, b) => a.title.localeCompare(b.title));
-
-  const transformClasses = (classes: UnitModel["classes"]) => {
-    if (!classes) return [];
-    return classes.map((cls) => ({
-      title: cls.title,
-      color: cls.color ?? "#000000",
-    }));
-  };
-
-  // Gestion de la pagination des classes
-  const indexOfLastClass = currentPage * classesPerPage;
-  const indexOfFirstClass = indexOfLastClass - classesPerPage;
-  const currentClasses = classes
-    .filter((classe) =>
-      classe.title.toLowerCase().includes(searchClassesQuery.toLowerCase())
-    )
-    .slice(indexOfFirstClass, indexOfLastClass);
-  const totalPages = Math.ceil(
-    classes.filter((classe) =>
-      classe.title.toLowerCase().includes(searchClassesQuery.toLowerCase())
-    ).length / classesPerPage
-  );
-
-  const handleClassesSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchClassesQuery(event.target.value);
-    setCurrentPage(1);
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-black">
+        <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full min-h-screen text-white font-kanit">
-      {/* Image de Fond Fixée et Proportionnée */}
+
+      {/* Fond fixe */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
           <img
             src={backgroundImage}
             alt="Background"
-            style={{
-              objectFit: "cover",
-              objectPosition: "center",
-              width: "100%",
-              height: "100%",
-              position: "fixed",
-            }}
-            className="brightness-50"
+            style={{ objectFit: "cover", width: "100%", height: "100%", position: "fixed" }}
+            className="brightness-40"
           />
-          {/* Overlay pour obscurcir davantage l'image vers le bas */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9))",
-            }}
-          ></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black" />
         </div>
       )}
 
-      {/* Hero Section en Haut de la Page */}
-      <HeroSection
-        backgroundImage={heroBackgroundImage}
-        title="Explorez l'Univers"
-        titleColor="#fff"
-        strongTitle="de Seranya"
-        strongTitleColor="#ffffff"
-        content="Découvrez les blogs, tutos et autres sur Seranya."
-        contentColor="#ddd"
-        button1Text="Commencer l'exploration"
-        button1Url="#"
-        button1BgColor="#000000"
-        button2Text="En savoir plus"
-        button2Url="#"
-        button2BgColor="#555"
-      />
+      <div className="relative z-10">
 
-      {/* Section "Dernières infos disponibles" */}
-      <motion.section
-        className="relative z-10 py-16 px-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-3xl font-bold text-white text-center font-iceberg mb-8">
-          Dernières infos disponibles
-        </h2>
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Grande carte à gauche */}
-          {latestClasses[0] && (
-            <Link
-              href={`/univers/classes/${latestClasses[0].id}`}
-              className="lg:w-2/3"
-            >
-              <div className="relative group overflow-hidden rounded-lg shadow-lg border border-gray-700">
-                {/* Image de fond */}
-                <div
-                  className="w-full h-96 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                  style={{
-                    backgroundImage: `url(${
-                      getImageUrl(
-                        latestClasses[0].uploads.find(
-                          (upload) => upload.type === "HEADERIMAGE"
-                        )?.path
-                      ) || "/images/backgrounds/placeholder.jpg"
-                    })`,
-                  }}
+        {/* ── Hero ── */}
+        <section className="flex flex-col items-center justify-center min-h-[45vh] text-center px-6 pt-32 pb-12">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            <span className="inline-block px-4 py-1.5 bg-green-500/20 border border-green-500/40 text-green-400 text-xs font-iceberg uppercase tracking-widest rounded-full mb-5">
+              Tout le contenu Seranya
+            </span>
+            <h1 className="text-5xl md:text-6xl font-iceberg uppercase tracking-wide text-white mb-4 leading-tight">
+              L&apos;Univers
+            </h1>
+            <p className="text-gray-300 text-lg max-w-xl mx-auto leading-relaxed">
+              Articles, tutoriels vidéo et définitions — toute la connaissance Seranya réunie en un seul endroit.
+            </p>
+          </motion.div>
+        </section>
+
+        {/* ── Filtres + Recherche ── */}
+        <div className="sticky top-16 z-20 bg-black/80 backdrop-blur-md border-b border-gray-800 px-6 py-4">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center gap-4">
+
+            {/* Tabs */}
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              {FILTERS.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setActiveFilter(f.key)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-iceberg uppercase tracking-widest transition-all duration-200 ${
+                    activeFilter === f.key
+                      ? "bg-green-500 text-white shadow-lg shadow-green-500/30"
+                      : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-gray-700"
+                  }`}
                 >
-                  {/* Overlay pour obscurcir l'image vers le bas */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8))",
-                    }}
-                  ></div>
-                </div>
-                {/* Contenu */}
-                <div className="absolute inset-0 flex flex-col justify-end items-center p-4">
-                  <h3 className="text-2xl font-bold text-white font-iceberg uppercase">
-                    {latestClasses[0].title}
-                  </h3>
-                  <p className="text-sm text-gray-300 font-kanit">
-                    {latestClasses[0].subtitle || "Aucune description"}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          )}
-          {/* Deux petites cartes à droite */}
-          <div className="flex flex-col gap-8 lg:w-1/3">
-            {latestClasses.slice(1, 3).map((classe) => (
-              <Link href={`/univers/classes/${classe.id}`} key={classe.id}>
-                <div className="relative group overflow-hidden rounded-lg shadow-lg border border-gray-700">
-                  {/* Image de fond */}
-                  <div
-                    className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                    style={{
-                      backgroundImage: `url(${
-                        getImageUrl(
-                          classe.uploads.find(
-                            (upload) => upload.type === "HEADERIMAGE"
-                          )?.path
-                        ) || "/images/backgrounds/placeholder.jpg"
-                      })`,
-                    }}
-                  >
-                    {/* Overlay pour obscurcir l'image vers le bas */}
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8))",
-                      }}
-                    ></div>
-                  </div>
-                  {/* Contenu */}
-                  <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
-                    <h3 className="text-xl font-bold text-white font-iceberg uppercase">
-                      {classe.title}
-                    </h3>
-                    <p className="text-sm text-gray-300 font-kanit">
-                      {classe.subtitle || "Aucune description"}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Bouton "Voir plus" */}
-        <div className="text-center mt-8">
-          <button
-            onClick={() => setShowMoreClasses(!showMoreClasses)}
-            className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-6 rounded transition-all duration-300 shadow-lg uppercase font-iceberg"
-          >
-            {showMoreClasses ? "Voir moins" : "Voir plus"}
-          </button>
-        </div>
-
-        {/* Liste des classes supplémentaires */}
-        {showMoreClasses && (
-          <div className="mt-8">
-            {/* Barre de recherche pour les classes */}
-            <div className="mb-4 flex justify-center">
-              <div className="relative w-full max-w-md">
-                <input
-                  className="w-full h-12 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-white border-0 rounded-md shadow focus:placeholder-gray-600 focus:bg-gray-100 focus:ring-2 focus:ring-blue-500"
-                  type="text"
-                  placeholder="Rechercher une famille..."
-                  aria-label="Rechercher"
-                  value={searchClassesQuery}
-                  onChange={handleClassesSearch}
-                />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                  <SearchOutlined className="text-gray-400" />
-                </div>
-              </div>
-            </div>
-
-            {/* Liste des classes avec pagination */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {currentClasses.map((classe) => (
-                <Link href={`/univers/classes/${classe.id}`} key={classe.id}>
-                  <div className="relative group overflow-hidden rounded-lg shadow-lg border border-gray-700">
-                    {/* Image de fond */}
-                    <div
-                      className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                      style={{
-                        backgroundImage: `url(${
-                          getImageUrl(
-                            classe.uploads.find(
-                              (upload) => upload.type === "HEADERIMAGE"
-                            )?.path
-                          ) || "/images/backgrounds/placeholder.jpg"
-                        })`,
-                      }}
-                    >
-                      {/* Overlay pour obscurcir l'image vers le bas */}
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background:
-                            "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.8))",
-                        }}
-                      ></div>
-                    </div>
-                    {/* Contenu */}
-                    <div className="absolute inset-0 flex flex-col justify-end items-center p-2">
-                      <h3 className="text-xl font-bold text-white font-iceberg uppercase">
-                        {classe.title}
-                      </h3>
-                      <p className="text-sm text-gray-300 font-kanit">
-                        {classe.subtitle || "Aucune description"}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+                  {f.icon}
+                  {f.label}
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full font-kanit ${
+                    activeFilter === f.key ? "bg-white/20" : "bg-gray-700"
+                  }`}>
+                    {counts[f.key]}
+                  </span>
+                </button>
               ))}
             </div>
 
-            {/* Pagination */}
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`px-4 py-2 mx-1 rounded ${
-                  currentPage === 1
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-black hover:bg-gray-700 hover:text-white"
-                }`}
-              >
-                Précédent
-              </button>
-              <span className="px-4 py-2 mx-1">
-                Page {currentPage} sur {totalPages}
-              </span>
-              <button
-                onClick={() =>
-                  currentPage < totalPages && setCurrentPage(currentPage + 1)
-                }
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 mx-1 rounded ${
-                  currentPage === totalPages
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-white text-black hover:bg-gray-700 hover:text-white"
-                }`}
-              >
-                Suivant
-              </button>
+            {/* Recherche */}
+            <div className="relative ml-auto w-full sm:w-64">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Rechercher..."
+                className="w-full h-10 pl-9 pr-4 rounded-lg bg-white/5 border border-gray-700 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
+              />
+              <SearchOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
             </div>
           </div>
-        )}
-      </motion.section>
-
-      {/* Titre et Texte d'accroche pour l'Encyclopédie */}
-      <motion.section
-        className="relative z-10 py-8 px-8 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-3xl font-bold text-white font-iceberg">
-          L&apos;Encyclopédie de Seranya
-        </h2>
-        <p className="mt-4 text-lg text-gray-300 font-kanit">
-          Explorez les blogs de Seranya .
-        </p>
-      </motion.section>
-
-      {/* Section Principale avec Sidebar et Contenu */}
-      <section className="relative z-10 py-16 px-12">
-        <div className="flex flex-col lg:flex-row">
-          {/* Barre Latérale des Filtres */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="lg:w-1/4 p-4 bg-black/80 rounded-lg shadow-lg sticky top-24 max-h-[85vh] overflow-y-auto mr-0 lg:mr-8 mb-8 lg:mb-0"
-          >
-            {/* Barre de Recherche dans la Sidebar */}
-            <div className="mb-8 relative">
-              <input
-                className="w-full h-12 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-500 bg-white border-0 rounded-md shadow focus:placeholder-gray-600 focus:bg-gray-100 focus:ring-2 focus:ring-blue-500"
-                type="text"
-                placeholder="Rechercher..."
-                aria-label="Rechercher"
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-black p-1 rounded">
-                <SearchOutlined className="text-white" />
-              </div>
-            </div>
-
-            {/* Filtres Dépliables */}
-            <div className="mb-4">
-              <button
-                onClick={() => setIsTypeFilterOpen(!isTypeFilterOpen)}
-                className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-black/70 rounded-t-lg focus:outline-none"
-              >
-                Filtrage par type
-              </button>
-              {isTypeFilterOpen && (
-                <ul className="flex flex-col bg-black/70 rounded-b-lg">
-                  {["ALL", "CHAMPION", "UNIT"].map((type) => (
-                    <li
-                      key={type}
-                      className="flex items-center gap-x-2 py-2 px-4 text-sm font-medium text-white bg-black/70 rounded-lg mb-2 last:mb-0"
-                    >
-                      <input
-                        id={`type-filter-${type}`}
-                        name={`type-filter-${type}`}
-                        type="checkbox"
-                        checked={activeFilter === type}
-                        onChange={() => handleFilterClick(type)}
-                        className="h-4 w-4 accent-black border-gray-300 rounded focus:ring-2 focus:ring-white"
-                      />
-                      <label
-                        htmlFor={`type-filter-${type}`}
-                        className="block text-sm font-medium text-white"
-                      >
-                        {type === "ALL"
-                          ? "Toutes les Entités"
-                          : type.charAt(0) + type.slice(1).toLowerCase()}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div>
-              <button
-                onClick={() => setIsClassFilterOpen(!isClassFilterOpen)}
-                className="w-full text-left text-lg font-iceberg text-white py-2 px-4 bg-black/70 rounded-b-lg focus:outline-none"
-              >
-                Filtrage par famille
-              </button>
-              {isClassFilterOpen && (
-                <div className="flex flex-wrap gap-2 p-4 bg-black/70 rounded-lg mt-2">
-                  {classes.map((classe) => (
-                    <button
-                      key={classe.id}
-                      onClick={() => handleClassFilter(classe.title)}
-                      className={`px-3 py-1 rounded-full text-sm font-medium focus:outline-none transition-colors duration-200 cursor-pointer font-iceberg uppercase m-1`}
-                      style={{
-                        backgroundColor: selectedClasses.includes(classe.title)
-                          ? classe.color ?? "#000000"
-                          : "#4B5563",
-                        color: "#FFFFFF",
-                        boxShadow: selectedClasses.includes(classe.title)
-                          ? `0 0 10px ${classe.color ?? "#000000"}`
-                          : "none",
-                      }}
-                    >
-                      {classe.title}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Contenu Principal */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="lg:w-3/4"
-          >
-            {/* Section Champions */}
-            {sortedChampions.length > 0 && (
-              <>
-                <DividersWithHeading text="Champions" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {sortedChampions.map((unit) => (
-                    <motion.div
-                      key={unit.id}
-                      className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {/* Header Image */}
-                      <div
-                        className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                        style={{
-                          backgroundImage: `url(${
-                            getImageUrl(unit.headerImage) ||
-                            "/images/backgrounds/placeholder.jpg"
-                          })`,
-                        }}
-                      ></div>
-
-                      {/* Profile Image */}
-                      <img
-                        alt={unit.title}
-                        src={
-                          unit.profileImage ||
-                          "/images/backgrounds/placeholder.jpg"
-                        }
-                        className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20"
-                      />
-
-                      {/* Text Content */}
-                      <div
-                        className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10"
-                        style={{
-                          backgroundImage: unit.footerImage
-                            ? `url(${getImageUrl(unit.footerImage)})`
-                            : undefined,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      >
-                        {unit.footerImage && (
-                          <div className="absolute inset-0 bg-black opacity-70 rounded-b-lg"></div>
-                        )}
-
-                        <div className="relative z-10">
-                          <span className="text-2xl font-iceberg uppercase mt-4">
-                            {unit.title}
-                          </span>
-                          {unit.classes && unit.classes.length > 0 && (
-                            <div className="mt-2">
-                              <BadgeComponent
-                                classes={transformClasses(unit.classes)}
-                              />
-                            </div>
-                          )}
-                          <p className="text-white font-kanit mt-2">
-                            {unit.subtitle || "Aucune citation"}
-                          </p>
-                        </div>
-
-                        <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                          <p className="text-white font-kanit p-3">
-                            {unit.intro || "Aucune introduction disponible."}
-                          </p>
-                        </div>
-
-                        <div className="text-center mt-6 transition-all duration-300 relative z-10">
-                          <Link href={`/univers/units/${unit.id}`}>
-                            <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
-                              Explorer
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {/* Section Bestiaire */}
-            {sortedBestiaire.length > 0 && (
-              <>
-                <DividersWithHeading text="Bestiaire" />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {sortedBestiaire.map((unit) => (
-                    <motion.div
-                      key={unit.id}
-                      className="relative group overflow-hidden rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-500 border border-gray-700 flex flex-col bg-black/60"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {/* Header Image */}
-                      <div
-                        className="w-full h-48 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                        style={{
-                          backgroundImage: `url(${
-                            getImageUrl(unit.headerImage) ||
-                            "/images/backgrounds/placeholder.jpg"
-                          })`,
-                        }}
-                      ></div>
-
-                      {/* Profile Image */}
-                      <img
-                        alt={unit.title}
-                        src={
-                          unit.profileImage ||
-                          "/images/backgrounds/placeholder.jpg"
-                        }
-                        className="absolute left-1/2 top-48 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 object-cover rounded-full border-4 border-black shadow-[0_0_10px_black] z-20"
-                      />
-
-                      <div
-                        className="pb-4 text-center px-3 flex flex-col justify-between flex-grow relative pt-10"
-                        style={{
-                          backgroundImage: unit.footerImage
-                            ? `url(${getImageUrl(unit.footerImage)})`
-                            : undefined,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat",
-                        }}
-                      >
-                        {unit.footerImage && (
-                          <div className="absolute inset-0 bg-black opacity-70 rounded-b-lg"></div>
-                        )}
-
-                        <div className="relative z-10">
-                          <span className="text-2xl font-iceberg uppercase mt-4">
-                            {unit.title}
-                          </span>
-                          {unit.classes && unit.classes.length > 0 && (
-                            <div className="mt-2">
-                              <BadgeComponent
-                                classes={transformClasses(unit.classes)}
-                              />
-                            </div>
-                          )}
-                          <p className="text-white font-kanit mt-2">
-                            {unit.subtitle || "Aucune citation"}
-                          </p>
-                        </div>
-
-                        <div className="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-40">
-                          <p className="text-white font-kanit p-3">
-                            {unit.intro || "Aucune introduction disponible."}
-                          </p>
-                        </div>
-
-                        <div className="text-center mt-6 transition-all duration-300 relative z-10">
-                          <Link href={`/univers/units/${unit.id}`}>
-                            <button className="bg-white hover:bg-gray-700 text-black hover:text-white font-semibold py-2 px-4 rounded transition-all duration-300 shadow-lg uppercase font-iceberg">
-                              Explorer
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </>
-            )}
-          </motion.div>
         </div>
-      </section>
+
+        {/* ── Grille de contenu ── */}
+        <section className="max-w-6xl mx-auto px-6 py-12">
+          {items.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-500 font-kanit text-lg">Aucun contenu trouvé.</p>
+            </div>
+          ) : (
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              initial="hidden"
+              animate="visible"
+              variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+            >
+              {items.map((item, i) => {
+                if (item.kind === "post")       return <PostCard       key={`post-${item.data.id}`}    post={item.data} />;
+                if (item.kind === "tutorial")   return <TutorialCard   key={`tuto-${item.data.id}`}    tutorial={item.data} />;
+                if (item.kind === "definition") return <DefinitionCard key={`def-${item.data.id}`}     def={item.data} />;
+              })}
+            </motion.div>
+          )}
+        </section>
+
+      </div>
     </div>
   );
-};
-
-export default UniversPage;
+}

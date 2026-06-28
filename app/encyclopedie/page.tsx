@@ -78,10 +78,10 @@ const EncyclopediePage: React.FC = () => {
           contentColor="#e5e7eb"
           button1Text="Explorer"
           button1Url="#encyclopedie-section"
-          button1BgColor="#38b2ac"
+          button1BgColor="#22c55e"
           button2Text="S'abonner"
           button2Url="/subscription"
-          button2BgColor="#555"
+          button2BgColor="#374151"
         />
 
         <div id="encyclopedie-section" className="py-16 px-6 max-w-6xl mx-auto">

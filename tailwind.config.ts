@@ -9,11 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        oxanium: ['Poppins', 'cursive'],
-        kanit: ['Poppins', 'cursive'],
-        optimus: ['Poppins', 'cursive'],
-        poppins: ['Poppins', 'cursive'],
-        iceberg: ['Poppins', 'cursive'],
+        oxanium: ['Oxanium', 'cursive'],
+        kanit: ['Kanit', 'sans-serif'],
+        optimus: ['Optimus Princeps', 'serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        iceberg: ['Iceberg', 'cursive'],
       },
       boxShadow: {
         'white-glow': '0 0 20px rgba(255, 255, 255, 0.8)', // Custom white box shadow

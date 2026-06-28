@@ -21,6 +21,14 @@ const nextConfig = {
         hostname: 'localhost',
         port: '5000',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
     ],
   },
 };

@@ -92,10 +92,10 @@ const PostsPage: React.FC = () => {
           contentColor="#ffffff" // Blanc
           button1Text="Voir les Posts"
           button1Url="#posts-section"
-          button1BgColor="#38b2ac"
+          button1BgColor="#22c55e"
           button2Text="Découvrir"
           button2Url="/univers"
-          button2BgColor="#38b2ac" // Teal (Hex code)
+          button2BgColor="#374151"
         />
 
         {/* Section des Posts */}

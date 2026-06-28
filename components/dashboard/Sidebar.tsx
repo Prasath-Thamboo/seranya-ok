@@ -34,10 +34,8 @@ export default function Sidebar() {
     if (token) {
       fetchCurrentUser()
         .then((userData) => {
-          const profileImageUrl = `${process.env.NEXT_PUBLIC_API_URL_PROD}/uploads/users/${userData.id}/ProfileImage.png`;
           setUser({
             ...userData,
-            profileImage: profileImageUrl,
             role: userData.role || UserRole.USER,
           });
         })
@@ -104,124 +102,113 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`relative z-20 flex flex-col h-full text-white bg-black shadow-lg transition-all duration-300 ${
-        collapsed ? 'w-20' : 'w-80'
-      } ${isMobile ? 'hidden' : 'block'} `}
+      className={`relative z-20 flex flex-col h-full text-white bg-gray-950 border-r border-gray-800 shadow-xl transition-all duration-300 ${
+        collapsed ? 'w-[4.5rem]' : 'w-72'
+      } ${isMobile ? 'hidden' : 'block'}`}
     >
       {/* Bouton de repli */}
-      <div
-        className="absolute top-24 right-0 transform translate-x-1/2 bg-black text-white rounded-full p-1 cursor-pointer shadow-lg border-2 border-white"
-        style={{
-          right: collapsed ? '0px' : '0px',
-        }}
+      <button
+        className="absolute top-20 -right-3 bg-gray-950 text-white rounded-full p-1 cursor-pointer shadow-lg border border-gray-700 hover:border-green-400 transition-colors z-10"
         onClick={toggleSidebar}
+        aria-label="Réduire le menu"
       >
         {collapsed ? (
-          <BiChevronRight className="w-6 h-6" />
+          <BiChevronRight className="w-5 h-5" />
         ) : (
-          <BiChevronLeft className="w-6 h-6" />
+          <BiChevronLeft className="w-5 h-5" />
         )}
-      </div>
+      </button>
 
       {/* Section Logo */}
       <div
-        className={`flex items-center justify-center my-10 cursor-pointer ${collapsed ? 'justify-center' : ''}`}
+        className="flex items-center justify-center py-6 px-4 border-b border-gray-800 cursor-pointer"
         onClick={handleLogoClick}
       >
         <Image
-          src={collapsed ? "/logos/seranyaicon.png" : "/logos/seranyaicon.png"}
+          src="/logos/seranyaicon.png"
           alt="Seranya Logo"
-          width={collapsed ? 35 : 180}
-          height={50}
-          className="mx-auto"
+          width={collapsed ? 32 : 140}
+          height={45}
+          className="mx-auto transition-all duration-300"
         />
       </div>
 
       {/* Navigation */}
+      <div className="flex-1 overflow-y-auto py-4">
       <Menu
         mode="inline"
         className="font-iceberg"
-        style={{ background: 'black', borderRight: 'none', boxShadow: '0 -3px 10px rgba(0, 0, 0, 0.5)' }}
+        style={{ background: 'transparent', borderRight: 'none' }}
       >
-        <Menu.Item
-          key="dashboard"
-          icon={<AiFillHome className="w-5 h-5 text-shadow-white" />}
-          className="menu-item"
-          onClick={() => router.push('/admin')}
-        >
-          {!collapsed && <span className="uppercase text-shadow-white">Tableau de bord</span>}
-        </Menu.Item>
+        {user?.role === UserRole.ADMIN && (
+          <Menu.Item
+            key="dashboard"
+            icon={<AiFillHome className="w-5 h-5 text-shadow-white" />}
+            className="menu-item"
+            onClick={() => router.push('/admin')}
+          >
+            {!collapsed && <span className="uppercase text-shadow-white">Tableau de bord</span>}
+          </Menu.Item>
+        )}
 
-        <Menu.SubMenu
+        <Menu.Item
           key="posts"
           icon={<FaFolderOpen className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Articles</span>}
           className="menu-item"
+          onClick={() => router.push('/admin/posts')}
         >
-          <Menu.Item key="general-posts" className="submenu-item" onClick={() => router.push('/admin/posts')}>
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
+          {!collapsed && <span className="uppercase text-shadow-white">Articles</span>}
+        </Menu.Item>
 
         {user?.role === UserRole.ADMIN && (
-          <Menu.SubMenu
+          <Menu.Item
             key="users"
             icon={<FaUsers className="w-5 h-5 text-shadow-white" />}
-            title={!collapsed && <span className="uppercase text-shadow-white">Utilisateurs</span>}
             className="menu-item"
+            onClick={() => router.push('/admin/users')}
           >
-            <Menu.Item key="general-users" className="submenu-item" onClick={() => router.push('/admin/users')}>
-              <span className="uppercase">Général</span>
-            </Menu.Item>
-          </Menu.SubMenu>
+            {!collapsed && <span className="uppercase text-shadow-white">Utilisateurs</span>}
+          </Menu.Item>
         )}
 
-        <Menu.SubMenu
+        <Menu.Item
           key="encyclopedie"
           icon={<FaBookOpen className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Encyclopédie</span>}
           className="menu-item"
+          onClick={() => router.push('/admin/encyclopedie')}
         >
-          <Menu.Item key="general-encyclopedie" className="submenu-item" onClick={() => router.push('/admin/encyclopedie')}>
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
+          {!collapsed && <span className="uppercase text-shadow-white">Encyclopédie</span>}
+        </Menu.Item>
 
-        <Menu.SubMenu
+        <Menu.Item
           key="tutoriels"
           icon={<FaVideo className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Tutoriels</span>}
           className="menu-item"
+          onClick={() => router.push('/admin/tutoriels')}
         >
-          <Menu.Item key="general-tutoriels" className="submenu-item" onClick={() => router.push('/admin/tutoriels')}>
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
+          {!collapsed && <span className="uppercase text-shadow-white">Tutoriels</span>}
+        </Menu.Item>
 
         {user?.role === UserRole.ADMIN && (
-          <Menu.SubMenu
+          <Menu.Item
             key="units"
             icon={<FaCubes className="w-5 h-5 text-shadow-white" />}
-            title={!collapsed && <span className="uppercase text-shadow-white">Entités</span>}
             className="menu-item"
+            onClick={() => router.push('/admin/units')}
           >
-            <Menu.Item key="general-units" className="submenu-item" onClick={() => router.push('/admin/units')}>
-              <span className="uppercase">Général</span>
-            </Menu.Item>
-          </Menu.SubMenu>
+            {!collapsed && <span className="uppercase text-shadow-white">Entités</span>}
+          </Menu.Item>
         )}
 
         {user?.role === UserRole.ADMIN && (
-          <Menu.SubMenu
+          <Menu.Item
             key="classes"
             icon={<FaBook className="w-5 h-5 text-shadow-white" />}
-            title={!collapsed && <span className="uppercase text-shadow-white">Familles</span>}
             className="menu-item"
+            onClick={() => router.push('/admin/classes')}
           >
-            <Menu.Item key="general-classes" className="submenu-item" onClick={() => router.push('/admin/classes')}>
-              <span className="uppercase">Général</span>
-            </Menu.Item>
-          </Menu.SubMenu>
+            {!collapsed && <span className="uppercase text-shadow-white">Familles</span>}
+          </Menu.Item>
         )}
 
         <Menu.Item
@@ -233,31 +220,35 @@ export default function Sidebar() {
           {!collapsed && <span className="uppercase text-shadow-white">Discussion</span>}
         </Menu.Item>
       </Menu>
+      </div>
 
-  {/* Section Profil et Déconnexion */}
-  <div className="mt-auto">
-        <div className="flex flex-col items-center justify-center mb-2 relative transition-all duration-300 p-4 rounded-lg w-full cursor-pointer" onClick={handleProfileClick}>
+      {/* Section Profil et Déconnexion */}
+      <div className="border-t border-gray-800">
+        <div
+          className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-900 transition-colors"
+          onClick={handleProfileClick}
+        >
           <Image
             src={typeof user?.profileImage === "string" ? user.profileImage : "/images/backgrounds/placeholder.jpg"}
             alt="User Avatar"
-            width={48}
-            height={48}
-            className="rounded-full object-cover mb-2"
+            width={38}
+            height={38}
+            className="rounded-full object-cover ring-2 ring-gray-700 flex-shrink-0"
           />
           {!collapsed && (
-            <div className="flex items-center">
-              <span className="text-lg font-iceberg font-semibold mr-2">{user?.pseudo}</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-iceberg font-semibold text-white truncate">{user?.pseudo}</span>
               <Badge role={user?.role || UserRole.USER} />
             </div>
           )}
         </div>
 
-        <div className={`flex justify-center items-center mb-4 ${collapsed ? 'p-2' : 'p-4'}`}>
+        <div className="px-3 pb-4">
           <button
-            className={`bg-transparent text-white font-iceberg font-bold flex items-center ${collapsed ? '' : 'w-full justify-center'}`}
+            className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-kanit text-sm transition-colors ${collapsed ? 'justify-center' : ''}`}
             onClick={showLogoutModal}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
               <path d="M16 13v-2H7.414l2.293-2.293-1.414-1.414L3.586 12l4.707 4.707 1.414-1.414L7.414 13H16z" />
               <path d="M20 3h-6v2h6v14h-6v2h6a2 2 0 002-2V5a2 2 0 00-2-2z" />
             </svg>

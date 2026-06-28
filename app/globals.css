@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200;400;600;700&family=Oxanium:wght@200;400;600;700&family=Poppins:wght@200;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;600;700&family=Oxanium:wght@200;400;600;700&family=Poppins:wght@200;400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -19,6 +19,15 @@
 }
 
 :root {
+  --color-primary: #000000;
+  --color-accent: #4ade80;
+  --color-accent-dark: #16a34a;
+  --color-accent-teal: #2dd4bf;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f9fafb;
+  --color-border: #e5e7eb;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -33,7 +42,7 @@
 }
 
 body {
-  font-family: 'Canveat Brush', sans-serif;
+  font-family: 'Kanit', 'Poppins', sans-serif;
   color: rgb(var(--foreground-rgb));
   overflow-x: hidden;
   background: linear-gradient(
@@ -84,6 +93,51 @@ body {
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+/* ── Inputs sombres : login / register / contact ── */
+
+/* Wrapper affix (Input.Password, Input avec prefix/suffix) et input direct */
+.custom-input.bg-gray-900,
+.custom-input.bg-gray-900.ant-input,
+.custom-input.bg-gray-900.ant-input-outlined,
+.custom-input.bg-gray-900.ant-input-affix-wrapper,
+.custom-input.bg-gray-900.ant-input-affix-wrapper-focused {
+  --ant-color-bg-container: #1e293b !important;
+  background-color: #1e293b !important;
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Inner <input> et <textarea> à l'intérieur du wrapper */
+.custom-input.bg-gray-900 input,
+.custom-input.bg-gray-900 textarea,
+.custom-input.bg-gray-900 .ant-input,
+.custom-input.bg-gray-900 .ant-input-textarea-inner {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+/* Hover / Focus */
+.custom-input.bg-gray-900:hover,
+.custom-input.bg-gray-900:focus,
+.custom-input.bg-gray-900.ant-input-affix-wrapper:hover,
+.custom-input.bg-gray-900.ant-input-affix-wrapper-focused {
+  border-color: #4ade80 !important;
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15) !important;
+}
+
+/* Placeholder */
+.custom-input.bg-gray-900 input::placeholder,
+.custom-input.bg-gray-900 textarea::placeholder,
+.custom-input.bg-gray-900 .ant-input::placeholder {
+  color: rgba(74, 222, 128, 0.3) !important;
+}
+
+/* Icône œil mot de passe */
+.custom-input.bg-gray-900 .ant-input-password-icon,
+.custom-input.bg-gray-900 .ant-input-suffix svg {
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Champs de formulaire avec bordure noire active et effet white-glow */
@@ -164,18 +218,17 @@ button.ant-btn-primary:hover {
 .menu-item span,
 .submenu-item span,
 .ant-menu-submenu-title span {
-  color: white !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
-/* Par défaut, icônes blanches avec ombre néon blanche */
+/* Par défaut, icônes blanc cassé */
 .menu-item svg,
 .submenu-item svg,
 .ant-menu-submenu-title svg {
-  color: white !important;
-  text-shadow: 0 0 8px #FFFFFF;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* Hover, Focus, et Active : texte noir et fond blanc */
+/* Hover, Focus, et Active : accent vert */
 .menu-item:hover,
 .submenu-item:hover,
 .menu-item:focus,
@@ -186,8 +239,8 @@ button.ant-btn-primary:hover {
 .ant-menu-submenu-title:focus,
 .ant-menu-submenu-title.ant-menu-submenu-active,
 .ant-menu-submenu-title.ant-menu-submenu-selected {
-  background-color: white !important;
-  color: black !important;
+  background-color: rgba(74, 222, 128, 0.1) !important;
+  color: #4ade80 !important;
 }
 
 .menu-item:hover span,
@@ -200,7 +253,7 @@ button.ant-btn-primary:hover {
 .ant-menu-submenu-title:focus span,
 .ant-menu-submenu-title.ant-menu-submenu-active span,
 .ant-menu-submenu-title.ant-menu-submenu-selected span {
-  color: black !important;
+  color: #4ade80 !important;
 }
 
 .menu-item:hover svg,
@@ -213,25 +266,37 @@ button.ant-btn-primary:hover {
 .ant-menu-submenu-title:focus svg,
 .ant-menu-submenu-title.ant-menu-submenu-active svg,
 .ant-menu-submenu-title.ant-menu-submenu-selected svg {
-  color: black !important;
+  color: #4ade80 !important;
 }
 
-/* Garantir que les sous-menus restent avec le texte noir lorsqu'ils sont ouverts */
+/* Sous-menus ouverts */
 .ant-menu-submenu-open > .ant-menu-submenu-title,
-.ant-menu-submenu-open > .ant-menu-submenu-title .anticon,
-.ant-menu-submenu-open > .ant-menu-item {
-  background-color: white !important;
-  color: black !important;
+.ant-menu-submenu-open > .ant-menu-submenu-title .anticon {
+  background-color: rgba(74, 222, 128, 0.1) !important;
+  color: #4ade80 !important;
 }
 
-.ant-menu-submenu-open > .ant-menu-submenu-title svg,
-.ant-menu-submenu-open > .ant-menu-item svg {
-  color: black !important;
+.ant-menu-submenu-open > .ant-menu-submenu-title svg {
+  color: #4ade80 !important;
 }
 
-/* Style des bordures noires pour les sous-menus déployés */
+/* Sous-menus */
+.ant-menu-sub {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Style des bordures pour les sous-menus déployés */
 .submenu-item {
-  border-left: 4px solid black !important;
+  border-left: 3px solid #4ade80 !important;
+}
+
+/* Item sélectionné */
+.ant-menu-item-selected {
+  background-color: rgba(74, 222, 128, 0.15) !important;
+}
+
+.ant-menu-item-selected::after {
+  border-right-color: #4ade80 !important;
 }
 
 .neon-pulse {

@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { Switch } from 'antd';
 import Table from '@/components/Table';
-import { fetchTutorials, deleteTutorial } from '@/lib/queries/TutorialQueries';
+import { fetchTutorials, deleteTutorial, updateTutorial } from '@/lib/queries/TutorialQueries';
 import { TutorialModel } from '@/lib/models/TutorialModels';
 import { useNotification } from '@/components/notifications/NotificationProvider';
 
@@ -51,10 +52,16 @@ const TutorielsAdminPage = () => {
       {
         Header: 'Publié',
         accessor: 'isPublished',
-        Cell: ({ value }: any) => (
-          <span className={`px-2 py-1 rounded text-xs font-bold ${value ? 'bg-green-500 text-white' : 'bg-gray-400 text-white'}`}>
-            {value ? 'Oui' : 'Non'}
-          </span>
+        Cell: ({ value, row }: any) => (
+          <Switch
+            checked={value}
+            onChange={async (checked) => {
+              await updateTutorial(row.original.id, { isPublished: checked });
+              loadTutorials();
+            }}
+            checkedChildren="Oui"
+            unCheckedChildren="Non"
+          />
         ),
       },
       {
