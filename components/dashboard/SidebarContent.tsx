@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FaUsers, FaComments, FaCubes, FaBook } from 'react-icons/fa';
+import { FaUsers, FaNewspaper, FaPlay, FaBookOpen } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
@@ -9,9 +9,8 @@ import Badge from "@/components/Badge";
 import CustomModal from "@/components/CustomModal";
 import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; // Import du composant Image
+import Image from 'next/image';
 import { AiFillHome } from 'react-icons/ai';
-import { FaFolderOpen } from "react-icons/fa6";
 
 export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
@@ -64,30 +63,20 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
   };
 
   if (isMobile) {
-    // Layout pour mobile
     return (
       <nav className="fixed bottom-0 left-0 w-full h-20 bg-black text-white flex items-center justify-between z-50 shadow-lg px-4">
-        {/* Icônes à gauche */}
         <div className="flex items-center space-x-6">
-          <FaUsers className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/users')} />
-          <FaCubes className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/units')} />
+          <FaUsers className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/users')} />
+          <FaNewspaper className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/posts')} />
         </div>
 
-        {/* Logo central */}
         <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/admin')}>
-          <Image
-            src="/logos/seranyaicon.png" // Utilisation du logo simplifié en mobile
-            alt="Home"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
+          <Image src="/logos/seranyaicon.png" alt="Home" width={40} height={40} className="rounded-full" />
         </div>
 
-        {/* Icônes à droite */}
         <div className="flex items-center space-x-6">
-          <FaBook className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/classes')} />
-          <FaComments className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/discussion')} />
+          <FaPlay className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
+          <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
         </div>
       </nav>
     );
@@ -131,89 +120,57 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
       {/* Navigation Section */}
       <Menu
         mode="inline"
-        className="font-iceberg" // Police Iceberg pour toute la barre de navigation
-        style={{ background: 'black', borderRight: 'none', boxShadow: '0 -3px 10px rgba(0, 0, 0, 0.5)' }} // Adding top shadow
+        className="font-iceberg"
+        style={{ background: 'black', borderRight: 'none' }}
       >
+        {/* Groupe 1 — Administration */}
         <Menu.Item
           key="dashboard"
-          icon={<AiFillHome className="w-5 h-5 text-shadow-white" />}
+          icon={<AiFillHome className="w-5 h-5" />}
           className="menu-item"
           onClick={() => router.push('/admin')}
         >
-          {!collapsed && <span className="uppercase text-shadow-white">Tableau de bord</span>}
+          {!collapsed && <span className="uppercase">Tableau de bord</span>}
         </Menu.Item>
 
-        <Menu.SubMenu
-          key="posts"
-          icon={<FaFolderOpen className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Articles</span>}
-          className="menu-item"
-        >
-          <Menu.Item
-            key="general-posts"
-            className="submenu-item"
-            style={{ borderLeft: '4px solid black' }}
-            onClick={() => router.push('/admin/posts')}
-          >
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
-
-        <Menu.SubMenu
+        <Menu.Item
           key="users"
-          icon={<FaUsers className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Utilisateurs</span>}
+          icon={<FaUsers className="w-5 h-5" />}
           className="menu-item"
+          onClick={() => router.push('/admin/users')}
         >
-          <Menu.Item
-            key="general-users"
-            className="submenu-item"
-            style={{ borderLeft: '4px solid black' }}
-            onClick={() => router.push('/admin/users')}
-          >
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
+          {!collapsed && <span className="uppercase">Utilisateurs</span>}
+        </Menu.Item>
 
-        <Menu.SubMenu
-          key="units"
-          icon={<FaCubes className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Units</span>}
-          className="menu-item"
-        >
-          <Menu.Item
-            key="general-units"
-            className="submenu-item"
-            style={{ borderLeft: '4px solid black' }}
-            onClick={() => router.push('/admin/units')}
-          >
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
+        {/* Séparateur */}
+        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
 
-        <Menu.SubMenu
-          key="classes"
-          icon={<FaBook className="w-5 h-5 text-shadow-white" />}
-          title={!collapsed && <span className="uppercase text-shadow-white">Classes</span>}
+        {/* Groupe 2 — Contenu */}
+        <Menu.Item
+          key="posts"
+          icon={<FaNewspaper className="w-5 h-5" />}
           className="menu-item"
+          onClick={() => router.push('/admin/posts')}
         >
-          <Menu.Item
-            key="general-classes"
-            className="submenu-item"
-            style={{ borderLeft: '4px solid black' }}
-            onClick={() => router.push('/admin/classes')}
-          >
-            <span className="uppercase">Général</span>
-          </Menu.Item>
-        </Menu.SubMenu>
+          {!collapsed && <span className="uppercase">Articles</span>}
+        </Menu.Item>
 
         <Menu.Item
-          key="chat"
-          icon={<FaComments className="w-5 h-5 text-shadow-white" />}
+          key="tutoriels"
+          icon={<FaPlay className="w-5 h-5" />}
           className="menu-item"
-          onClick={() => router.push('/admin/discussion')}
+          onClick={() => router.push('/admin/tutoriels')}
         >
-          {!collapsed && <span className="uppercase text-shadow-white">Discussion</span>}
+          {!collapsed && <span className="uppercase">Tutoriels</span>}
+        </Menu.Item>
+
+        <Menu.Item
+          key="encyclopedie"
+          icon={<FaBookOpen className="w-5 h-5" />}
+          className="menu-item"
+          onClick={() => router.push('/admin/encyclopedie')}
+        >
+          {!collapsed && <span className="uppercase">Encyclopédie</span>}
         </Menu.Item>
       </Menu>
 

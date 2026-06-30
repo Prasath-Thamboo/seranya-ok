@@ -3,18 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const LINKS = [
   { label: "Accueil", href: "/" },
   { label: "À propos", href: "/about" },
-  { label: "Contact", href: "/contact" },
   { label: "Mentions légales", href: "/mentions" },
-  { label: "Abonnement", href: "/subscription" },
 ];
 
 const SOCIALS = [
-  { icon: <FaGithub className="w-4 h-4" />, href: "https://github.com", label: "GitHub" },
+  { icon: <FaFacebook className="w-4 h-4" />, href: "https://facebook.com", label: "Facebook" },
   { icon: <FaTwitter className="w-4 h-4" />, href: "https://twitter.com", label: "Twitter" },
   { icon: <FaInstagram className="w-4 h-4" />, href: "https://instagram.com", label: "Instagram" },
 ];

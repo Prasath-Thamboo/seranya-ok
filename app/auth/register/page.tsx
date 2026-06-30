@@ -54,9 +54,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="h-screen w-full overflow-hidden flex flex-col lg:flex-row">
+    <div className="h-screen w-full overflow-hidden relative flex flex-col lg:flex-row">
       {/* Background image section */}
-      <div className="relative w-full lg:w-1/2 h-36 lg:h-full flex-shrink-0">
+      <div className="absolute inset-0 lg:relative lg:inset-auto lg:w-1/2 lg:h-full lg:flex-shrink-0">
         <Image
           src="/images/backgrounds/seranyayoga.jpg"
           alt="Background"
@@ -65,12 +65,12 @@ export default function RegisterPage() {
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/90 hidden lg:block" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 lg:hidden" />
+        <div className="absolute inset-0 bg-black/65 lg:hidden" />
       </div>
 
       {/* Register form section */}
-      <div className="flex flex-1 lg:w-1/2 lg:flex-shrink-0 overflow-hidden justify-center items-center bg-black">
-        <div className="max-w-md w-full text-white px-8 py-6">
+      <div className="relative z-10 flex flex-1 lg:w-1/2 lg:flex-shrink-0 overflow-hidden justify-center items-center lg:bg-black">
+        <div className="max-w-md w-full text-white px-8 py-8 mx-4 lg:mx-0 bg-black/50 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none rounded-2xl lg:rounded-none border border-white/10 lg:border-0">
           {/* Logo */}
           <div className="mb-4">
             <Link href="/">

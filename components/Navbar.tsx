@@ -318,9 +318,9 @@ export default function Navbar() {
               </button>
             </Dropdown>
 
-            {/* Extraits */}
+            {/* Blogs */}
             <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-              <span className="shadow-text">Extraits</span>
+              <span className="shadow-text">Blogs</span>
             </Link>
 
             {/* Contact */}

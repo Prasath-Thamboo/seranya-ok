@@ -10,11 +10,12 @@ import { FaCheck, FaArrowRight } from "react-icons/fa";
 import { HiOutlineBookOpen, HiOutlineUsers, HiOutlineSparkles } from "react-icons/hi2";
 import Loader from "@/components/Loader";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { fetchClasses } from "@/lib/queries/ClassQueries";
 import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery";
 import { getAccessToken, fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { UnitModel } from "@/lib/models/UnitModels";
-import { ClassModel } from "@/lib/models/ClassModels";
+import { fetchPosts } from "@/lib/queries/PostQueries";
+import { fetchPublishedTutorials } from "@/lib/queries/TutorialQueries";
+import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -27,16 +28,15 @@ const stagger = {
 
 export default function Home() {
   const [units, setUnits] = useState<UnitModel[]>([]);
-  const [classes, setClasses] = useState<ClassModel[]>([]);
   const [backgroundImage, setBackgroundImage] = useState("");
   const [sectionImages, setSectionImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const [unitCount, setUnitCount] = useState(0);
-  const [championCount, setChampionCount] = useState(0);
-  const [classCount, setClassCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
+  const [tutorialCount, setTutorialCount] = useState(0);
+  const [definitionCount, setDefinitionCount] = useState(0);
 
   const [statsRef, statsInView] = useInView({ threshold: 0.2, triggerOnce: true });
 
@@ -46,9 +46,11 @@ export default function Home() {
         const token = getAccessToken();
         setIsLoggedIn(!!token);
 
-        const [fetchedUnits, fetchedClasses, bgImage, secImages, currentUser] = await Promise.allSettled([
+        const [fetchedUnits, fetchedPosts, fetchedTutorials, fetchedDefinitions, bgImage, secImages, currentUser] = await Promise.allSettled([
           fetchUnits(),
-          fetchClasses(),
+          fetchPosts(),
+          fetchPublishedTutorials(),
+          fetchPublishedDefinitions(),
           fetchRandomBackground(),
           fetchRandomBackgrounds(4),
           token ? fetchCurrentUser() : Promise.reject("no token"),
@@ -57,14 +59,10 @@ export default function Home() {
         if (fetchedUnits.status === "fulfilled") {
           const u = fetchedUnits.value as UnitModel[];
           setUnits(u.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3));
-          setUnitCount(u.filter(x => x.type === "UNIT").length);
-          setChampionCount(u.filter(x => x.type === "CHAMPION").length);
         }
-        if (fetchedClasses.status === "fulfilled") {
-          const c = fetchedClasses.value as ClassModel[];
-          setClasses(c);
-          setClassCount(c.length);
-        }
+        if (fetchedPosts.status === "fulfilled") setPostCount((fetchedPosts.value as any[]).length);
+        if (fetchedTutorials.status === "fulfilled") setTutorialCount((fetchedTutorials.value as any[]).length);
+        if (fetchedDefinitions.status === "fulfilled") setDefinitionCount((fetchedDefinitions.value as any[]).length);
         if (bgImage.status === "fulfilled") setBackgroundImage(bgImage.value as string);
         else setBackgroundImage("/images/backgrounds/placeholder.jpg");
         if (secImages.status === "fulfilled") setSectionImages((secImages.value as string[]).slice(0, 4));
@@ -164,9 +162,9 @@ export default function Home() {
         variants={stagger}
       >
         {sectionImages[0] && (
-          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="opacity-15" />
+          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="opacity-30 blur-sm scale-110" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/60 to-black pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/40 to-black/95 pointer-events-none" />
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
             L&apos;univers en chiffres
@@ -177,9 +175,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: <HiOutlineSparkles className="w-7 h-7" />, label: "Entités", value: unitCount },
-              { icon: <HiOutlineUsers className="w-7 h-7" />, label: "Champions", value: championCount },
-              { icon: <HiOutlineBookOpen className="w-7 h-7" />, label: "Familles", value: classCount },
+              { icon: <HiOutlineBookOpen className="w-7 h-7" />, label: "Articles de blog", value: postCount },
+              { icon: <HiOutlineSparkles className="w-7 h-7" />, label: "Tuto", value: tutorialCount },
+              { icon: <HiOutlineUsers className="w-7 h-7" />, label: "Définitions", value: definitionCount },
             ].map((stat) => (
               <motion.div
                 key={stat.label}
@@ -207,9 +205,9 @@ export default function Home() {
           variants={stagger}
         >
           {sectionImages[1] && (
-            <Image src={sectionImages[1]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10" />
+            <Image src={sectionImages[1]} alt="" fill style={{ objectFit: "cover" }} className="opacity-25 blur-sm scale-110" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-black pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/40 to-black/95 pointer-events-none" />
           <div className="relative z-10 max-w-6xl mx-auto">
             <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
               Découverte
@@ -269,16 +267,16 @@ export default function Home() {
 
       {/* ── FEATURES ── */}
       <motion.section
-        className="relative py-20 px-6 overflow-hidden border-t border-gray-900"
+        className="relative py-20 px-6 overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={stagger}
       >
         {sectionImages[2] && (
-          <Image src={sectionImages[2]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10" />
+          <Image src={sectionImages[2]} alt="" fill style={{ objectFit: "cover" }} className="opacity-25 blur-sm scale-110" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/65 to-black pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/40 to-black/95 pointer-events-none" />
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
             Pourquoi Seranya
@@ -321,7 +319,7 @@ export default function Home() {
 
       {/* ── PRICING ── */}
       {!isSubscribed && <motion.section
-        className="py-20 px-6 border-t border-gray-900"
+        className="py-20 px-6"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -384,9 +382,9 @@ export default function Home() {
         variants={stagger}
       >
         {sectionImages[3] && (
-          <Image src={sectionImages[3]} alt="" fill style={{ objectFit: "cover" }} className="opacity-20" />
+          <Image src={sectionImages[3]} alt="" fill style={{ objectFit: "cover" }} className="opacity-35 blur-sm scale-110" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/90" />
 
         <div className="relative z-10 max-w-2xl mx-auto text-center">
           <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-iceberg uppercase text-white mb-6">

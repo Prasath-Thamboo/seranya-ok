@@ -70,10 +70,6 @@ export default function ContactPage() {
           animate="visible"
           variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
         >
-          <motion.div variants={fadeUp} className="mb-10">
-            <Image src="/logos/seranyaicon.png" alt="Seranya" width={140} height={50} />
-          </motion.div>
-
           <motion.p variants={fadeUp} className="text-green-400 font-iceberg uppercase tracking-widest text-sm mb-3">
             Contact
           </motion.p>

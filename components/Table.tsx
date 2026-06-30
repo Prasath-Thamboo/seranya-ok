@@ -350,13 +350,13 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                     <td
                       {...cell.getCellProps()}
                       key={cell.id}
-                      className="px-6 py-4 whitespace-nowrap font-kanit"
+                      className="px-6 py-4 font-kanit"
                     >
                       {cell.render('Cell')}
                     </td>
                   ))}
                   <td
-                    className="px-6 py-4 whitespace-nowrap"
+                    className="px-6 py-4"
                     key={`actions-${row.id}`}
                   >
                     <ActionButtons

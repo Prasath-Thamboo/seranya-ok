@@ -30,7 +30,9 @@ const UpdatePost = () => {
 
   const { addNotification } = useNotification();
 
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+  const backendUrl = process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
   useEffect(() => {
     if (numericId !== null) {
@@ -264,7 +266,7 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Image de Profil */}
-          <Form.Item label={<span className="text-black font-kanit">Image de profil</span>}>
+          <Form.Item name="profileImage" label={<span className="text-black font-kanit">Image de profil</span>}>
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {post?.profileImage && (
@@ -296,7 +298,7 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Image Header */}
-          <Form.Item label={<span className="text-black font-kanit">Image Header</span>}>
+          <Form.Item name="headerImage" label={<span className="text-black font-kanit">Image Header</span>}>
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {post?.headerImage && (

@@ -36,7 +36,9 @@ const UpdateUnit = () => {
   const { addNotification } = useNotification();
 
   // Définir l'URL de base en fonction de l'environnement
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL_PROD || process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+  const backendUrl = process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 
   // Chargement des unités et des classes

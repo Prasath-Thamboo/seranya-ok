@@ -92,23 +92,18 @@ const PostsPage = () => {
         Header: 'Titre',
         accessor: 'title',
         Cell: ({ row, value }: any) => (
-          <div className="flex flex-col items-center gap-2 p-5">
+          <div className="flex items-center gap-3">
             <Image
               src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'}
               alt={`Image de ${value}`}
-              width={150}
-              height={150}
-              style={{ borderRadius: '8px', objectFit: 'cover' }}
-              preview={true} // Permet le zoom au clic
+              width={60}
+              height={60}
+              style={{ borderRadius: '6px', objectFit: 'cover', flexShrink: 0 }}
+              preview={true}
             />
-            <div>{value}</div>
+            <span className="font-medium">{value}</span>
           </div>
         ),
-      },
-      {
-        Header: 'Sous-titre',
-        accessor: 'subtitle',
-        Cell: ({ value }: any) => <div className="whitespace-pre-wrap">{value}</div>,
       },
       {
         Header: 'Type',
@@ -116,47 +111,19 @@ const PostsPage = () => {
         Cell: ({ value }: any) => <Badge type={value} />,
       },
       {
+        Header: 'Publié',
+        accessor: 'isPublished',
+        Cell: ({ value }: any) => (
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${value ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+            {value ? 'Oui' : 'Non'}
+          </span>
+        ),
+      },
+      {
         Header: 'Créé le',
         accessor: 'createdAt',
         Cell: ({ value }: any) => (
-          <div>{new Date(value).toLocaleDateString('fr-FR')}</div>
-        ),
-      },
-      {
-        Header: 'Mis à jour le',
-        accessor: 'updatedAt',
-        Cell: ({ value }: any) => (
-          <div>{new Date(value).toLocaleDateString('fr-FR')}</div>
-        ),
-      },
-      {
-        Header: 'Classes liées',
-        accessor: 'postClasses',
-        Cell: ({ value }: any) => (
-          <div>
-            {value && value.length > 0 ? (
-              value.map((postClass: any) => (
-                <div key={postClass.classId}>{postClass.classId}</div>
-              ))
-            ) : (
-              <div>Aucune classe liée</div>
-            )}
-          </div>
-        ),
-      },
-      {
-        Header: 'Units liées',
-        accessor: 'postUnits',
-        Cell: ({ value }: any) => (
-          <div>
-            {value && value.length > 0 ? (
-              value.map((postUnit: any) => (
-                <div key={postUnit.unitId}>{postUnit.unit?.title || postUnit.unitId}</div>
-              ))
-            ) : (
-              <div>Aucune unité liée</div>
-            )}
-          </div>
+          <div className="text-sm">{new Date(value).toLocaleDateString('fr-FR')}</div>
         ),
       },
     ],

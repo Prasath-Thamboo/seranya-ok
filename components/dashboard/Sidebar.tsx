@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FaUsers, FaComments, FaCubes, FaBook, FaVideo, FaBookOpen } from 'react-icons/fa';
+import { FaUsers, FaComments, FaVideo, FaBookOpen, FaNewspaper } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
@@ -11,7 +11,6 @@ import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { AiFillHome } from 'react-icons/ai';
-import { FaFolderOpen } from "react-icons/fa6";
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -69,32 +68,18 @@ export default function Sidebar() {
   };
 
   if (isMobile) {
-    // Layout pour mobile
     return (
       <nav className="fixed bottom-0 left-0 w-full h-20 bg-black text-white flex items-center justify-between z-50 shadow-lg px-4">
-        {/* Icônes à gauche */}
         <div className="flex items-center space-x-6">
-          {user?.role === UserRole.ADMIN && (
-            <FaUsers className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/users')} />
-          )}
-          <FaVideo className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
+          <FaNewspaper className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/posts')} />
+          <FaVideo className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
         </div>
-
-        {/* Logo central */}
         <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/admin')}>
-          <Image
-            src="/logos/seranyaicon.png"
-            alt="Home"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
+          <Image src="/logos/seranyaicon.png" alt="Home" width={40} height={40} className="rounded-full" />
         </div>
-
-        {/* Icônes à droite */}
         <div className="flex items-center space-x-6">
-          <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
-          <FaComments className="w-6 h-6 cursor-pointer hover:text-teal-400 transition-colors duration-200" onClick={() => router.push('/admin/discussion')} />
+          <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
+          <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussion')} />
         </div>
       </nav>
     );
@@ -140,84 +125,67 @@ export default function Sidebar() {
         className="font-iceberg"
         style={{ background: 'transparent', borderRight: 'none' }}
       >
+        {/* Groupe 1 — Administration */}
         {user?.role === UserRole.ADMIN && (
           <Menu.Item
             key="dashboard"
-            icon={<AiFillHome className="w-5 h-5 text-shadow-white" />}
+            icon={<AiFillHome className="w-5 h-5" />}
             className="menu-item"
             onClick={() => router.push('/admin')}
           >
-            {!collapsed && <span className="uppercase text-shadow-white">Tableau de bord</span>}
+            {!collapsed && <span className="uppercase">Tableau de bord</span>}
           </Menu.Item>
         )}
-
-        <Menu.Item
-          key="posts"
-          icon={<FaFolderOpen className="w-5 h-5 text-shadow-white" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/posts')}
-        >
-          {!collapsed && <span className="uppercase text-shadow-white">Articles</span>}
-        </Menu.Item>
 
         {user?.role === UserRole.ADMIN && (
           <Menu.Item
             key="users"
-            icon={<FaUsers className="w-5 h-5 text-shadow-white" />}
+            icon={<FaUsers className="w-5 h-5" />}
             className="menu-item"
             onClick={() => router.push('/admin/users')}
           >
-            {!collapsed && <span className="uppercase text-shadow-white">Utilisateurs</span>}
+            {!collapsed && <span className="uppercase">Utilisateurs</span>}
           </Menu.Item>
         )}
 
+        {/* Séparateur */}
+        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
+
+        {/* Groupe 2 — Contenu */}
         <Menu.Item
-          key="encyclopedie"
-          icon={<FaBookOpen className="w-5 h-5 text-shadow-white" />}
+          key="posts"
+          icon={<FaNewspaper className="w-5 h-5" />}
           className="menu-item"
-          onClick={() => router.push('/admin/encyclopedie')}
+          onClick={() => router.push('/admin/posts')}
         >
-          {!collapsed && <span className="uppercase text-shadow-white">Encyclopédie</span>}
+          {!collapsed && <span className="uppercase">Articles</span>}
         </Menu.Item>
 
         <Menu.Item
           key="tutoriels"
-          icon={<FaVideo className="w-5 h-5 text-shadow-white" />}
+          icon={<FaVideo className="w-5 h-5" />}
           className="menu-item"
           onClick={() => router.push('/admin/tutoriels')}
         >
-          {!collapsed && <span className="uppercase text-shadow-white">Tutoriels</span>}
+          {!collapsed && <span className="uppercase">Tutoriels</span>}
         </Menu.Item>
 
-        {user?.role === UserRole.ADMIN && (
-          <Menu.Item
-            key="units"
-            icon={<FaCubes className="w-5 h-5 text-shadow-white" />}
-            className="menu-item"
-            onClick={() => router.push('/admin/units')}
-          >
-            {!collapsed && <span className="uppercase text-shadow-white">Entités</span>}
-          </Menu.Item>
-        )}
-
-        {user?.role === UserRole.ADMIN && (
-          <Menu.Item
-            key="classes"
-            icon={<FaBook className="w-5 h-5 text-shadow-white" />}
-            className="menu-item"
-            onClick={() => router.push('/admin/classes')}
-          >
-            {!collapsed && <span className="uppercase text-shadow-white">Familles</span>}
-          </Menu.Item>
-        )}
+        <Menu.Item
+          key="encyclopedie"
+          icon={<FaBookOpen className="w-5 h-5" />}
+          className="menu-item"
+          onClick={() => router.push('/admin/encyclopedie')}
+        >
+          {!collapsed && <span className="uppercase">Encyclopédie</span>}
+        </Menu.Item>
 
         <Menu.Item
           key="chat"
-          icon={<FaComments className="w-5 h-5 text-shadow-white" />}
+          icon={<FaComments className="w-5 h-5" />}
           className="menu-item"
           onClick={() => router.push('/admin/discussion')}
         >
-          {!collapsed && <span className="uppercase text-shadow-white">Discussion</span>}
+          {!collapsed && <span className="uppercase">Discussion</span>}
         </Menu.Item>
       </Menu>
       </div>

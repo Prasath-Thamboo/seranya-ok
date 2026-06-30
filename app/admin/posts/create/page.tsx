@@ -12,6 +12,11 @@ import 'react-quill/dist/quill.snow.css'; // Importation du CSS de Quill
 const { Option } = Select;
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
+
 interface ClassModel {
   id: string;
   title: string;
@@ -34,7 +39,7 @@ const CreatePost = () => {
     // Charger les classes disponibles
     const loadClasses = async () => {
       try {
-        const response = await axios.get(`https://back.seranya.fr/classes`);
+        const response = await axios.get(`${BASE_URL}/classes`);
         setClasses(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des classes:", error);
@@ -44,7 +49,7 @@ const CreatePost = () => {
     // Charger les unités disponibles
     const loadUnits = async () => {
       try {
-        const response = await axios.get(`https://back.seranya.fr/units`);
+        const response = await axios.get(`${BASE_URL}/units`);
         setUnits(response.data);
       } catch (error) {
         console.error("Erreur lors de la récupération des unités:", error);
@@ -101,7 +106,7 @@ const CreatePost = () => {
       }
 
       // Envoi du formulaire au backend avec Axios
-      await axios.post(`https://back.seranya.fr/posts`, formData, {
+      await axios.post(`${BASE_URL}/posts`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
