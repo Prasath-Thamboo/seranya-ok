@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FaUsers, FaNewspaper, FaPlay, FaBookOpen } from 'react-icons/fa';
+import { FaUsers, FaNewspaper, FaPlay, FaBookOpen, FaComments } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
@@ -77,6 +77,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         <div className="flex items-center space-x-6">
           <FaPlay className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
+          <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
         </div>
       </nav>
     );
@@ -171,6 +172,19 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           onClick={() => router.push('/admin/encyclopedie')}
         >
           {!collapsed && <span className="uppercase">Encyclopédie</span>}
+        </Menu.Item>
+
+        {/* Séparateur */}
+        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
+
+        {/* Groupe 3 — Communauté */}
+        <Menu.Item
+          key="discussions"
+          icon={<FaComments className="w-5 h-5" />}
+          className="menu-item"
+          onClick={() => router.push('/admin/discussions')}
+        >
+          {!collapsed && <span className="uppercase">Discussions</span>}
         </Menu.Item>
       </Menu>
 

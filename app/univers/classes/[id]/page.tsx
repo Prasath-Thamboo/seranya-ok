@@ -23,6 +23,7 @@ import { UploadType, UploadModel } from "@/lib/models/ClassModels";
 import MiniLoader from "@/components/MiniLoader";
 import { ColorContext } from "@/context/ColorContext";
 import Footer from "@/components/Footer";
+import CommentSection from "@/components/CommentSection";
 
 const ClassDetailPage = () => {
   const params = useParams();
@@ -514,6 +515,13 @@ const ClassDetailPage = () => {
             )}
           </div>
         </div>
+
+        {/* Section commentaires */}
+        {classe && (
+          <div className="max-w-4xl mx-auto px-6 pb-16">
+            <CommentSection classId={classe.id} />
+          </div>
+        )}
       </div>
 
       {/* Footer Section */}

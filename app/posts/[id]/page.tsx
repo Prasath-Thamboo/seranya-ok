@@ -6,6 +6,7 @@ import { fetchPostById, fetchPosts } from "@/lib/queries/PostQueries";
 import { PostModel } from "@/lib/models/PostModels";
 import { Skeleton, Image as AntImage } from "antd";
 import Badge from "@/components/Badge";
+import CommentSection from "@/components/CommentSection";
 import Masonry from "react-masonry-css";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -183,12 +184,10 @@ const PostDetailPage = () => {
 
               
             )}
-
-          
+            {post && <CommentSection postId={post.id} />}
           </div>
         </div>
       </div>
-
     </div>
   );
 };

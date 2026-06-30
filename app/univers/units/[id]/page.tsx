@@ -11,8 +11,9 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { Image as AntImage, Skeleton } from "antd";
 import { getImageUrl } from "@/utils/image";
 import { UploadType, ClassModel as ImportedClassModel, UploadModel } from "@/lib/models/ClassModels";
-import Footer from "@/components/Footer"; 
+import Footer from "@/components/Footer";
 import MiniLoader from "@/components/MiniLoader";
+import CommentSection from "@/components/CommentSection";
 import { ColorContext } from "@/context/ColorContext";
 
 interface ClassModel {
@@ -469,6 +470,13 @@ const UnitDetailPage = () => {
             )}
           </div>
         </div>
+
+        {/* Section commentaires */}
+        {unit && (
+          <div className="max-w-4xl mx-auto px-6 pb-16">
+            <CommentSection unitId={unit.id} />
+          </div>
+        )}
       </div>
 
       {/* Footer Section */}

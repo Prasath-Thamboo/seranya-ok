@@ -64,8 +64,10 @@ export interface LoginResponse {
     const response = await axios.post(`${BASE_URL}/auth/login`, data);
   
     if (response.data && response.data.token) {
-      // Stocker le token JWT dans le localStorage
-      localStorage.setItem('access_token', response.data.token);
+      const jwt = typeof response.data.token === 'string'
+        ? response.data.token
+        : response.data.token.access_token;
+      localStorage.setItem('access_token', jwt);
       return response.data;
     }
   
