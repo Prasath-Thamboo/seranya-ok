@@ -63,12 +63,12 @@ function PostCard({ post }: { post: PostModel }) {
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-          <span className="absolute top-3 left-3 px-2 py-0.5 bg-green-500/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
-            {post.type}
-          </span>
         </div>
         <div className="p-5 flex flex-col flex-grow">
-          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors">
+          <span className="self-start mb-2 px-2 py-0.5 bg-green-500/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
+            {post.type}
+          </span>
+          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors text-center sm:text-left">
             {post.title}
           </h3>
           <p className="text-gray-400 font-kanit text-sm flex-grow line-clamp-3">{post.intro}</p>
@@ -109,12 +109,12 @@ function TutorialCard({ tutorial }: { tutorial: TutorialModel }) {
               <FaPlay className="w-4 h-4 text-white ml-1" />
             </div>
           </div>
-          <span className="absolute top-3 left-3 px-2 py-0.5 bg-red-600/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
-            Tutoriel
-          </span>
         </div>
         <div className="p-5 flex flex-col flex-grow">
-          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors">
+          <span className="self-start mb-2 px-2 py-0.5 bg-red-600/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
+            Tutoriel
+          </span>
+          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors text-center sm:text-left">
             {tutorial.title}
           </h3>
           {tutorial.description && (

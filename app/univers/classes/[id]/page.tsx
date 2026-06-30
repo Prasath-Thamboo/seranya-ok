@@ -169,19 +169,18 @@ const ClassDetailPage = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent"></div>
               <div
-                className="flex flex-col items-center text-center"
+                className="flex flex-col items-center text-center px-4"
                 style={{
                   boxShadow: "0px 60vh 60vh -60vh rgba(0, 0, 0, 0.95)",
                 }}
               >
-                <h1 className="text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                <h1 className="text-3xl sm:text-5xl lg:text-7xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                   {classe?.title || (
                     <Skeleton active title={false} paragraph={{ rows: 1 }} />
                   )}
                 </h1>
-                {/* Vous pouvez ajouter un badge si nécessaire */}
                 {classe?.subtitle ? (
-                  <p className="mt-4 text-xl font-iceberg text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  <p className="mt-4 text-base sm:text-xl font-iceberg text-gray-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {classe.subtitle}
                   </p>
                 ) : (

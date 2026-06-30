@@ -42,6 +42,7 @@ export default function Navbar() {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
   const [navbarBackground, setNavbarBackground] = useState("bg-transparent");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUniversOpen, setIsUniversOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0); // État pour la progression du scroll
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -82,16 +83,20 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleNavbarScroll);
-    window.addEventListener("scroll", handleScroll); // Listener pour mettre à jour la barre de progression
+    window.addEventListener("scroll", handleScroll);
 
-    // Initial call to set the correct background on page load
     handleNavbarScroll();
 
     return () => {
       window.removeEventListener("scroll", handleNavbarScroll);
-      window.removeEventListener("scroll", handleScroll); // Nettoyage des listeners
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
 
   const handleLogout = async () => {
     try {
@@ -145,7 +150,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${navbarBackground}`}
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${isMenuOpen ? "bg-black" : navbarBackground}`}
       style={{
         "--neon-color": "#2ecc40", // Définir la variable CSS pour la couleur néon
         "--button-bg-color": "#2ecc40", // Définir la variable CSS pour la couleur des boutons
@@ -279,7 +284,7 @@ export default function Navbar() {
       </div>
 
       {/* Barre de progression fixe en bas */}
-      <div className="fixed bottom-0 left-0 w-full h-1 bg-green-400 z-50">
+      <div className={`fixed bottom-0 left-0 w-full h-1 bg-green-400 z-50 ${isMenuOpen ? "hidden" : ""}`}>
         <div
           className="h-full neon-effect transition-all duration-500"
           style={{
@@ -289,138 +294,210 @@ export default function Navbar() {
         ></div>
       </div>
 
-      {/* Overlay et Menu mobile */}
+      {/* Menu mobile — panneau latéral */}
       {isMenuOpen && (
         <>
-          {/* Gray background overlay */}
+          {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-            onClick={() => setIsMenuOpen(false)} // Permet de fermer le menu en cliquant en dehors
-          ></div>
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55]"
+            onClick={() => setIsMenuOpen(false)}
+          />
 
-          {/* Menu mobile */}
-          <div className="fixed inset-x-0 top-16 md:hidden flex flex-col items-center space-y-4 text-center bg-gray-700 bg-opacity-90 z-50 p-5 animate-slide-in">
-            {/* Accueil */}
-            <Link href="/" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-              <span className="shadow-text">Accueil</span>
-            </Link>
+          {/* Panneau slide depuis la droite */}
+          <div className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-black border-l border-gray-800 z-[60] flex flex-col animate-slide-in-right">
 
-            {/* Dropdown mobile pour Univers */}
-            <Dropdown
-              overlay={universSubMenu}
-              trigger={["click"]}
-              placement="bottomLeft"
-              overlayClassName="custom-submenu-dropdown"
-            >
-              <button className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center">
-                <span className="shadow-text">Univers</span>
-                <FaChevronDown className="ml-1" />
+            {/* Header panneau */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+              <Link href="/" onClick={() => setIsMenuOpen(false)}>
+                <Image src="/logos/seranyaicon.png" alt="Seranya" width={110} height={40} className="object-contain" />
+              </Link>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-colors"
+              >
+                <FiX className="w-5 h-5" />
               </button>
-            </Dropdown>
+            </div>
 
-            {/* Blogs */}
-            <Link href="/posts" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-              <span className="shadow-text">Blogs</span>
-            </Link>
+            {/* Navigation */}
+            <nav className="flex-1 overflow-y-auto px-5 py-6">
+              <ul className="space-y-1">
 
-            {/* Contact */}
-            <Link href="/contact" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-              <span className="shadow-text">Contact</span>
-            </Link>
-
-            {/* Abonnement */}
-            <Link href="/subscription" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-              <span className="shadow-text">Abonnement</span>
-            </Link>
-
-            {isLoggedIn && user ? (
-              <>
-                <Link href="/admin/me" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-                  <span className="shadow-text">Mon Profil</span>
-                </Link>
-                {user.role === "ADMIN" && (
-                  <Link href="/admin" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-                    <span className="shadow-text">Administration</span>
+                <li>
+                  <Link
+                    href="/"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                  >
+                    Accueil
                   </Link>
-                )}
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="relative group text-base font-iceberg uppercase text-red-500 hover:text-red-700 transition-colors duration-200"
-                >
-                  Déconnexion
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/auth/login" className="relative group text-base font-iceberg text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-                  <span className="shadow-text">Connexion</span>
-                </Link>
-                <Link href="/auth/register" className="relative group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200" onClick={() => setIsMenuOpen(false)}>
-                  <span className="shadow-text">Inscription</span>
-                </Link>
-              </>
-            )}
+                </li>
+
+                {/* Univers — section dépliable */}
+                <li>
+                  <button
+                    onClick={() => setIsUniversOpen(!isUniversOpen)}
+                    className="w-full flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                  >
+                    Univers
+                    <FaChevronDown className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${isUniversOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  {isUniversOpen && (
+                    <ul className="mt-1 ml-3 pl-3 border-l border-green-500/30 space-y-0.5 mb-2">
+                      {[
+                        { href: "/tutoriels", label: "Tutoriels" },
+                        { href: "/univers", label: "Univers" },
+                        { href: "/encyclopedie", label: "Encyclopédie" },
+                      ].map((item) => (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            onClick={() => setIsMenuOpen(false)}
+                            className="flex items-center gap-2 py-2.5 px-2 font-kanit text-sm text-gray-400 hover:text-green-400 transition-colors"
+                          >
+                            <span className="w-1 h-1 rounded-full bg-green-500/60 flex-shrink-0" />
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+
+                <li>
+                  <Link
+                    href="/posts"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                  >
+                    Blogs
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/contact"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                  >
+                    Contact
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/subscription"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200"
+                  >
+                    Abonnement
+                  </Link>
+                </li>
+
+              </ul>
+            </nav>
+
+            {/* Zone utilisateur */}
+            <div className="px-5 py-5 border-t border-gray-800">
+              {isLoggedIn && user ? (
+                <div className="space-y-3">
+                  {/* Infos utilisateur */}
+                  <div className="flex items-center gap-3 px-1 mb-4">
+                    {profileImageUrl ? (
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-green-400/60 flex-shrink-0">
+                        <Image src={profileImageUrl} alt="Avatar" layout="fill" objectFit="cover" className="rounded-full" />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-green-500/10 border border-green-400/40 flex items-center justify-center flex-shrink-0">
+                        <span className="text-green-400 font-iceberg text-lg">{user.pseudo.charAt(0).toUpperCase()}</span>
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-white font-iceberg text-sm truncate">{user.pseudo}</p>
+                      {user.role && <Badge role={user.role} />}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Link
+                      href="/admin/me"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex-1 text-center py-2.5 text-xs font-iceberg uppercase text-gray-300 border border-gray-700 rounded-lg hover:border-green-500/50 hover:text-green-400 transition-all"
+                    >
+                      Profil
+                    </Link>
+                    {user.role === "ADMIN" && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex-1 text-center py-2.5 text-xs font-iceberg uppercase text-gray-300 border border-gray-700 rounded-lg hover:border-green-500/50 hover:text-green-400 transition-all"
+                      >
+                        Admin
+                      </Link>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                    className="w-full py-2.5 text-xs font-iceberg uppercase text-red-400 border border-red-900/40 rounded-lg hover:bg-red-900/20 transition-all flex items-center justify-center gap-2"
+                  >
+                    <FiLogOut className="w-4 h-4" />
+                    Déconnexion
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-iceberg uppercase text-white bg-green-500 hover:bg-green-400 rounded-lg transition-all"
+                  >
+                    <FiLogIn className="w-4 h-4" />
+                    Connexion
+                  </Link>
+                  <Link
+                    href="/auth/register"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-iceberg uppercase text-green-400 border border-green-500/40 hover:bg-green-500/10 rounded-lg transition-all"
+                  >
+                    <FiUserPlus className="w-4 h-4" />
+                    Inscription
+                  </Link>
+                </div>
+              )}
+            </div>
+
           </div>
         </>
       )}
 
       {/* Styles supplémentaires pour l'effet néon et les animations */}
       <style jsx>{`
-        /* Effet néon pour la barre de progression */
-  
-        /* Animation pour le menu mobile */
-        @keyframes slide-in {
-          from {
-            transform: translateY(-20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
+        @keyframes slide-in-right {
+          from { transform: translateX(100%); }
+          to   { transform: translateX(0); }
+        }
+        .animate-slide-in-right {
+          animation: slide-in-right 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out forwards;
-        }
-
-        /* Effet néon pour les textes */
         .shadow-text {
           text-shadow: 1px 1px 0px #000000;
         }
-
-        /* Effet néon sur hover et actif */
         .group:hover .shadow-text,
         .active .shadow-text {
           color: #2ecc40;
           text-shadow: 0 0 10px green, 0 0 20px green, 0 0 30px green;
         }
 
-        /* Styles personnalisés pour les sous-menus */
         .custom-submenu-dropdown .ant-dropdown-menu {
-          background-color: rgba(31, 41, 55, 0.75); /* bg-green-400 bg-opacity-75 */
+          background-color: rgba(31, 41, 55, 0.75);
           border: none;
         }
-
         .custom-submenu-dropdown .ant-dropdown-menu-item {
           color: white;
           transition: background-color 0.3s ease;
         }
-
-        /* Styles personnalisés pour le sous-menu mobile */
-        .custom-submenu-dropdown .ant-dropdown-menu {
-          background-color: rgba(31, 41, 55, 0.75); /* bg-green-400 bg-opacity-75 */
-          border: none;
-        }
-
-        .custom-submenu-dropdown .ant-dropdown-menu-item {
-          color: white;
-          transition: background-color 0.3s ease;
-        }
-
       `}</style>
     </nav>
   );

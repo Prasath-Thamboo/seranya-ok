@@ -127,11 +127,21 @@ body {
   box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15) !important;
 }
 
-/* Placeholder */
+/* Placeholder — fond sombre */
+.custom-input.bg-gray-900::placeholder,
 .custom-input.bg-gray-900 input::placeholder,
 .custom-input.bg-gray-900 textarea::placeholder,
-.custom-input.bg-gray-900 .ant-input::placeholder {
-  color: rgba(74, 222, 128, 0.3) !important;
+.custom-input.bg-gray-900 .ant-input::placeholder,
+.custom-input.bg-gray-900 .ant-input-textarea-inner textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Placeholder — fond blanc (resetPassword) */
+.custom-input.bg-white::placeholder,
+.custom-input.bg-white input::placeholder,
+.custom-input.bg-white textarea::placeholder,
+.custom-input.bg-white .ant-input::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Icône œil mot de passe */

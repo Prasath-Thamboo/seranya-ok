@@ -139,13 +139,15 @@ const PostDetailPage = () => {
             ) : (
               <div className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
                 {/* Titre et Sous-titre */}
-                <div className="mb-6">
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-iceberg uppercase text-white drop-shadow-lg">
+                <div className="mb-6 text-center lg:text-left">
+                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-iceberg uppercase text-white drop-shadow-lg">
                     {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
                   </h1>
-                  <Badge role={post?.type || "DEFAULT"} />
+                  <div className="flex justify-center lg:justify-start mt-2">
+                    <Badge role={post?.type || "DEFAULT"} />
+                  </div>
                   {post?.subtitle && (
-                    <p className="mt-4 text-2xl sm:text-3xl md:text-4xl font-iceberg text-gray-300 drop-shadow-lg">
+                    <p className="mt-4 text-xl sm:text-2xl md:text-3xl font-iceberg text-gray-300 drop-shadow-lg">
                       {post.subtitle}
                     </p>
                   )}
