@@ -74,7 +74,7 @@ const TutorielsAdminPage = () => {
   );
 
   return (
-    <div className="p-6 font-kanit relative">
+    <div className="font-kanit">
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Tutoriels</h1>
       <Table
         data={tutorials}

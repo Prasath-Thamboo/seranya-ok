@@ -34,8 +34,8 @@ interface AvatarProps {
 function Avatar({ src, alt = 'avatar' }: AvatarProps) {
   return (
     <Image
-      width={120}
-      height={80}
+      width={80}
+      height={56}
       src={src}
       alt={alt}
       style={{ borderRadius: '8px', objectFit: 'cover' }}
@@ -100,7 +100,7 @@ function GlobalSearchFilter1({ globalFilter, setGlobalFilter, className = '' }: 
       value={globalFilter || ''}
       onChange={(e) => setGlobalFilter(e.target.value)}
       label="Recherche..."
-      decoration={<FaSearch className="h-5 w-5 text-gray-400" />}
+      decoration={<FaSearch className="h-5 w-5 text-gray-400 shrink-0" />}
       className={className}
     />
   );
@@ -194,30 +194,33 @@ interface PaginationNav1Props {
 }
 
 function PaginationNav1({ gotoPage, canPreviousPage, canNextPage, pageCount, pageIndex, pageOptions, pageSize, totalItems }: PaginationNav1Props) {
-  const startItem = pageIndex * pageSize + 1;
-  const endItem = Math.min((pageIndex + 1) * pageSize, totalItems);
-
   return (
-    <div className="flex justify-between items-center mt-4">
-      <div>
-        <Button2
-          content={<><FaChevronLeft /> Précédent</>}
-          onClick={() => gotoPage(pageIndex - 1)}
-          disabled={!canPreviousPage}
-          className="bg-teal-500 text-white hover:bg-teal-600"
-        />
-      </div>
-      <div className="text-sm text-gray-700 font-kanit">
-        Page {pageIndex + 1} sur {pageCount}
-      </div>
-      <div>
-        <Button2
-          content={<>Suivant <FaChevronRight /></>}
-          onClick={() => gotoPage(pageIndex + 1)}
-          disabled={!canNextPage}
-          className="bg-teal-500 text-white hover:bg-teal-600"
-        />
-      </div>
+    <div className="flex justify-between items-center mt-4 gap-2">
+      <Button2
+        content={
+          <>
+            <FaChevronLeft className="shrink-0" />
+            <span className="hidden sm:inline ml-1">Précédent</span>
+          </>
+        }
+        onClick={() => gotoPage(pageIndex - 1)}
+        disabled={!canPreviousPage}
+        className="bg-teal-500 text-white hover:bg-teal-600 text-sm"
+      />
+      <span className="text-sm text-gray-700 font-kanit whitespace-nowrap">
+        {pageIndex + 1} / {pageCount}
+      </span>
+      <Button2
+        content={
+          <>
+            <span className="hidden sm:inline mr-1">Suivant</span>
+            <FaChevronRight className="shrink-0" />
+          </>
+        }
+        onClick={() => gotoPage(pageIndex + 1)}
+        disabled={!canNextPage}
+        className="bg-teal-500 text-white hover:bg-teal-600 text-sm"
+      />
     </div>
   );
 }
@@ -230,29 +233,32 @@ interface ActionButtonProps {
 
 function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-1 items-center justify-center">
       {viewUrl && (
-        <button
-          className="bg-teal-500 text-white px-4 py-2 rounded-full flex items-center gap-2 font-kanit hover:bg-teal-600 hover:shadow-teal-500/50 transition"
-          onClick={() => window.location.href = viewUrl}
+        <a
+          href={viewUrl}
+          title="Voir"
+          className="p-2 rounded-lg text-teal-600 hover:bg-teal-50 transition-colors"
         >
-          <FaEye /> Voir
-        </button>
+          <FaEye className="w-4 h-4" />
+        </a>
       )}
       {editUrl && (
-        <button
-          className="bg-teal-500 text-white px-4 py-2 rounded-full flex items-center gap-2 font-kanit hover:bg-teal-600 hover:shadow-teal-500/50 transition"
-          onClick={() => window.location.href = editUrl}
+        <a
+          href={editUrl}
+          title="Modifier"
+          className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 transition-colors"
         >
-          <FaEdit /> Modifier
-        </button>
+          <FaEdit className="w-4 h-4" />
+        </a>
       )}
       {onDelete && (
         <button
-          className="bg-red-500 text-white px-4 py-2 rounded-full flex items-center gap-2 font-kanit hover:bg-red-600 hover:shadow-red-500/50 transition"
+          title="Supprimer"
           onClick={onDelete}
+          className="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
         >
-          <FaTrash /> Supprimer
+          <FaTrash className="w-4 h-4" />
         </button>
       )}
     </div>
@@ -285,15 +291,10 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
     if (itemToDelete) {
       try {
         const token = localStorage.getItem("access_token");
-        if (!token) {
-          throw new Error("Token non trouvé");
-        }
+        if (!token) throw new Error("Token non trouvé");
         await axios.delete(`${BASE_URL}/${apiRoute}/${itemToDelete.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        
         onDelete(itemToDelete);
         addNotification("success", `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} supprimé(e) avec succès.`);
       } catch (error) {
@@ -306,7 +307,7 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
   };
 
   return (
-    <div className="mt-6 shadow-sm border rounded-lg overflow-x-auto">
+    <div className="mt-4 shadow-sm border rounded-xl overflow-hidden bg-white">
       <CustomModal
         visible={isDeleteModalVisible}
         onCancel={() => setDeleteModalVisible(false)}
@@ -317,7 +318,9 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
         cancelText="Annuler"
         iconType="delete"
       />
-      <div className="relative inline-block min-w-full">
+
+      {/* Vue tableau — masquée sur mobile */}
+      <div className="hidden md:block overflow-x-auto">
         <table {...getTableProps()} className="w-full table-auto text-sm text-left">
           <thead className="bg-gray-50 text-gray-600 font-medium border-b">
             {headerGroups.map((headerGroup: any) => (
@@ -325,51 +328,81 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
                 {headerGroup.headers.map((column: any) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="py-3 px-6 font-iceberg cursor-pointer"
+                    className="py-3 px-4 font-iceberg cursor-pointer whitespace-nowrap"
                     style={{ width: column.width }}
                     key={column.id}
                   >
                     {column.render('Header')}
                   </th>
                 ))}
-                <th
-                  className="py-3 px-6 font-iceberg"
-                  key="actions"
-                >
+                <th className="py-3 px-4 font-iceberg text-center whitespace-nowrap" key="actions">
                   Actions
                 </th>
               </tr>
             ))}
           </thead>
           <tbody {...getTableBodyProps()} className="text-gray-600 divide-y">
-            {rows.map((row: any) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-100">
-                  {row.cells.map((cell: any) => (
-                    <td
-                      {...cell.getCellProps()}
-                      key={cell.id}
-                      className="px-6 py-4 font-kanit"
-                    >
-                      {cell.render('Cell')}
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan={999} className="px-4 py-8 text-center text-gray-400 font-kanit text-sm">
+                  Aucun résultat.
+                </td>
+              </tr>
+            ) : (
+              rows.map((row: any) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-50">
+                    {row.cells.map((cell: any) => (
+                      <td {...cell.getCellProps()} key={cell.id} className="px-4 py-3 font-kanit">
+                        {cell.render('Cell')}
+                      </td>
+                    ))}
+                    <td className="px-4 py-3" key={`actions-${row.id}`}>
+                      <ActionButtons
+                        viewUrl={`/${baseRoute}/${row.original.id}`}
+                        editUrl={`/${baseRoute}/update?id=${row.original.id}`}
+                        onDelete={() => handleDelete(row)}
+                      />
                     </td>
-                  ))}
-                  <td
-                    className="px-6 py-4"
-                    key={`actions-${row.id}`}
-                  >
-                    <ActionButtons
-                      viewUrl={`/${baseRoute}/${row.original.id}`}
-                      editUrl={`/${baseRoute}/update?id=${row.original.id}`}
-                      onDelete={() => handleDelete(row)}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
+      </div>
+
+      {/* Vue cartes — visible uniquement sur mobile */}
+      <div className="block md:hidden divide-y">
+        {rows.length === 0 ? (
+          <p className="text-center text-gray-400 py-8 font-kanit text-sm">Aucun résultat.</p>
+        ) : (
+          rows.map((row: any) => {
+            prepareRow(row);
+            return (
+              <div key={row.id} className="p-4 hover:bg-gray-50 transition-colors">
+                {row.cells.map((cell: any) => (
+                  <div key={cell.column.id} className="flex justify-between items-start py-1.5 gap-3 min-w-0">
+                    <span className="text-gray-400 text-xs font-iceberg uppercase tracking-wider shrink-0">
+                      {cell.column.render('Header')}
+                    </span>
+                    <div className="text-gray-700 font-kanit text-sm text-right min-w-0 max-w-[65%] break-words">
+                      {cell.render('Cell')}
+                    </div>
+                  </div>
+                ))}
+                <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
+                  <ActionButtons
+                    viewUrl={`/${baseRoute}/${row.original.id}`}
+                    editUrl={`/${baseRoute}/update?id=${row.original.id}`}
+                    onDelete={() => handleDelete(row)}
+                  />
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
@@ -381,9 +414,9 @@ interface TableProps {
   createButtonText?: string;
   createUrl?: string;
   onDelete: (item: any) => void;
-  baseRoute: string; // Pour les routes côté client
-  apiRoute: string;  // Pour les appels à l'API
-  itemType: string;  // Pour personnaliser les textes (e.g., 'classe')
+  baseRoute: string;
+  apiRoute: string;
+  itemType: string;
 }
 
 function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute, apiRoute, itemType }: TableProps) {
@@ -415,26 +448,28 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
 
   return (
     <div className="flex flex-col gap-4 font-kanit w-full">
-      <div className="container mx-auto py-6 sm:px-6">
-        <div className="px-4 py-4 -mx-4 sm:-mx-6 sm:px-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold leading-tight font-iceberg">
-              Liste des {itemType.charAt(0).toUpperCase() + itemType.slice(1)}s
-            </h2>
-            <div className="flex items-center gap-3">
-              <GlobalSearchFilter1 className="sm:w-64" globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
-              {createUrl && (
-                <button
-                  className="bg-teal-500 text-white px-5 py-2 rounded-full shadow-md hover:shadow-teal-500/50 transform transition-transform duration-300 hover:scale-105 font-kanit flex items-center gap-2"
-                  onClick={() => window.location.href = createUrl}
-                >
-                  <FaPlus /> {createButtonText}
-                </button>
-              )}
-            </div>
-          </div>
+      {/* Barre de contrôle */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-xl font-semibold font-iceberg">
+          Liste des {itemType.charAt(0).toUpperCase() + itemType.slice(1)}s
+        </h2>
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+          <GlobalSearchFilter1
+            className="w-full sm:w-64"
+            globalFilter={state.globalFilter}
+            setGlobalFilter={setGlobalFilter}
+          />
+          {createUrl && (
+            <button
+              className="bg-teal-500 text-white px-4 py-2 rounded-full shadow-md hover:shadow-teal-500/50 transform transition-transform duration-300 hover:scale-105 font-kanit flex items-center justify-center gap-2 whitespace-nowrap"
+              onClick={() => window.location.href = createUrl}
+            >
+              <FaPlus /> {createButtonText}
+            </button>
+          )}
         </div>
       </div>
+
       <TableComponent
         getTableProps={getTableProps}
         headerGroups={headerGroups}
@@ -446,6 +481,7 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
         apiRoute={apiRoute}
         itemType={itemType}
       />
+
       <PaginationNav1
         gotoPage={gotoPage}
         canPreviousPage={canPreviousPage}

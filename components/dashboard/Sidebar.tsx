@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FaUsers, FaComments, FaVideo, FaBookOpen, FaNewspaper } from 'react-icons/fa';
+import { FaUsers, FaComments, FaVideo, FaBookOpen, FaNewspaper, FaSearch } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
@@ -79,7 +79,8 @@ export default function Sidebar() {
         </div>
         <div className="flex items-center space-x-6">
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
-          <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussion')} />
+          <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+          <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
         </div>
       </nav>
     );
@@ -183,9 +184,22 @@ export default function Sidebar() {
           key="chat"
           icon={<FaComments className="w-5 h-5" />}
           className="menu-item"
-          onClick={() => router.push('/admin/discussion')}
+          onClick={() => router.push('/admin/discussions')}
         >
-          {!collapsed && <span className="uppercase">Discussion</span>}
+          {!collapsed && <span className="uppercase">Discussions</span>}
+        </Menu.Item>
+
+        {/* Séparateur */}
+        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
+
+        {/* Recherche */}
+        <Menu.Item
+          key="search"
+          icon={<FaSearch className="w-5 h-5" />}
+          className="menu-item"
+          onClick={() => router.push('/admin/search')}
+        >
+          {!collapsed && <span className="uppercase">Recherche</span>}
         </Menu.Item>
       </Menu>
       </div>
