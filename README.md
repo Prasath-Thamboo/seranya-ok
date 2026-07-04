@@ -13,7 +13,7 @@ Application Next.js (App Router) de Seranya, plateforme de yoga/méditation à u
 - Lighthouse (runner maison dans `lighthouse/`) pour l'audit de performance
 - `next-auth` (préparé, désactivé par défaut — pas d'OAuth actif)
 
-## Prérequis
+## Prérequiss
 
 - Node.js 20+
 - L'API backend Seranya lancée (voir `../backend/README.md`)
