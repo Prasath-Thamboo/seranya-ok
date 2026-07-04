@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import {
-  FiSearch, FiNewspaper, FiPlay, FiBook, FiUsers,
+  FiSearch, FiFileText, FiPlay, FiBook, FiUsers,
   FiEdit, FiEye,
 } from "react-icons/fi";
 
@@ -23,7 +23,7 @@ interface SearchResults {
 const EMPTY: SearchResults = { posts: [], tutorials: [], definitions: [], users: [] };
 
 const SECTIONS = [
-  { key: "posts"       as const, label: "Articles",     icon: <FiNewspaper />, baseRoute: "admin/posts",       editRoute: (id: number | string) => `/admin/posts/update?id=${id}`,       viewRoute: (id: number | string) => `/posts/${id}`,              getTitle: (r: any) => r.title,  getSub: (r: any) => r.type },
+  { key: "posts"       as const, label: "Articles",     icon: <FiFileText />, baseRoute: "admin/posts",       editRoute: (id: number | string) => `/admin/posts/update?id=${id}`,       viewRoute: (id: number | string) => `/posts/${id}`,              getTitle: (r: any) => r.title,  getSub: (r: any) => r.type },
   { key: "tutorials"   as const, label: "Tutoriels",    icon: <FiPlay />,      baseRoute: "admin/tutoriels",   editRoute: (id: number | string) => `/admin/tutoriels/update?id=${id}`,   viewRoute: null,                                                  getTitle: (r: any) => r.title,  getSub: (r: any) => r.description?.slice(0, 60) },
   { key: "definitions" as const, label: "Encyclopédie", icon: <FiBook />,      baseRoute: "admin/encyclopedie",editRoute: (id: number | string) => `/admin/encyclopedie/update?id=${id}`,viewRoute: null,                                                  getTitle: (r: any) => r.term,   getSub: (r: any) => r.category },
   { key: "users"       as const, label: "Utilisateurs", icon: <FiUsers />,     baseRoute: "admin/users",       editRoute: null,                                                           viewRoute: null,                                                  getTitle: (r: any) => r.pseudo, getSub: (r: any) => r.email },
