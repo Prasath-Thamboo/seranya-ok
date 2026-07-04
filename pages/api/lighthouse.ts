@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 // Fonction qui gère la méthode GET pour récupérer les données depuis PageSpeed Insights API
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;  // Remplacez par votre clé API
-  const url = 'https://seranya.fr/';
+  const url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${API_KEY}&category=performance&category=accessibility&category=seo`;
 
   try {

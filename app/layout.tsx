@@ -10,6 +10,8 @@ import CookieConsent from "@/components/CookieConsent";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import { metadata } from "@/app/metadata"; // Import des métadonnées
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 import React from "react";
 import { LoadingProvider } from "@/components/LoadingContext";
 import { FooterProvider } from "@/context/FooterContext";
@@ -66,9 +68,9 @@ export default function RootLayout({
           property="og:description"
           content={String(metadata.description) ?? "Plongez dans le monde fascinant de Seranya."} // Conversion en chaîne
         />
-        <meta property="og:image" content="https://seranya.fr/logos/favicon.ico" />
+        <meta property="og:image" content={`${siteUrl}/logos/favicon.ico`} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://seranya.fr/" />
+        <meta property="og:url" content={siteUrl} />
 
         <meta name="geo.region" content="FR" /> 
         <meta name="geo.placename" content="Paris" />
@@ -86,7 +88,7 @@ export default function RootLayout({
           name="twitter:description"
           content={String(metadata.description) ?? "Votre aventure commence ici avec des expériences immersives."} // Conversion en chaîne
         />
-        <meta name="twitter:image" content="https://seranya.fr/logos/favicon.ico" />
+        <meta name="twitter:image" content={`${siteUrl}/logos/favicon.ico`} />
 
       
 

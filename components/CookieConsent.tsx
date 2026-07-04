@@ -58,8 +58,11 @@ export default function CookieConsent() {
         Nous utilisons des cookies pour améliorer votre expérience sur notre
         site et pour collecter des données à des fins statistiques. En acceptant,
         vous consentez à une utilisation des cookies, y compris ceux de Google
-        Analytics. Vous pouvez consulter notre politique de confidentialité pour en
-        savoir plus.
+        Analytics. Vous pouvez consulter notre{" "}
+        <a href="/confidentialite" target="_blank" rel="noopener noreferrer">
+          politique de confidentialité
+        </a>{" "}
+        pour en savoir plus.
       </p>
     </Modal>
   );

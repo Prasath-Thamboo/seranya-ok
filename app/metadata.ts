@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Seranya - Découvrez un Univers Fascinant",
   description: "Plongez dans le monde fascinant de Seranya",
@@ -9,11 +11,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SeranyaNext - Découvrez un Univers Fascinant",
     description: "Plongez dans le monde fascinant de Seranya, une expérience immersive inédite.",
-    url: "https://www.seranya.fr",
+    url: siteUrl,
     siteName: "SeranyaNext",
     images: [
       {
-        url: "https://seranya.fr/logos/seranyaicon.png",
+        url: `${siteUrl}/logos/seranyaicon.png`,
         width: 1200,
         height: 630,
         alt: "Seranya Logo",
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Seranya - Découvrez un Univers Fascinant",
     description: "Votre aventure commence ici avec des expériences immersives fascinantes.",
-    images: ["https://seranya.fr/logos/seranyaicon.png"],
+    images: [`${siteUrl}/logos/seranyaicon.png`],
   },
   // Information about the theme color for mobile devices and PWA
   themeColor: "#000000",
@@ -38,9 +40,9 @@ export const metadata: Metadata = {
   },
   // Alternative URLs for other languages
   alternates: {
-    canonical: "http://seranya.fr/",
+    canonical: siteUrl,
     languages: {
-      fr: "http://seranya.fr/",
+      fr: siteUrl,
     },
   },
 };

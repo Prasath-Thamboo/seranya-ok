@@ -9,6 +9,7 @@ const LINKS = [
   { label: "Accueil", href: "/" },
   { label: "À propos", href: "/about" },
   { label: "Mentions légales", href: "/mentions" },
+  { label: "Politique de confidentialité", href: "/confidentialite" },
   { label: "Mes données personnelles", href: "/rgpd" },
 ];
 

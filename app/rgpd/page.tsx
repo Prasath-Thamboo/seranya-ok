@@ -110,7 +110,7 @@ export default function RgpdRequestPage() {
           <motion.p variants={fadeUp} className="text-gray-500 text-xs leading-relaxed max-w-sm">
             Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation
             auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">cnil.fr</a>).
-            Voir aussi nos <a href="/mentions" className="text-green-400 hover:underline">mentions légales</a>.
+            Voir aussi notre <a href="/confidentialite" className="text-green-400 hover:underline">politique de confidentialité</a> et nos <a href="/mentions" className="text-green-400 hover:underline">mentions légales</a>.
           </motion.p>
         </motion.div>
 
