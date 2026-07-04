@@ -150,6 +150,28 @@ body {
   color: rgba(255, 255, 255, 0.4) !important;
 }
 
+/* Select sombre : formulaire RGPD et autres formulaires sur fond noir */
+.custom-select .ant-select-selector {
+  background-color: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+}
+
+.custom-select .ant-select-selection-placeholder,
+.custom-select .ant-select-selection-item {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.custom-select:hover .ant-select-selector,
+.custom-select.ant-select-focused .ant-select-selector {
+  border-color: #4ade80 !important;
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15) !important;
+}
+
+.custom-select .ant-select-arrow {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
 /* Champs de formulaire avec bordure noire active et effet white-glow */
 .custom-input:focus {
   border-color: black !important;

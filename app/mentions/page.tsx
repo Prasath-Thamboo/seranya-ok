@@ -56,7 +56,8 @@ const MentionsLegalesPage = () => {
             <li>Les informations de paiement pour vos achats</li>
           </ul>
           <p className="mb-6 leading-relaxed">
-            Ces données sont collectées dans le respect du Règlement Général sur la Protection des Données (RGPD) et vous pouvez exercer votre droit d&apos;accès, de rectification ou de suppression en nous contactant à l&apos;adresse <strong>prasath.thamb@gmail.com</strong>.
+            Ces données sont collectées dans le respect du Règlement Général sur la Protection des Données (RGPD) et vous pouvez exercer votre droit d&apos;accès, de rectification, de suppression, d&apos;opposition ou de portabilité via notre{' '}
+            <a href="/rgpd" className="underline text-green-400 hover:text-green-300">formulaire de demande d&apos;accès aux données</a>, ou en nous contactant à l&apos;adresse <strong>prasath.thamb@gmail.com</strong>.
           </p>
 
           <h2 className="text-2xl font-bold mb-4">Politique de Confidentialité</h2>
@@ -64,7 +65,8 @@ const MentionsLegalesPage = () => {
             Nous nous engageons à protéger la vie privée de nos utilisateurs conformément aux exigences du RGPD. Vos données personnelles ne seront utilisées que pour les besoins du site et pour améliorer l&apos;expérience utilisateur. Elles ne seront jamais vendues à des tiers sans votre consentement explicite.
           </p>
           <p className="mb-6 leading-relaxed">
-            Vous avez le droit de demander l&apos;accès, la rectification ou la suppression de vos données personnelles à tout moment. Pour exercer ces droits, vous pouvez nous contacter à <strong>prasath.thamb@gmail.com</strong>.
+            Vous avez le droit de demander l&apos;accès, la rectification, la suppression, l&apos;opposition au traitement ou la portabilité de vos données personnelles à tout moment, via notre{' '}
+            <a href="/rgpd" className="underline text-green-400 hover:text-green-300">formulaire dédié</a>. Nous répondons dans un délai maximum d&apos;un mois.
           </p>
 
           <h2 className="text-2xl font-bold mb-4">Google Analytics</h2>
