@@ -24,8 +24,10 @@ export default function RegisterPage() {
         phone: values.phone,
       } as RegisterUserModel);
       setSuccess(true);
-    } catch (error) {
-      setError('Inscription échouée. Veuillez réessayer.');
+    } catch (error: any) {
+      setError(
+        error?.response?.data?.message || 'Inscription échouée. Veuillez réessayer.',
+      );
       console.error('Failed to register:', error);
     } finally {
       setLoading(false);
