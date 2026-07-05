@@ -31,7 +31,6 @@ export const registerUser = async (
   if (data.name) formData.append('name', data.name);
   if (data.lastName) formData.append('lastName', data.lastName);
   if (data.address) formData.append('address', data.address);
-  if (data.phone) formData.append('phone', data.phone);
   if (data.status) formData.append('status', data.status);
   formData.append('pseudo', data.pseudo);
   if (data.role) formData.append('role', data.role);
@@ -92,22 +91,14 @@ export interface LoginResponse {
 
 // Function to generate a password reset token
 export const generateResetToken = async (email: string): Promise<AuthResponse> => {
-  const response = await axios.post<AuthResponse>(`${BASE_URL}/auth/generate-reset-token`, { email }, {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
+  const response = await axios.post<AuthResponse>(`${BASE_URL}/auth/generate-reset-token`, { email });
 
   return response.data;
 };
 
 // Function to reset a user's password
 export const resetPassword = async (data: ResetPasswordModel): Promise<AuthResponse> => {
-  const response = await axios.post<AuthResponse>(`${BASE_URL}/auth/reset-password`, data, {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
+  const response = await axios.post<AuthResponse>(`${BASE_URL}/auth/reset-password`, data);
 
   return response.data;
 };

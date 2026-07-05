@@ -120,7 +120,7 @@ export default function LoginPage() {
               <Form.Item name="remember" valuePropName="checked" className="mb-0">
                 <Checkbox className="text-gray-400 font-kanit text-sm">Se souvenir de moi</Checkbox>
               </Form.Item>
-              <Link href="/auth/resetPassword" className="text-green-400 hover:text-green-300 text-sm font-kanit transition-colors">
+              <Link href="/auth/forgotPassword" className="text-green-400 hover:text-green-300 text-sm font-kanit transition-colors">
                 Mot de passe oublié ?
               </Link>
             </div>

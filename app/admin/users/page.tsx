@@ -87,10 +87,6 @@ const UsersPage = () => {
         accessor: 'email',
       },
       {
-        Header: 'Téléphone',
-        accessor: 'phone',
-      },
-      {
         Header: 'Rôle',
         accessor: 'role',
       },

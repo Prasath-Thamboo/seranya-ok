@@ -8,6 +8,11 @@ import Link from "next/link";
 import { FaCheck, FaTimes, FaLeaf, FaStar, FaShieldAlt, FaInfinity } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi2";
 
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_API_URL_PROD
+    : process.env.NEXT_PUBLIC_API_URL_LOCAL || "http://localhost:5000";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
@@ -70,7 +75,7 @@ export const Pricing = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch('https://back.seranya.fr/payment/create-subscription', {
+      const response = await fetch(`${BASE_URL}/payment/create-subscription`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId }),

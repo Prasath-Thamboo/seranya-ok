@@ -7,6 +7,10 @@ import axios from 'axios';
 import { Suspense } from 'react';
 import React from 'react';
 
+const backendUrl = process.env.NODE_ENV === 'production'
+  ? process.env.NEXT_PUBLIC_API_URL_PROD
+  : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+
 const fetchRandomImage = async () => {
   const res = await fetch("/api/getRandomImage");
   const data = await res.json();
@@ -27,7 +31,7 @@ function ConfirmationContent() {
     const confirmEmail = async () => {
       if (token) {
         try {
-          const response = await axios.get(`/auth/confirm?token=${token}`);
+          const response = await axios.get(`${backendUrl}/auth/confirm?token=${token}`);
           setConfirmationMessage('Votre compte a été confirmé avec succès.');
           console.log('Confirmation réussie', response.data);
         } catch (error) {

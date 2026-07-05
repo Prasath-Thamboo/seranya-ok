@@ -7,10 +7,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useState, useEffect, Suspense } from "react";
 import { useNotification } from "@/components/notifications/NotificationProvider";
-
-const backendUrl = process.env.NODE_ENV === 'production'
-  ? process.env.NEXT_PUBLIC_API_URL_PROD
-  : process.env.NEXT_PUBLIC_API_URL_LOCAL;
+import { resetPassword } from "@/lib/queries/AuthQueries";
 
 export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
@@ -60,12 +57,12 @@ export default function ResetPasswordPage() {
     setLoading(true);
   
     try {
-      const response = await axios.post(`${backendUrl}/auth/reset-password`, {
+      const response = await resetPassword({
         newPassword: values.newPassword,
         resetToken,
       });
-  
-      if (response && response.data) {
+
+      if (response) {
         addNotification("success", "Mot de passe réinitialisé avec succès !");
         router.push("/auth/login");
       }

@@ -77,7 +77,9 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         <div className="flex items-center space-x-6">
           <FaPlay className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
-          <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+          {user?.role === UserRole.ADMIN && (
+            <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+          )}
         </div>
       </nav>
     );
@@ -174,18 +176,20 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           {!collapsed && <span className="uppercase">Encyclopédie</span>}
         </Menu.Item>
 
-        {/* Séparateur */}
-        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
-
-        {/* Groupe 3 — Communauté */}
-        <Menu.Item
-          key="discussions"
-          icon={<FaComments className="w-5 h-5" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/discussions')}
-        >
-          {!collapsed && <span className="uppercase">Discussions</span>}
-        </Menu.Item>
+        {/* Groupe 3 — Communauté (réservé aux admins) */}
+        {user?.role === UserRole.ADMIN && (
+          <>
+            <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
+            <Menu.Item
+              key="discussions"
+              icon={<FaComments className="w-5 h-5" />}
+              className="menu-item"
+              onClick={() => router.push('/admin/discussions')}
+            >
+              {!collapsed && <span className="uppercase">Discussions</span>}
+            </Menu.Item>
+          </>
+        )}
       </Menu>
 
       {/* Fixed Bottom Section */}

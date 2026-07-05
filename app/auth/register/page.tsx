@@ -21,7 +21,6 @@ export default function RegisterPage() {
         pseudo: values.pseudo,
         email: values.email,
         password: values.password,
-        phone: values.phone,
       } as RegisterUserModel);
       setSuccess(true);
     } catch (error: any) {
@@ -103,19 +102,6 @@ export default function RegisterPage() {
               </Form.Item>
 
               <Form.Item
-                label={<span className="text-gray-300 font-kanit text-sm">Téléphone</span>}
-                name="phone"
-                rules={[{ required: true, message: 'Requis' }]}
-                className="mb-3"
-              >
-                <Input
-                  placeholder="+33 6 00 00 00 00"
-                  className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400 focus:border-green-400"
-                  style={{ height: '2.5rem', borderRadius: '0.375rem' }}
-                />
-              </Form.Item>
-
-              <Form.Item
                 label={<span className="text-gray-300 font-kanit text-sm">Email</span>}
                 name="email"
                 rules={[{ required: true, message: 'Requis' }]}
@@ -133,7 +119,7 @@ export default function RegisterPage() {
                 label={<span className="text-gray-300 font-kanit text-sm">Mot de passe</span>}
                 name="password"
                 rules={[{ required: true, message: 'Requis' }]}
-                className="mb-3"
+                className="mb-3 col-span-2"
               >
                 <Input.Password
                   placeholder="••••••••"

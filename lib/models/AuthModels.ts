@@ -14,7 +14,6 @@ export interface RegisterUserModel {
   email: string;
   address?: string;
   password: string
-  phone?: string;
   status?: string;
   pseudo: string;
   role?: UserRole;
@@ -32,7 +31,6 @@ export interface LoginUserModel {
 
 // Interface pour le modèle de réinitialisation de mot de passe
 export interface ResetPasswordModel {
-  email: string;
   newPassword: string;
   resetToken: string;
 }
