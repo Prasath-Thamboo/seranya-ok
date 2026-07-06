@@ -3,12 +3,12 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { fetchCurrentUser } from '@/lib/queries/AuthQueries';
+import { fetchCurrentUser, generateResetToken } from '@/lib/queries/AuthQueries';
 import { RegisterUserModel, UserRole } from '@/lib/models/AuthModels';
 import { useNotification } from '@/components/notifications/NotificationProvider';
 import {
   FiCamera, FiMail, FiShield, FiCalendar,
-  FiUser, FiEdit3, FiCheck, FiX, FiAtSign,
+  FiUser, FiEdit3, FiCheck, FiX, FiAtSign, FiLock, FiSend,
 } from 'react-icons/fi';
 
 const backendUrl =
@@ -53,6 +53,12 @@ export default function ProfilePage() {
   const [editValues, setEditValues]     = useState({ name: '', lastName: '', pseudo: '' });
   const [pseudoStatus, setPseudoStatus] = useState<PseudoStatus>('idle');
   const [pseudoMsg, setPseudoMsg]       = useState('');
+  const [emailEditing, setEmailEditing] = useState(false);
+  const [newEmail, setNewEmail]         = useState('');
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailSent, setEmailSent]       = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordSent, setPasswordSent] = useState(false);
   const fileInputRef                    = useRef<HTMLInputElement>(null);
   const debounceRef                     = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router                          = useRouter();
@@ -167,6 +173,43 @@ export default function ProfilePage() {
     }
   };
 
+  /* Demande de changement d'email : un email de confirmation part sur la nouvelle adresse */
+  const handleRequestEmailChange = async () => {
+    if (!newEmail || newEmail === user?.email) return;
+    setEmailLoading(true);
+    try {
+      const token = localStorage.getItem('access_token');
+      await axios.post(
+        `${backendUrl}/users/me/change-email`,
+        { newEmail },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      setEmailSent(true);
+      setEmailEditing(false);
+      addNotification('success', 'Un email de confirmation a été envoyé à la nouvelle adresse.');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || "Erreur lors de la demande de changement d'email.";
+      addNotification('critical', msg);
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  /* Demande de changement de mot de passe : réutilise le flux "mot de passe oublié" */
+  const handleRequestPasswordReset = async () => {
+    if (!user?.email) return;
+    setPasswordLoading(true);
+    try {
+      await generateResetToken(user.email);
+      setPasswordSent(true);
+      addNotification('success', 'Un email vous a été envoyé pour réinitialiser votre mot de passe.');
+    } catch {
+      addNotification('critical', "Erreur lors de l'envoi de l'email de réinitialisation.");
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -252,27 +295,25 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Onglets (non-admin) */}
-        {!isAdmin && (
-          <div className="flex mt-6 border-b border-gray-800">
-            {(['info', 'edit'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2.5 text-sm font-iceberg uppercase tracking-widest transition-colors ${
-                  activeTab === tab
-                    ? 'text-green-400 border-b-2 border-green-400 -mb-px'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                {tab === 'info' ? 'Informations' : 'Modifier'}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Onglets */}
+        <div className="flex mt-6 border-b border-gray-800">
+          {(['info', 'edit'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-5 py-2.5 text-sm font-iceberg uppercase tracking-widest transition-colors ${
+                activeTab === tab
+                  ? 'text-green-400 border-b-2 border-green-400 -mb-px'
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {tab === 'info' ? 'Informations' : 'Modifier'}
+            </button>
+          ))}
+        </div>
 
         {/* Onglet Informations */}
-        {!isAdmin && activeTab === 'info' && (
+        {activeTab === 'info' && (
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
               <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500 mb-3">Informations personnelles</p>
@@ -294,7 +335,7 @@ export default function ProfilePage() {
         )}
 
         {/* Onglet Modifier */}
-        {!isAdmin && activeTab === 'edit' && (
+        {activeTab === 'edit' && (
           <form onSubmit={handleProfileUpdate} className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-5 space-y-4">
 
             {/* Pseudo — champ spécial avec feedback */}
@@ -349,14 +390,95 @@ export default function ProfilePage() {
           </form>
         )}
 
-        {/* Admin — carte compte seulement */}
-        {isAdmin && (
-          <div className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-4">
-            <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500 mb-3">Détails du compte</p>
-            <div className="space-y-3.5">
-              <InfoRow icon={<FiShield />}   label="Statut"        value={user.status || '—'} />
-              <InfoRow icon={<FiCalendar />} label="Membre depuis" value={new Date(user.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })} />
-              <InfoRow icon={<FiCalendar />} label="Mis à jour le" value={new Date(user.updatedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })} />
+        {/* Sécurité : email et mot de passe (changements soumis à confirmation par email) */}
+        {activeTab === 'edit' && (
+          <div className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-5 space-y-5">
+            <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500">Sécurité du compte</p>
+
+            {/* Email */}
+            <div>
+              <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+                Adresse email
+              </label>
+              {!emailEditing ? (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                    <FiMail className="w-4 h-4 text-green-400 shrink-0" />
+                    <span>{user.email}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setEmailEditing(true); setNewEmail(''); setEmailSent(false); }}
+                    className="text-xs font-iceberg uppercase tracking-widest text-green-400 hover:text-green-300 shrink-0"
+                  >
+                    Changer
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    placeholder="Nouvelle adresse email"
+                    className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-green-500/50 transition-colors"
+                  />
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleRequestEmailChange}
+                      disabled={emailLoading || !newEmail}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-black text-xs font-iceberg uppercase tracking-widest hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {emailLoading
+                        ? <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        : <FiSend className="w-3.5 h-3.5" />}
+                      Envoyer
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEmailEditing(false)}
+                      className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-xs font-iceberg uppercase tracking-widest hover:text-gray-200 transition-colors"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </div>
+              )}
+              <p className="text-xs text-gray-600 mt-1.5">
+                {emailSent
+                  ? 'Un email de confirmation a été envoyé à la nouvelle adresse. Le changement prendra effet une fois le lien cliqué.'
+                  : "Un email de confirmation sera envoyé à la nouvelle adresse ; le changement ne prend effet qu'après validation du lien."}
+              </p>
+            </div>
+
+            {/* Mot de passe */}
+            <div className="pt-4 border-t border-gray-800">
+              <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+                Mot de passe
+              </label>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <FiLock className="w-4 h-4 text-green-400 shrink-0" />
+                  <span>••••••••</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRequestPasswordReset}
+                  disabled={passwordLoading}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs font-iceberg uppercase tracking-widest text-gray-300 hover:border-green-400 hover:text-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                >
+                  {passwordLoading
+                    ? <div className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                    : <FiSend className="w-3.5 h-3.5" />}
+                  Changer le mot de passe
+                </button>
+              </div>
+              <p className="text-xs text-gray-600 mt-1.5">
+                {passwordSent
+                  ? 'Un email vous a été envoyé avec un lien pour définir un nouveau mot de passe.'
+                  : "Un email contenant un lien de réinitialisation vous sera envoyé à l'adresse actuelle."}
+              </p>
             </div>
           </div>
         )}

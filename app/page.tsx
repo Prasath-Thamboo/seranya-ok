@@ -175,20 +175,21 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: <HiOutlineBookOpen className="w-7 h-7" />, label: "Articles de blog", value: postCount },
-              { icon: <HiOutlineSparkles className="w-7 h-7" />, label: "Tuto", value: tutorialCount },
-              { icon: <HiOutlineUsers className="w-7 h-7" />, label: "Définitions", value: definitionCount },
+              { icon: <HiOutlineBookOpen className="w-7 h-7" />, label: "Articles de blog", value: postCount, href: "/posts" },
+              { icon: <HiOutlineSparkles className="w-7 h-7" />, label: "Tuto", value: tutorialCount, href: "/tutoriels" },
+              { icon: <HiOutlineUsers className="w-7 h-7" />, label: "Définitions", value: definitionCount, href: "/encyclopedie" },
             ].map((stat) => (
-              <motion.div
-                key={stat.label}
-                variants={fadeUp}
-                className="flex flex-col items-center gap-3 p-8 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
-              >
-                <div className="text-green-400">{stat.icon}</div>
-                <span className="text-5xl font-bold font-iceberg text-white">
-                  {statsInView ? <CountUp end={stat.value} duration={2} /> : 0}
-                </span>
-                <span className="text-gray-400 font-kanit uppercase text-xs tracking-widest">{stat.label}</span>
+              <motion.div key={stat.label} variants={fadeUp}>
+                <Link
+                  href={stat.href}
+                  className="flex flex-col items-center gap-3 p-8 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+                >
+                  <div className="text-green-400">{stat.icon}</div>
+                  <span className="text-5xl font-bold font-iceberg text-white">
+                    {statsInView ? <CountUp end={stat.value} duration={2} /> : 0}
+                  </span>
+                  <span className="text-gray-400 font-kanit uppercase text-xs tracking-widest">{stat.label}</span>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -291,26 +292,30 @@ export default function Home() {
                 title: "Sérénité",
                 desc: "Un espace pensé pour la paix intérieure et le ressourcement, loin du bruit du monde.",
                 icon: "✦",
+                href: "/univers",
               },
               {
                 title: "Connaissance",
                 desc: "Une encyclopédie vivante de l'univers bouddhiste et yogique, enrichie en permanence.",
                 icon: "◈",
+                href: "/encyclopedie",
               },
               {
                 title: "Communauté",
                 desc: "Des membres partageant les mêmes valeurs, unis par la quête du bonheur authentique.",
                 icon: "❋",
+                href: "/contact",
               },
             ].map((f) => (
-              <motion.div
-                key={f.title}
-                variants={fadeUp}
-                className="p-6 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
-              >
-                <div className="text-green-400 text-2xl mb-4">{f.icon}</div>
-                <h3 className="font-iceberg uppercase text-white text-lg mb-3">{f.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+              <motion.div key={f.title} variants={fadeUp} className="h-full">
+                <Link
+                  href={f.href}
+                  className="h-full flex flex-col p-6 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+                >
+                  <div className="text-green-400 text-2xl mb-4">{f.icon}</div>
+                  <h3 className="font-iceberg uppercase text-white text-lg mb-3">{f.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+                </Link>
               </motion.div>
             ))}
           </div>
