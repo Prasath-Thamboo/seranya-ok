@@ -93,7 +93,7 @@ export default function Home() {
             className="scale-105"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/65 to-black" />
 
         <motion.div
           className="relative z-10 text-center px-6 max-w-3xl mx-auto"
@@ -113,12 +113,12 @@ export default function Home() {
 
           <motion.h1
             variants={fadeUp}
-            className="font-iceberg uppercase text-5xl md:text-7xl font-bold tracking-widest mb-4 text-white drop-shadow-lg"
+            className="font-iceberg uppercase text-5xl md:text-7xl font-bold tracking-widest mb-4 text-white text-shadow-sm"
           >
             Seranya
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="text-lg md:text-xl text-gray-300 mb-10 max-w-xl mx-auto">
+          <motion.p variants={fadeUp} className="text-lg md:text-xl text-gray-300 mb-10 max-w-xl mx-auto text-shadow-sm">
             Un univers bouddhiste et yogique. Atteignez la paix intérieure et fusionnez avec votre être profond.
           </motion.p>
 

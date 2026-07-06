@@ -45,7 +45,7 @@ export default function SubscriptionPage() {
             priority
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/65 to-black" />
 
         <motion.div
           className="relative z-10 text-center px-6 max-w-3xl mx-auto"
@@ -62,7 +62,7 @@ export default function SubscriptionPage() {
 
           <motion.h1
             variants={fadeUp}
-            className="text-5xl md:text-6xl lg:text-7xl font-iceberg uppercase tracking-wide text-white mb-6 leading-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-iceberg uppercase tracking-wide text-white mb-6 leading-tight text-shadow-sm"
           >
             Votre voie,{' '}
             <span className="text-green-400">votre rythme</span>
@@ -70,7 +70,7 @@ export default function SubscriptionPage() {
 
           <motion.p
             variants={fadeUp}
-            className="text-gray-300 text-lg md:text-xl max-w-xl mx-auto leading-relaxed"
+            className="text-gray-300 text-lg md:text-xl max-w-xl mx-auto leading-relaxed text-shadow-sm"
           >
             Accédez à l&apos;intégralité du contenu Seranya, devenez éditeur actif et rejoignez une communauté passionnée.
           </motion.p>
