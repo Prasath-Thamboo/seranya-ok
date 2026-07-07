@@ -93,7 +93,7 @@ export default function RgpdRequestPage() {
           <div className="space-y-6 mb-10">
             {[
               { icon: <FiShield className="w-5 h-5 text-green-400" />, label: 'Délai de réponse', value: '1 mois maximum' },
-              { icon: <FiMail className="w-5 h-5 text-green-400" />, label: 'Contact DPO', value: 'prasath.thamb@gmail.com' },
+              { icon: <FiMail className="w-5 h-5 text-green-400" />, label: 'Contact DPO', value: 'contact@seranya.fr' },
             ].map((item) => (
               <motion.div key={item.label} variants={fadeUp} className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center flex-shrink-0">

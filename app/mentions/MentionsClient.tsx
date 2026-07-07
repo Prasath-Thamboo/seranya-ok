@@ -65,7 +65,7 @@ const MentionsLegalesPage = () => {
 
           <h2 className="text-2xl font-bold mb-4">Contact</h2>
           <p className="mb-6 leading-relaxed">
-            Pour toute question ou réclamation, vous pouvez nous contacter à <strong>prasath.thamb@gmail.com</strong>.
+            Pour toute question ou réclamation, vous pouvez nous contacter à <strong>contact@seranya.fr</strong>.
           </p>
         </div>
       </div>

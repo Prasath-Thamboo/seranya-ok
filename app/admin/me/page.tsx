@@ -361,11 +361,11 @@ export default function ProfilePage() {
                   </span>
                 )}
               </div>
-              <div className="flex justify-between items-center mt-1">
-                <p className={`text-xs ${pseudoStatus === 'available' ? 'text-green-400' : pseudoStatus === 'taken' || pseudoStatus === 'invalid' ? 'text-red-400' : 'text-gray-600'}`}>
+              <div className="flex justify-between items-center mt-1 gap-2">
+                <p className={`text-xs min-w-0 ${pseudoStatus === 'available' ? 'text-green-400' : pseudoStatus === 'taken' || pseudoStatus === 'invalid' ? 'text-red-400' : 'text-gray-600'}`}>
                   {pseudoMsg || 'Lettres, chiffres, _ et - uniquement. 3–20 caractères.'}
                 </p>
-                <p className="text-xs text-gray-600 shrink-0 ml-2">{editValues.pseudo.length}/20</p>
+                <p className="text-xs text-gray-600 shrink-0">{editValues.pseudo.length}/20</p>
               </div>
             </div>
 
@@ -401,34 +401,34 @@ export default function ProfilePage() {
                 Adresse email
               </label>
               {!emailEditing ? (
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 min-w-0">
                     <FiMail className="w-4 h-4 text-green-400 shrink-0" />
-                    <span>{user.email}</span>
+                    <span className="truncate">{user.email}</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => { setEmailEditing(true); setNewEmail(''); setEmailSent(false); }}
-                    className="text-xs font-iceberg uppercase tracking-widest text-green-400 hover:text-green-300 shrink-0"
+                    className="text-xs font-iceberg uppercase tracking-widest text-green-400 hover:text-green-300 shrink-0 self-start sm:self-auto"
                   >
                     Changer
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-col gap-2">
                   <input
                     type="email"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     placeholder="Nouvelle adresse email"
-                    className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-green-500/50 transition-colors"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-green-500/50 transition-colors"
                   />
-                  <div className="flex gap-2 shrink-0">
+                  <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
                       onClick={handleRequestEmailChange}
                       disabled={emailLoading || !newEmail}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-black text-xs font-iceberg uppercase tracking-widest hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-black text-xs font-iceberg uppercase tracking-widest hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       {emailLoading
                         ? <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -457,7 +457,7 @@ export default function ProfilePage() {
               <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
                 Mot de passe
               </label>
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-sm text-gray-300">
                   <FiLock className="w-4 h-4 text-green-400 shrink-0" />
                   <span>••••••••</span>
@@ -466,7 +466,7 @@ export default function ProfilePage() {
                   type="button"
                   onClick={handleRequestPasswordReset}
                   disabled={passwordLoading}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs font-iceberg uppercase tracking-widest text-gray-300 hover:border-green-400 hover:text-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                  className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs font-iceberg uppercase tracking-widest text-gray-300 hover:border-green-400 hover:text-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-auto"
                 >
                   {passwordLoading
                     ? <div className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />

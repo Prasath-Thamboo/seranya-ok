@@ -58,7 +58,7 @@ const PolitiqueConfidentialitePage = () => {
           <h2 className="text-2xl font-bold mb-4">Vos droits</h2>
           <p className="mb-6 leading-relaxed">
             Vous avez le droit de demander l&apos;accès, la rectification, la suppression, l&apos;opposition au traitement ou la portabilité de vos données personnelles à tout moment, via notre{' '}
-            <a href="/rgpd" className="underline text-green-400 hover:text-green-300">formulaire dédié</a>, ou en nous contactant à l&apos;adresse <strong>prasath.thamb@gmail.com</strong>. Nous répondons dans un délai maximum d&apos;un mois.
+            <a href="/rgpd" className="underline text-green-400 hover:text-green-300">formulaire dédié</a>, ou en nous contactant à l&apos;adresse <strong>contact@seranya.fr</strong>. Nous répondons dans un délai maximum d&apos;un mois.
           </p>
           <p className="mb-6 leading-relaxed">
             Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la{' '}
@@ -77,7 +77,7 @@ const PolitiqueConfidentialitePage = () => {
 
           <h2 className="text-2xl font-bold mb-4">Contact</h2>
           <p className="mb-6 leading-relaxed">
-            Pour toute question relative à vos données personnelles, vous pouvez nous contacter à <strong>prasath.thamb@gmail.com</strong>. Voir aussi nos{' '}
+            Pour toute question relative à vos données personnelles, vous pouvez nous contacter à <strong>contact@seranya.fr</strong>. Voir aussi nos{' '}
             <a href="/mentions" className="underline text-green-400 hover:text-green-300">mentions légales</a>.
           </p>
         </div>
