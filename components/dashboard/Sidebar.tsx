@@ -79,7 +79,9 @@ export default function Sidebar() {
         </div>
         <div className="flex items-center space-x-6">
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
-          <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+          {user?.role === UserRole.ADMIN && (
+            <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+          )}
           <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
         </div>
       </nav>
@@ -180,14 +182,16 @@ export default function Sidebar() {
           {!collapsed && <span className="uppercase">Encyclopédie</span>}
         </Menu.Item>
 
-        <Menu.Item
-          key="chat"
-          icon={<FaComments className="w-5 h-5" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/discussions')}
-        >
-          {!collapsed && <span className="uppercase">Discussions</span>}
-        </Menu.Item>
+        {user?.role === UserRole.ADMIN && (
+          <Menu.Item
+            key="chat"
+            icon={<FaComments className="w-5 h-5" />}
+            className="menu-item"
+            onClick={() => router.push('/admin/discussions')}
+          >
+            {!collapsed && <span className="uppercase">Discussions</span>}
+          </Menu.Item>
+        )}
 
         {/* Séparateur */}
         <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />

@@ -53,6 +53,9 @@ const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
       case 'ADMIN':
         badgeStyle += ' bg-indigo-400/10 text-indigo-400 ring-indigo-400/30 font-bold';
         break;
+      case 'EDITOR':
+        badgeStyle += ' bg-teal-500/10 text-teal-500 ring-teal-500/30 font-bold';
+        break;
       case 'USER':
         badgeStyle += ' bg-blue-400/10 text-blue-400 ring-blue-400/30 font-bold';
         break;

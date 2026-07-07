@@ -38,8 +38,6 @@ export default function AdminSearchPage() {
   const router                  = useRouter();
   const inputRef                = useRef<HTMLInputElement>(null);
 
-  useEffect(() => { inputRef.current?.focus(); }, []);
-
   const doSearch = useCallback(async (q: string) => {
     if (q.trim().length < 2) { setResults(EMPTY); setSearched(false); return; }
     setLoading(true);
@@ -57,6 +55,8 @@ export default function AdminSearchPage() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => { inputRef.current?.focus(); }, []);
 
   const handleInput = (value: string) => {
     setQuery(value);

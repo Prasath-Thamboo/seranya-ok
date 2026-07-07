@@ -120,8 +120,6 @@ export const deleteUserAccount = async (email: string, token: string): Promise<A
 export const fetchCurrentUser = async (): Promise<RegisterUserModel> => {
   const token = getToken(); // Retrieve the token from local storage
 
-  console.log("Token from local storage (before request):", token);
-
   if (!token) {
     throw new Error("No token found");
   }
