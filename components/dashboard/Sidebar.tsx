@@ -80,9 +80,11 @@ export default function Sidebar() {
         <div className="flex items-center space-x-6">
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
           {user?.role === UserRole.ADMIN && (
-            <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+            <>
+              <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+              <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
+            </>
           )}
-          <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
         </div>
       </nav>
     );
@@ -193,18 +195,20 @@ export default function Sidebar() {
           </Menu.Item>
         )}
 
-        {/* Séparateur */}
-        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
-
-        {/* Recherche */}
-        <Menu.Item
-          key="search"
-          icon={<FaSearch className="w-5 h-5" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/search')}
-        >
-          {!collapsed && <span className="uppercase">Recherche</span>}
-        </Menu.Item>
+        {/* Recherche (admin uniquement) */}
+        {user?.role === UserRole.ADMIN && (
+          <>
+            <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
+            <Menu.Item
+              key="search"
+              icon={<FaSearch className="w-5 h-5" />}
+              className="menu-item"
+              onClick={() => router.push('/admin/search')}
+            >
+              {!collapsed && <span className="uppercase">Recherche</span>}
+            </Menu.Item>
+          </>
+        )}
       </Menu>
       </div>
 

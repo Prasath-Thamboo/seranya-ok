@@ -103,14 +103,12 @@ export const resetPassword = async (data: ResetPasswordModel): Promise<AuthRespo
   return response.data;
 };
 
-// Function to delete a user account
-export const deleteUserAccount = async (email: string, token: string): Promise<AuthResponse> => {
+// Function to delete the currently authenticated user's own account
+export const deleteUserAccount = async (token: string): Promise<AuthResponse> => {
   const response = await axios.delete<AuthResponse>(`${BASE_URL}/auth/delete`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    data: { email },
   });
 
   return response.data;

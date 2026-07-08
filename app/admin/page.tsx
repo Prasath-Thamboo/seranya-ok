@@ -12,6 +12,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 import DividersWithHeading from '@/components/DividersWhithHeading';
 import MiniLoader from '@/components/MiniLoader';
 import { getAccessToken } from '@/lib/queries/AuthQueries';
+import ProtectedRoute from '@/middleware/ProtectedRoute';
+import { UserRole } from '@/lib/models/UserModels';
 
 interface LighthouseMetrics {
   performance: number;
@@ -25,7 +27,7 @@ const PERF_COLORS = ['#3b82f6', '#e5e7eb'];
 const ACCESS_COLORS = ['#22c55e', '#e5e7eb'];
 const SEO_COLORS = ['#f59e0b', '#e5e7eb'];
 
-export default function DashboardHome() {
+function DashboardHome() {
   const [totalPosts, setTotalPosts] = useState<number | null>(null);
   const [totalTutorials, setTotalTutorials] = useState<number | null>(null);
   const [totalDefinitions, setTotalDefinitions] = useState<number | null>(null);
@@ -247,5 +249,13 @@ export default function DashboardHome() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function AdminDashboardPage() {
+  return (
+    <ProtectedRoute allowedRoles={[UserRole.ADMIN]} fallbackPath="/admin/posts">
+      <DashboardHome />
+    </ProtectedRoute>
   );
 }

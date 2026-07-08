@@ -5,8 +5,6 @@ import { fetchAllComments, deleteComment } from "@/lib/queries/CommentQueries";
 import { CommentModel } from "@/lib/models/CommentModels";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { FiTrash2, FiMessageCircle, FiSearch } from "react-icons/fi";
-import ProtectedRoute from "@/middleware/ProtectedRoute";
-import { UserRole } from "@/lib/models/UserModels";
 
 const resourceLabel = (comment: CommentModel) => {
   if (comment.post) return { label: "Post", title: comment.post.title, href: `/posts/${comment.post.id}` };
@@ -165,9 +163,5 @@ function DiscussionsContent() {
 }
 
 export default function AdminDiscussionsPage() {
-  return (
-    <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
-      <DiscussionsContent />
-    </ProtectedRoute>
-  );
+  return <DiscussionsContent />;
 }
