@@ -112,7 +112,7 @@ export default function Navbar() {
   const menuItems = (
     <Menu className="font-kanit">
       <Menu.Item key="1">
-        <Link href="/admin/me">Profile</Link>
+        <Link href="/compte">Profile</Link>
       </Menu.Item>
       {user?.role === "ADMIN" && (
         <Menu.Item key="2">
@@ -420,7 +420,7 @@ export default function Navbar() {
 
                   <div className="flex gap-2">
                     <Link
-                      href="/admin/me"
+                      href="/compte"
                       onClick={() => setIsMenuOpen(false)}
                       className="flex-1 text-center py-2.5 text-xs font-iceberg uppercase text-gray-300 border border-gray-700 rounded-lg hover:border-green-500/50 hover:text-green-400 transition-all"
                     >

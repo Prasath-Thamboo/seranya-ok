@@ -10,7 +10,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'back.seranya.fr',
+        hostname: 'seranya-back.onrender.com',
       },
       {
         protocol: 'https',

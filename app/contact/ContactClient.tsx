@@ -82,7 +82,7 @@ export default function ContactPage() {
 
           <div className="space-y-6">
             {[
-              { icon: <FiMail className="w-5 h-5 text-green-400" />, label: 'Email', value: 'contact@seranya.fr' },
+              { icon: <FiMail className="w-5 h-5 text-green-400" />, label: 'Email', value: 'contact@seranya-blog.com' },
               { icon: <FiMessageSquare className="w-5 h-5 text-green-400" />, label: 'Réponse', value: 'Sous 24 heures' },
             ].map((item) => (
               <motion.div key={item.label} variants={fadeUp} className="flex items-center gap-4">

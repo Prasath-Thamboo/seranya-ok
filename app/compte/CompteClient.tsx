@@ -2,6 +2,6 @@
 
 import AccountSettings from "@/components/account/AccountSettings";
 
-export default function AdminMePage() {
+export default function CompteClient() {
   return <AccountSettings />;
 }
