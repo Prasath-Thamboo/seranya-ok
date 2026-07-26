@@ -44,8 +44,8 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
   const handleLogout = async () => {
     try {
       await logoutUser();
-      setUser(null);
-      router.push('/auth/login');
+      // Rechargement complet pour que toute la page reflète la déconnexion.
+      window.location.href = '/auth/login';
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
     }

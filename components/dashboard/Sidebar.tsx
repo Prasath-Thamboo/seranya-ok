@@ -45,8 +45,8 @@ export default function Sidebar() {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      setUser(null);
-      router.push('/auth/login');
+      // Rechargement complet pour que toute la page reflète la déconnexion.
+      window.location.href = '/auth/login';
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
     }
@@ -71,10 +71,13 @@ export default function Sidebar() {
     return (
       <nav className="fixed bottom-0 left-0 w-full h-20 bg-black text-white flex items-center justify-between z-50 shadow-lg px-4">
         <div className="flex items-center space-x-6">
+          {user?.role === UserRole.ADMIN && (
+            <FaUsers className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/users')} />
+          )}
           <FaNewspaper className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/posts')} />
           <FaVideo className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
         </div>
-        <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/admin')}>
+        <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/')}>
           <Image src="/logos/seranyaicon.png" alt="Home" width={40} height={40} className="rounded-full" />
         </div>
         <div className="flex items-center space-x-6">
@@ -215,7 +218,7 @@ export default function Sidebar() {
       {/* Section Profil et Déconnexion */}
       <div className="border-t border-gray-800">
         <div
-          className="flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-900 transition-colors"
+          className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-900 transition-colors ${collapsed ? 'justify-center' : ''}`}
           onClick={handleProfileClick}
         >
           <Image

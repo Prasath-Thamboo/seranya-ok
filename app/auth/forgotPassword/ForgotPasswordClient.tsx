@@ -1,9 +1,10 @@
 "use client";
 
-import { Form, Input, Button } from "antd";
+import { Form, Input } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { FiSend } from "react-icons/fi";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { generateResetToken } from "@/lib/queries/AuthQueries";
 
@@ -85,14 +86,14 @@ export default function ForgotPasswordPage() {
               </Form.Item>
 
               <Form.Item className="mt-4 mb-3">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  className="w-full h-12 font-iceberg uppercase tracking-widest text-sm font-bold bg-green-500 border-none hover:bg-green-400"
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-12 font-iceberg uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 rounded-md transition-all duration-200 bg-green-500 text-white hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 active:scale-95"
                 >
-                  Envoyer le lien
-                </Button>
+                  <FiSend className="w-5 h-5" />
+                  {loading ? "Envoi..." : "Envoyer le lien"}
+                </button>
               </Form.Item>
             </Form>
 

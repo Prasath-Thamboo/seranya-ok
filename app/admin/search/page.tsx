@@ -26,7 +26,7 @@ const SECTIONS = [
   { key: "posts"       as const, label: "Articles",     icon: <FiFileText />, baseRoute: "admin/posts",       editRoute: (id: number | string) => `/admin/posts/update?id=${id}`,       viewRoute: (id: number | string) => `/posts/${id}`,              getTitle: (r: any) => r.title,  getSub: (r: any) => r.type },
   { key: "tutorials"   as const, label: "Tutoriels",    icon: <FiPlay />,      baseRoute: "admin/tutoriels",   editRoute: (id: number | string) => `/admin/tutoriels/update?id=${id}`,   viewRoute: null,                                                  getTitle: (r: any) => r.title,  getSub: (r: any) => r.description?.slice(0, 60) },
   { key: "definitions" as const, label: "Encyclopédie", icon: <FiBook />,      baseRoute: "admin/encyclopedie",editRoute: (id: number | string) => `/admin/encyclopedie/update?id=${id}`,viewRoute: null,                                                  getTitle: (r: any) => r.term,   getSub: (r: any) => r.category },
-  { key: "users"       as const, label: "Utilisateurs", icon: <FiUsers />,     baseRoute: "admin/users",       editRoute: null,                                                           viewRoute: null,                                                  getTitle: (r: any) => r.pseudo, getSub: (r: any) => r.email },
+  { key: "users"       as const, label: "Utilisateurs", icon: <FiUsers />,     baseRoute: "admin/users",       editRoute: null,                                                           viewRoute: (id: number | string) => `/admin/users/${id}`,       getTitle: (r: any) => r.pseudo, getSub: (r: any) => r.email },
 ];
 
 export default function AdminSearchPage() {
@@ -136,10 +136,13 @@ export default function AdminSearchPage() {
 
                   {/* Résultats */}
                   <div className="space-y-1">
-                    {items.map((item: any) => (
+                    {items.map((item: any) => {
+                      const isUser = section.key === "users";
+                      return (
                       <div
                         key={item.id}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-900 transition-colors group"
+                        onClick={isUser ? () => router.push(section.viewRoute!(item.id)) : undefined}
+                        className={`flex items-center gap-3 p-3 rounded-lg hover:bg-gray-900 transition-colors group ${isUser ? "cursor-pointer" : ""}`}
                       >
                         {/* Statut publié */}
                         <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${item.isPublished ?? true ? "bg-green-400" : "bg-gray-600"}`} />
@@ -158,30 +161,33 @@ export default function AdminSearchPage() {
                         </span>
 
                         {/* Actions */}
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                          {section.viewRoute && (
-                            <a
-                              href={section.viewRoute(item.id)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              title="Voir"
-                              className="p-1.5 rounded-lg text-teal-500 hover:bg-teal-500/10 transition-colors"
-                            >
-                              <FiEye className="w-3.5 h-3.5" />
-                            </a>
-                          )}
-                          {section.editRoute && (
-                            <button
-                              onClick={() => router.push(section.editRoute!(item.id))}
-                              title="Modifier"
-                              className="p-1.5 rounded-lg text-blue-400 hover:bg-blue-400/10 transition-colors"
-                            >
-                              <FiEdit className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                        </div>
+                        {!isUser && (
+                          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                            {section.viewRoute && (
+                              <a
+                                href={section.viewRoute(item.id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Voir"
+                                className="p-1.5 rounded-lg text-teal-500 hover:bg-teal-500/10 transition-colors"
+                              >
+                                <FiEye className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {section.editRoute && (
+                              <button
+                                onClick={() => router.push(section.editRoute!(item.id))}
+                                title="Modifier"
+                                className="p-1.5 rounded-lg text-blue-400 hover:bg-blue-400/10 transition-colors"
+                              >
+                                <FiEdit className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );

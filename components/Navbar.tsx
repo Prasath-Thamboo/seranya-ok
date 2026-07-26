@@ -101,9 +101,9 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      setIsLoggedIn(false);
-      setUser(null);
-      addNotification("success", "Vous êtes déconnecté.");
+      // Rechargement complet pour que toute la page (Navbar comprise, qui ne
+      // relit l'état d'authentification qu'au montage) reflète la déconnexion.
+      window.location.href = '/';
     } catch (error) {
       addNotification("critical", "Une erreur s'est produite lors de la déconnexion.");
     }
@@ -114,7 +114,7 @@ export default function Navbar() {
       <Menu.Item key="1">
         <Link href="/compte">Profile</Link>
       </Menu.Item>
-      {user?.role === "ADMIN" && (
+      {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
         <Menu.Item key="2">
           <Link href="/admin">Administration</Link>
         </Menu.Item>
@@ -426,7 +426,7 @@ export default function Navbar() {
                     >
                       Profil
                     </Link>
-                    {user.role === "ADMIN" && (
+                    {(user.role === "ADMIN" || user.role === "EDITOR") && (
                       <Link
                         href="/admin"
                         onClick={() => setIsMenuOpen(false)}

@@ -3,5 +3,5 @@
 import AccountSettings from "@/components/account/AccountSettings";
 
 export default function CompteClient() {
-  return <AccountSettings />;
+  return <AccountSettings withNavbarOffset />;
 }

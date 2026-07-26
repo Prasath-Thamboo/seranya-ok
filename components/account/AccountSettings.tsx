@@ -44,7 +44,7 @@ function validatePseudoClient(pseudo: string): string | null {
 type PseudoStatus = 'idle' | 'checking' | 'available' | 'taken' | 'invalid';
 
 /* ── Page principale ── */
-export default function AccountSettings() {
+export default function AccountSettings({ withNavbarOffset = false }: { withNavbarOffset?: boolean }) {
   const [user, setUser]                 = useState<RegisterUserModel | null>(null);
   const [previewSrc, setPreviewSrc]     = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -232,7 +232,7 @@ export default function AccountSettings() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className={`flex items-center justify-center min-h-[60vh] ${withNavbarOffset ? 'pt-24' : ''}`}>
         <div className="w-8 h-8 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -262,7 +262,7 @@ export default function AccountSettings() {
 
   return (
     <div className="min-h-screen bg-black text-white font-kanit">
-      <div className="max-w-2xl mx-auto py-6 px-4 sm:px-0">
+      <div className={`max-w-2xl mx-auto px-4 sm:px-0 ${withNavbarOffset ? 'pt-24 pb-6' : 'py-6'}`}>
 
         {/* Carte hero */}
         <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
