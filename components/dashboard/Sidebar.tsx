@@ -82,11 +82,11 @@ export default function Sidebar() {
         </div>
         <div className="flex items-center space-x-6">
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
+          {(user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR) && (
+            <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
+          )}
           {user?.role === UserRole.ADMIN && (
-            <>
-              <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
-              <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
-            </>
+            <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
           )}
         </div>
       </nav>
@@ -187,7 +187,7 @@ export default function Sidebar() {
           {!collapsed && <span className="uppercase">Encyclopédie</span>}
         </Menu.Item>
 
-        {user?.role === UserRole.ADMIN && (
+        {(user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR) && (
           <Menu.Item
             key="chat"
             icon={<FaComments className="w-5 h-5" />}

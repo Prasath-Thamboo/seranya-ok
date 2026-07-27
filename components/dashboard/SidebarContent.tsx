@@ -77,7 +77,7 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
         <div className="flex items-center space-x-6">
           <FaPlay className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
           <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
-          {user?.role === UserRole.ADMIN && (
+          {(user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR) && (
             <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
           )}
         </div>
@@ -176,8 +176,8 @@ export function SidebarContent({ collapsed, toggleSidebar }: { collapsed: boolea
           {!collapsed && <span className="uppercase">Encyclopédie</span>}
         </Menu.Item>
 
-        {/* Groupe 3 — Communauté (réservé aux admins) */}
-        {user?.role === UserRole.ADMIN && (
+        {/* Groupe 3 — Communauté */}
+        {(user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR) && (
           <>
             <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
             <Menu.Item

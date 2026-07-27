@@ -32,8 +32,8 @@ export const fetchUserById = async (id: number, token: string): Promise<UserMode
 export const createUser = async (data: CreateUserModel, token: string): Promise<UserModel> => {
   const formData = new FormData();
 
-  formData.append('name', data.name);
-  formData.append('lastName', data.lastName);
+  if (data.name) formData.append('name', data.name);
+  if (data.lastName) formData.append('lastName', data.lastName);
   if (data.address) formData.append('address', data.address);
   formData.append('email', data.email);
   if (data.phone) formData.append('phone', data.phone);

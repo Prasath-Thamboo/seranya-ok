@@ -6,7 +6,7 @@ import { UserRole } from "@/lib/models/UserModels";
 
 export default function AdminDiscussionsLayout({ children }: { children: ReactNode }) {
   return (
-    <ProtectedRoute allowedRoles={[UserRole.ADMIN]} fallbackPath="/admin/posts">
+    <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.EDITOR]} fallbackPath="/admin/posts">
       {children}
     </ProtectedRoute>
   );

@@ -1,12 +1,12 @@
 // seranyanext\components\dashboard\Header.tsx
 
 import React, { useState, useEffect } from 'react';
-import { FiBell } from 'react-icons/fi';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAccessToken, fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { RegisterUserModel, UserRole } from "@/lib/models/AuthModels";
 import Badge from "@/components/Badge";
+import NotificationBell from "@/components/dashboard/NotificationBell";
 
 export default function Header() {
   const [user, setUser] = useState<RegisterUserModel | null>(null);
@@ -42,10 +42,7 @@ export default function Header() {
       <div className="flex items-center justify-end h-full px-6 mx-auto text-black gap-4">
         {/* Right side: notification + user */}
         <div className="flex items-center gap-4">
-          <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none">
-            <FiBell className="w-5 h-5 text-gray-600" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
-          </button>
+          <NotificationBell />
 
           <div className="h-6 w-px bg-gray-200"></div>
 

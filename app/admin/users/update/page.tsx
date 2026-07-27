@@ -114,7 +114,6 @@ const UpdateUser = () => {
             <Form.Item
               name="name"
               label={<span className="text-black font-kanit">Prénom</span>}
-              rules={[{ required: true, message: "Veuillez entrer le prénom!" }]}
             >
               <Input placeholder="Prénom" className="bg-white text-black font-kanit" />
             </Form.Item>
@@ -122,7 +121,6 @@ const UpdateUser = () => {
             <Form.Item
               name="lastName"
               label={<span className="text-black font-kanit">Nom de famille</span>}
-              rules={[{ required: true, message: "Veuillez entrer le nom de famille!" }]}
             >
               <Input placeholder="Nom de famille" className="bg-white text-black font-kanit" />
             </Form.Item>

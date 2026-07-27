@@ -11,8 +11,8 @@ export enum UserRole {
 // Interface pour le modèle d'utilisateur (données complètes)
 export interface UserModel {
   id: number;
-  name: string;
-  lastName: string;
+  name?: string;
+  lastName?: string;
   address?: string;
   email: string;
   phone?: string;
@@ -26,8 +26,8 @@ export interface UserModel {
 
 // Interface pour le modèle de création d'utilisateur
 export interface CreateUserModel {
-  name: string;
-  lastName: string;
+  name?: string;
+  lastName?: string;
   address?: string;
   email: string;
   phone?: string;
