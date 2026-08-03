@@ -62,6 +62,10 @@ export default function CookieConsent() {
         <a href="/confidentialite" target="_blank" rel="noopener noreferrer">
           politique de confidentialité
         </a>{" "}
+        et notre{" "}
+        <a href="/cookies" target="_blank" rel="noopener noreferrer">
+          politique de cookies
+        </a>{" "}
         pour en savoir plus.
       </p>
     </Modal>
