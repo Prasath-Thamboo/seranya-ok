@@ -230,10 +230,12 @@ export default function UniversPage() {
       {/* Fond fixe */}
       {backgroundImage && (
         <div className="fixed inset-0 z-0">
-          <img
+          <Image
             src={backgroundImage}
             alt="Background"
-            style={{ objectFit: "cover", width: "100%", height: "100%", position: "fixed" }}
+            fill
+            priority
+            style={{ objectFit: "cover" }}
             className="brightness-40"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black" />

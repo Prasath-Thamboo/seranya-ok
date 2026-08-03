@@ -170,12 +170,14 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
                     <button
                       onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }}
                       className="p-1.5 text-gray-600 hover:text-green-400 transition-colors rounded-lg hover:bg-green-500/10"
+                      aria-label="Modifier le commentaire"
                     >
                       <FiEdit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(comment.id)}
                       className="p-1.5 text-gray-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                      aria-label="Supprimer le commentaire"
                     >
                       <FiTrash2 className="w-3.5 h-3.5" />
                     </button>

@@ -117,6 +117,7 @@ const Carousel: React.FC<CarouselProps> = ({
           <button
             key={index}
             onClick={() => goToSlide(index)}
+            aria-label={`Aller à la diapositive ${index + 1}`}
             className={`w-6 h-2 rounded-sm transition-all duration-300 ${
               index === currentIndex
                 ? 'bg-white shadow-neon'

@@ -10,6 +10,11 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const response = await fetch(apiUrl);
     const data = await response.json();
 
+    if (!response.ok || !data.lighthouseResult) {
+      console.error('PageSpeed API error:', data.error || data);
+      return res.status(502).json({ error: 'Failed to fetch Lighthouse metrics' });
+    }
+
     const { lighthouseResult } = data;
     const metrics = {
       performance: lighthouseResult.categories.performance.score * 100,

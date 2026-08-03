@@ -277,6 +277,7 @@ export default function Navbar() {
           <button
             className="text-white focus:outline-none hover:text-green-500 transition-all"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
             {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
           </button>
@@ -314,6 +315,7 @@ export default function Navbar() {
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-colors"
+                aria-label="Fermer le menu"
               >
                 <FiX className="w-5 h-5" />
               </button>

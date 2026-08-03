@@ -33,6 +33,7 @@ function DashboardHome() {
   const [totalDefinitions, setTotalDefinitions] = useState<number | null>(null);
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
   const [metrics, setMetrics] = useState<LighthouseMetrics | null>(null);
+  const [metricsError, setMetricsError] = useState(false);
   const [contentDistribution, setContentDistribution] = useState<{ name: string; value: number }[] | null>(null);
   const [userDistribution, setUserDistribution] = useState<{ name: string; value: number }[] | null>(null);
 
@@ -89,9 +90,11 @@ function DashboardHome() {
       try {
         const response = await fetch('/api/lighthouse');
         const data = await response.json();
+        if (!response.ok) throw new Error(data?.error || 'Failed to fetch Lighthouse metrics');
         setMetrics(data);
       } catch (error) {
         console.error('Erreur lors de la récupération des métriques Lighthouse', error);
+        setMetricsError(true);
       }
     };
 
@@ -214,6 +217,8 @@ function DashboardHome() {
                 [{ name: 'Performance', value: metrics.performance }, { name: 'Rest', value: 100 - metrics.performance }],
                 PERF_COLORS
               )
+            ) : metricsError ? (
+              <div className="flex justify-center items-center w-full h-full text-gray-400 font-kanit text-sm">Indisponible</div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
@@ -228,6 +233,8 @@ function DashboardHome() {
                 [{ name: 'Accessibilité', value: metrics.accessibility }, { name: 'Rest', value: 100 - metrics.accessibility }],
                 ACCESS_COLORS
               )
+            ) : metricsError ? (
+              <div className="flex justify-center items-center w-full h-full text-gray-400 font-kanit text-sm">Indisponible</div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
@@ -242,6 +249,8 @@ function DashboardHome() {
                 [{ name: 'SEO', value: metrics.seo }, { name: 'Rest', value: 100 - metrics.seo }],
                 SEO_COLORS
               )
+            ) : metricsError ? (
+              <div className="flex justify-center items-center w-full h-full text-gray-400 font-kanit text-sm">Indisponible</div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}

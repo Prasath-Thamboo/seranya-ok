@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useId } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { fetchCurrentUser, generateResetToken, deleteUserAccount, getAccessToken } from '@/lib/queries/AuthQueries';
@@ -360,7 +360,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
             {/* Pseudo — champ spécial avec feedback */}
             <div className="sm:col-span-2">
-              <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+              <label htmlFor="account-pseudo" className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
                 Nom d&apos;utilisateur
               </label>
               <div className="relative">
@@ -368,6 +368,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   <FiAtSign className="w-4 h-4" />
                 </span>
                 <input
+                  id="account-pseudo"
                   type="text"
                   value={editValues.pseudo}
                   onChange={(e) => handlePseudoChange(e.target.value, user.pseudo)}
@@ -417,7 +418,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
             {/* Email */}
             <div>
-              <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+              <label htmlFor="account-email" className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
                 Adresse email
               </label>
               {!emailEditing ? (
@@ -437,6 +438,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
               ) : (
                 <div className="flex flex-col gap-2">
                   <input
+                    id="account-email"
                     type="email"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
@@ -575,10 +577,12 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
 function FormField({ label, value, onChange, placeholder }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string;
 }) {
+  const id = useId();
   return (
     <div>
-      <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">{label}</label>
+      <label htmlFor={id} className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">{label}</label>
       <input
+        id={id}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}

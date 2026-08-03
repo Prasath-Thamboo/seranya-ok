@@ -93,6 +93,7 @@ const EncyclopediePage: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher un terme..."
+              aria-label="Rechercher un terme"
               className="w-full h-12 pl-10 pr-4 rounded-lg bg-white/10 border border-white/30 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 font-kanit"
             />
             <SearchOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 text-lg" />

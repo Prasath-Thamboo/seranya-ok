@@ -86,6 +86,7 @@ export default function NotificationBell() {
       <button
         onClick={toggleOpen}
         className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
+        aria-label="Notifications"
       >
         <FiBell className="w-5 h-5 text-gray-600" />
         {unreadCount > 0 && (
