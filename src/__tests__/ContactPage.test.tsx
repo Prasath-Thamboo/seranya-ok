@@ -1,41 +1,61 @@
-import { render, fireEvent } from '@testing-library/react';
-import ContactPage from '@/app/contact/page';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import axios from 'axios';
+import ContactPage from '@/app/contact/ContactClient';
+import { NotificationProvider } from '@/components/notifications/NotificationProvider';
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+const renderContactPage = () =>
+  render(
+    <NotificationProvider>
+      <ContactPage />
+    </NotificationProvider>,
+  );
 
 describe('ContactPage', () => {
+  beforeEach(() => {
+    mockedAxios.post.mockReset();
+  });
+
   it('renders the contact form', () => {
-    const { getByLabelText, getByRole } = render(<ContactPage />);
-    
-    // Vérifier que les champs du formulaire sont bien présents
-    expect(getByLabelText(/Votre email/i)).toBeInTheDocument();
-    expect(getByLabelText(/Sujet/i)).toBeInTheDocument();
-    expect(getByLabelText(/Votre message/i)).toBeInTheDocument();
-    
-    // Vérifier que le bouton est présent
-    expect(getByRole('button', { name: /envoyer le message/i })).toBeInTheDocument();
+    renderContactPage();
+
+    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Sujet/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Message/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Envoyer/i })).toBeInTheDocument();
   });
 
-  it('submits the form with valid input', () => {
-    const { getByLabelText, getByRole } = render(<ContactPage />);
+  it('submits the form with valid input', async () => {
+    const user = userEvent.setup();
+    mockedAxios.post.mockResolvedValueOnce({ data: {} });
+    renderContactPage();
 
-    // Remplir les champs du formulaire
-    fireEvent.change(getByLabelText(/Votre email/i), { target: { value: 'test@example.com' } });
-    fireEvent.change(getByLabelText(/Sujet/i), { target: { value: 'Problème technique' } });
-    fireEvent.change(getByLabelText(/Votre message/i), { target: { value: 'Mon message de test' } });
+    await user.type(screen.getByLabelText(/Email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/Sujet/i), 'Problème technique');
+    await user.type(screen.getByLabelText(/Message/i), 'Mon message de test');
+    await user.click(screen.getByRole('button', { name: /Envoyer/i }));
 
-    // Simuler l'envoi du formulaire
-    fireEvent.click(getByRole('button', { name: /envoyer le message/i }));
-
-    // Vous pouvez ajouter des attentes supplémentaires pour voir ce qui se passe après la soumission
-    // Ex: vérifier que les données soumises sont loggées dans la console
+    await waitFor(() => expect(mockedAxios.post).toHaveBeenCalledTimes(1));
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      expect.stringContaining('/mailer/contact'),
+      expect.objectContaining({
+        email: 'test@example.com',
+        subject: 'Problème technique',
+        message: 'Mon message de test',
+      }),
+    );
   });
 
-  it('shows error message on empty fields', () => {
-    const { getByRole } = render(<ContactPage />);
+  it('shows a validation error and does not submit when fields are empty', async () => {
+    const user = userEvent.setup();
+    renderContactPage();
 
-    // Soumettre sans remplir le formulaire
-    fireEvent.click(getByRole('button', { name: /envoyer le message/i }));
+    await user.click(screen.getByRole('button', { name: /Envoyer/i }));
 
-    // Attendez que des messages d'erreur soient affichés
-    expect(getByRole('alert')).toBeInTheDocument();
+    expect(await screen.findAllByText('Requis')).not.toHaveLength(0);
+    expect(mockedAxios.post).not.toHaveBeenCalled();
   });
 });

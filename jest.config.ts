@@ -6,10 +6,12 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'], // Notez que ce fichier est un .js
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy', // Pour gérer les imports CSS
-    '^@/(.*)$': '<rootDir>/src/$1', // Pour les alias d'import
+    '^@/(.*)$': '<rootDir>/$1', // Pour les alias d'import (aligné sur tsconfig paths)
   },
   transform: {
-    '^.+\\.(ts|tsx|js|jsx)$': 'ts-jest', // Utiliser ts-jest pour les fichiers TypeScript et JSX
+    // jsx: 'react-jsx' surcharge le tsconfig ('preserve', requis par le compilateur Next.js)
+    // car ts-jest a besoin de JSX compilé en JS exécutable par Node.
+    '^.+\\.(ts|tsx|js|jsx)$': ['ts-jest', { tsconfig: { jsx: 'react-jsx' } }],
   },
   transformIgnorePatterns: ['/node_modules/'],
 };
