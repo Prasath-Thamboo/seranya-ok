@@ -162,9 +162,8 @@ export default function Home() {
         variants={stagger}
       >
         {sectionImages[0] && (
-          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="opacity-30 blur-sm scale-110" />
+          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/40 to-black/95 pointer-events-none" />
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
             L&apos;univers en chiffres
@@ -206,9 +205,8 @@ export default function Home() {
           variants={stagger}
         >
           {sectionImages[1] && (
-            <Image src={sectionImages[1]} alt="" fill style={{ objectFit: "cover" }} className="opacity-25 blur-sm scale-110" />
+            <Image src={sectionImages[1]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/40 to-black/95 pointer-events-none" />
           <div className="relative z-10 max-w-6xl mx-auto">
             <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
               Découverte
@@ -275,9 +273,8 @@ export default function Home() {
         variants={stagger}
       >
         {sectionImages[2] && (
-          <Image src={sectionImages[2]} alt="" fill style={{ objectFit: "cover" }} className="opacity-25 blur-sm scale-110" />
+          <Image src={sectionImages[2]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/40 to-black/95 pointer-events-none" />
         <div className="relative z-10 max-w-5xl mx-auto">
           <motion.p variants={fadeUp} className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
             Pourquoi Seranya
@@ -387,9 +384,9 @@ export default function Home() {
         variants={stagger}
       >
         {sectionImages[3] && (
-          <Image src={sectionImages[3]} alt="" fill style={{ objectFit: "cover" }} className="opacity-35 blur-sm scale-110" />
+          <Image src={sectionImages[3]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
 
         <div className="relative z-10 max-w-2xl mx-auto text-center">
           <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-iceberg uppercase text-white mb-6">

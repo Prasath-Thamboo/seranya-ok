@@ -8,7 +8,6 @@ import { Skeleton, Image as AntImage } from "antd";
 import Badge from "@/components/Badge";
 import CommentSection from "@/components/CommentSection";
 import Masonry from "react-masonry-css";
-import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from 'next/image'; // Importez Next.js Image si vous l'utilisez
 
@@ -89,9 +88,10 @@ const PostDetailPage = () => {
                     <Image
                       src={post.headerImage}
                       alt={`${post.title} Header Image`} // Ajustez selon vos besoins
-                      height={600} // Ajustez selon vos besoins
-                      layout="responsive"
-                      className="object-cover"
+                      width={768}
+                      height={600}
+                      sizes="(max-width: 1024px) 100vw, 40vw"
+                      className="w-full h-auto object-cover"
                     />
                     {/* Si vous préférez utiliser AntImage, utilisez ce code à la place :
                     <AntImage
