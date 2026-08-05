@@ -2,11 +2,10 @@
 
 "use client";
 
-import { ReactNode, useEffect, useState, useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Loader from "@/components/Loader";
 import { BackTop } from "antd"; // Importation de BackTop
 import { FaArrowUp } from "react-icons/fa"; // Importation de l'icône flèche vers le haut
 import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
@@ -21,24 +20,7 @@ export default function ClientLayout({
   disableFooter = false, // Default to false
 }: ClientLayoutProps) {
   const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(true);
   const { color } = useContext(ColorContext); // Consommer le contexte
-
-  // Supprimez les états liés aux images si non nécessaires
-  // const [footerImage, setFooterImage] = useState<string | undefined>(undefined);
-  // etc.
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Simulate a loading delay
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <Loader />; // Show the loader while the page is loading
-  }
 
   // Define paths where the footer should not be shown
   const excludedFooterPaths = [

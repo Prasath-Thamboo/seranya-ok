@@ -5,8 +5,8 @@ import Image from "next/image";
 import { CgLogIn } from "react-icons/cg";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/lib/queries/AuthQueries";
-import { useState } from "react";
+import { loginUser, getAccessToken } from "@/lib/queries/AuthQueries";
+import { useEffect, useState } from "react";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 
 
@@ -16,6 +16,12 @@ export default function LoginPage() {
   const { addNotification } = useNotification();
 
   const [form] = Form.useForm(); // Hook pour gérer le formulaire
+
+  useEffect(() => {
+    if (getAccessToken()) {
+      router.replace("/");
+    }
+  }, [router]);
 
   const onFinish = async (values: any) => {
     setLoading(true);
