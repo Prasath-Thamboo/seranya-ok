@@ -5,7 +5,7 @@ import Image from "next/image";
 import { CgLogIn } from "react-icons/cg";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loginUser, getAccessToken } from "@/lib/queries/AuthQueries";
+import { loginUser, getAccessToken, fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { useEffect, useState } from "react";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 
@@ -18,9 +18,14 @@ export default function LoginPage() {
   const [form] = Form.useForm(); // Hook pour gérer le formulaire
 
   useEffect(() => {
-    if (getAccessToken()) {
-      router.replace("/");
-    }
+    if (!getAccessToken()) return;
+
+    fetchCurrentUser()
+      .then(() => router.replace("/"))
+      .catch(() => {
+        // Token présent mais invalide/expiré : on reste sur /login
+        // (fetchCurrentUser a déjà nettoyé le token invalide du localStorage)
+      });
   }, [router]);
 
   const onFinish = async (values: any) => {

@@ -132,6 +132,9 @@ export const fetchCurrentUser = async (): Promise<RegisterUserModel> => {
     const user = response.data;
     return user;
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      localStorage.removeItem('access_token');
+    }
     console.error("Error fetching user data:", error);
     throw error;
   }
