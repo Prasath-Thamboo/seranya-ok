@@ -1,7 +1,7 @@
 "use client";
 
 import { useNotification } from '@/components/notifications/NotificationProvider';
-import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
+import { fetchCurrentUser, getAccessToken } from "@/lib/queries/AuthQueries";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -77,8 +77,10 @@ export const Pricing = () => {
     try {
       const response = await fetch(`${BASE_URL}/payment/create-subscription`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       });
       const data = await response.json();
       if (data.sessionUrl) {
