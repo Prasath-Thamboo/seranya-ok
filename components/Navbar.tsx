@@ -161,7 +161,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex-shrink-0 p-1">
           <Link href="/">
-            <div className="hidden md:block">
+            <div className={isLoggedIn ? "hidden md:block" : "hidden min-[1074px]:block"}>
               <Image
                 src="/logos/seranyaicon.png" // Utiliser le chemin correct vers votre logo
                 alt="Logo Seranya"
@@ -170,7 +170,7 @@ export default function Navbar() {
                 className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
               />
             </div>
-            <div className="block md:hidden">
+            <div className={isLoggedIn ? "block md:hidden" : "block min-[1074px]:hidden"}>
               <Image
                 src="/logos/seranyaicon.png" // Assurez-vous que ce chemin est correct
                 alt="Logo Seranya"
@@ -183,7 +183,7 @@ export default function Navbar() {
         </div>
 
         {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
-        <div className="hidden md:flex space-x-6 items-center">
+        <div className={isLoggedIn ? "hidden md:flex space-x-6 items-center" : "hidden min-[1074px]:flex space-x-6 items-center"}>
           {/* Accueil */}
           <Link href="/" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
             <span className="shadow-text">Accueil</span>
@@ -219,7 +219,7 @@ export default function Navbar() {
         </div>
 
         {/* Menu utilisateur pour grand écran */}
-        <div ref={userMenuRef} className="hidden md:flex items-center space-x-3">
+        <div ref={userMenuRef} className={isLoggedIn ? "hidden md:flex items-center space-x-3" : "hidden min-[1074px]:flex items-center space-x-3"}>
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer group">
@@ -273,7 +273,7 @@ export default function Navbar() {
         </div>
 
         {/* Menu hamburger pour mobile */}
-        <div className="md:hidden z-50">
+        <div className={isLoggedIn ? "md:hidden z-50" : "min-[1074px]:hidden z-50"}>
           <button
             className="text-white focus:outline-none hover:text-green-500 transition-all"
             onClick={() => setIsMenuOpen(!isMenuOpen)}

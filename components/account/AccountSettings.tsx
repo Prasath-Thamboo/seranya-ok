@@ -4,11 +4,13 @@ import React, { useEffect, useState, useRef, useCallback, useId } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { fetchCurrentUser, generateResetToken, deleteUserAccount, getAccessToken } from '@/lib/queries/AuthQueries';
+import { fetchSubscriptionInfo, cancelSubscription as cancelSubscriptionRequest, SubscriptionInfo } from '@/lib/queries/PaymentQueries';
 import { RegisterUserModel, UserRole } from '@/lib/models/AuthModels';
 import { useNotification } from '@/components/notifications/NotificationProvider';
 import {
   FiCamera, FiMail, FiShield, FiCalendar,
   FiUser, FiEdit3, FiCheck, FiX, FiAtSign, FiLock, FiSend, FiAlertTriangle, FiTrash2,
+  FiCreditCard, FiXCircle,
 } from 'react-icons/fi';
 
 const backendUrl =
@@ -61,6 +63,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
   const [passwordSent, setPasswordSent] = useState(false);
   const [deleteConfirming, setDeleteConfirming] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [subscription, setSubscription]           = useState<SubscriptionInfo | null>(null);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
+  const [cancelConfirming, setCancelConfirming]    = useState(false);
+  const [cancelLoading, setCancelLoading]          = useState(false);
   const fileInputRef                    = useRef<HTMLInputElement>(null);
   const debounceRef                     = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router                          = useRouter();
@@ -71,6 +77,13 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       .then((u) => {
         setUser(u);
         setEditValues({ name: u.name || '', lastName: u.lastName || '', pseudo: u.pseudo || '' });
+        if (u.role === UserRole.EDITOR) {
+          setSubscriptionLoading(true);
+          fetchSubscriptionInfo()
+            .then(setSubscription)
+            .catch(() => setSubscription(null))
+            .finally(() => setSubscriptionLoading(false));
+        }
       })
       .catch(() => router.push('/auth/login'));
   }, [router]);
@@ -227,6 +240,24 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       const msg = err?.response?.data?.message || 'Erreur lors de la suppression du compte.';
       addNotification('critical', msg);
       setDeleteLoading(false);
+    }
+  };
+
+  /* Résiliation de l'abonnement premium (immédiate) */
+  const handleCancelSubscription = async () => {
+    setCancelLoading(true);
+    try {
+      await cancelSubscriptionRequest();
+      const updated = await fetchCurrentUser();
+      setUser(updated);
+      setSubscription(null);
+      setCancelConfirming(false);
+      addNotification('success', 'Votre abonnement a été résilié.');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || "Erreur lors de la résiliation de l'abonnement.";
+      addNotification('critical', msg);
+    } finally {
+      setCancelLoading(false);
     }
   };
 
@@ -502,6 +533,90 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   : "Un email contenant un lien de réinitialisation vous sera envoyé à l'adresse actuelle."}
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Gestion de l'abonnement : réservée aux éditeurs (statut obtenu via l'abonnement premium) */}
+        {activeTab === 'edit' && user.role === UserRole.EDITOR && (
+          <div className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-5 space-y-4">
+            <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500 flex items-center gap-2">
+              <FiCreditCard className="w-3.5 h-3.5 text-green-400" />
+              Gestion de l&apos;abonnement
+            </p>
+
+            {subscriptionLoading ? (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
+                Chargement des informations d&apos;abonnement…
+              </div>
+            ) : subscription?.subscribed ? (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <InfoRow
+                    icon={<FiShield />}
+                    label="Statut"
+                    value={subscription.status === 'active' ? 'Actif' : subscription.status || '—'}
+                  />
+                  {subscription.amount != null && subscription.currency && (
+                    <InfoRow
+                      icon={<FiCreditCard />}
+                      label="Tarif"
+                      value={`${(subscription.amount / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 })} ${subscription.currency.toUpperCase()} / ${subscription.interval === 'month' ? 'mois' : subscription.interval}`}
+                    />
+                  )}
+                  {subscription.currentPeriodEnd && (
+                    <InfoRow
+                      icon={<FiCalendar />}
+                      label="Prochain renouvellement"
+                      value={new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    />
+                  )}
+                </div>
+
+                <div className="pt-2 border-t border-gray-800">
+                  {!cancelConfirming ? (
+                    <button
+                      type="button"
+                      onClick={() => setCancelConfirming(true)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-gray-300 text-xs font-iceberg uppercase tracking-widest hover:border-red-500/50 hover:text-red-400 transition-colors"
+                    >
+                      <FiXCircle className="w-3.5 h-3.5" />
+                      Résilier l&apos;abonnement
+                    </button>
+                  ) : (
+                    <div className="border border-red-900/50 rounded-lg p-4 space-y-3 bg-red-950/10">
+                      <p className="text-sm text-red-300">
+                        Ton abonnement sera résilié immédiatement et tu perdras le statut éditeur
+                        ainsi que l&apos;accès au contenu premium. Cette action est irréversible.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={handleCancelSubscription}
+                          disabled={cancelLoading}
+                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-iceberg uppercase tracking-widest hover:bg-red-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {cancelLoading
+                            ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            : <FiXCircle className="w-3.5 h-3.5" />}
+                          Confirmer la résiliation
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCancelConfirming(false)}
+                          disabled={cancelLoading}
+                          className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-xs font-iceberg uppercase tracking-widest hover:text-gray-200 transition-colors"
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <p className="text-xs text-gray-500">Aucun abonnement actif trouvé.</p>
+            )}
           </div>
         )}
 

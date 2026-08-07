@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FaUsers, FaComments, FaVideo, FaBookOpen, FaNewspaper, FaSearch } from 'react-icons/fa';
 import { Menu } from 'antd';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { getAccessToken, fetchCurrentUser, logoutUser } from "@/lib/queries/AuthQueries";
 import Badge from "@/components/Badge";
 import CustomModal from "@/components/CustomModal";
@@ -12,16 +13,23 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { AiFillHome } from 'react-icons/ai';
 
+const MOBILE_BREAKPOINT = 770;
+
+type MenuEntry =
+  | { key: string; label: string; path: string; icon: React.ReactNode; visible: boolean; divider?: false }
+  | { key: string; divider: true; visible: boolean };
+
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [user, setUser] = useState<RegisterUserModel | null>(null);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Basculer vers mobile-friendly sidebar
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -41,6 +49,11 @@ export default function Sidebar() {
         .catch(() => setUser(null));
     }
   }, []);
+
+  // Referme le menu mobile si l'écran repasse en desktop/tablette large
+  useEffect(() => {
+    if (!isMobile) setMobileMenuOpen(false);
+  }, [isMobile]);
 
   const handleLogout = async () => {
     try {
@@ -67,29 +80,175 @@ export default function Sidebar() {
     router.push('/');
   };
 
+  const menuItems: MenuEntry[] = [
+    {
+      key: 'dashboard',
+      label: 'Tableau de bord',
+      path: '/admin',
+      icon: <AiFillHome className="w-5 h-5" />,
+      visible: user?.role === UserRole.ADMIN,
+    },
+    {
+      key: 'users',
+      label: 'Utilisateurs',
+      path: '/admin/users',
+      icon: <FaUsers className="w-5 h-5" />,
+      visible: user?.role === UserRole.ADMIN,
+    },
+    { key: 'divider-1', divider: true, visible: user?.role === UserRole.ADMIN },
+    {
+      key: 'posts',
+      label: 'Articles',
+      path: '/admin/posts',
+      icon: <FaNewspaper className="w-5 h-5" />,
+      visible: true,
+    },
+    {
+      key: 'tutoriels',
+      label: 'Tutoriels',
+      path: '/admin/tutoriels',
+      icon: <FaVideo className="w-5 h-5" />,
+      visible: true,
+    },
+    {
+      key: 'encyclopedie',
+      label: 'Encyclopédie',
+      path: '/admin/encyclopedie',
+      icon: <FaBookOpen className="w-5 h-5" />,
+      visible: true,
+    },
+    {
+      key: 'chat',
+      label: 'Discussions',
+      path: '/admin/discussions',
+      icon: <FaComments className="w-5 h-5" />,
+      visible: user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR,
+    },
+    { key: 'divider-2', divider: true, visible: user?.role === UserRole.ADMIN },
+    {
+      key: 'search',
+      label: 'Recherche',
+      path: '/admin/search',
+      icon: <FaSearch className="w-5 h-5" />,
+      visible: user?.role === UserRole.ADMIN,
+    },
+  ];
+
+  const visibleItems = menuItems.filter((item) => item.visible);
+
   if (isMobile) {
     return (
-      <nav className="fixed bottom-0 left-0 w-full h-20 bg-black text-white flex items-center justify-between z-50 shadow-lg px-4">
-        <div className="flex items-center space-x-6">
-          {user?.role === UserRole.ADMIN && (
-            <FaUsers className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/users')} />
-          )}
-          <FaNewspaper className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/posts')} />
-          <FaVideo className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/tutoriels')} />
-        </div>
-        <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md cursor-pointer border-2 border-white bg-black" onClick={() => router.push('/')}>
-          <Image src="/logos/seranyaicon.png" alt="Home" width={40} height={40} className="rounded-full" />
-        </div>
-        <div className="flex items-center space-x-6">
-          <FaBookOpen className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/encyclopedie')} />
-          {(user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR) && (
-            <FaComments className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/discussions')} />
-          )}
-          {user?.role === UserRole.ADMIN && (
-            <FaSearch className="w-6 h-6 cursor-pointer hover:text-green-400 transition-colors duration-200" onClick={() => router.push('/admin/search')} />
-          )}
-        </div>
-      </nav>
+      <>
+        {/* Overlay */}
+        {mobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Bouton hamburger flottant */}
+        <button
+          className="fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full bg-black text-white flex items-center justify-center shadow-lg border-2 border-white transition-transform duration-200 active:scale-95"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+        >
+          {mobileMenuOpen ? <AiOutlineClose className="w-6 h-6" /> : <AiOutlineMenu className="w-6 h-6" />}
+        </button>
+
+        {/* Panneau du menu (reprend le menu desktop, en plus compact) */}
+        <nav
+          className={`fixed bottom-0 left-0 w-full max-h-[75vh] overflow-y-auto bg-gray-950 text-white z-50 rounded-t-2xl shadow-2xl border-t border-gray-800 transition-transform duration-300 ease-in-out ${
+            mobileMenuOpen ? 'translate-y-0' : 'translate-y-full'
+          }`}
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+            <Image
+              src="/logos/seranyaicon.png"
+              alt="Seranya Logo"
+              width={100}
+              height={32}
+              onClick={() => {
+                handleLogoClick();
+                setMobileMenuOpen(false);
+              }}
+              className="cursor-pointer"
+            />
+            <button
+              className="p-2 text-gray-300 hover:text-white transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Fermer le menu"
+            >
+              <AiOutlineClose className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="py-2">
+            {visibleItems.map((item) =>
+              item.divider ? (
+                <div key={item.key} className="h-px bg-gray-800 my-2 mx-4" />
+              ) : (
+                <button
+                  key={item.key}
+                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-iceberg uppercase text-gray-200 hover:bg-gray-900 hover:text-green-400 transition-colors"
+                  onClick={() => {
+                    router.push(item.path);
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  <span className="flex items-center justify-center [&>svg]:w-4 [&>svg]:h-4">
+                    {item.icon}
+                  </span>
+                  {item.label}
+                </button>
+              )
+            )}
+          </div>
+
+          <div className="border-t border-gray-800 px-4 py-3 flex items-center justify-between">
+            <div
+              className="flex items-center gap-2 cursor-pointer min-w-0"
+              onClick={() => {
+                handleProfileClick();
+                setMobileMenuOpen(false);
+              }}
+            >
+              <Image
+                src={typeof user?.profileImage === 'string' ? user.profileImage : '/images/backgrounds/placeholder.jpg'}
+                alt="User Avatar"
+                width={28}
+                height={28}
+                className="rounded-full object-cover ring-2 ring-gray-700 flex-shrink-0"
+              />
+              <span className="text-xs font-iceberg font-semibold text-white truncate">{user?.pseudo}</span>
+            </div>
+            <button
+              className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-400 font-kanit transition-colors flex-shrink-0"
+              onClick={() => {
+                showLogoutModal();
+                setMobileMenuOpen(false);
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 13v-2H7.414l2.293-2.293-1.414-1.414L3.586 12l4.707 4.707 1.414-1.414L7.414 13H16z" />
+                <path d="M20 3h-6v2h6v14h-6v2h6a2 2 0 002-2V5a2 2 0 00-2-2z" />
+              </svg>
+              Déconnexion
+            </button>
+          </div>
+        </nav>
+
+        <CustomModal
+          visible={isLogoutModalVisible}
+          onCancel={hideLogoutModal}
+          onConfirm={handleLogout}
+          title="Déconnexion"
+          subtitle="Êtes-vous sûr de vouloir vous déconnecter ?"
+          confirmText="Déconnexion"
+          cancelText="Annuler"
+          iconType="warning"
+        />
+      </>
     );
   }
 
@@ -97,7 +256,7 @@ export default function Sidebar() {
     <aside
       className={`relative z-20 flex flex-col h-full text-white bg-gray-950 border-r border-gray-800 shadow-xl transition-all duration-300 ${
         collapsed ? 'w-[4.5rem]' : 'w-72'
-      } ${isMobile ? 'hidden' : 'block'}`}
+      }`}
     >
       {/* Bouton de repli */}
       <button
@@ -133,84 +292,19 @@ export default function Sidebar() {
         className="font-iceberg"
         style={{ background: 'transparent', borderRight: 'none' }}
       >
-        {/* Groupe 1 — Administration */}
-        {user?.role === UserRole.ADMIN && (
-          <Menu.Item
-            key="dashboard"
-            icon={<AiFillHome className="w-5 h-5" />}
-            className="menu-item"
-            onClick={() => router.push('/admin')}
-          >
-            {!collapsed && <span className="uppercase">Tableau de bord</span>}
-          </Menu.Item>
-        )}
-
-        {user?.role === UserRole.ADMIN && (
-          <Menu.Item
-            key="users"
-            icon={<FaUsers className="w-5 h-5" />}
-            className="menu-item"
-            onClick={() => router.push('/admin/users')}
-          >
-            {!collapsed && <span className="uppercase">Utilisateurs</span>}
-          </Menu.Item>
-        )}
-
-        {/* Séparateur */}
-        <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
-
-        {/* Groupe 2 — Contenu */}
-        <Menu.Item
-          key="posts"
-          icon={<FaNewspaper className="w-5 h-5" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/posts')}
-        >
-          {!collapsed && <span className="uppercase">Articles</span>}
-        </Menu.Item>
-
-        <Menu.Item
-          key="tutoriels"
-          icon={<FaVideo className="w-5 h-5" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/tutoriels')}
-        >
-          {!collapsed && <span className="uppercase">Tutoriels</span>}
-        </Menu.Item>
-
-        <Menu.Item
-          key="encyclopedie"
-          icon={<FaBookOpen className="w-5 h-5" />}
-          className="menu-item"
-          onClick={() => router.push('/admin/encyclopedie')}
-        >
-          {!collapsed && <span className="uppercase">Encyclopédie</span>}
-        </Menu.Item>
-
-        {(user?.role === UserRole.ADMIN || user?.role === UserRole.EDITOR) && (
-          <Menu.Item
-            key="chat"
-            icon={<FaComments className="w-5 h-5" />}
-            className="menu-item"
-            onClick={() => router.push('/admin/discussions')}
-          >
-            {!collapsed && <span className="uppercase">Discussions</span>}
-          </Menu.Item>
-        )}
-
-        {/* Recherche (admin uniquement) */}
-        {user?.role === UserRole.ADMIN && (
-          <>
-            <Menu.Divider style={{ borderColor: '#374151', margin: '8px 16px' }} />
+        {visibleItems.map((item) =>
+          item.divider ? (
+            <Menu.Divider key={item.key} style={{ borderColor: '#374151', margin: '8px 16px' }} />
+          ) : (
             <Menu.Item
-              key="search"
-              icon={<FaSearch className="w-5 h-5" />}
+              key={item.key}
+              icon={item.icon}
               className="menu-item"
-              onClick={() => router.push('/admin/search')}
+              onClick={() => router.push(item.path)}
             >
-              {!collapsed && <span className="uppercase">Recherche</span>}
+              {!collapsed && <span className="uppercase">{item.label}</span>}
             </Menu.Item>
-          </>
+          )
         )}
       </Menu>
       </div>
