@@ -71,6 +71,7 @@ export const updateUser = async (
   if (data.pseudo) formData.append('pseudo', data.pseudo);
   if (data.password) formData.append('password', data.password);
   if (data.role) formData.append('role', data.role);
+  if (data.isSubscribed !== undefined) formData.append('isSubscribed', String(data.isSubscribed));
 
   if (data.profileImage) formData.append('profileImage', data.profileImage as File);
 

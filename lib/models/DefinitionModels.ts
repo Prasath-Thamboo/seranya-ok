@@ -4,6 +4,7 @@ export interface DefinitionModel {
   definition: string;
   category?: string;
   isPublished: boolean;
+  publishedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }

@@ -10,16 +10,28 @@ const BASE_URL =
 
 console.log('BASE_URL:', BASE_URL);
 
+// Ajoute le token (s'il existe) pour que les EDITOR/ADMIN connectés voient
+// aussi leur contenu programmé/brouillon sur les pages publiques.
+const authHeaders = (): Record<string, string> => {
+  if (typeof window === 'undefined') return {};
+  const token = localStorage.getItem('access_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 // Fonction pour récupérer tous les posts
 export const fetchPosts = async (): Promise<PostModel[]> => {
   console.log('fetchPosts called');
-  const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`);
+  const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`, {
+    headers: authHeaders(),
+  });
   return response.data;
 };
 
 // Fonction pour récupérer un post par ID
 export const fetchPostById = async (id: number): Promise<PostModel> => {
-  const response = await axios.get<PostModel>(`${BASE_URL}/posts/${id}`);
+  const response = await axios.get<PostModel>(`${BASE_URL}/posts/${id}`, {
+    headers: authHeaders(),
+  });
   return response.data;
 };
 
@@ -32,6 +44,7 @@ export const createPost = async (data: CreatePostModel, token: string): Promise<
   if (data.subtitle) formData.append('subtitle', data.subtitle);
   if (data.content) formData.append('content', data.content);
   if (data.isPublished !== undefined) formData.append('isPublished', String(data.isPublished));
+  if (data.publishedAt) formData.append('publishedAt', data.publishedAt);
   formData.append('type', data.type);
 
   if (data.profileImage && typeof data.profileImage !== 'string') {
@@ -84,6 +97,7 @@ export const updatePost = async (
   if (data.subtitle) formData.append('subtitle', data.subtitle);
   if (data.content) formData.append('content', data.content);
   if (data.isPublished !== undefined) formData.append('isPublished', String(data.isPublished));
+  if (data.publishedAt) formData.append('publishedAt', data.publishedAt);
   if (data.type) formData.append('type', data.type);
 
   // Ajout des fichiers uploadés pour la mise à jour

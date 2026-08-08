@@ -19,6 +19,7 @@ export interface UserModel {
   status: string;
   pseudo: string;
   role: UserRole;
+  isSubscribed?: boolean;
   createdAt: Date;
   updatedAt: Date;
   profileImage?: string;
@@ -49,5 +50,6 @@ export interface UpdateUserModel {
   pseudo?: string;
   password?: string;
   role?: UserRole;
+  isSubscribed?: boolean;
   profileImage?: FileType;
 }

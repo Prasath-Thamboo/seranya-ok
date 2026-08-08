@@ -7,7 +7,10 @@ const BASE_URL =
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
 export const fetchPublishedTutorials = async (): Promise<TutorialModel[]> => {
-  const response = await axios.get<TutorialModel[]>(`${BASE_URL}/tutorials/published`);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  const response = await axios.get<TutorialModel[]>(`${BASE_URL}/tutorials/published`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
   return response.data;
 };
 

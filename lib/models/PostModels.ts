@@ -48,6 +48,7 @@ export interface PostModel {
   subtitle?: string;
   content?: string;
   isPublished: boolean;
+  publishedAt?: string | null;
   color?: string;
   type: PostType;
   createdAt: Date;
@@ -71,6 +72,7 @@ export interface CreatePostModel {
   content?: string;
   color?: string;
   isPublished?: boolean;
+  publishedAt?: string | null;
   type: PostType;
   profileImage?: File | null;
   headerImage?: File | null;
@@ -88,6 +90,7 @@ export interface UpdatePostModel {
   content?: string;
   color?: string;
   isPublished?: boolean;
+  publishedAt?: string | null;
   type?: PostType;
   profileImage?: File | null;
   headerImage?: File | null;

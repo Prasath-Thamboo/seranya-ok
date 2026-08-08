@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, Input, Button, Switch } from 'antd';
+import { Form, Input, Button, Switch, DatePicker } from 'antd';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,7 @@ const CreateTutoriel = () => {
         description: values.description,
         videoUrl: values.videoUrl,
         isPublished: values.isPublished ?? false,
+        publishedAt: values.publishedAt ? values.publishedAt.toISOString() : undefined,
       });
       addNotification('success', 'Tutoriel créé avec succès!');
       router.push('/admin/tutoriels');
@@ -77,6 +78,13 @@ const CreateTutoriel = () => {
             valuePropName="checked"
           >
             <Switch />
+          </Form.Item>
+
+          <Form.Item
+            name="publishedAt"
+            label={<span className="font-kanit text-black">Date de publication (laisser vide pour publier immédiatement)</span>}
+          >
+            <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item className="flex justify-center mt-6">

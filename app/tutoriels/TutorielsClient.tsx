@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { TutorialModel } from '@/lib/models/TutorialModels';
 import { fetchPublishedTutorials } from '@/lib/queries/TutorialQueries';
+import { fetchCurrentUser, getAccessToken } from '@/lib/queries/AuthQueries';
 import HeroSection from '@/components/HeroSection';
+import SubscriptionLock from '@/components/SubscriptionLock';
 import { fetchRandomBackground } from '@/lib/queries/RandomBackgroundQuery';
 
 const getYouTubeEmbedUrl = (url: string): string => {
@@ -17,6 +19,7 @@ const TutorielsPage: React.FC = () => {
   const [tutorials, setTutorials] = useState<TutorialModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState('');
+  const [hasFullAccess, setHasFullAccess] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -34,6 +37,14 @@ const TutorielsPage: React.FC = () => {
       }
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    if (!getAccessToken()) return;
+    // Un simple USER (non abonné) n'a accès qu'à l'aperçu — EDITOR/ADMIN et abonnés voient la vidéo.
+    fetchCurrentUser()
+      .then((user: any) => setHasFullAccess(user?.role === 'ADMIN' || user?.role === 'EDITOR' || !!user?.isSubscribed))
+      .catch(() => {});
   }, []);
 
   if (loading) {
@@ -85,13 +96,17 @@ const TutorielsPage: React.FC = () => {
                   className="bg-black/60 rounded-xl overflow-hidden shadow-lg border border-gray-700 flex flex-col"
                 >
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      className="absolute inset-0 w-full h-full"
-                      src={getYouTubeEmbedUrl(tutorial.videoUrl)}
-                      title={tutorial.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
+                    {hasFullAccess ? (
+                      <iframe
+                        className="absolute inset-0 w-full h-full"
+                        src={getYouTubeEmbedUrl(tutorial.videoUrl)}
+                        title={tutorial.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <SubscriptionLock message="Vidéo réservée aux abonnés" className="rounded-none" />
+                    )}
                   </div>
                   <div className="p-5 flex flex-col flex-grow">
                     <h3 className="text-xl font-bold text-white font-iceberg uppercase mb-2">

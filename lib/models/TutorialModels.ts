@@ -4,6 +4,7 @@ export interface TutorialModel {
   description?: string;
   videoUrl: string;
   isPublished: boolean;
+  publishedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }

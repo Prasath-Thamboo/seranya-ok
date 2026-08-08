@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from 'antd';
 import { FaUsers, FaNewspaper, FaPlay, FaBookOpen } from 'react-icons/fa';
 import { fetchPosts } from '@/lib/queries/PostQueries';
@@ -22,12 +23,13 @@ interface LighthouseMetrics {
 }
 
 const CONTENT_COLORS = ['#3b82f6', '#f59e0b', '#8b5cf6'];
-const USER_COLORS = ['#87CEFA', '#FFD700'];
+const USER_COLORS = ['#60a5fa', '#14b8a6', '#818cf8']; // Utilisateur (blue-400), Éditeur (teal-500), Admin (indigo-400) — cohérent avec Badge.tsx
 const PERF_COLORS = ['#3b82f6', '#e5e7eb'];
 const ACCESS_COLORS = ['#22c55e', '#e5e7eb'];
 const SEO_COLORS = ['#f59e0b', '#e5e7eb'];
 
 function DashboardHome() {
+  const router = useRouter();
   const [totalPosts, setTotalPosts] = useState<number | null>(null);
   const [totalTutorials, setTotalTutorials] = useState<number | null>(null);
   const [totalDefinitions, setTotalDefinitions] = useState<number | null>(null);
@@ -70,14 +72,16 @@ function DashboardHome() {
           const userCounts = fetchedUsers.reduce(
             (acc, user) => {
               if (user.role === 'ADMIN') acc.admins += 1;
+              else if (user.role === 'EDITOR') acc.editors += 1;
               else acc.users += 1;
               return acc;
             },
-            { users: 0, admins: 0 }
+            { users: 0, editors: 0, admins: 0 }
           );
 
           setUserDistribution([
             { name: 'Utilisateur', value: userCounts.users },
+            { name: 'Éditeur', value: userCounts.editors },
             { name: 'Admin', value: userCounts.admins },
           ]);
         }
@@ -130,7 +134,11 @@ function DashboardHome() {
       <DividersWithHeading text="Contenu" styleVariant="admin" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 justify-center items-center mb-12">
 
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48" hoverable>
+        <Card
+          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          hoverable
+          onClick={() => router.push('/admin/posts')}
+        >
           <div className="flex justify-between items-center h-full">
             {totalPosts !== null ? (
               <div>
@@ -144,7 +152,11 @@ function DashboardHome() {
           </div>
         </Card>
 
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48" hoverable>
+        <Card
+          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          hoverable
+          onClick={() => router.push('/admin/tutoriels')}
+        >
           <div className="flex justify-between items-center h-full">
             {totalTutorials !== null ? (
               <div>
@@ -158,7 +170,11 @@ function DashboardHome() {
           </div>
         </Card>
 
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48" hoverable>
+        <Card
+          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          hoverable
+          onClick={() => router.push('/admin/encyclopedie')}
+        >
           <div className="flex justify-between items-center h-full">
             {totalDefinitions !== null ? (
               <div>
@@ -172,7 +188,11 @@ function DashboardHome() {
           </div>
         </Card>
 
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48" hoverable>
+        <Card
+          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          hoverable
+          onClick={() => router.push('/admin/users')}
+        >
           <div className="flex justify-between items-center h-full">
             {totalUsers !== null ? (
               <div>

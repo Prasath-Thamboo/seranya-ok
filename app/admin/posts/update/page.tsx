@@ -1,10 +1,11 @@
 "use client";
 
-import { Form, Input, Button, Select, Image, Row, Col, Card, Upload } from "antd";
+import { Form, Input, Button, Select, Image, Row, Col, Card, Upload, Switch, DatePicker } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import { PostModel, PostType, UpdatePostModel, ClassModel } from "@/lib/models/PostModels";
 import { fetchPostById } from "@/lib/queries/PostQueries";
@@ -60,6 +61,10 @@ const UpdatePost = () => {
               type: data.type || PostType.SCIENCE,
               classIds: data.postClasses?.map((c) => c.classId.toString()) || [],
               color: data.color || '#FFFFFF',
+              isPublished: data.isPublished,
+              // publishedAt is bound to a DatePicker at runtime (expects Dayjs), while
+              // UpdatePostModel types it as string for the outgoing FormData payload.
+              publishedAt: (data.publishedAt ? dayjs(data.publishedAt) : undefined) as unknown as string | undefined,
               // Note : Les fichiers ne peuvent pas être pré-remplis dans les inputs de type file pour des raisons de sécurité
             });
           }
@@ -98,6 +103,9 @@ const UpdatePost = () => {
       formData.append('subtitle', values.subtitle || '');
       formData.append('content', contentValue);
       formData.append('color', values.color || '#FFFFFF');
+      formData.append('isPublished', String(values.isPublished ?? false));
+      const publishedAtValue = values.publishedAt as unknown as { toISOString: () => string } | undefined;
+      if (publishedAtValue) formData.append('publishedAt', publishedAtValue.toISOString());
       formData.append('type', values.type || PostType.SCIENCE);
 
       if (selectedClassIds.length > 0) {
@@ -244,6 +252,21 @@ const UpdatePost = () => {
               <Option value={PostType.UNIVERS}>Univers</Option>
               <Option value={PostType.REGION}>Région</Option>
             </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="isPublished"
+            label={<span className="text-black font-kanit">Publier</span>}
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+
+          <Form.Item
+            name="publishedAt"
+            label={<span className="text-black font-kanit">Date de publication (laisser vide pour publier immédiatement)</span>}
+          >
+            <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item

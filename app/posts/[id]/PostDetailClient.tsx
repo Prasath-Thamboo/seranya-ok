@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { fetchPostById, fetchPosts } from "@/lib/queries/PostQueries";
+import { fetchCurrentUser, getAccessToken } from "@/lib/queries/AuthQueries";
 import { PostModel } from "@/lib/models/PostModels";
 import { Skeleton, Image as AntImage } from "antd";
 import Badge from "@/components/Badge";
 import CommentSection from "@/components/CommentSection";
+import SubscriptionLock from "@/components/SubscriptionLock";
 import Masonry from "react-masonry-css";
 import Link from "next/link";
 import Image from 'next/image'; // Importez Next.js Image si vous l'utilisez
@@ -19,6 +21,27 @@ const PostDetailPage = () => {
   const [relatedPosts, setRelatedPosts] = useState<PostModel[]>([]);
   const [loadingPost, setLoadingPost] = useState<boolean>(true);
   const [loadingRelatedPosts, setLoadingRelatedPosts] = useState<boolean>(true);
+  const [notFound, setNotFound] = useState<boolean>(false);
+  const [isPrivileged, setIsPrivileged] = useState<boolean>(false);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+  const [loadingUser, setLoadingUser] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!getAccessToken()) {
+      setLoadingUser(false);
+      return;
+    }
+    fetchCurrentUser()
+      .then((user: any) => {
+        setIsPrivileged(user?.role === "ADMIN" || user?.role === "EDITOR");
+        setIsSubscribed(!!user?.isSubscribed);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingUser(false));
+  }, []);
+
+  // Un simple USER (non abonné) n'a accès qu'à l'aperçu — EDITOR/ADMIN et abonnés voient tout.
+  const hasFullAccess = isPrivileged || isSubscribed;
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -28,6 +51,7 @@ const PostDetailPage = () => {
           setPost(fetchedPost);
         } catch (error) {
           console.error("Error fetching post:", error);
+          setNotFound(true);
         } finally {
           setLoadingPost(false);
         }
@@ -56,6 +80,17 @@ const PostDetailPage = () => {
 
     fetchRelatedPosts();
   }, [post]);
+
+  if (!loadingPost && notFound) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-white font-iceberg text-center px-4">
+        <p className="text-2xl mb-4">Contenu non disponible.</p>
+        <Link href="/posts" className="text-teal-400 hover:text-teal-300 underline">
+          Retour aux posts
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full min-h-screen text-white font-iceberg">
@@ -144,8 +179,11 @@ const PostDetailPage = () => {
                   <h1 className="text-2xl sm:text-4xl md:text-5xl font-iceberg uppercase text-white drop-shadow-lg">
                     {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
                   </h1>
-                  <div className="flex justify-center lg:justify-start mt-2">
+                  <div className="flex justify-center lg:justify-start mt-2 gap-2">
                     <Badge role={post?.type || "DEFAULT"} />
+                    {isPrivileged && post?.publishedAt && new Date(post.publishedAt) > new Date() && (
+                      <Badge type={`Publication prévue le ${new Date(post.publishedAt).toLocaleDateString("fr-FR")}`} />
+                    )}
                   </div>
                   {post?.subtitle && (
                     <p className="mt-4 text-xl sm:text-2xl md:text-3xl font-iceberg text-gray-300 drop-shadow-lg">
@@ -154,10 +192,21 @@ const PostDetailPage = () => {
                   )}
                 </div>
                 {/* Contenu du post */}
-                <div
-                  className="prose prose-lg sm:prose-xl md:prose-2xl text-gray-300"
-                  dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
-                />
+                {loadingUser ? (
+                  <Skeleton active paragraph={{ rows: 5 }} />
+                ) : hasFullAccess ? (
+                  <div
+                    className="prose prose-lg sm:prose-xl md:prose-2xl text-gray-300"
+                    dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
+                  />
+                ) : (
+                  <div className="relative min-h-[300px]">
+                    {post?.intro && (
+                      <p className="text-gray-300 blur-[2px] select-none">{post.intro}</p>
+                    )}
+                    <SubscriptionLock message="L'article complet est réservé aux abonnés" />
+                  </div>
+                )}
                   {/* Gallery Section */}
             {post?.gallery && post.gallery.length > 0 && (
               <div className="mt-12">

@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, Input, Button, Switch, Select } from 'antd';
+import { Form, Input, Button, Switch, Select, DatePicker } from 'antd';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,6 +24,7 @@ const CreateDefinition = () => {
         definition: values.definition,
         category: values.category,
         isPublished: values.isPublished ?? false,
+        publishedAt: values.publishedAt ? values.publishedAt.toISOString() : undefined,
       });
       addNotification('success', 'Définition créée avec succès!');
       router.push('/admin/encyclopedie');
@@ -82,6 +83,13 @@ const CreateDefinition = () => {
             valuePropName="checked"
           >
             <Switch />
+          </Form.Item>
+
+          <Form.Item
+            name="publishedAt"
+            label={<span className="font-kanit text-black">Date de publication (laisser vide pour publier immédiatement)</span>}
+          >
+            <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item className="flex justify-center mt-6">

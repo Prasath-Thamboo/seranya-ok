@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button, Upload, Select } from "antd";
+import { Form, Input, Button, Upload, Select, Switch, DatePicker } from "antd";
 import { UploadOutlined, PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -75,6 +75,8 @@ const CreatePost = () => {
       formData.append('intro', values.intro);
       if (values.subtitle) formData.append('subtitle', values.subtitle);
       formData.append('content', contentValue);
+      formData.append('isPublished', String(values.isPublished ?? false));
+      if (values.publishedAt) formData.append('publishedAt', values.publishedAt.toISOString());
       formData.append('type', values.type);
 
       if (values.classIds && values.classIds.length > 0) {
@@ -140,7 +142,7 @@ const CreatePost = () => {
 
         <Form
           name="create_post"
-          initialValues={{ remember: true }}
+          initialValues={{ remember: true, isPublished: false }}
           onFinish={handleSubmit}
           layout="vertical"
           className="text-black font-kanit"
@@ -201,6 +203,21 @@ const CreatePost = () => {
               <Option value="HISTOIRE">HISTOIRE</Option>
               {/* Ajoutez d'autres types si nécessaire */}
             </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="isPublished"
+            label={<span className="font-kanit text-black">Publier</span>}
+            valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+
+          <Form.Item
+            name="publishedAt"
+            label={<span className="font-kanit text-black">Date de publication (laisser vide pour publier immédiatement)</span>}
+          >
+            <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: "100%" }} />
           </Form.Item>
 
           {/* Sélection des classes associées */}

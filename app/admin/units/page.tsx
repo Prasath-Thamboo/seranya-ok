@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Table from '@/components/Table';
 import CardList from '@/components/CardList';
-import { SidebarContent } from '@/components/dashboard/SidebarContent';
 import { fetchUnits } from '@/lib/queries/UnitQueries';
 import { UnitModel } from '@/lib/models/UnitModels';
 import { Image } from 'antd';
@@ -129,10 +128,7 @@ const UnitsPage = () => {
     <div className="p-6 font-kanit relative">
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Units</h1>
       {isMobile ? (
-        <>
-          <CardList items={units} itemsPerPage={4} renderItem={renderUnitItem} />
-          <SidebarContent collapsed={false} toggleSidebar={() => {}} />
-        </>
+        <CardList items={units} itemsPerPage={4} renderItem={renderUnitItem} />
       ) : (
         <Table
           data={units}

@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Table from '@/components/Table';
 import CardList from '@/components/CardList';
-import { SidebarContent } from '@/components/dashboard/SidebarContent';
 import { fetchPosts } from '@/lib/queries/PostQueries';
 import { PostModel } from '@/lib/models/PostModels';
 import { Image } from 'antd';
@@ -170,10 +169,7 @@ const PostsPage = () => {
     <div className="p-6 font-kanit relative">
       <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Posts</h1>
       {isMobile ? (
-        <>
-          <CardList items={posts} itemsPerPage={4} renderItem={renderPostItem} />
-          <SidebarContent collapsed={false} toggleSidebar={() => {}} />
-        </>
+        <CardList items={posts} itemsPerPage={4} renderItem={renderPostItem} />
       ) : (
         <Table
           data={posts}

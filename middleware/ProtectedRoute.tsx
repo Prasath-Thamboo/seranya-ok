@@ -1,8 +1,10 @@
 "use client"; // Mark this file as a client component
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { UserRole } from "@/lib/models/UserModels";
+import { useNotification } from "@/components/notifications/NotificationProvider";
 import React from "react";
 
 interface ProtectedRouteProps {
@@ -21,6 +23,8 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles, fallbackPath = "/auth/login" }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const router = useRouter();
+  const { addNotification } = useNotification();
 
   useEffect(() => {
     const checkAuthorization = async () => {
@@ -31,17 +35,30 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles,
         if (user?.role && allowedRoles.includes(user.role)) {
           setIsAuthorized(true);
         } else {
-          window.location.href = fallbackPath;
+          addNotification(
+            "critical",
+            "Accès refusé",
+            { description: "Vous n'avez pas les autorisations nécessaires pour accéder à cette page." },
+          );
+          // router.push (not window.location.href) keeps the app mounted so the
+          // notification above survives the redirect instead of being wiped by a reload.
+          router.push(fallbackPath);
         }
       } catch (error) {
         // Not authenticated at all: always go to login.
-        window.location.href = "/auth/login";
+        addNotification(
+          "critical",
+          "Connexion requise",
+          { description: "Vous devez être connecté avec un compte autorisé pour accéder à cette page." },
+        );
+        router.push("/auth/login");
       } finally {
         setLoading(false);
       }
     };
 
     checkAuthorization();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedRoles, fallbackPath]);
 
   if (loading) {

@@ -5,6 +5,7 @@
 import React from 'react';
 import PostCard from '@/components/PostCard';
 import { fetchPosts } from '@/lib/queries/PostQueries';
+import { fetchCurrentUser, getAccessToken } from '@/lib/queries/AuthQueries';
 import { PostModel, PostType } from '@/lib/models/PostModels';
 import HeroSection from '@/components/HeroSection';
 import { fetchRandomBackground } from '@/lib/queries/RandomBackgroundQuery';
@@ -16,6 +17,14 @@ const PostsPage: React.FC = () => {
   const [backgroundImage, setBackgroundImage] = React.useState<string>('');
   const [bgLoading, setBgLoading] = React.useState<boolean>(true);
   const [bgError, setBgError] = React.useState<string | null>(null);
+  const [isPrivileged, setIsPrivileged] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (!getAccessToken()) return;
+    fetchCurrentUser()
+      .then((user: any) => setIsPrivileged(user?.role === 'ADMIN' || user?.role === 'EDITOR'))
+      .catch(() => {});
+  }, []);
 
   React.useEffect(() => {
     const getPosts = async () => {
@@ -105,7 +114,7 @@ const PostsPage: React.FC = () => {
           </h2>
           <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {posts.map(post => (
-              <PostCard key={post.id} post={post} />
+              <PostCard key={post.id} post={post} isPrivileged={isPrivileged} />
             ))}
           </div>
         </div>

@@ -7,14 +7,23 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FiBookOpen, FiChevronRight } from 'react-icons/fi';
 import { PostModel } from '@/lib/models/PostModels'; // Import du modèle de post
+import Badge from '@/components/Badge';
 
 interface PostCardProps {
   post: PostModel; // Utilisation de PostModel directement
+  isPrivileged?: boolean;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, isPrivileged }) => {
+  const isScheduled = isPrivileged && post.publishedAt && new Date(post.publishedAt) > new Date();
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 font-kanit">
+      {isScheduled && (
+        <div className="p-2">
+          <Badge type={`Publication prévue le ${new Date(post.publishedAt as string).toLocaleDateString('fr-FR')}`} />
+        </div>
+      )}
       {post.headerImage ? (
         <Image
           src={post.headerImage}

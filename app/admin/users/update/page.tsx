@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button, Upload, Select, Image } from "antd";
+import { Form, Input, Button, Upload, Select, Image, Switch } from "antd";
 import { UploadOutlined, LoadingOutlined, SaveOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,6 +40,7 @@ const UpdateUser = () => {
             address: data.address || '',
             status: data.status || '',
             role: data.role || UserRole.USER,
+            isSubscribed: data.isSubscribed ?? false,
           });
         } catch (error) {
           console.error("Erreur lors du chargement de l'utilisateur:", error);
@@ -73,6 +74,7 @@ const UpdateUser = () => {
           address: values.address,
           status: values.status,
           role: values.role,
+          isSubscribed: values.isSubscribed,
           password: values.password || undefined,
           profileImage,
         },
@@ -173,6 +175,19 @@ const UpdateUser = () => {
               <Input placeholder="Statut" className="bg-white text-black font-kanit" />
             </Form.Item>
           </div>
+
+          <Form.Item
+            name="isSubscribed"
+            label={<span className="text-black font-kanit">Abonné</span>}
+            valuePropName="checked"
+            extra={
+              <span className="text-gray-400">
+                Repasser le rôle d&apos;EDITOR à USER retire automatiquement ce statut.
+              </span>
+            }
+          >
+            <Switch />
+          </Form.Item>
 
           <Form.Item
             name="password"
