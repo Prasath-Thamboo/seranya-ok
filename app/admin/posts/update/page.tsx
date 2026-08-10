@@ -157,7 +157,11 @@ const UpdatePost = () => {
       }
     } catch (error) {
       console.error("Error during post update:", error);
-      addNotification("critical", "Erreur lors de la mise à jour du post.");
+      const backendMessage = axios.isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+      const detail = Array.isArray(backendMessage) ? backendMessage.join(', ') : backendMessage;
+      addNotification("critical", detail ? `Erreur lors de la mise à jour du post : ${detail}` : "Erreur lors de la mise à jour du post.");
     } finally {
       setLoading(false);
     }

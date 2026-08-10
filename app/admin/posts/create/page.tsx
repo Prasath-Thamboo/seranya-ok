@@ -119,7 +119,11 @@ const CreatePost = () => {
       router.push("/admin/posts");
     } catch (error) {
       console.error("Erreur lors de la création du post:", error);
-      addNotification("critical", "Erreur lors de la création du post.");
+      const backendMessage = axios.isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+      const detail = Array.isArray(backendMessage) ? backendMessage.join(', ') : backendMessage;
+      addNotification("critical", detail ? `Erreur lors de la création du post : ${detail}` : "Erreur lors de la création du post.");
     } finally {
       setLoading(false);
     }
@@ -200,8 +204,8 @@ const CreatePost = () => {
             >
               <Option value="SCIENCE">SCIENCE</Option>
               <Option value="PHILO">PHILO</Option>
-              <Option value="HISTOIRE">HISTOIRE</Option>
-              {/* Ajoutez d'autres types si nécessaire */}
+              <Option value="UNIVERS">UNIVERS</Option>
+              <Option value="REGION">REGION</Option>
             </Select>
           </Form.Item>
 
