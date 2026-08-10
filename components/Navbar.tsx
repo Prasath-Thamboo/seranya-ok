@@ -10,7 +10,7 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { RegisterUserModel } from "@/lib/models/AuthModels";
 import Badge from "@/components/Badge";
 import { Dropdown, Menu } from "antd";
-import { FiLogOut, FiMenu, FiX, FiLogIn, FiUserPlus } from "react-icons/fi"; // Import des icônes FiLogIn et FiUserPlus
+import { FiLogOut, FiMenu, FiX, FiLogIn, FiUserPlus, FiHome } from "react-icons/fi"; // Import des icônes FiLogIn et FiUserPlus
 import { FaChevronDown } from "react-icons/fa"; // Utilisation de FaChevronDown
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import React from "react";
@@ -145,6 +145,9 @@ export default function Navbar() {
       <Menu.Item key="3">
         <Link href="/encyclopedie">Encyclopédie</Link>
       </Menu.Item>
+      <Menu.Item key="4">
+        <Link href="/eveil">Éveil</Link>
+      </Menu.Item>
     </Menu>
   );
 
@@ -185,8 +188,14 @@ export default function Navbar() {
         {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
         <div className={isLoggedIn ? "hidden md:flex space-x-6 items-center" : "hidden min-[1074px]:flex space-x-6 items-center"}>
           {/* Accueil */}
-          <Link href="/" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
+          <Link href="/" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center gap-2">
+            <FiHome className="w-4 h-4" />
             <span className="shadow-text">Accueil</span>
+          </Link>
+
+          {/* Extraits */}
+          <Link href="/posts" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
+            <span className="shadow-text">Blogs</span>
           </Link>
 
           {/* Dropdown pour Univers */}
@@ -201,11 +210,6 @@ export default function Navbar() {
               <FaChevronDown className="ml-1" />
             </button>
           </Dropdown>
-
-          {/* Extraits */}
-          <Link href="/posts" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
-            <span className="shadow-text">Blogs</span>
-          </Link>
 
           {/* Contact */}
           <Link href="/contact" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
@@ -331,7 +335,20 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
                   >
-                    Accueil
+                    <span className="flex items-center gap-2">
+                      <FiHome className="w-4 h-4" />
+                      Accueil
+                    </span>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/posts"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                  >
+                    Blogs
                   </Link>
                 </li>
 
@@ -350,6 +367,7 @@ export default function Navbar() {
                         { href: "/tutoriels", label: "Tutoriels" },
                         { href: "/univers", label: "Univers" },
                         { href: "/encyclopedie", label: "Encyclopédie" },
+                        { href: "/eveil", label: "Éveil" },
                       ].map((item) => (
                         <li key={item.href}>
                           <Link
@@ -364,16 +382,6 @@ export default function Navbar() {
                       ))}
                     </ul>
                   )}
-                </li>
-
-                <li>
-                  <Link
-                    href="/posts"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
-                  >
-                    Blogs
-                  </Link>
                 </li>
 
                 <li>

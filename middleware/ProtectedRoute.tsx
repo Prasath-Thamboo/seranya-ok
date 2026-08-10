@@ -35,11 +35,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles,
         if (user?.role && allowedRoles.includes(user.role)) {
           setIsAuthorized(true);
         } else {
-          addNotification(
-            "critical",
-            "Accès refusé",
-            { description: "Vous n'avez pas les autorisations nécessaires pour accéder à cette page." },
-          );
+          // Un EDITOR qui atterrit sur une page réservée à l'ADMIN (ex. /admin
+          // racine) est juste redirigé vers sa page autorisée : c'est une
+          // navigation normale, pas une tentative d'accès non autorisée, donc
+          // pas de notification "Accès refusé" dans ce cas.
+          if (user?.role === UserRole.USER) {
+            addNotification(
+              "critical",
+              "Accès refusé",
+              { description: "Vous n'avez pas les autorisations nécessaires pour accéder à cette page." },
+            );
+          }
           // router.push (not window.location.href) keeps the app mounted so the
           // notification above survives the redirect instead of being wiped by a reload.
           router.push(fallbackPath);

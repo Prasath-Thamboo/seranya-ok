@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaCheck, FaArrowRight } from "react-icons/fa";
+import { FaCheck, FaArrowRight, FaLungs, FaBrain, FaHeartbeat } from "react-icons/fa";
 import { HiOutlineBookOpen, HiOutlineUsers, HiOutlineSparkles } from "react-icons/hi2";
 import Reveal from "@/components/home/Reveal";
 import Counter from "@/components/home/Counter";
@@ -237,6 +237,48 @@ export default async function Home() {
                 <h3 className="font-iceberg uppercase text-white text-lg mb-3">{f.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
               </Link>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+
+      {/* ── ÉVEIL (bienfaits du yoga) ── */}
+      <Reveal className="relative py-20 px-6 overflow-hidden border-t border-gray-900">
+        <div className="absolute inset-0 bg-gradient-to-b from-green-950/10 via-transparent to-transparent" />
+        <div className="relative z-10 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
+              Le pouvoir du yoga
+            </p>
+            <h2 className="text-3xl md:text-4xl font-iceberg uppercase text-white mb-6">
+              Éveil
+            </h2>
+            <p className="text-gray-400 leading-relaxed mb-8">
+              Souplesse, force, respiration, sérénité intérieure : découvrez pourquoi
+              le yoga transforme durablement le corps et l&apos;esprit, et comment il
+              peut changer votre quotidien dès la première séance.
+            </p>
+            <Link
+              href="/eveil"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95"
+            >
+              Découvrir Éveil <FaArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { icon: <FaHeartbeat className="w-6 h-6" />, label: "Le corps" },
+              { icon: <FaBrain className="w-6 h-6" />, label: "L'esprit" },
+              { icon: <FaLungs className="w-6 h-6" />, label: "Le souffle" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="flex flex-col items-center gap-3 p-6 rounded-2xl border border-gray-800 bg-gray-950 text-center"
+              >
+                <div className="text-green-400">{item.icon}</div>
+                <span className="text-gray-300 font-kanit uppercase text-xs tracking-widest">{item.label}</span>
+              </div>
             ))}
           </div>
         </div>

@@ -96,7 +96,7 @@ const TutorielsPage: React.FC = () => {
                   className="bg-black/60 rounded-xl overflow-hidden shadow-lg border border-gray-700 flex flex-col"
                 >
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    {hasFullAccess ? (
+                    {hasFullAccess && tutorial.videoUrl ? (
                       <iframe
                         className="absolute inset-0 w-full h-full"
                         src={getYouTubeEmbedUrl(tutorial.videoUrl)}

@@ -10,9 +10,11 @@ import { fetchPosts } from "@/lib/queries/PostQueries";
 import { fetchPublishedTutorials } from "@/lib/queries/TutorialQueries";
 import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
+import { fetchCurrentUser, getAccessToken } from "@/lib/queries/AuthQueries";
 import { PostModel } from "@/lib/models/PostModels";
 import { TutorialModel } from "@/lib/models/TutorialModels";
 import { DefinitionModel } from "@/lib/models/DefinitionModels";
+import SubscriptionLock from "@/components/SubscriptionLock";
 
 /* ── Types ── */
 type ContentType = "all" | "posts" | "tutorials" | "definitions";
@@ -81,50 +83,67 @@ function PostCard({ post }: { post: PostModel }) {
   );
 }
 
-function TutorialCard({ tutorial }: { tutorial: TutorialModel }) {
-  const thumb = getYouTubeThumbnail(tutorial.videoUrl);
+function TutorialCard({ tutorial, hasFullAccess }: { tutorial: TutorialModel; hasFullAccess: boolean }) {
+  // Le backend fournit thumbnailUrl même quand videoUrl est masqué (non-abonné) ;
+  // on ne recalcule côté client que pour les anciennes réponses qui ne l'auraient pas.
+  const thumb = tutorial.thumbnailUrl ?? (tutorial.videoUrl ? getYouTubeThumbnail(tutorial.videoUrl) : null);
+
+  const inner = (
+    <motion.div
+      variants={fadeUp}
+      className="group flex flex-col bg-black/60 border border-gray-700 rounded-xl overflow-hidden hover:border-green-500/50 transition-all duration-300 h-full"
+    >
+      <div className="relative w-full h-44 overflow-hidden">
+        {thumb ? (
+          <Image
+            src={thumb}
+            alt={tutorial.title}
+            fill
+            style={{ objectFit: "cover" }}
+            className="group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+            <FaPlay className="w-10 h-10 text-gray-700" />
+          </div>
+        )}
+        {hasFullAccess ? (
+          <>
+            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-green-500/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FaPlay className="w-4 h-4 text-white ml-1" />
+              </div>
+            </div>
+          </>
+        ) : (
+          <SubscriptionLock message="Vidéo réservée aux abonnés" minHeight={0} className="rounded-none" />
+        )}
+      </div>
+      <div className="p-5 flex flex-col flex-grow">
+        <span className="self-start mb-2 px-2 py-0.5 bg-red-600/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
+          Tutoriel
+        </span>
+        <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors text-center sm:text-left">
+          {tutorial.title}
+        </h3>
+        {tutorial.description && (
+          <p className="text-gray-400 font-kanit text-sm flex-grow line-clamp-3">{tutorial.description}</p>
+        )}
+        <p className="text-gray-600 font-kanit text-xs mt-3">
+          {new Date(tutorial.createdAt).toLocaleDateString("fr-FR")}
+        </p>
+      </div>
+    </motion.div>
+  );
+
+  // Non-abonné : pas de lien vers la vidéo réelle (le backend ne l'envoie de toute
+  // façon pas), seul le verrou est cliquable (redirige vers /subscription).
+  if (!hasFullAccess || !tutorial.videoUrl) return inner;
+
   return (
     <a href={tutorial.videoUrl} target="_blank" rel="noopener noreferrer">
-      <motion.div
-        variants={fadeUp}
-        className="group flex flex-col bg-black/60 border border-gray-700 rounded-xl overflow-hidden hover:border-green-500/50 transition-all duration-300 h-full"
-      >
-        <div className="relative w-full h-44 overflow-hidden">
-          {thumb ? (
-            <Image
-              src={thumb}
-              alt={tutorial.title}
-              fill
-              style={{ objectFit: "cover" }}
-              className="group-hover:scale-105 transition-transform duration-500"
-            />
-          ) : (
-            <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-              <FaPlay className="w-10 h-10 text-gray-700" />
-            </div>
-          )}
-          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-green-500/80 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <FaPlay className="w-4 h-4 text-white ml-1" />
-            </div>
-          </div>
-        </div>
-        <div className="p-5 flex flex-col flex-grow">
-          <span className="self-start mb-2 px-2 py-0.5 bg-red-600/80 text-white text-xs font-iceberg uppercase tracking-widest rounded">
-            Tutoriel
-          </span>
-          <h3 className="text-white font-iceberg uppercase text-base mb-2 line-clamp-2 group-hover:text-green-400 transition-colors text-center sm:text-left">
-            {tutorial.title}
-          </h3>
-          {tutorial.description && (
-            <p className="text-gray-400 font-kanit text-sm flex-grow line-clamp-3">{tutorial.description}</p>
-          )}
-          <p className="text-gray-600 font-kanit text-xs mt-3">
-            {new Date(tutorial.createdAt).toLocaleDateString("fr-FR")}
-          </p>
-        </div>
-      </motion.div>
+      {inner}
     </a>
   );
 }
@@ -163,6 +182,7 @@ export default function UniversPage() {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<ContentType>("all");
   const [search, setSearch] = useState("");
+  const [hasFullAccess, setHasFullAccess] = useState(false);
 
   useEffect(() => {
     Promise.allSettled([
@@ -177,6 +197,14 @@ export default function UniversPage() {
       if (bg.status === "fulfilled") setBackgroundImage(bg.value);
       setLoading(false);
     });
+  }, []);
+
+  useEffect(() => {
+    if (!getAccessToken()) return;
+    // Un simple USER (non abonné) ou un visiteur non connecté n'a accès qu'à l'aperçu des tutoriels.
+    fetchCurrentUser()
+      .then((user: any) => setHasFullAccess(user?.role === "ADMIN" || user?.role === "EDITOR" || !!user?.isSubscribed))
+      .catch(() => {});
   }, []);
 
   const items = useMemo<UnifiedItem[]>(() => {
@@ -315,7 +343,7 @@ export default function UniversPage() {
             >
               {items.map((item, i) => {
                 if (item.kind === "post")       return <PostCard       key={`post-${item.data.id}`}    post={item.data} />;
-                if (item.kind === "tutorial")   return <TutorialCard   key={`tuto-${item.data.id}`}    tutorial={item.data} />;
+                if (item.kind === "tutorial")   return <TutorialCard   key={`tuto-${item.data.id}`}    tutorial={item.data} hasFullAccess={hasFullAccess} />;
                 if (item.kind === "definition") return <DefinitionCard key={`def-${item.data.id}`}     def={item.data} />;
               })}
             </motion.div>
