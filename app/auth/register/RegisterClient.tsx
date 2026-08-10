@@ -118,7 +118,10 @@ export default function RegisterPage() {
               <Form.Item
                 label={<span className="text-gray-300 font-kanit text-sm">Mot de passe</span>}
                 name="password"
-                rules={[{ required: true, message: 'Requis' }]}
+                rules={[
+                  { required: true, message: 'Le mot de passe est requis.' },
+                  { min: 8, message: 'Le mot de passe doit contenir au moins 8 caractères.' },
+                ]}
                 className="mb-3 col-span-2"
               >
                 <Input.Password
