@@ -79,44 +79,32 @@ const PostsPage: React.FC = () => {
   }
 
   return (
-    <div
-      className="min-h-screen relative bg-cover bg-center bg-fixed"
-      style={{
-        backgroundImage: `url(${backgroundImage || '/images/backgrounds/bouddhisme.jpg'})`,
-      }}
-    >
-      {/* Overlay pour obscurcir l'image de fond */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+    <div className="min-h-screen bg-black">
+      <HeroSection
+        backgroundImage={backgroundImage || '/images/backgrounds/bouddhisme.jpg'}
+        title="Bienvenue dans"
+        titleColor="#ffffff" // Blanc
+        strongTitle="L'Univers Seranya"
+        strongTitleColor="#ffffff" // Blanc
+        content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
+        contentColor="#ffffff" // Blanc
+        button1Text="Voir les Posts"
+        button1Url="#posts-section"
+        button1BgColor="#22c55e"
+        button2Text="Découvrir"
+        button2Url="/univers"
+        button2BgColor="#374151"
+      />
 
-      {/* Contenu de la page avec un z-index supérieur pour être au-dessus de l'overlay */}
-      <div className="relative z-10">
-        {/* Intégration du HeroSection */}
-        <HeroSection
-          backgroundImage="/images/backgrounds/bouddhisme.jpg" 
-          title="Bienvenue dans"
-          titleColor="#ffffff" // Blanc
-          strongTitle="L'Univers Seranya"
-          strongTitleColor="#ffffff" // Blanc
-          content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
-          contentColor="#ffffff" // Blanc
-          button1Text="Voir les Posts"
-          button1Url="#posts-section"
-          button1BgColor="#22c55e"
-          button2Text="Découvrir"
-          button2Url="/univers"
-          button2BgColor="#374151"
-        />
-
-        {/* Section des Posts */}
-        <div id="posts-section" className="py-10 px-5">
-          <h2 className="text-4xl font-bold text-center text-white mb-10 font-iceberg text-shadow-lg">
-            Exploration de l&apos;Univers
-          </h2>
-          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map(post => (
-              <PostCard key={post.id} post={post} isPrivileged={isPrivileged} />
-            ))}
-          </div>
+      {/* Section des Posts */}
+      <div id="posts-section" className="relative z-10 py-16 px-5">
+        <h2 className="text-4xl font-bold text-center text-white mb-10 font-iceberg text-shadow-lg">
+          Exploration de l&apos;Univers
+        </h2>
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map(post => (
+            <PostCard key={post.id} post={post} isPrivileged={isPrivileged} />
+          ))}
         </div>
       </div>
     </div>

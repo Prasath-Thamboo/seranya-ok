@@ -61,32 +61,26 @@ const EncyclopediePage: React.FC = () => {
   }
 
   return (
-    <div
-      className="min-h-screen relative bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: `url(${backgroundImage || '/images/backgrounds/bouddhisme.jpg'})` }}
-    >
-      <div className="absolute inset-0 bg-black opacity-60"></div>
+    <div className="min-h-screen bg-black">
+      <HeroSection
+        backgroundImage={backgroundImage || '/images/backgrounds/bouddhisme.jpg'}
+        title="Encyclopédie"
+        titleColor="#ffffff"
+        strongTitle="Yoga & Bouddhisme"
+        strongTitleColor="#4ade80"
+        content="Retrouvez les définitions essentielles du yoga et de la philosophie bouddhiste."
+        contentColor="#e5e7eb"
+        button1Text="Explorer"
+        button1Url="#encyclopedie-section"
+        button1BgColor="#22c55e"
+        button2Text="S'abonner"
+        button2Url="/subscription"
+        button2BgColor="#374151"
+      />
 
-      <div className="relative z-10">
-        <HeroSection
-          backgroundImage={backgroundImage || '/images/backgrounds/bouddhisme.jpg'}
-          title="Encyclopédie"
-          titleColor="#ffffff"
-          strongTitle="Yoga & Bouddhisme"
-          strongTitleColor="#4ade80"
-          content="Retrouvez les définitions essentielles du yoga et de la philosophie bouddhiste."
-          contentColor="#e5e7eb"
-          button1Text="Explorer"
-          button1Url="#encyclopedie-section"
-          button1BgColor="#22c55e"
-          button2Text="S'abonner"
-          button2Url="/subscription"
-          button2BgColor="#374151"
-        />
+      <div id="encyclopedie-section" className="relative z-10 py-16 px-6 max-w-6xl mx-auto">
 
-        <div id="encyclopedie-section" className="py-16 px-6 max-w-6xl mx-auto">
-
-          {/* Barre de recherche */}
+        {/* Barre de recherche */}
           <div className="relative max-w-xl mx-auto mb-8">
             <input
               type="text"
@@ -172,7 +166,6 @@ const EncyclopediePage: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 };
