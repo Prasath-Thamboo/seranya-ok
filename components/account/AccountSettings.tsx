@@ -243,16 +243,20 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
     }
   };
 
-  /* Résiliation de l'abonnement premium (immédiate) */
+  /* Résiliation de l'abonnement premium : l'accès est conservé jusqu'à la fin de la période payée */
   const handleCancelSubscription = async () => {
     setCancelLoading(true);
     try {
       await cancelSubscriptionRequest();
-      const updated = await fetchCurrentUser();
-      setUser(updated);
-      setSubscription(null);
+      const updatedSubscription = await fetchSubscriptionInfo();
+      setSubscription(updatedSubscription);
       setCancelConfirming(false);
-      addNotification('success', 'Votre abonnement a été résilié.');
+      addNotification(
+        'success',
+        updatedSubscription.currentPeriodEnd
+          ? `Ton abonnement a été résilié. Tu conserves l'accès jusqu'au ${new Date(updatedSubscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+          : "Ton abonnement a été résilié. Tu conserves l'accès jusqu'à la fin de la période en cours.",
+      );
     } catch (err: any) {
       const msg = err?.response?.data?.message || "Erreur lors de la résiliation de l'abonnement.";
       addNotification('critical', msg);
@@ -567,14 +571,22 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   {subscription.currentPeriodEnd && (
                     <InfoRow
                       icon={<FiCalendar />}
-                      label="Prochain renouvellement"
+                      label={subscription.cancelAtPeriodEnd ? 'Accès jusqu\'au' : 'Prochain renouvellement'}
                       value={new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                     />
                   )}
                 </div>
 
                 <div className="pt-2 border-t border-gray-800">
-                  {!cancelConfirming ? (
+                  {subscription.cancelAtPeriodEnd ? (
+                    <p className="text-sm text-amber-300 bg-amber-950/20 border border-amber-900/40 rounded-lg p-3">
+                      Ton abonnement est résilié et ne sera pas reconduit. Tu conserves le statut
+                      éditeur et l&apos;accès au contenu premium jusqu&apos;au{' '}
+                      {subscription.currentPeriodEnd
+                        ? new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+                        : 'terme de la période en cours'}.
+                    </p>
+                  ) : !cancelConfirming ? (
                     <button
                       type="button"
                       onClick={() => setCancelConfirming(true)}
@@ -586,8 +598,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   ) : (
                     <div className="border border-red-900/50 rounded-lg p-4 space-y-3 bg-red-950/10">
                       <p className="text-sm text-red-300">
-                        Ton abonnement sera résilié immédiatement et tu perdras le statut éditeur
-                        ainsi que l&apos;accès au contenu premium. Cette action est irréversible.
+                        Tu conserveras le statut éditeur et l&apos;accès au contenu premium
+                        jusqu&apos;à la fin de la période déjà payée{subscription.currentPeriodEnd
+                          ? ` (${new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })})`
+                          : ''}. L&apos;abonnement ne sera ensuite pas reconduit.
                       </p>
                       <div className="flex flex-wrap gap-2">
                         <button
