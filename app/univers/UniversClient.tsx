@@ -278,7 +278,7 @@ export default function UniversPage() {
             <span className="inline-block px-4 py-1.5 bg-green-500/20 border border-green-500/40 text-green-400 text-xs font-iceberg uppercase tracking-widest rounded-full mb-5">
               Tout le contenu Seranya
             </span>
-            <h1 className="text-5xl md:text-6xl font-iceberg uppercase tracking-wide text-white mb-4 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-iceberg uppercase tracking-widest text-white mb-4 leading-tight">
               L&apos;Univers
             </h1>
             <p className="text-gray-300 text-lg max-w-xl mx-auto leading-relaxed">

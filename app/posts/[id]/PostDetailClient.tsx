@@ -154,10 +154,11 @@ const PostDetailPage = () => {
                 <ul className="space-y-4">
                   {relatedPosts.map((relatedPost) => (
                     <li key={relatedPost.id}>
-                      <Link href={`/posts/${relatedPost.id}`}>
-                        <a className="block text-lg text-white hover:text-blue-400 transition-colors duration-200">
-                          {relatedPost.title}
-                        </a>
+                      <Link
+                        href={`/posts/${relatedPost.id}`}
+                        className="block text-lg text-white hover:text-blue-400 transition-colors duration-200"
+                      >
+                        {relatedPost.title}
                       </Link>
                     </li>
                   ))}
@@ -176,7 +177,7 @@ const PostDetailPage = () => {
               <div className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
                 {/* Titre et Sous-titre */}
                 <div className="mb-6 text-center lg:text-left">
-                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-iceberg uppercase text-white drop-shadow-lg">
+                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
                   </h1>
                   <div className="flex justify-center lg:justify-start mt-2 gap-2">

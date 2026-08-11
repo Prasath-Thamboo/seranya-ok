@@ -39,17 +39,17 @@ function ConfirmEmailChangeContent() {
     <div className="min-h-screen flex flex-col items-center justify-center font-kanit text-center bg-black text-white px-6">
       {confirmationMessage ? (
         <>
-          <h1 className="text-4xl font-bold mb-8">Confirmation réussie !</h1>
+          <h1 className="text-4xl font-bold mb-8 uppercase">Confirmation réussie !</h1>
           <p className="text-lg mb-6 text-gray-300">{confirmationMessage}</p>
         </>
       ) : errorMessage ? (
         <>
-          <h1 className="text-4xl font-bold mb-8 text-red-500">Erreur de confirmation</h1>
+          <h1 className="text-4xl font-bold mb-8 uppercase text-red-500">Erreur de confirmation</h1>
           <p className="text-lg mb-6 text-red-400">{errorMessage}</p>
         </>
       ) : (
         <>
-          <h1 className="text-4xl font-bold mb-8">Confirmation en cours…</h1>
+          <h1 className="text-4xl font-bold mb-8 uppercase">Confirmation en cours…</h1>
           <p className="text-lg mb-6 text-gray-300">Veuillez patienter.</p>
         </>
       )}

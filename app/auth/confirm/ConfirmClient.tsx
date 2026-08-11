@@ -78,17 +78,17 @@ function ConfirmationContent() {
       <div className="relative z-10">
         {confirmationMessage ? (
           <>
-            <h1 className="text-4xl font-bold mb-8 text-white">Confirmation réussie !</h1>
+            <h1 className="text-4xl font-bold mb-8 uppercase text-white">Confirmation réussie !</h1>
             <p className="text-lg mb-6 text-gray-200">{confirmationMessage}</p>
           </>
         ) : errorMessage ? (
           <>
-            <h1 className="text-4xl font-bold mb-8 text-red-600">Erreur de confirmation</h1>
+            <h1 className="text-4xl font-bold mb-8 uppercase text-red-600">Erreur de confirmation</h1>
             <p className="text-lg mb-6 text-red-400">{errorMessage}</p>
           </>
         ) : (
           <>
-            <h1 className="text-4xl font-bold mb-8 text-white">Inscription presque terminée !</h1>
+            <h1 className="text-4xl font-bold mb-8 uppercase text-white">Inscription presque terminée !</h1>
             <p className="text-lg mb-6 text-gray-200">
               Nous traitons votre demande de confirmation. Veuillez patienter...
             </p>

@@ -50,7 +50,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
         <h1
-          className="text-3xl font-extrabold sm:text-5xl font-iceberg text-shadow-sm"
+          className="text-3xl font-extrabold sm:text-5xl font-iceberg uppercase tracking-widest text-shadow-sm"
           style={{ color: titleColor }}
         >
           {title}

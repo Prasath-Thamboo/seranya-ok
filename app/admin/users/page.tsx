@@ -61,16 +61,18 @@ const UsersPage = () => {
         Header: 'Pseudo',
         accessor: 'pseudo',
         Cell: ({ row, value }: any) => (
-          <div className="flex gap-2 items-center">
-            <Image 
-              src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'} 
-              alt={`${value}'s Avatar`}
-              width={50}
-              height={50}
-              style={{ borderRadius: '8px', objectFit: 'cover' }}
-              preview={true}
-            />
-            <div>{value}</div>
+          <div className="flex gap-2 items-center min-w-0">
+            <div className="flex-shrink-0">
+              <Image
+                src={row.original.profileImage || '/images/backgrounds/placeholder.jpg'}
+                alt={`${value}'s Avatar`}
+                width={50}
+                height={50}
+                style={{ borderRadius: '8px', objectFit: 'cover' }}
+                preview={true}
+              />
+            </div>
+            <div className="min-w-0 break-words">{value}</div>
           </div>
         ),
       },

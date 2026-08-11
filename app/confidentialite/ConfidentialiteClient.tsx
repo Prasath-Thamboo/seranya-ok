@@ -38,7 +38,7 @@ const PolitiqueConfidentialitePage = () => {
       )}
 
       <div className="relative z-10 py-16 px-4 lg:px-24 text-center">
-        <h1 className="text-4xl font-bold mb-12 mt-10 lg:mt-16">Politique de Confidentialité</h1>
+        <h1 className="text-4xl font-bold uppercase mb-12 mt-10 lg:mt-16">Politique de Confidentialité</h1>
 
         <div className="max-w-4xl mx-auto bg-black/50 p-6 md:p-12 rounded-lg shadow-lg">
           <p className="mb-6 leading-relaxed">

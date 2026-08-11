@@ -79,7 +79,7 @@ export default function RegisterPage() {
             </Link>
           </div>
 
-          <h1 className="text-2xl font-bold mb-1 text-center font-iceberg uppercase tracking-widest text-white">
+          <h1 className="text-3xl font-bold mb-2 text-center font-iceberg uppercase tracking-widest text-white">
             Inscription
           </h1>
           <p className="text-gray-400 text-sm text-center font-kanit mb-5">

@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
         {sent ? (
           <div className="text-center">
             <div className="text-green-400 text-5xl mb-4">✓</div>
-            <h1 className="text-2xl font-bold mb-4 text-center font-iceberg uppercase tracking-widest text-white">
+            <h1 className="text-3xl font-bold mb-2 text-center font-iceberg uppercase tracking-widest text-white">
               Email envoyé
             </h1>
             <p className="text-gray-400 font-kanit text-sm mb-8">
@@ -61,7 +61,7 @@ export default function ForgotPasswordPage() {
           </div>
         ) : (
           <>
-            <h1 className="text-2xl font-bold mb-2 text-center font-iceberg uppercase tracking-widest text-white">
+            <h1 className="text-3xl font-bold mb-2 text-center font-iceberg uppercase tracking-widest text-white">
               Mot de passe oublié
             </h1>
             <p className="text-gray-400 text-sm text-center font-kanit mb-6">
