@@ -19,8 +19,14 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
   const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${API_KEY}&category=performance&category=accessibility&category=seo`;
 
+  // L'audit PageSpeed prend souvent 15-30s+. On coupe avant la limite de la
+  // fonction serverless pour renvoyer une erreur JSON propre plutôt que de
+  // laisser la plateforme tuer la requête et renvoyer une page HTML.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, { signal: controller.signal });
     const data = await response.json();
 
     if (!response.ok || !data.lighthouseResult) {
@@ -38,7 +44,14 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json(metrics);
   } catch (error) {
     console.error('Error fetching Lighthouse metrics from PageSpeed API:', error);
-    return res.status(500).json({ error: 'Failed to fetch Lighthouse metrics' });
+    const isTimeout = error instanceof Error && error.name === 'AbortError';
+    return res.status(isTimeout ? 504 : 500).json({
+      error: isTimeout
+        ? "L'audit PageSpeed a pris trop de temps (>25s) et a été annulé."
+        : 'Failed to fetch Lighthouse metrics',
+    });
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

@@ -93,6 +93,13 @@ function DashboardHome() {
     const fetchLighthouseMetrics = async () => {
       try {
         const response = await fetch('/api/lighthouse');
+
+        if (!response.headers.get('content-type')?.includes('application/json')) {
+          throw new Error(
+            `Réponse inattendue du serveur (HTTP ${response.status}) au lieu de JSON — probablement un timeout de la fonction serverless.`
+          );
+        }
+
         const data = await response.json();
         if (!response.ok) throw new Error(data?.error || 'Failed to fetch Lighthouse metrics');
         setMetrics(data);
