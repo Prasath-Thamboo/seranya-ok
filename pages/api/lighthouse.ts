@@ -4,6 +4,19 @@ import { NextApiRequest, NextApiResponse } from 'next';
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;  // Remplacez par votre clé API
   const url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  if (!API_KEY) {
+    return res.status(500).json({
+      error: "Clé API Google manquante : configurez NEXT_PUBLIC_GOOGLE_API_KEY (PageSpeed Insights API) dans les variables d'environnement.",
+    });
+  }
+
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)/i.test(url)) {
+    return res.status(500).json({
+      error: "NEXT_PUBLIC_SITE_URL pointe vers localhost, inaccessible par l'API Google PageSpeed. Configurez un domaine public pour activer l'audit.",
+    });
+  }
+
   const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${API_KEY}&category=performance&category=accessibility&category=seo`;
 
   try {
