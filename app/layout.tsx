@@ -44,9 +44,9 @@ export const metadata: Metadata = {
     apple: "/logos/seranyaicon.png",
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: "/",
     languages: {
-      fr: siteUrl,
+      fr: "/",
     },
   },
   manifest: "/manifest.json",
