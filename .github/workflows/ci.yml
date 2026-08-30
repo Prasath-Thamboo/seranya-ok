@@ -1,0 +1,48 @@
+# CI frontend Seranya — à committer à la RACINE du dépôt `seranya-ok`
+# (le chemin final doit être `.github/workflows/ci.yml`).
+#
+# Vérifie chaque push sur main et chaque pull request : installation propre,
+# lint, tests Jest, puis compilation Next.js (`next build` seul, sans le
+# `postbuild` next-sitemap qui essaierait de contacter le backend).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      # `npx next build` et non `npm run build` : ce dernier déclenche le script
+      # `postbuild` (next-sitemap) qui fetch /posts,/units,/classes sur l'API en
+      # prod — inutile et non joignable en CI. On veut seulement vérifier que
+      # l'app compile et type-check.
+      - name: Build (next build only, no sitemap)
+        run: npx next build
