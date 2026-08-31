@@ -1,94 +1,196 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;600;700&family=Oxanium:wght@200;400;600;700&family=Poppins:wght@200;400;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Optimus Princeps';
-  src: url('/fonts/OptimusPrinceps.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Iceberg';
-  src: url('/fonts/Iceberg.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
+/* =========================================================================
+   Seranya — Design tokens (lot 1 : fondations)
+   Identité "spa premium apaisé" : base ivoire chaude, accent sauge,
+   touches terracotta / bronze. Plus aucun fond noir ni vert néon par défaut.
+   ========================================================================= */
 :root {
-  --color-primary: #000000;
-  --color-accent: #4ade80;
-  --color-accent-dark: #16a34a;
-  --color-accent-teal: #2dd4bf;
-  --color-surface: #ffffff;
-  --color-surface-muted: #f9fafb;
-  --color-border: #e5e7eb;
-  --color-text: #111827;
-  --color-text-muted: #6b7280;
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* Surfaces */
+  --surface-page: #faf7f2;   /* fond de page — ivoire chaud, jamais #fff pur */
+  --surface-raised: #fffdf9; /* cartes / éléments en élévation */
+  --surface-sunken: #efe7da; /* sections alternées — sable clair */
+  --surface-overlay: rgba(250, 247, 242, 0.72); /* voile / verre dépoli chaud */
+
+  /* Texte */
+  --text-primary: #2b241d;   /* brun très foncé chaud (pas de noir pur) */
+  --text-secondary: #6e6255;
+  --text-muted: #9a8e7d;
+  --text-on-accent: #faf7f2;
+
+  /* Lignes */
+  --border-subtle: #e4dacb;
+  --border-strong: #d3c6b2;
+
+  /* Accent signature — sauge profonde */
+  --accent: #7a8b6f;
+  --accent-hover: #6b7a61;
+  --accent-soft: #e9ede4;
+  --accent-ring: rgba(122, 139, 111, 0.28);
+
+  /* Accent chaud secondaire — terracotta doux */
+  --warm: #a9553d;
+  --warm-soft: #fbf1ed;
+
+  /* Touche de luxe — bronze / or mat désaturé (usage parcimonieux) */
+  --gold: #b08d57;
+  --gold-soft: #fbf6ec;
+
+  /* Sémantique adoucie */
+  --success: #6f8a6a;
+  --danger: #a9553d;
+  --warning: #b08d57;
+  --info: #5f7684;
+
+  /* Compat : anciennes variables encore éventuellement référencées */
+  --color-primary: #2b241d;
+  --color-accent: #7a8b6f;
+  --color-accent-dark: #6b7a61;
+  --color-accent-teal: #7a8b6f;
+  --color-surface: #fffdf9;
+  --color-surface-muted: #faf7f2;
+  --color-border: #e4dacb;
+  --color-text: #2b241d;
+  --color-text-muted: #6e6255;
+  --foreground-rgb: 43, 36, 29;
+  --background-rgb: 250, 247, 242;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+/* Le site est désormais engagé sur un thème clair unique : pas de bloc
+   prefers-color-scheme dark (il inversait fond + texte). */
 
 body {
-  font-family: 'Kanit', 'Poppins', sans-serif;
-  color: rgb(var(--foreground-rgb));
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--surface-page);
   overflow-x: hidden;
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  /* Titres non classés (prose, admin) : serif élégante, casse normale. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif), Georgia, Cambria, serif;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  a {
+    color: inherit;
+  }
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--text-primary);
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  /* Voile clair réutilisable (paywall, barres sticky, etc.) */
+  .surface-overlay {
+    background: var(--surface-overlay);
+    backdrop-filter: blur(10px);
+  }
 }
 
+/* =========================================================================
+   Compat — classes "néon" de l'ancien thème.
+   Conservées (des composants les référencent encore) mais NEUTRALISÉES :
+   plus de halo lumineux, plus de pulsation. Nettoyage des call-sites dans
+   les lots suivants.
+   ========================================================================= */
+.neon-effect {
+  background-color: var(--accent);
+}
+.neon-pulse {
+  animation: none;
+}
+.neon-gold {
+  color: var(--gold);
+  text-shadow: none;
+}
+.neon-avatar {
+  border-radius: 50%;
+  box-shadow: 0 8px 30px rgba(43, 36, 29, 0.12);
+  transition: box-shadow 0.4s var(--ease-calm, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.neon-avatar:hover {
+  box-shadow: 0 12px 40px rgba(43, 36, 29, 0.16);
+}
+
+/* Ombres de texte : très légères, uniquement pour la lisibilité sur photo. */
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(43, 36, 29, 0.18);
+}
+.text-shadow-lg {
+  text-shadow: 0 2px 6px rgba(43, 36, 29, 0.22);
+}
+.text-shadow-white {
+  text-shadow: none;
+}
+.stroke-text {
+  -webkit-text-stroke: 0px transparent;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fadeIn {
+  animation: fadeIn 1s ease-in-out forwards;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* Respiration douce — remplace les pulsations néon des loaders. */
+@keyframes breathe {
+  0%, 100% { opacity: 0.55; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Anciennes "cartes" génériques — aplaties, sans le hover grid-span cassé. */
+.card-button {
+  background-color: var(--accent);
+  color: var(--text-on-accent);
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.9rem;
+  transition: background-color 0.3s ease;
+}
+.card-button:hover {
+  background-color: var(--accent-hover);
+}
+.card-container {
+  position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.card-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 50px rgba(43, 36, 29, 0.1);
+}
+.card-content {
+  padding: 16px;
+}
+
+/* Boutons sociaux (auth) — carte claire sobre, sans effet "shine". */
 .social-btn-container {
   position: relative;
-  width: 6rem; /* Largeur ajustée */
-  height: 6rem; /* Hauteur ajustée */
-  background-color: white;
-  border-radius: 0.5rem; /* Arrondir seulement les coins supérieurs gauche et inférieurs droits */
-  border: 1px solid #ccc;
+  width: 6rem;
+  height: 6rem;
+  background-color: var(--surface-raised);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-subtle);
   overflow: hidden;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 16px rgba(43, 36, 29, 0.07);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
-
-.social-btn-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.4);
-  transform: skewX(-25deg);
-  transition: 0.5s;
+.social-btn-container:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 30px rgba(43, 36, 29, 0.1);
 }
-
-.social-btn-container:hover::before {
-  left: 125%;
-  transition: 0.5s;
-}
-
 .social-btn-content {
   display: flex;
   justify-content: center;
@@ -97,172 +199,152 @@ body {
   height: 100%;
 }
 
-/* ── Inputs sombres : login / register / contact ── */
+/* =========================================================================
+   Overrides Ant Design — reskin premium clair (structure des libs inchangée)
+   ========================================================================= */
 
-/* Wrapper affix (Input.Password, Input avec prefix/suffix) et input direct */
+/* Bouton primaire : accent sauge plein, hover plus profond (fini noir/blanc). */
+button.ant-btn-primary,
+.ant-btn-primary {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--text-on-accent) !important;
+  box-shadow: none !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+button.ant-btn-primary:hover,
+.ant-btn-primary:hover {
+  background-color: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+  color: var(--text-on-accent) !important;
+}
+
+.ant-btn-default {
+  border-color: var(--border-strong) !important;
+  color: var(--text-primary) !important;
+}
+.ant-btn-default:hover {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* Cases à cocher */
+.ant-checkbox-inner {
+  border-color: var(--border-strong) !important;
+  background-color: var(--surface-raised) !important;
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox-wrapper .ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: var(--accent) !important;
+}
+
+.ant-form-item-label > label {
+  color: var(--text-secondary) !important;
+}
+.ant-form-item-label > label.ant-form-item-required::before {
+  color: var(--warm) !important;
+}
+
+/* ---- Champs de formulaire ----------------------------------------------
+   L'ancien thème avait des inputs sombres (.custom-input.bg-gray-900) et une
+   variante claire (.bg-white). On unifie tout sur une seule surface claire ;
+   les sélecteurs sont conservés pour ne casser aucune className. */
+.custom-input,
 .custom-input.bg-gray-900,
+.custom-input.bg-white,
 .custom-input.bg-gray-900.ant-input,
 .custom-input.bg-gray-900.ant-input-outlined,
 .custom-input.bg-gray-900.ant-input-affix-wrapper,
 .custom-input.bg-gray-900.ant-input-affix-wrapper-focused {
-  --ant-color-bg-container: #1e293b !important;
-  background-color: #1e293b !important;
-  color: white !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
+  --ant-color-bg-container: var(--surface-raised) !important;
+  background-color: var(--surface-raised) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-subtle) !important;
 }
 
-/* Inner <input> et <textarea> à l'intérieur du wrapper */
 .custom-input.bg-gray-900 input,
 .custom-input.bg-gray-900 textarea,
 .custom-input.bg-gray-900 .ant-input,
-.custom-input.bg-gray-900 .ant-input-textarea-inner {
+.custom-input.bg-gray-900 .ant-input-textarea-inner,
+.custom-input.bg-white input,
+.custom-input.bg-white textarea {
   background-color: transparent !important;
-  color: white !important;
+  color: var(--text-primary) !important;
 }
 
-/* Hover / Focus */
+.custom-input:hover,
 .custom-input.bg-gray-900:hover,
-.custom-input.bg-gray-900:focus,
-.custom-input.bg-gray-900.ant-input-affix-wrapper:hover,
-.custom-input.bg-gray-900.ant-input-affix-wrapper-focused {
-  border-color: #4ade80 !important;
-  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15) !important;
+.custom-input.bg-white:hover,
+.custom-input.bg-gray-900.ant-input-affix-wrapper:hover {
+  border-color: var(--accent) !important;
 }
 
-/* Placeholder — fond sombre */
+.custom-input:focus,
+.custom-input:focus-within,
+.custom-input.bg-gray-900:focus,
+.custom-input.bg-gray-900.ant-input-affix-wrapper:focus,
+.custom-input.bg-gray-900.ant-input-affix-wrapper-focused {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-ring) !important;
+  outline: none !important;
+}
+
+.custom-input::placeholder,
+.custom-input input::placeholder,
+.custom-input textarea::placeholder,
 .custom-input.bg-gray-900::placeholder,
 .custom-input.bg-gray-900 input::placeholder,
 .custom-input.bg-gray-900 textarea::placeholder,
-.custom-input.bg-gray-900 .ant-input::placeholder,
-.custom-input.bg-gray-900 .ant-input-textarea-inner textarea::placeholder {
-  color: rgba(255, 255, 255, 0.45) !important;
-}
-
-/* Placeholder — fond blanc (resetPassword) */
 .custom-input.bg-white::placeholder,
-.custom-input.bg-white input::placeholder,
-.custom-input.bg-white textarea::placeholder,
-.custom-input.bg-white .ant-input::placeholder {
-  color: rgba(0, 0, 0, 0.4) !important;
+.custom-input.bg-white input::placeholder {
+  color: var(--text-muted) !important;
 }
 
-/* Icône œil mot de passe */
 .custom-input.bg-gray-900 .ant-input-password-icon,
 .custom-input.bg-gray-900 .ant-input-suffix svg {
-  color: rgba(255, 255, 255, 0.4) !important;
+  color: var(--text-muted) !important;
 }
 
-/* Select sombre : formulaire RGPD et autres formulaires sur fond noir */
+/* Select — même surface claire */
 .custom-select .ant-select-selector {
-  background-color: #1e293b !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  color: white !important;
+  background-color: var(--surface-raised) !important;
+  border-color: var(--border-subtle) !important;
+  color: var(--text-primary) !important;
 }
-
-.custom-select .ant-select-selection-placeholder,
+.custom-select .ant-select-selection-placeholder {
+  color: var(--text-muted) !important;
+}
 .custom-select .ant-select-selection-item {
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: var(--text-primary) !important;
 }
-
 .custom-select:hover .ant-select-selector,
 .custom-select.ant-select-focused .ant-select-selector {
-  border-color: #4ade80 !important;
-  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.15) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-ring) !important;
 }
-
 .custom-select .ant-select-arrow {
-  color: rgba(255, 255, 255, 0.45) !important;
+  color: var(--text-muted) !important;
 }
 
-/* Champs de formulaire avec bordure noire active et effet white-glow */
-.custom-input:focus {
-  border-color: black !important;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6) !important;
-}
-
-/* Effet de survol pour le bouton de connexion */
-button.ant-btn-primary {
-  background-color: black;
-  border-color: white;
-  color: white;
-  transition: all 0.3s ease;
-}
-
-button.ant-btn-primary:hover {
-  background-color: white;
-  color: black;
-  border-color: black;
-}
-
-/* Custom styles for Ant Design components */
-.ant-checkbox-inner {
-  border-color: white !important;
-  background-color: black !important;
-}
-
-.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: black !important;
-  border-color: white !important;
-}
-
-.ant-checkbox-wrapper .ant-checkbox-input:focus + .ant-checkbox-inner {
-  border-color: white !important;
-}
-
-.ant-btn-primary {
-  background-color: black !important;
-  border-color: white !important;
-  color: white !important;
-  transition: all 0.3s ease;
-}
-
-.ant-btn-primary:hover {
-  background-color: white !important;
-  color: black !important;
-  border-color: black !important;
-}
-
-.ant-form-item-label > label.ant-form-item-required {
-  color: white !important;
-}
-
-/* Champs de formulaire avec bordure blanche active et effet white-glow */
-.custom-input:focus {
-  border-color: white !important; /* Changement de la bordure à blanc */
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.6) !important;
-}
-
-/* Survol des champs de formulaire */
-.custom-input:hover {
-  border-color: white !important; /* Changement de la bordure à blanc */
-}
-
-/* Texte et icônes avec ombre néon blanche */
-.text-shadow-white {
-  text-shadow: 0 0 8px #FFFFFF;
-}
-
-/* Styles spécifiques pour les éléments de menu */
+/* ---- Menus Ant (sidebar admin, dropdowns) ---- */
 .menu-item,
 .submenu-item {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* Par défaut, texte blanc avec ombre néon blanche */
 .menu-item span,
 .submenu-item span,
 .ant-menu-submenu-title span {
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: var(--text-secondary) !important;
 }
-
-/* Par défaut, icônes blanc cassé */
 .menu-item svg,
 .submenu-item svg,
 .ant-menu-submenu-title svg {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: var(--text-muted) !important;
 }
-
-/* Hover, Focus, et Active : accent vert */
 .menu-item:hover,
 .submenu-item:hover,
 .menu-item:focus,
@@ -270,194 +352,35 @@ button.ant-btn-primary:hover {
 .menu-item.ant-menu-item-selected,
 .submenu-item.ant-menu-item-selected,
 .ant-menu-submenu-title:hover,
-.ant-menu-submenu-title:focus,
-.ant-menu-submenu-title.ant-menu-submenu-active,
-.ant-menu-submenu-title.ant-menu-submenu-selected {
-  background-color: rgba(74, 222, 128, 0.1) !important;
-  color: #4ade80 !important;
+.ant-menu-submenu-open > .ant-menu-submenu-title {
+  background-color: var(--accent-soft) !important;
+  color: var(--accent) !important;
 }
-
 .menu-item:hover span,
 .submenu-item:hover span,
-.menu-item:focus span,
-.submenu-item:focus span,
 .menu-item.ant-menu-item-selected span,
 .submenu-item.ant-menu-item-selected span,
 .ant-menu-submenu-title:hover span,
-.ant-menu-submenu-title:focus span,
-.ant-menu-submenu-title.ant-menu-submenu-active span,
-.ant-menu-submenu-title.ant-menu-submenu-selected span {
-  color: #4ade80 !important;
-}
-
+.ant-menu-submenu-open > .ant-menu-submenu-title span,
 .menu-item:hover svg,
 .submenu-item:hover svg,
-.menu-item:focus svg,
-.submenu-item:focus svg,
 .menu-item.ant-menu-item-selected svg,
 .submenu-item.ant-menu-item-selected svg,
 .ant-menu-submenu-title:hover svg,
-.ant-menu-submenu-title:focus svg,
-.ant-menu-submenu-title.ant-menu-submenu-active svg,
-.ant-menu-submenu-title.ant-menu-submenu-selected svg {
-  color: #4ade80 !important;
-}
-
-/* Sous-menus ouverts */
-.ant-menu-submenu-open > .ant-menu-submenu-title,
-.ant-menu-submenu-open > .ant-menu-submenu-title .anticon {
-  background-color: rgba(74, 222, 128, 0.1) !important;
-  color: #4ade80 !important;
-}
-
 .ant-menu-submenu-open > .ant-menu-submenu-title svg {
-  color: #4ade80 !important;
+  color: var(--accent) !important;
 }
-
-/* Sous-menus */
 .ant-menu-sub {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background-color: var(--surface-sunken) !important;
 }
-
-/* Style des bordures pour les sous-menus déployés */
 .submenu-item {
-  border-left: 3px solid #4ade80 !important;
+  border-left: 3px solid var(--accent) !important;
 }
-
-/* Item sélectionné */
 .ant-menu-item-selected {
-  background-color: rgba(74, 222, 128, 0.15) !important;
+  background-color: var(--accent-soft) !important;
 }
-
 .ant-menu-item-selected::after {
-  border-right-color: #4ade80 !important;
-}
-
-.neon-pulse {
-  animation: neon-pulse 1.5s infinite;
-}
-
-@keyframes neon-pulse {
-  0%, 100% {
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00ff, 0 0 70px #ff00ff, 0 0 80px #ff00ff, 0 0 100px #ff00ff, 0 0 150px #ff00ff;
-  }
-  50% {
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #ff00ff, 0 0 35px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 75px #ff00ff;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 1s ease-in-out forwards;
-}
-
-/* Effet néon pour l'avatar */
-.neon-avatar {
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6),
-              0 0 45px rgba(255, 255, 255, 0.4), 0 0 60px rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transition: box-shadow 0.5s ease-in-out;
-}
-
-.neon-avatar:hover {
-  box-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(255, 255, 255, 0.8),
-              0 0 60px rgba(255, 255, 255, 0.6), 0 0 80px rgba(255, 255, 255, 0.5);
-}
-
-/* Effet néon doré */
-.neon-gold {
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.7), 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-.stroke-text {
-  text-stroke: 0.5px black; /* Contour léger autour des lettres */
-}
-
-/* Add to your global CSS or component-specific CSS */
-.card-button {
-  background-color: black;
-  color: white;
-  border-radius: 0.375rem;
-  padding: 0.5rem;
-  transition: background-color 0.3s ease;
-}
-
-.card-button:hover {
-  background-color: white;
-  color: black;
-}
-
-.card-container {
-  position: relative;
-  transition: all 0.3s ease-in-out;
-  z-index: 1;
-}
-
-.card-container:hover {
-  grid-column: span 2 !important; /* Prend deux colonnes */
-  grid-row: span 2 !important;    /* Prend deux lignes */
-  position: relative;
-  z-index: 10; /* Au-dessus des autres éléments */
-  transform: scale(1.05); /* Augmente légèrement la taille */
-}
-
-.card-content {
-  padding: 16px; /* Ajout de padding pour le texte */
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-}
-
-.card-content:hover {
-  max-height: none; /* Pour montrer plus de contenu */
-}
-
-
-/* Scrollbar global pour Webkit-based browsers (Chrome, Safari, Edge) */
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1a1a1a; /* Couleur du fond */
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #4a4a4a; /* Couleur du curseur */
-  border-radius: 10px;       /* Coins arrondis */
-  border: 3px solid #1a1a1a; /* Pour ajouter un effet de contour */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #636363; /* Couleur du curseur au survol */
-}
-
-/* Scrollbar pour Firefox */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: #4a4a4a #1a1a1a; /* Couleur du curseur et du fond */
-}
-
-html ::-moz-scrollbar {
-  width: 12px;
-}
-
-html ::-moz-scrollbar-thumb {
-  background-color: #4a4a4a;
-  border-radius: 10px;
-  border: 3px solid #1a1a1a;
-}
-
-html ::-moz-scrollbar-thumb:hover {
-  background-color: #636363;
+  border-right-color: var(--accent) !important;
 }
 
 .ant-image {
@@ -465,26 +388,31 @@ html ::-moz-scrollbar-thumb:hover {
   height: 100%;
 }
 
-/* Ajout d'un léger agrandissement au survol */
+/* =========================================================================
+   Scrollbar — neutres chauds (fini le gris anthracite)
+   ========================================================================= */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface-sunken);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+  border-radius: 10px;
+  border: 3px solid var(--surface-sunken);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-muted);
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--surface-sunken);
+}
+
+/* Léger agrandissement au survol du bouton retour-en-haut */
 .back-to-top-button:hover {
-  opacity: 0.8;
-  transform: scale(1.1);
+  opacity: 0.85;
+  transform: translateY(-2px);
 }
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Classes personnalisées pour les ombres de texte */
-.text-shadow-lg {
-  text-shadow: 1px 1px 5px black;
-}
-
-.text-shadow-sm {
-  text-shadow: 1px 1px 3px black;
-}
-
-
-

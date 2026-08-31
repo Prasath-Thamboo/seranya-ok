@@ -22,11 +22,13 @@ interface LighthouseMetrics {
   seo: number;
 }
 
-const CONTENT_COLORS = ['#3b82f6', '#f59e0b', '#8b5cf6'];
-const USER_COLORS = ['#60a5fa', '#14b8a6', '#818cf8']; // Utilisateur (blue-400), Éditeur (teal-500), Admin (indigo-400) — cohérent avec Badge.tsx
-const PERF_COLORS = ['#3b82f6', '#e5e7eb'];
-const ACCESS_COLORS = ['#22c55e', '#e5e7eb'];
-const SEO_COLORS = ['#f59e0b', '#e5e7eb'];
+// Palette dérivée de la charte : sauge, terracotta, bronze, ardoise, sable
+const CONTENT_COLORS = ['#7A8B6F', '#B9744A', '#B08D57'];
+const USER_COLORS = ['#9A8E7D', '#7A8B6F', '#5F7684']; // USER (taupe), EDITOR (sauge), ADMIN (ardoise) — cohérent avec Badge.tsx
+const TRACK_COLOR = '#E4DACB';
+const PERF_COLORS = ['#5F7684', TRACK_COLOR];
+const ACCESS_COLORS = ['#7A8B6F', TRACK_COLOR];
+const SEO_COLORS = ['#B08D57', TRACK_COLOR];
 
 function DashboardHome() {
   const router = useRouter();
@@ -142,74 +144,74 @@ function DashboardHome() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 justify-center items-center mb-12">
 
         <Card
-          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 ease-calm h-48 cursor-pointer rounded-2xl"
           hoverable
           onClick={() => router.push('/admin/posts')}
         >
           <div className="flex justify-between items-center h-full">
             {totalPosts !== null ? (
               <div>
-                <h3 className="text-lg font-iceberg">Total des Articles</h3>
-                <p className="text-4xl font-bold font-kanit">{totalPosts}</p>
+                <h3 className="text-sm font-sans text-ink-soft">Total des Articles</h3>
+                <p className="text-4xl font-serif font-medium text-ink">{totalPosts}</p>
               </div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
-            <FaNewspaper className="w-12 h-12 text-black" />
+            <FaNewspaper className="w-10 h-10 text-accent" />
           </div>
         </Card>
 
         <Card
-          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 ease-calm h-48 cursor-pointer rounded-2xl"
           hoverable
           onClick={() => router.push('/admin/tutoriels')}
         >
           <div className="flex justify-between items-center h-full">
             {totalTutorials !== null ? (
               <div>
-                <h3 className="text-lg font-iceberg">Total des Tutoriels</h3>
-                <p className="text-4xl font-bold font-kanit">{totalTutorials}</p>
+                <h3 className="text-sm font-sans text-ink-soft">Total des Tutoriels</h3>
+                <p className="text-4xl font-serif font-medium text-ink">{totalTutorials}</p>
               </div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
-            <FaPlay className="w-12 h-12 text-black" />
+            <FaPlay className="w-10 h-10 text-accent" />
           </div>
         </Card>
 
         <Card
-          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 ease-calm h-48 cursor-pointer rounded-2xl"
           hoverable
           onClick={() => router.push('/admin/encyclopedie')}
         >
           <div className="flex justify-between items-center h-full">
             {totalDefinitions !== null ? (
               <div>
-                <h3 className="text-lg font-iceberg">Total des Définitions</h3>
-                <p className="text-4xl font-bold font-kanit">{totalDefinitions}</p>
+                <h3 className="text-sm font-sans text-ink-soft">Total des Définitions</h3>
+                <p className="text-4xl font-serif font-medium text-ink">{totalDefinitions}</p>
               </div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
-            <FaBookOpen className="w-12 h-12 text-black" />
+            <FaBookOpen className="w-10 h-10 text-accent" />
           </div>
         </Card>
 
         <Card
-          className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-48 cursor-pointer"
+          className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 ease-calm h-48 cursor-pointer rounded-2xl"
           hoverable
           onClick={() => router.push('/admin/users')}
         >
           <div className="flex justify-between items-center h-full">
             {totalUsers !== null ? (
               <div>
-                <h3 className="text-lg font-iceberg">Total des Utilisateurs</h3>
-                <p className="text-4xl font-bold font-kanit">{totalUsers}</p>
+                <h3 className="text-sm font-sans text-ink-soft">Total des Utilisateurs</h3>
+                <p className="text-4xl font-serif font-medium text-ink">{totalUsers}</p>
               </div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
-            <FaUsers className="w-12 h-12 text-black" />
+            <FaUsers className="w-10 h-10 text-accent" />
           </div>
         </Card>
       </div>
@@ -217,16 +219,16 @@ function DashboardHome() {
       {/* Section Répartition */}
       {contentDistribution && userDistribution && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center items-center mb-12">
-          <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300" hoverable>
+          <Card className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl" hoverable>
             <div className="h-full">
-              <h3 className="text-lg font-iceberg text-center">Répartition du contenu</h3>
+              <h3 className="text-sm font-sans text-ink-soft text-center">Répartition du contenu</h3>
               {renderPieChart(contentDistribution, CONTENT_COLORS)}
             </div>
           </Card>
 
-          <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300" hoverable>
+          <Card className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl" hoverable>
             <div className="h-full">
-              <h3 className="text-lg font-iceberg text-center">Répartition des Utilisateurs</h3>
+              <h3 className="text-sm font-sans text-ink-soft text-center">Répartition des Utilisateurs</h3>
               {renderPieChart(userDistribution, USER_COLORS)}
             </div>
           </Card>
@@ -236,48 +238,48 @@ function DashboardHome() {
       {/* Section Performances */}
       <DividersWithHeading text="Performances" styleVariant="admin" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 justify-center items-center">
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300 h-full" hoverable>
+        <Card className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 h-full rounded-2xl" hoverable>
           <div className="h-full">
-            <h3 className="text-lg font-iceberg text-center">Performances</h3>
+            <h3 className="text-sm font-sans text-ink-soft text-center">Performances</h3>
             {metrics ? (
               renderPieChart(
                 [{ name: 'Performance', value: metrics.performance }, { name: 'Rest', value: 100 - metrics.performance }],
                 PERF_COLORS
               )
             ) : metricsError ? (
-              <div className="flex justify-center items-center w-full h-full text-gray-400 font-kanit text-sm text-center px-4">{metricsError}</div>
+              <div className="flex justify-center items-center w-full h-full text-ink-muted font-sans text-sm text-center px-4">{metricsError}</div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
           </div>
         </Card>
 
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300" hoverable>
+        <Card className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl" hoverable>
           <div className="h-full">
-            <h3 className="text-lg font-iceberg text-center">Accessibilité</h3>
+            <h3 className="text-sm font-sans text-ink-soft text-center">Accessibilité</h3>
             {metrics ? (
               renderPieChart(
                 [{ name: 'Accessibilité', value: metrics.accessibility }, { name: 'Rest', value: 100 - metrics.accessibility }],
                 ACCESS_COLORS
               )
             ) : metricsError ? (
-              <div className="flex justify-center items-center w-full h-full text-gray-400 font-kanit text-sm text-center px-4">{metricsError}</div>
+              <div className="flex justify-center items-center w-full h-full text-ink-muted font-sans text-sm text-center px-4">{metricsError}</div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}
           </div>
         </Card>
 
-        <Card className="bg-white text-black shadow-lg hover:shadow-xl transition-all duration-300" hoverable>
+        <Card className="bg-raised text-ink border border-line shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl" hoverable>
           <div className="h-full">
-            <h3 className="text-lg font-iceberg text-center">SEO</h3>
+            <h3 className="text-sm font-sans text-ink-soft text-center">SEO</h3>
             {metrics ? (
               renderPieChart(
                 [{ name: 'SEO', value: metrics.seo }, { name: 'Rest', value: 100 - metrics.seo }],
                 SEO_COLORS
               )
             ) : metricsError ? (
-              <div className="flex justify-center items-center w-full h-full text-gray-400 font-kanit text-sm text-center px-4">{metricsError}</div>
+              <div className="flex justify-center items-center w-full h-full text-ink-muted font-sans text-sm text-center px-4">{metricsError}</div>
             ) : (
               <div className="flex justify-center items-center w-full h-full"><MiniLoader /></div>
             )}

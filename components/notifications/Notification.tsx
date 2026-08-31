@@ -36,29 +36,29 @@ const typeStyles: Record<NotificationType, {
     container: "bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 dark:bg-blue-800/30",
     iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-blue-100 bg-blue-200 text-blue-800 dark:border-blue-900 dark:bg-blue-800 dark:text-blue-400",
     icon: <AiOutlineInfoCircle className="shrink-0 text-xl" />,
-    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
+    title: "text-gray-800 font-semibold dark:text-white font-sans",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-sans",
   },
   success: {
     container: "bg-teal-50 border-l-4 border-teal-500 rounded-lg p-4 dark:bg-teal-800/30",
     iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-teal-100 bg-teal-200 text-teal-800 dark:border-teal-900 dark:bg-teal-800 dark:text-teal-400",
     icon: <AiOutlineCheckCircle className="shrink-0 text-xl" />,
-    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
+    title: "text-gray-800 font-semibold dark:text-white font-sans",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-sans",
   },
   warning: {
     container: "bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 dark:bg-yellow-800/30",
     iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-yellow-100 bg-yellow-200 text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800 dark:text-yellow-400",
     icon: <AiOutlineWarning className="shrink-0 text-xl" />,
-    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
+    title: "text-gray-800 font-semibold dark:text-white font-sans",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-sans",
   },
   critical: {
     container: "bg-red-50 border-l-4 border-red-500 rounded-lg p-4 dark:bg-red-800/30",
     iconContainer: "inline-flex justify-center items-center w-8 h-8 rounded-full border-4 border-red-100 bg-red-200 text-red-800 dark:border-red-900 dark:bg-red-800 dark:text-red-400",
     icon: <AiOutlineCloseCircle className="shrink-0 text-xl" />,
-    title: "text-gray-800 font-semibold dark:text-white font-iceberg",
-    description: "text-sm text-gray-700 dark:text-neutral-400 font-iceberg",
+    title: "text-gray-800 font-semibold dark:text-white font-sans",
+    description: "text-sm text-gray-700 dark:text-neutral-400 font-sans",
   },
 };
 
@@ -106,7 +106,7 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
           <div className="mt-3 flex space-x-2">
             <button
               type="button"
-              className="bg-teal-500 hover:bg-teal-700 text-white font-iceberg py-2 px-4 rounded transition-all"
+              className="bg-accent hover:bg-accent-hover text-ink-invert font-sans py-2 px-4 rounded transition-all"
               onClick={onPrimaryButtonClick}
             >
               {primaryButtonLabel}
@@ -114,7 +114,7 @@ export const NotificationWithButton: React.FC<NotificationWithButtonProps> = ({
             {secondaryButtonLabel && (
               <button
                 type="button"
-                className="bg-teal-200 hover:bg-teal-300 text-teal-800 font-iceberg py-2 px-4 rounded transition-all"
+                className="border border-line text-ink-soft hover:bg-sunken font-sans py-2 px-4 rounded transition-all"
                 onClick={onSecondaryButtonClick}
               >
                 {secondaryButtonLabel}

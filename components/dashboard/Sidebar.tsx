@@ -142,14 +142,14 @@ export default function Sidebar() {
         {/* Overlay */}
         {mobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0 bg-ink/30 backdrop-blur-sm z-40"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}
 
         {/* Bouton hamburger flottant */}
         <button
-          className="fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full bg-black text-white flex items-center justify-center shadow-lg border-2 border-white transition-transform duration-200 active:scale-95"
+          className="fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full bg-accent text-ink-invert flex items-center justify-center shadow-md transition-transform duration-200 active:scale-95"
           onClick={() => setMobileMenuOpen((open) => !open)}
           aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
         >
@@ -158,11 +158,11 @@ export default function Sidebar() {
 
         {/* Panneau du menu (reprend le menu desktop, en plus compact) */}
         <nav
-          className={`fixed bottom-0 left-0 w-full max-h-[75vh] overflow-y-auto bg-gray-950 text-white z-50 rounded-t-2xl shadow-2xl border-t border-gray-800 transition-transform duration-300 ease-in-out ${
+          className={`fixed bottom-0 left-0 w-full max-h-[75vh] overflow-y-auto bg-raised text-ink z-50 rounded-t-2xl shadow-lg border-t border-line transition-transform duration-300 ease-in-out ${
             mobileMenuOpen ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-line">
             <Image
               src="/logos/seranyaicon.png"
               alt="Seranya Logo"
@@ -175,7 +175,7 @@ export default function Sidebar() {
               className="cursor-pointer"
             />
             <button
-              className="p-2 text-gray-300 hover:text-white transition-colors"
+              className="p-2 text-ink-soft hover:text-ink transition-colors"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Fermer le menu"
             >
@@ -186,11 +186,11 @@ export default function Sidebar() {
           <div className="py-2">
             {visibleItems.map((item) =>
               item.divider ? (
-                <div key={item.key} className="h-px bg-gray-800 my-2 mx-4" />
+                <div key={item.key} className="h-px bg-line my-2 mx-4" />
               ) : (
                 <button
                   key={item.key}
-                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-iceberg uppercase text-gray-200 hover:bg-gray-900 hover:text-green-400 transition-colors"
+                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-sans text-ink-soft hover:bg-sunken hover:text-accent transition-colors"
                   onClick={() => {
                     router.push(item.path);
                     setMobileMenuOpen(false);
@@ -205,7 +205,7 @@ export default function Sidebar() {
             )}
           </div>
 
-          <div className="border-t border-gray-800 px-4 py-3 flex items-center justify-between">
+          <div className="border-t border-line px-4 py-3 flex items-center justify-between">
             <div
               className="flex items-center gap-2 cursor-pointer min-w-0"
               onClick={() => {
@@ -218,12 +218,12 @@ export default function Sidebar() {
                 alt="User Avatar"
                 width={28}
                 height={28}
-                className="rounded-full object-cover ring-2 ring-gray-700 flex-shrink-0"
+                className="rounded-full object-cover ring-1 ring-line flex-shrink-0"
               />
-              <span className="text-xs font-iceberg font-semibold text-white truncate">{user?.pseudo}</span>
+              <span className="text-xs font-serif font-medium text-ink truncate">{user?.pseudo}</span>
             </div>
             <button
-              className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-400 font-kanit transition-colors flex-shrink-0"
+              className="flex items-center gap-1 text-xs text-ink-muted hover:text-danger font-sans transition-colors flex-shrink-0"
               onClick={() => {
                 showLogoutModal();
                 setMobileMenuOpen(false);
@@ -254,13 +254,13 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`relative z-20 flex flex-col h-full text-white bg-gray-950 border-r border-gray-800 shadow-xl transition-all duration-300 ${
+      className={`relative z-20 flex flex-col h-full text-ink bg-raised border-r border-line shadow-sm transition-all duration-300 ${
         collapsed ? 'w-[4.5rem]' : 'w-72'
       }`}
     >
       {/* Bouton de repli */}
       <button
-        className="absolute top-20 -right-3 bg-gray-950 text-white rounded-full p-1 cursor-pointer shadow-lg border border-gray-700 hover:border-green-400 transition-colors z-10"
+        className="absolute top-20 -right-3 bg-raised text-ink rounded-full p-1 cursor-pointer shadow-md border border-line hover:border-accent transition-colors z-10"
         onClick={toggleSidebar}
         aria-label="Réduire le menu"
       >
@@ -273,7 +273,7 @@ export default function Sidebar() {
 
       {/* Section Logo */}
       <div
-        className="flex items-center justify-center py-6 px-4 border-b border-gray-800 cursor-pointer"
+        className="flex items-center justify-center py-6 px-4 border-b border-line cursor-pointer"
         onClick={handleLogoClick}
       >
         <Image
@@ -289,12 +289,12 @@ export default function Sidebar() {
       <div className="flex-1 overflow-y-auto py-4">
       <Menu
         mode="inline"
-        className="font-iceberg"
+        className="font-sans"
         style={{ background: 'transparent', borderRight: 'none' }}
       >
         {visibleItems.map((item) =>
           item.divider ? (
-            <Menu.Divider key={item.key} style={{ borderColor: '#374151', margin: '8px 16px' }} />
+            <Menu.Divider key={item.key} style={{ borderColor: 'var(--border-subtle)', margin: '8px 16px' }} />
           ) : (
             <Menu.Item
               key={item.key}
@@ -302,7 +302,7 @@ export default function Sidebar() {
               className="menu-item"
               onClick={() => router.push(item.path)}
             >
-              {!collapsed && <span className="uppercase">{item.label}</span>}
+              {!collapsed && <span>{item.label}</span>}
             </Menu.Item>
           )
         )}
@@ -310,9 +310,9 @@ export default function Sidebar() {
       </div>
 
       {/* Section Profil et Déconnexion */}
-      <div className="border-t border-gray-800">
+      <div className="border-t border-line">
         <div
-          className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-900 transition-colors ${collapsed ? 'justify-center' : ''}`}
+          className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-sunken transition-colors ${collapsed ? 'justify-center' : ''}`}
           onClick={handleProfileClick}
         >
           <Image
@@ -320,11 +320,11 @@ export default function Sidebar() {
             alt="User Avatar"
             width={38}
             height={38}
-            className="rounded-full object-cover ring-2 ring-gray-700 flex-shrink-0"
+            className="rounded-full object-cover ring-1 ring-line flex-shrink-0"
           />
           {!collapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-iceberg font-semibold text-white truncate">{user?.pseudo}</span>
+              <span className="text-sm font-serif font-medium text-ink truncate">{user?.pseudo}</span>
               <Badge role={user?.role || UserRole.USER} />
             </div>
           )}
@@ -332,7 +332,7 @@ export default function Sidebar() {
 
         <div className="px-3 pb-4">
           <button
-            className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-kanit text-sm transition-colors ${collapsed ? 'justify-center' : ''}`}
+            className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-ink-muted hover:bg-danger/10 hover:text-danger font-sans text-sm transition-colors ${collapsed ? 'justify-center' : ''}`}
             onClick={showLogoutModal}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">

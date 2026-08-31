@@ -3,57 +3,51 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
 
 const LINKS = [
   { label: "Accueil", href: "/" },
   { label: "À propos", href: "/about" },
   { label: "Mentions légales", href: "/mentions" },
-  { label: "Politique de confidentialité", href: "/confidentialite" },
-  { label: "Politique de cookies", href: "/cookies" },
-  { label: "Mes données personnelles", href: "/rgpd" },
+  { label: "Confidentialité", href: "/confidentialite" },
+  { label: "Cookies", href: "/cookies" },
+  { label: "Mes données", href: "/rgpd" },
 ];
 
 const SOCIALS = [
-  { icon: <FaFacebook className="w-4 h-4" />, href: "https://facebook.com", label: "Facebook" },
-  { icon: <FaTwitter className="w-4 h-4" />, href: "https://twitter.com", label: "Twitter" },
-  { icon: <FaInstagram className="w-4 h-4" />, href: "https://instagram.com", label: "Instagram" },
+  { icon: <FaFacebookF className="w-3.5 h-3.5" />, href: "https://facebook.com", label: "Facebook" },
+  { icon: <FaXTwitter className="w-3.5 h-3.5" />, href: "https://twitter.com", label: "X" },
+  { icon: <FaInstagram className="w-3.5 h-3.5" />, href: "https://instagram.com", label: "Instagram" },
 ];
 
 const Footer: React.FC<{ onLoad?: () => void }> = () => {
   return (
-    <footer className="relative z-10 bg-black border-t border-gray-900 font-kanit">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-
-        {/* Ligne principale */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-
-          {/* Logo */}
+    <footer className="relative z-10 bg-sunken border-t border-line font-sans">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <Link href="/" className="flex-shrink-0 opacity-90 hover:opacity-100 transition-opacity">
             <Image
               src="/logos/seranyaicon.png"
               alt="Logo Seranya"
-              width={120}
+              width={116}
               height={44}
               className="object-contain"
             />
           </Link>
 
-          {/* Liens */}
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <nav className="flex flex-wrap justify-center gap-x-7 gap-y-2">
             {LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-xs font-iceberg uppercase tracking-widest text-gray-400 hover:text-green-400 transition-colors duration-200"
+                className="text-sm text-ink-soft hover:text-accent transition-colors duration-200"
               >
                 {l.label}
               </Link>
             ))}
           </nav>
 
-          {/* Réseaux */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {SOCIALS.map((s) => (
               <a
                 key={s.label}
@@ -61,7 +55,7 @@ const Footer: React.FC<{ onLoad?: () => void }> = () => {
                 aria-label={s.label}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-800 text-gray-400 hover:text-green-400 hover:border-green-400 transition-all duration-200"
+                className="w-9 h-9 flex items-center justify-center rounded-full border border-line text-ink-soft hover:text-accent hover:border-accent transition-all duration-200"
               >
                 {s.icon}
               </a>
@@ -69,13 +63,12 @@ const Footer: React.FC<{ onLoad?: () => void }> = () => {
           </div>
         </div>
 
-        {/* Séparateur + copyright */}
-        <div className="mt-6 pt-5 border-t border-gray-900 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-gray-600 font-iceberg uppercase tracking-widest">
+        <div className="mt-8 pt-6 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-xs text-ink-muted">
             © {new Date().getFullYear()} Seranya. Tous droits réservés.
           </p>
-          <p className="text-xs text-gray-700 font-iceberg uppercase tracking-widest">
-            Conçu avec passion
+          <p className="text-xs text-ink-muted">
+            Un espace pour respirer.
           </p>
         </div>
       </div>

@@ -169,9 +169,9 @@ const UpdateClass = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-kanit">
+    <div className="min-h-screen flex items-center justify-center bg-sunken p-4 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Mettre à jour la Classe
         </h1>
 
@@ -180,33 +180,33 @@ const UpdateClass = () => {
           name="update_class"
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           <Form.Item
             name="title"
-            label={<span className="text-black font-kanit">Titre</span>}
+            label={<span className="text-ink-soft font-sans">Titre</span>}
             rules={[{ required: true, message: "Veuillez entrer le titre de la classe!" }]}
           >
-            <Input placeholder="Titre de la classe" className="bg-white text-black font-kanit" />
+            <Input placeholder="Titre de la classe" className="bg-raised text-ink font-sans" />
           </Form.Item>
 
           <Form.Item
             name="intro"
             label={<span className="text-black">Introduction</span>}
             rules={[{ required: true, message: "Veuillez entrer l'introduction de la classe!" }]}
-            className="font-kanit"
+            className="font-sans"
           >
-            <Input.TextArea placeholder="Introduction" className="bg-white text-black font-kanit" />
+            <Input.TextArea placeholder="Introduction" className="bg-raised text-ink font-sans" />
           </Form.Item>
 
-          <Form.Item name="subtitle" label="Sous-titre" className="font-kanit">
-            <Input placeholder="Sous-titre de la classe" className="bg-white text-black font-kanit" />
+          <Form.Item name="subtitle" label="Sous-titre" className="font-sans">
+            <Input placeholder="Sous-titre de la classe" className="bg-raised text-ink font-sans" />
           </Form.Item>
 
         {/* Champ Couleur */}
         <Form.Item
         name="color"
-        label={<span className="font-kanit text-black">Couleur</span>}
+        label={<span className="font-sans text-ink-soft">Couleur</span>}
       >
         <ColorPicker
           format="hex"
@@ -218,12 +218,12 @@ const UpdateClass = () => {
       </Form.Item>
 
 
-          <Form.Item label="Histoire" className="font-kanit">
-            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
+          <Form.Item label="Histoire" className="font-sans">
+            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-sans" />
           </Form.Item>
 
-          <Form.Item label="Biographie" className="font-kanit">
-            <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
+          <Form.Item label="Biographie" className="font-sans">
+            <ReactQuill value={bioValue} onChange={setBioValue} className="font-sans" />
           </Form.Item>
 
           <Form.Item label="Unités associées">
@@ -304,7 +304,7 @@ const UpdateClass = () => {
 
           {/* Galerie */}
           <div className="bg-gray-200 p-4 rounded-lg mb-4">
-            <h2 className="font-kanit text-black">Galerie</h2>
+            <h2 className="font-sans text-ink-soft">Galerie</h2>
             {visibleGallery.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {visibleGallery.map((image, index) => (
@@ -337,11 +337,11 @@ const UpdateClass = () => {
           </div>
 
           {/* Bouton de soumission */}
-          <Form.Item className="flex justify-center font-kanit">
+          <Form.Item className="flex justify-center font-sans">
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit font-lg uppercase p-3"
+              className="bg-accent text-ink-invert font-sans p-3 rounded-full"
               icon={loading ? <LoadingOutlined /> : <PlusOutlined />}
               loading={loading}
               disabled={loading}

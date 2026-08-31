@@ -3,75 +3,52 @@ import React from 'react';
 interface BadgeProps {
   type?: string;
   role?: string;
-  classes?: Array<{ title: string; color?: string }>; // Nouvelle prop pour les classes
+  classes?: Array<{ title: string; color?: string }>;
 }
 
+const BASE =
+  'inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-sans font-medium tracking-wide ring-1 ring-inset';
+
+const VARIANTS: Record<string, string> = {
+  CHAMPION: 'bg-gilt-soft text-gilt ring-gilt/40',
+  ADMIN: 'bg-info-soft text-info ring-info/30',
+  EDITOR: 'bg-accent-soft text-accent ring-accent/30',
+  USER: 'bg-sand-100 text-ink-soft ring-line',
+  UNIT: 'bg-sand-100 text-ink-soft ring-line',
+  DEFAULT: 'bg-sand-100 text-ink-muted ring-line',
+};
+
 const Badge: React.FC<BadgeProps> = ({ type, role, classes }) => {
-  // Si des classes sont fournies et qu'elles existent
+  // Badges de classes : pastille teintée de la couleur de la classe, sobre
+  // (bordure + fond très léger, plus aucun halo néon).
   if (classes && classes.length > 0) {
     return (
       <div className="flex flex-wrap gap-2 justify-center">
-        {classes.map((classItem, index) => (
-          <span
-            key={index}
-            className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-bold uppercase neon-effect font-iceberg`}
-            style={{
-              color: classItem.color || '#000000', // Texte avec couleur de classe ou noir
-              boxShadow: `0 0 8px ${classItem.color || '#000000'}`, // Effet néon avec couleur de classe
-              border: `1px solid ${classItem.color || '#000000'}`, // Bordure avec couleur de classe ou noir
-              padding: '6px 12px', // Ajout d'un padding-y léger
-              textShadow: `0 0 5px ${classItem.color || '#000000'}`, // Ajout de l'ombre de texte avec la couleur de la classe
-            }}
-          >
-            {classItem.title} {/* Affiche le titre de la classe */}
-          </span>
-        ))}
+        {classes.map((classItem, index) => {
+          const c = classItem.color || 'var(--accent)';
+          return (
+            <span
+              key={index}
+              className={`${BASE}`}
+              style={{
+                color: c,
+                borderColor: 'transparent',
+                boxShadow: `inset 0 0 0 1px ${c}55`,
+                backgroundColor: `${c}14`,
+              }}
+            >
+              {classItem.title}
+            </span>
+          );
+        })}
       </div>
     );
   }
 
-  // Code existant pour afficher les badges basés sur "type" ou "role"
-  let badgeStyle = 'font-iceberg uppercase'; // Police Iceberg par défaut avec uppercase
+  const key = (type || role || 'DEFAULT').toUpperCase();
+  const variant = VARIANTS[key] || VARIANTS.DEFAULT;
 
-  if (type) {
-    switch (type.toUpperCase()) {
-      case 'CHAMPION':
-        badgeStyle += ' bg-yellow-600/10 text-yellow-400 ring-yellow-400/30 neon-gold font-bold';
-        break;
-      case 'UNIT':
-        badgeStyle += ' bg-gray-300/10 text-black ring-gray-300/20 font-bold';
-        break;
-      default:
-        badgeStyle += ' bg-gray-400/10 text-gray-400 ring-gray-400/20 font-bold';
-        break;
-    }
-  } else if (role) {
-    switch (role.toUpperCase()) {
-      case 'CHAMPION':
-        badgeStyle += ' bg-yellow-600/10 text-yellow-400 ring-yellow-400/30 neon-gold font-bold';
-        break;
-      case 'ADMIN':
-        badgeStyle += ' bg-indigo-400/10 text-indigo-400 ring-indigo-400/30 font-bold';
-        break;
-      case 'EDITOR':
-        badgeStyle += ' bg-teal-500/10 text-teal-500 ring-teal-500/30 font-bold';
-        break;
-      case 'USER':
-        badgeStyle += ' bg-blue-400/10 text-blue-400 ring-blue-400/30 font-bold';
-        break;
-      default:
-        badgeStyle += ' bg-gray-400/10 text-gray-400 ring-gray-400/20 font-bold';
-        break;
-    }
-  }
-
-  return (
-    <span
-      className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium ring-1 ring-inset ${badgeStyle}`}
-    >
-      {type?.toUpperCase() || role?.toUpperCase()}
-    </span>
-  );
+  return <span className={`${BASE} ${variant}`}>{key}</span>;
 };
 
 export default Badge;

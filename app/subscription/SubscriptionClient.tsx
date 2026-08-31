@@ -6,13 +6,11 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 
-const stagger = {
-  visible: { transition: { staggerChildren: 0.12 } },
-};
+const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } },
 };
 
 const STATS = [
@@ -25,64 +23,52 @@ export default function SubscriptionPage() {
   const [backgroundImage, setBackgroundImage] = useState<string>('');
 
   useEffect(() => {
-    fetchRandomBackground()
-      .then(setBackgroundImage)
-      .catch(() => {});
+    fetchRandomBackground().then(setBackgroundImage).catch(() => {});
   }, []);
 
   return (
-    <main className="bg-black text-white font-kanit">
-
+    <main className="bg-page font-sans text-ink">
       {/* ── HERO ── */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-page">
         {backgroundImage && (
-          <Image
-            src={backgroundImage}
-            alt="Fond abonnement"
-            fill
-            style={{ objectFit: 'cover' }}
-            className="scale-105"
-            priority
-          />
+          <Image src={backgroundImage} alt="" fill priority sizes="100vw" style={{ objectFit: 'cover' }} className="scale-105" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/65 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-page" />
 
         <motion.div
-          className="relative z-10 text-center px-6 max-w-3xl mx-auto"
+          className="relative z-10 mx-auto max-w-3xl px-6 text-center"
           initial="hidden"
           animate="visible"
           variants={stagger}
         >
           <motion.span
             variants={fadeUp}
-            className="inline-block px-4 py-1.5 bg-green-500/20 border border-green-500/40 text-green-400 text-xs font-iceberg uppercase tracking-widest rounded-full mb-6"
+            className="mb-6 inline-block rounded-full border border-white/40 bg-white/10 px-4 py-1.5 text-xs font-sans uppercase tracking-[0.2em] text-white backdrop-blur-sm"
           >
             Rejoignez la communauté
           </motion.span>
 
           <motion.h1
             variants={fadeUp}
-            className="text-5xl md:text-6xl lg:text-7xl font-iceberg uppercase tracking-wide text-white mb-6 leading-tight text-shadow-sm"
+            className="mb-6 font-serif text-5xl font-medium leading-tight text-white text-shadow-sm md:text-6xl lg:text-7xl"
           >
-            Votre voie,{' '}
-            <span className="text-green-400">votre rythme</span>
+            Votre voie, <span className="italic text-white/95">votre rythme</span>
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="text-gray-300 text-lg md:text-xl max-w-xl mx-auto leading-relaxed text-shadow-sm"
+            className="mx-auto max-w-xl text-lg leading-relaxed text-white/90 text-shadow-sm md:text-xl"
           >
-            Accédez à l&apos;intégralité du contenu Seranya, devenez éditeur actif et rejoignez une communauté passionnée.
+            Accédez à l&apos;intégralité du contenu Seranya, devenez éditeur actif et rejoignez une
+            communauté passionnée.
           </motion.p>
 
-          <motion.div
-            variants={fadeUp}
-            className="flex items-center justify-center gap-10 mt-12"
-          >
+          <motion.div variants={fadeUp} className="mt-12 flex items-center justify-center gap-10">
             {STATS.map((s) => (
               <div key={s.label} className="text-center">
-                <p className="text-4xl font-iceberg text-green-400 font-bold">{s.value}</p>
-                <p className="text-xs text-gray-400 font-iceberg uppercase tracking-widest mt-1">{s.label}</p>
+                <p className="font-serif text-4xl font-medium text-white">{s.value}</p>
+                <p className="mt-1 text-xs font-sans uppercase tracking-[0.18em] text-white/80">{s.label}</p>
               </div>
             ))}
           </motion.div>
@@ -90,7 +76,7 @@ export default function SubscriptionPage() {
           <motion.div variants={fadeUp} className="mt-10">
             <a
               href="#plans"
-              className="inline-flex items-center gap-2 px-8 py-3 border border-green-500/50 text-green-400 font-iceberg uppercase tracking-widest text-sm rounded-full hover:bg-green-500/10 transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-full border border-white/50 px-8 py-3 text-sm font-sans text-white transition-all duration-200 hover:bg-white/10"
             >
               Voir les plans ↓
             </a>
@@ -102,7 +88,6 @@ export default function SubscriptionPage() {
       <section id="plans">
         <Pricing />
       </section>
-
     </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button } from 'antd';
+import { Form, Input } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CgUserAdd } from 'react-icons/cg';
@@ -24,9 +24,7 @@ export default function RegisterPage() {
       } as RegisterUserModel);
       setSuccess(true);
     } catch (error: any) {
-      setError(
-        error?.response?.data?.message || 'Inscription échouée. Veuillez réessayer.',
-      );
+      setError(error?.response?.data?.message || 'Inscription échouée. Veuillez réessayer.');
       console.error('Failed to register:', error);
     } finally {
       setLoading(false);
@@ -35,17 +33,17 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="h-screen w-full overflow-hidden flex items-center justify-center bg-black">
-        <div className="max-w-md w-full text-center px-8">
-          <Image src="/logos/seranyaicon.png" alt="Seranya" width={160} height={60} className="mx-auto mb-6" />
-          <div className="text-green-400 text-5xl mb-4">✓</div>
-          <h2 className="text-2xl font-iceberg uppercase tracking-widest text-white mb-3">Inscription réussie !</h2>
-          <p className="text-gray-400 font-kanit text-sm mb-8">
-            Un email de confirmation vous a été envoyé. Cliquez sur le lien dans votre email pour activer votre compte.
+      <div className="flex h-screen w-full items-center justify-center bg-page font-sans text-ink">
+        <div className="w-full max-w-md px-8 text-center">
+          <Image src="/logos/seranyaicon.png" alt="Seranya" width={156} height={58} className="mx-auto mb-6" />
+          <div className="mb-4 text-5xl text-accent">✓</div>
+          <h2 className="mb-3 font-serif text-2xl font-medium text-ink">Inscription réussie</h2>
+          <p className="mb-8 font-sans text-sm text-ink-soft">
+            Un email de confirmation vous a été envoyé. Cliquez sur le lien pour activer votre compte.
           </p>
           <Link
             href="/auth/login"
-            className="inline-block px-8 py-3 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 transition-colors"
+            className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-sans text-ink-invert transition-colors hover:bg-accent-hover"
           >
             Se connecter
           </Link>
@@ -55,100 +53,76 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="h-screen w-full overflow-hidden relative flex flex-col lg:flex-row">
-      {/* Background image section */}
-      <div className="absolute inset-0 lg:relative lg:inset-auto lg:w-1/2 lg:h-full lg:flex-shrink-0">
-        <Image
-          src="/images/backgrounds/seranyayoga.jpg"
-          alt="Background"
-          fill
-          style={{ objectFit: 'cover' }}
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/90 hidden lg:block" />
-        <div className="absolute inset-0 bg-black/65 lg:hidden" />
+    <div className="relative flex h-screen w-full flex-col overflow-hidden bg-page lg:flex-row">
+      {/* Image */}
+      <div className="absolute inset-0 lg:relative lg:inset-auto lg:h-full lg:w-1/2 lg:flex-shrink-0">
+        <Image src="/images/backgrounds/seranyayoga.jpg" alt="" fill style={{ objectFit: 'cover' }} priority />
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-black/10 via-transparent to-page lg:block" />
+        <div className="absolute inset-0 bg-page/70 lg:hidden" />
       </div>
 
-      {/* Register form section */}
-      <div className="relative z-10 flex flex-1 lg:w-1/2 lg:flex-shrink-0 overflow-hidden justify-center items-center lg:bg-black">
-        <div className="max-w-md w-full text-white px-8 py-8 mx-4 lg:mx-0 bg-black/50 backdrop-blur-md lg:bg-transparent lg:backdrop-blur-none rounded-2xl lg:rounded-none border border-white/10 lg:border-0">
-          {/* Logo */}
-          <div className="mb-4">
+      {/* Formulaire */}
+      <div className="relative z-10 flex flex-1 items-center justify-center overflow-y-auto px-4 py-10 lg:w-1/2 lg:flex-shrink-0 lg:bg-page">
+        <div className="mx-4 w-full max-w-md rounded-2xl border border-line bg-raised px-8 py-9 shadow-md lg:mx-0 lg:border-0 lg:bg-transparent lg:shadow-none">
+          <div className="mb-5">
             <Link href="/">
-              <Image src="/logos/seranyaicon.png" alt="Seranya Logo" width={160} height={58} className="mx-auto hover:opacity-80 transition-opacity cursor-pointer" />
+              <Image src="/logos/seranyaicon.png" alt="Seranya" width={156} height={56} className="mx-auto cursor-pointer transition-opacity hover:opacity-80" />
             </Link>
           </div>
 
-          <h1 className="text-3xl font-bold mb-2 text-center font-iceberg uppercase tracking-widest text-white">
-            Inscription
-          </h1>
-          <p className="text-gray-400 text-sm text-center font-kanit mb-5">
-            Créez votre espace Seranya
-          </p>
+          <h1 className="mb-2 text-center font-serif text-3xl font-medium text-ink">Inscription</h1>
+          <p className="mb-6 text-center font-sans text-sm text-ink-muted">Créez votre espace Seranya</p>
 
           <Form name="register" onFinish={onFinish} layout="vertical">
             <div className="grid grid-cols-2 gap-x-4">
               <Form.Item
-                label={<span className="text-gray-300 font-kanit text-sm">Pseudo</span>}
+                label={<span className="font-sans text-sm text-ink-soft">Pseudo</span>}
                 name="pseudo"
                 rules={[{ required: true, message: 'Requis' }]}
                 className="mb-3"
               >
-                <Input
-                  placeholder="VotrePseudo"
-                  className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400 focus:border-green-400"
-                  style={{ height: '2.5rem', borderRadius: '0.375rem' }}
-                />
+                <Input placeholder="VotrePseudo" className="custom-input" style={{ height: '2.5rem', borderRadius: '0.75rem' }} />
               </Form.Item>
 
               <Form.Item
-                label={<span className="text-gray-300 font-kanit text-sm">Email</span>}
+                label={<span className="font-sans text-sm text-ink-soft">Email</span>}
                 name="email"
                 rules={[{ required: true, message: 'Requis' }]}
                 className="mb-3"
               >
-                <Input
-                  type="email"
-                  placeholder="votre@email.com"
-                  className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400 focus:border-green-400"
-                  style={{ height: '2.5rem', borderRadius: '0.375rem' }}
-                />
+                <Input type="email" placeholder="votre@email.com" className="custom-input" style={{ height: '2.5rem', borderRadius: '0.75rem' }} />
               </Form.Item>
 
               <Form.Item
-                label={<span className="text-gray-300 font-kanit text-sm">Mot de passe</span>}
+                label={<span className="font-sans text-sm text-ink-soft">Mot de passe</span>}
                 name="password"
                 rules={[
                   { required: true, message: 'Le mot de passe est requis.' },
                   { min: 8, message: 'Le mot de passe doit contenir au moins 8 caractères.' },
                 ]}
-                className="mb-3 col-span-2"
+                className="col-span-2 mb-3"
               >
-                <Input.Password
-                  placeholder="••••••••"
-                  className="custom-input bg-gray-900 text-white font-kanit border-gray-700 hover:border-green-400"
-                  style={{ height: '2.5rem', borderRadius: '0.375rem' }}
-                />
+                <Input.Password placeholder="••••••••" className="custom-input" style={{ height: '2.5rem', borderRadius: '0.75rem' }} />
               </Form.Item>
             </div>
 
-            {error && <p className="text-red-400 font-kanit text-sm mb-3">{error}</p>}
+            {error && <p className="mb-3 font-sans text-sm text-danger">{error}</p>}
 
-            <Form.Item className="mt-4 mb-3">
+            <Form.Item className="mb-3 mt-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 font-iceberg uppercase tracking-widest text-sm font-bold flex items-center justify-center gap-2 rounded-md transition-all duration-200 bg-green-500 text-white hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 active:scale-95"
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-accent text-sm font-sans text-ink-invert transition-all duration-200 hover:bg-accent-hover"
               >
-                <CgUserAdd className="w-5 h-5" />
-                {loading ? 'Inscription...' : "S'inscrire"}
+                <CgUserAdd className="h-5 w-5" />
+                {loading ? 'Inscription…' : "S'inscrire"}
               </button>
             </Form.Item>
 
-            <div className="text-center border-t border-gray-800 pt-4">
-              <span className="text-gray-400 font-kanit text-sm">
+            <div className="border-t border-line pt-4 text-center">
+              <span className="font-sans text-sm text-ink-soft">
                 Déjà inscrit ?{' '}
-                <Link href="/auth/login" className="text-green-400 hover:text-green-300 transition-colors font-semibold">
+                <Link href="/auth/login" className="font-medium text-accent transition-colors hover:text-accent-hover">
                   Se connecter
                 </Link>
               </span>

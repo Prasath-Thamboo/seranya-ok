@@ -204,9 +204,9 @@ const UpdateUnit = () => {
   const colorValue = useWatch('color', form);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-kanit">
+    <div className="min-h-screen flex items-center justify-center bg-sunken p-4 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Mettre à jour l&apos;Unité
         </h1>
 
@@ -215,66 +215,66 @@ const UpdateUnit = () => {
           name="update_unit"
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           <Form.Item
             name="title"
-            label={<span className="text-black font-kanit">Titre</span>}
+            label={<span className="text-ink-soft font-sans">Titre</span>}
             rules={[{ required: true, message: "Veuillez entrer le titre de l'unité!" }]}
           >
             <Input
               placeholder="Titre de l'unité"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
           <Form.Item
             name="intro"
-            label={<span className="text-black font-kanit">Introduction</span>}
+            label={<span className="text-ink-soft font-sans">Introduction</span>}
             rules={[{ required: true, message: "Veuillez entrer l'introduction de l'unité!" }]}
-            className="font-kanit"
+            className="font-sans"
           >
             <Input.TextArea
               placeholder="Introduction"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
-          <Form.Item name="subtitle" label={<span className="text-black font-kanit">Sous-titre</span>} className="font-kanit">
+          <Form.Item name="subtitle" label={<span className="text-ink-soft font-sans">Sous-titre</span>} className="font-sans">
             <Input
               placeholder="Sous-titre de l'unité"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
-          <Form.Item label={<span className="text-black font-kanit">Histoire</span>} className="font-kanit">
-            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-kanit" />
+          <Form.Item label={<span className="text-ink-soft font-sans">Histoire</span>} className="font-sans">
+            <ReactQuill value={storyValue} onChange={setStoryValue} className="font-sans" />
           </Form.Item>
 
-          <Form.Item label={<span className="text-black font-kanit">Biographie</span>} className="font-kanit">
-            <ReactQuill value={bioValue} onChange={setBioValue} className="font-kanit" />
+          <Form.Item label={<span className="text-ink-soft font-sans">Biographie</span>} className="font-sans">
+            <ReactQuill value={bioValue} onChange={setBioValue} className="font-sans" />
           </Form.Item>
 
           {/* Nouveau Champ : Quote */}
           <Form.Item
             name="quote"
-            label={<span className="text-black font-kanit">Citation</span>}
+            label={<span className="text-ink-soft font-sans">Citation</span>}
             rules={[
               { required: true, message: "Veuillez entrer une citation pour l'unité!" },
               { max: 200, message: "La citation ne doit pas dépasser 200 caractères." }
             ]}
-            className="font-kanit"
+            className="font-sans"
           >
             <Input.TextArea
               placeholder="Citation de l'unité"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
           {/* Nouveau Champ : Color Picker avec Aperçu et Validation */}
           <Form.Item
             name="color"
-            label={<span className="text-black font-kanit">Couleur</span>}
+            label={<span className="text-ink-soft font-sans">Couleur</span>}
             rules={[
               { required: true, message: "Veuillez sélectionner une couleur!" },
               {
@@ -282,7 +282,7 @@ const UpdateUnit = () => {
                 message: "Veuillez sélectionner une couleur valide."
               }
             ]}
-            className="font-kanit"
+            className="font-sans"
           >
             <div className="flex items-center space-x-4">
               <input
@@ -302,18 +302,18 @@ const UpdateUnit = () => {
 
           <Form.Item
             name="type"
-            label={<span className="text-black font-kanit">Type</span>}
+            label={<span className="text-ink-soft font-sans">Type</span>}
             rules={[{ required: true, message: "Veuillez choisir un type!" }]}
-            className="font-kanit"
+            className="font-sans"
           >
             <Select
               placeholder="Sélectionnez le type"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             >
-              <Option className="font-kanit" value={UnitType.UNIT}>
+              <Option className="font-sans" value={UnitType.UNIT}>
                 UNIT
               </Option>
-              <Option className="font-kanit" value={UnitType.CHAMPION}>
+              <Option className="font-sans" value={UnitType.CHAMPION}>
                 CHAMPION
               </Option>
             </Select>
@@ -321,15 +321,15 @@ const UpdateUnit = () => {
 
           <Form.Item
             name="classIds"
-            label={<span className="text-black font-kanit">Classe associée</span>}
-            className="font-kanit"
+            label={<span className="text-ink-soft font-sans">Classe associée</span>}
+            className="font-sans"
           >
             <Select
               mode="multiple"
               placeholder="Sélectionnez une ou plusieurs classes"
               value={selectedClassIds}
               onChange={setSelectedClassIds}
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             >
               {classes.map((classe) => (
                 <Select.Option key={classe.id} value={classe.id}>
@@ -340,7 +340,7 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Image de profil */}
-          <Form.Item label={<span className="text-black font-kanit">Image de profil</span>} className="font-kanit">
+          <Form.Item label={<span className="text-ink-soft font-sans">Image de profil</span>} className="font-sans">
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {unit?.profileImage && (
@@ -370,7 +370,7 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Image Header */}
-          <Form.Item label={<span className="text-black font-kanit">Image Header</span>} className="font-kanit">
+          <Form.Item label={<span className="text-ink-soft font-sans">Image Header</span>} className="font-sans">
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {unit?.headerImage && (
@@ -400,7 +400,7 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Image Footer */}
-          <Form.Item label={<span className="text-black font-kanit">Image de pied de page</span>} className="font-kanit">
+          <Form.Item label={<span className="text-ink-soft font-sans">Image de pied de page</span>} className="font-sans">
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {unit?.footerImage && (
@@ -430,8 +430,8 @@ const UpdateUnit = () => {
           </Form.Item>
 
           {/* Galerie */}
-          <div className="bg-gray-200 p-4 rounded-lg mb-4 font-kanit">
-            <h2 className="text-black font-kanit mb-4">Galerie</h2>
+          <div className="bg-gray-200 p-4 rounded-lg mb-4 font-sans">
+            <h2 className="text-ink-soft font-sans mb-4">Galerie</h2>
             {visibleGallery.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {visibleGallery.map((image, index) => (
@@ -462,11 +462,11 @@ const UpdateUnit = () => {
             </Form.Item>
           </div>
 
-          <Form.Item className="flex justify-center font-kanit">
+          <Form.Item className="flex justify-center font-sans">
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-teal-500 text-white font-kanit text-lg uppercase p-3 focus:ring-teal-500 focus:border-teal-500"
+              className="bg-accent text-ink-invert font-sans text-sm p-3 rounded-full"
               icon={<PlusOutlined />}
               loading={loading}
             >

@@ -86,7 +86,7 @@ const CreateClass = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Créer une Classe
         </h1>
 
@@ -95,13 +95,13 @@ const CreateClass = () => {
           initialValues={{ remember: true }}
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           {/* Champ Titre */}
           <Form.Item
             name="title"
             label={
-              <span className="font-kanit text-black">
+              <span className="font-sans text-ink-soft">
                 Titre<span className="text-red-500 ml-1">*</span>
               </span>
             }
@@ -109,14 +109,14 @@ const CreateClass = () => {
           >
             <Input
               placeholder="Titre de la classe"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "3rem" }}
             />
           </Form.Item>
 
           <Form.Item
   name="color"
-  label={<span className="font-kanit text-black">Couleur</span>}
+  label={<span className="font-sans text-ink-soft">Couleur</span>}
   valuePropName="value"
   trigger="onChange"
 >
@@ -128,7 +128,7 @@ const CreateClass = () => {
           <Form.Item
             name="intro"
             label={
-              <span className="font-kanit text-black">
+              <span className="font-sans text-ink-soft">
                 Introduction<span className="text-red-500 ml-1">*</span>
               </span>
             }
@@ -140,7 +140,7 @@ const CreateClass = () => {
           {/* Champ Sous-titre */}
           <Form.Item
             name="subtitle"
-            label={<span className="font-kanit text-black">Sous-titre</span>}
+            label={<span className="font-sans text-ink-soft">Sous-titre</span>}
           >
             <Input.TextArea placeholder="Sous-titre de la classe" />
           </Form.Item>
@@ -148,7 +148,7 @@ const CreateClass = () => {
           {/* Champ Histoire */}
           <Form.Item
             name="story"
-            label={<span className="font-kanit text-black">Histoire</span>}
+            label={<span className="font-sans text-ink-soft">Histoire</span>}
           >
             <ReactQuill value={storyValue} onChange={setStoryValue} />
           </Form.Item>
@@ -156,7 +156,7 @@ const CreateClass = () => {
           {/* Champ Biographie */}
           <Form.Item
             name="bio"
-            label={<span className="font-kanit text-black">Biographie</span>}
+            label={<span className="font-sans text-ink-soft">Biographie</span>}
           >
             <ReactQuill value={bioValue} onChange={setBioValue} />
           </Form.Item>
@@ -164,7 +164,7 @@ const CreateClass = () => {
           {/* Upload Image de profil */}
           <Form.Item
             name="profileImage"
-            label={<span className="font-kanit text-black">Image de profil</span>}
+            label={<span className="font-sans text-ink-soft">Image de profil</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -181,7 +181,7 @@ const CreateClass = () => {
           {/* Upload Image Header */}
           <Form.Item
             name="headerImage"
-            label={<span className="font-kanit text-black">Image d&#39;en-tête</span>}
+            label={<span className="font-sans text-ink-soft">Image d&#39;en-tête</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -198,7 +198,7 @@ const CreateClass = () => {
           {/* Upload Image de pied de page */}
           <Form.Item
             name="footerImage"
-            label={<span className="font-kanit text-black">Image de pied de page</span>}
+            label={<span className="font-sans text-ink-soft">Image de pied de page</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -215,7 +215,7 @@ const CreateClass = () => {
           {/* Upload Galerie */}
           <Form.Item
             name="gallery"
-            label={<span className="font-kanit text-black">Galerie</span>}
+            label={<span className="font-sans text-ink-soft">Galerie</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -237,8 +237,8 @@ const CreateClass = () => {
               type="primary"
               htmlType="submit"
               className={`${
-                loading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-white text-black"
-              } font-kanit text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold`}
+                loading ? "bg-sunken text-ink-muted cursor-not-allowed" : "bg-accent text-ink-invert"
+              } font-sans text-sm py-3 px-10 flex items-center justify-center rounded-full`}
               loading={loading}
               disabled={loading}
               icon={!loading && <PlusOutlined className="mr-2" />}

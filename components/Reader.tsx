@@ -50,36 +50,38 @@ const Reader: React.FC<ReaderProps> = ({ text }) => {
   };
 
   return (
-    <div className="relative p-4 border rounded-lg shadow-lg bg-white">
+    <div className="relative rounded-2xl border border-line bg-raised p-5 shadow-sm">
       <div
-        className="text-lg font-kanit"
-        dangerouslySetInnerHTML={{ __html: pages[currentPage] || '' }} // Rendu HTML sécurisé
+        className="font-sans text-lg leading-relaxed text-ink-soft [&_p]:mb-4"
+        dangerouslySetInnerHTML={{ __html: pages[currentPage] || '' }}
       />
-      <div className="flex justify-between items-center mt-4">
-        <button 
-          onClick={prevPage} 
+      <div className="mt-4 flex items-center justify-between">
+        <button
+          onClick={prevPage}
           disabled={currentPage === 0}
-          className="p-2 text-gray-500 hover:text-black"
+          className="p-2 text-ink-muted transition-colors hover:text-accent disabled:opacity-40"
         >
-          <FaChevronLeft size={24} />
+          <FaChevronLeft size={22} />
         </button>
-        <span className="text-sm text-gray-600">
-          Page {currentPage + 1} of {pages.length}
+        <span className="text-sm text-ink-muted">
+          Page {currentPage + 1} / {pages.length}
         </span>
-        <button 
-          onClick={nextPage} 
+        <button
+          onClick={nextPage}
           disabled={currentPage === pages.length - 1}
-          className="p-2 text-gray-500 hover:text-black"
+          className="p-2 text-ink-muted transition-colors hover:text-accent disabled:opacity-40"
         >
-          <FaChevronRight size={24} />
+          <FaChevronRight size={22} />
         </button>
       </div>
-      <div className="flex justify-center gap-2 mt-2">
+      <div className="mt-3 flex flex-wrap justify-center gap-2">
         {pages.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentPage(index)}
-            className={`w-8 h-8 rounded-full ${index === currentPage ? 'bg-black text-white' : 'bg-gray-200 text-gray-600'}`}
+            className={`h-8 w-8 rounded-full text-sm transition-colors ${
+              index === currentPage ? 'bg-accent text-ink-invert' : 'bg-sunken text-ink-soft hover:bg-accent-soft'
+            }`}
           >
             {index + 1}
           </button>

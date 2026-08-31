@@ -85,27 +85,27 @@ export default function NotificationBell() {
     <div className="relative" ref={containerRef}>
       <button
         onClick={toggleOpen}
-        className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none"
+        className="relative p-2 rounded-lg hover:bg-sunken transition-colors focus:outline-none"
         aria-label="Notifications"
       >
-        <FiBell className="w-5 h-5 text-gray-600" />
+        <FiBell className="w-5 h-5 text-ink-soft" />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-green-500 text-white text-[10px] font-bold rounded-full ring-2 ring-white">
+          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-accent text-ink-invert text-[10px] font-bold rounded-full ring-2 ring-raised">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <span className="text-sm font-iceberg uppercase tracking-widest text-gray-700">
+        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-raised border border-line rounded-xl shadow-md z-50">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-line">
+            <span className="text-sm font-sans uppercase tracking-[0.14em] text-ink-soft">
               Notifications
             </span>
             {notifications.some((n) => !n.isRead) && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-xs text-green-600 hover:text-green-700"
+                className="text-xs text-accent hover:text-accent-hover"
               >
                 Tout marquer comme lu
               </button>
@@ -113,22 +113,22 @@ export default function NotificationBell() {
           </div>
 
           {notifications.length === 0 ? (
-            <p className="text-center text-gray-400 text-sm py-8">Aucune notification.</p>
+            <p className="text-center text-ink-muted text-sm py-8">Aucune notification.</p>
           ) : (
             notifications.map((notification) => (
               <button
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification)}
-                className={`w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors flex gap-2 items-start ${
+                className={`w-full text-left px-4 py-3 border-b border-line/60 hover:bg-sunken transition-colors flex gap-2 items-start ${
                   notification.isRead ? "opacity-60" : ""
                 }`}
               >
                 {!notification.isRead && (
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-800 leading-relaxed">{notification.message}</p>
-                  <p className="text-[10px] text-gray-400 mt-1">{formatDate(notification.createdAt)}</p>
+                  <p className="text-xs text-ink leading-relaxed">{notification.message}</p>
+                  <p className="text-[10px] text-ink-muted mt-1">{formatDate(notification.createdAt)}</p>
                 </div>
               </button>
             ))

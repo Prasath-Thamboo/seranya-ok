@@ -1,12 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Figtree } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import Analytics from "@/components/Analytics";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-const inter = Inter({ subsets: ["latin"] });
+// Corps / UI : sans humaniste douce, haute lisibilité.
+const fontSans = Figtree({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-sans",
+});
+
+// Titres / moments de marque : serif élégante et posée (casse normale).
+const fontSerif = Fraunces({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -61,7 +76,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#000000",
+  themeColor: "#FAF7F2",
 };
 
 const jsonLd = {
@@ -88,14 +103,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" className={`${fontSans.variable} ${fontSerif.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans">
         <Analytics />
         <Providers>{children}</Providers>
       </body>

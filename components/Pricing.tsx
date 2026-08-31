@@ -5,8 +5,7 @@ import { fetchCurrentUser, getAccessToken } from "@/lib/queries/AuthQueries";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { FaCheck, FaTimes, FaLeaf, FaStar, FaShieldAlt, FaInfinity } from "react-icons/fa";
-import { HiSparkles } from "react-icons/hi2";
+import { LuCheck, LuX, LuLeaf, LuStar, LuShieldCheck, LuInfinity, LuSparkles } from "react-icons/lu";
 
 const BASE_URL =
   process.env.NODE_ENV === "production"
@@ -14,10 +13,11 @@ const BASE_URL =
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || "http://localhost:5000";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 16 },
   visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.6, ease: "easeOut", delay: i * 0.1 },
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.1 },
   }),
 };
 
@@ -40,10 +40,10 @@ const PREMIUM_FEATURES = [
 ];
 
 const BENEFITS = [
-  { icon: <FaLeaf className="w-6 h-6 text-green-400" />, title: "Contenu curé", desc: "Articles, guides et pratiques issus des traditions du yoga et de la méditation bouddhiste." },
-  { icon: <HiSparkles className="w-6 h-6 text-green-400" />, title: "Éditeur actif", desc: "Rédigez et publiez vos propres articles pour partager votre expérience avec la communauté." },
-  { icon: <FaShieldAlt className="w-6 h-6 text-green-400" />, title: "Sans engagement", desc: "Résiliez à tout moment. Aucune condition cachée, aucune surprise." },
-  { icon: <FaInfinity className="w-6 h-6 text-green-400" />, title: "Accès illimité", desc: "Tout le contenu, tout le temps, depuis n'importe quel appareil." },
+  { icon: <LuLeaf className="h-6 w-6 text-accent" />, title: "Contenu curé", desc: "Articles, guides et pratiques issus des traditions du yoga et de la méditation bouddhiste." },
+  { icon: <LuSparkles className="h-6 w-6 text-accent" />, title: "Éditeur actif", desc: "Rédigez et publiez vos propres articles pour partager votre expérience avec la communauté." },
+  { icon: <LuShieldCheck className="h-6 w-6 text-accent" />, title: "Sans engagement", desc: "Résiliez à tout moment. Aucune condition cachée, aucune surprise." },
+  { icon: <LuInfinity className="h-6 w-6 text-accent" />, title: "Accès illimité", desc: "Tout le contenu, tout le temps, depuis n'importe quel appareil." },
 ];
 
 export const Pricing = () => {
@@ -76,15 +76,15 @@ export const Pricing = () => {
     setLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/payment/create-subscription`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${getAccessToken()}`,
         },
       });
       const data = await response.json();
       if (data.sessionUrl) {
-        window.open(data.sessionUrl, '_blank');
+        window.open(data.sessionUrl, "_blank");
       } else {
         addNotification("critical", "Une erreur s'est produite. Réessayez.");
       }
@@ -96,61 +96,51 @@ export const Pricing = () => {
   };
 
   return (
-    <div className="w-full font-kanit">
-
+    <div className="w-full bg-page font-sans">
       {/* ── Plans ── */}
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <motion.div
-          className="text-center mb-16"
-          initial="hidden"
-          animate="visible"
-          custom={0}
-          variants={fadeUp}
-        >
-          <span className="inline-block px-4 py-1.5 bg-green-500/20 border border-green-500/40 text-green-400 text-xs font-iceberg uppercase tracking-widest rounded-full mb-4">
+      <div className="mx-auto max-w-5xl px-6 py-20">
+        <motion.div className="mb-16 text-center" initial="hidden" animate="visible" custom={0} variants={fadeUp}>
+          <span className="mb-4 inline-block rounded-full bg-accent-soft px-4 py-1.5 text-xs font-sans uppercase tracking-[0.2em] text-accent">
             Tarification
           </span>
-          <h2 className="text-4xl md:text-5xl font-iceberg uppercase text-white mb-4 tracking-wide">
-            Choisissez votre voie
-          </h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          <h2 className="mb-4 font-serif text-4xl font-medium text-ink md:text-5xl">Choisissez votre voie</h2>
+          <p className="mx-auto max-w-xl text-lg text-ink-soft">
             Commencez gratuitement, évoluez quand vous le souhaitez.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Plan Gratuit */}
           <motion.div
             initial="hidden"
             animate="visible"
             custom={1}
             variants={fadeUp}
-            className="flex flex-col p-8 rounded-2xl border border-gray-800 bg-gray-950"
+            className="flex flex-col rounded-3xl border border-line bg-raised p-8 shadow-sm"
           >
             <div className="mb-8">
-              <p className="text-xs font-iceberg uppercase tracking-widest text-gray-400 mb-3">Plan Gratuit</p>
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-5xl font-bold font-iceberg text-white">0€</span>
-                <span className="text-gray-500 text-sm">/mois</span>
+              <p className="mb-3 text-xs font-sans uppercase tracking-[0.2em] text-ink-muted">Plan Gratuit</p>
+              <div className="mb-6 flex items-baseline gap-2">
+                <span className="font-serif text-5xl font-medium text-ink">0€</span>
+                <span className="text-sm text-ink-muted">/mois</span>
               </div>
-              <p className="text-gray-400 text-sm">Idéal pour découvrir l&apos;univers Seranya à votre rythme.</p>
+              <p className="text-sm text-ink-soft">Idéal pour découvrir l&apos;univers Seranya à votre rythme.</p>
             </div>
 
-            <ul className="space-y-3 mb-10 flex-1">
+            <ul className="mb-10 flex-1 space-y-3">
               {FREE_FEATURES.map((f) => (
                 <li key={f.label} className="flex items-center gap-3 text-sm">
                   {f.included
-                    ? <FaCheck className="w-4 h-4 text-green-400 flex-shrink-0" />
-                    : <FaTimes className="w-4 h-4 text-gray-700 flex-shrink-0" />}
-                  <span className={f.included ? "text-gray-300" : "text-gray-600"}>{f.label}</span>
+                    ? <LuCheck className="h-4 w-4 flex-shrink-0 text-accent" />
+                    : <LuX className="h-4 w-4 flex-shrink-0 text-ink-muted/50" />}
+                  <span className={f.included ? "text-ink-soft" : "text-ink-muted/70"}>{f.label}</span>
                 </li>
               ))}
             </ul>
 
             <button
               disabled
-              className="w-full h-12 rounded-lg border border-gray-700 text-gray-500 font-iceberg uppercase tracking-widest text-sm cursor-not-allowed"
+              className="h-12 w-full cursor-not-allowed rounded-full border border-line text-sm font-sans text-ink-muted"
             >
               Plan actuel
             </button>
@@ -162,31 +152,29 @@ export const Pricing = () => {
             animate="visible"
             custom={2}
             variants={fadeUp}
-            className="flex flex-col p-8 rounded-2xl border border-green-500/50 bg-gradient-to-b from-green-950/40 to-gray-950 relative overflow-hidden shadow-xl shadow-green-500/10"
+            className="relative flex flex-col overflow-hidden rounded-3xl border border-gilt/40 bg-raised p-8 shadow-md"
           >
-            {/* Glow */}
-            <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-green-500/20 pointer-events-none" />
-            <div className="absolute -top-20 -right-20 w-48 h-48 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-gilt/20" />
 
             <div className="relative mb-8">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-iceberg uppercase tracking-widest text-green-400">Plan Premium</p>
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-500 text-white text-xs font-iceberg uppercase tracking-widest rounded-full">
-                  <FaStar className="w-3 h-3" /> Populaire
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-xs font-sans uppercase tracking-[0.2em] text-accent">Plan Premium</p>
+                <span className="inline-flex items-center gap-1 rounded-full bg-gilt px-3 py-1 text-xs font-sans uppercase tracking-[0.12em] text-ink-invert">
+                  <LuStar className="h-3 w-3" /> Populaire
                 </span>
               </div>
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-5xl font-bold font-iceberg text-white">5€</span>
-                <span className="text-gray-400 text-sm">/mois</span>
+              <div className="mb-6 flex items-baseline gap-2">
+                <span className="font-serif text-5xl font-medium text-ink">5€</span>
+                <span className="text-sm text-ink-muted">/mois</span>
               </div>
-              <p className="text-gray-300 text-sm">Accès complet à tout le contenu et statut d&apos;éditeur actif.</p>
+              <p className="text-sm text-ink-soft">Accès complet à tout le contenu et statut d&apos;éditeur actif.</p>
             </div>
 
-            <ul className="space-y-3 mb-10 flex-1 relative">
+            <ul className="relative mb-10 flex-1 space-y-3">
               {PREMIUM_FEATURES.map((f) => (
                 <li key={f.label} className="flex items-center gap-3 text-sm">
-                  <FaCheck className="w-4 h-4 text-green-400 flex-shrink-0" />
-                  <span className="text-gray-200">{f.label}</span>
+                  <LuCheck className="h-4 w-4 flex-shrink-0 text-accent" />
+                  <span className="text-ink-soft">{f.label}</span>
                 </li>
               ))}
             </ul>
@@ -194,35 +182,35 @@ export const Pricing = () => {
             <button
               onClick={handleSubscription}
               disabled={isSubscribed || loading}
-              className={`relative w-full h-12 rounded-lg font-iceberg uppercase tracking-widest text-sm transition-all duration-200 ${
+              className={`relative h-12 w-full rounded-full text-sm font-sans transition-all duration-200 ${
                 isSubscribed
-                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-green-500 text-white hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/40 active:scale-95"
+                  ? "cursor-not-allowed bg-sunken text-ink-muted"
+                  : "bg-accent text-ink-invert hover:bg-accent-hover"
               }`}
             >
-              {isSubscribed ? "Déjà abonné ✓" : loading ? "Chargement..." : "Commencer maintenant →"}
+              {isSubscribed ? "Déjà abonné ✓" : loading ? "Chargement…" : "Commencer maintenant →"}
             </button>
 
             {!isSubscribed && (
-              <p className="text-center text-gray-500 text-xs mt-3">Sans engagement · Résiliable à tout moment</p>
+              <p className="mt-3 text-center text-xs text-ink-muted">Sans engagement · Résiliable à tout moment</p>
             )}
           </motion.div>
         </div>
       </div>
 
       {/* ── Bénéfices ── */}
-      <div className="border-t border-gray-900 py-16 px-6">
-        <div className="max-w-5xl mx-auto">
+      <div className="border-t border-line bg-sunken px-6 py-20">
+        <div className="mx-auto max-w-5xl">
           <motion.h3
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-2xl font-iceberg uppercase text-center text-white mb-12 tracking-wide"
+            transition={{ duration: 0.7 }}
+            className="mb-12 text-center font-serif text-2xl font-medium text-ink"
           >
             Pourquoi rejoindre la communauté ?
           </motion.h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {BENEFITS.map((b, i) => (
               <motion.div
                 key={b.title}
@@ -231,11 +219,11 @@ export const Pricing = () => {
                 viewport={{ once: true }}
                 custom={i}
                 variants={fadeUp}
-                className="p-6 rounded-xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+                className="rounded-2xl border border-line bg-raised p-6 shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
               >
                 <div className="mb-4">{b.icon}</div>
-                <h4 className="font-iceberg uppercase text-white text-sm mb-2">{b.title}</h4>
-                <p className="text-gray-400 text-xs leading-relaxed">{b.desc}</p>
+                <h4 className="mb-2 font-serif text-base font-medium text-ink">{b.title}</h4>
+                <p className="text-xs leading-relaxed text-ink-soft">{b.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -243,23 +231,22 @@ export const Pricing = () => {
       </div>
 
       {/* ── CTA Final ── */}
-      <div className="py-16 px-6 text-center border-t border-gray-900">
+      <div className="border-t border-line bg-page px-6 py-16 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
         >
-          <p className="text-gray-400 text-base mb-3">Des questions avant de vous lancer ?</p>
+          <p className="mb-3 text-base text-ink-soft">Des questions avant de vous lancer ?</p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 font-iceberg uppercase tracking-widest text-sm transition-colors"
+            className="inline-flex items-center gap-2 font-sans text-sm text-accent transition-colors hover:text-accent-hover"
           >
             Contactez-nous →
           </Link>
         </motion.div>
       </div>
-
     </div>
   );
 };

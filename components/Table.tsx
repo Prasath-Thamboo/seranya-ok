@@ -70,7 +70,7 @@ function InputGroup7({
   disabled = false,
 }: InputGroup7Props) {
   return (
-    <div className={`flex bg-gray-50 items-center p-2 gap-3 rounded-full border border-gray-900/10 ${className}`}>
+    <div className={`flex bg-raised items-center p-2 gap-3 rounded-full border border-line ${className}`}>
       {decoration}
       <input
         id={name}
@@ -80,7 +80,7 @@ function InputGroup7({
         placeholder={label}
         aria-label={label}
         onChange={onChange}
-        className={`bg-gray-50 outline-none block font-kanit placeholder:font-kanit rounded-full w-full ${disabled ? 'bg-gray-200' : ''} ${inputClassName}`}
+        className={`bg-transparent outline-none block font-sans rounded-full w-full ${disabled ? 'bg-sunken' : ''} ${inputClassName}`}
         disabled={disabled}
       />
     </div>
@@ -100,7 +100,7 @@ function GlobalSearchFilter1({ globalFilter, setGlobalFilter, className = '' }: 
       value={globalFilter || ''}
       onChange={(e) => setGlobalFilter(e.target.value)}
       label="Recherche..."
-      decoration={<FaSearch className="h-5 w-5 text-gray-400 shrink-0" />}
+      decoration={<FaSearch className="h-5 w-5 text-ink-muted shrink-0" />}
       className={className}
     />
   );
@@ -126,31 +126,31 @@ function SelectMenu1({ value, setValue, options, className = '', disabled = fals
   return (
     <div className={`relative w-full ${className}`}>
       <button
-        className={`relative w-full rounded-full py-3 px-4 text-base text-gray-700 text-left shadow-sm focus:outline-none ${disabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-white cursor-default'}`}
+        className={`relative w-full rounded-full py-3 px-4 text-base text-ink text-left shadow-sm focus:outline-none ${disabled ? 'bg-sunken cursor-not-allowed' : 'bg-raised cursor-default'}`}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className="block truncate font-kanit">{selectedOption?.caption}</span>
+        <span className="block truncate font-sans">{selectedOption?.caption}</span>
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-          <FaChevronDown size="1rem" className="text-gray-400" aria-hidden="true" />
+          <FaChevronDown size="1rem" className="text-ink-muted" aria-hidden="true" />
         </span>
       </button>
       {isOpen && (
-        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white text-base shadow-sm focus:outline-none">
+        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-raised border border-line text-base shadow-md focus:outline-none">
           {options.map((option) => (
             <div
               key={option.id}
-              className={`relative cursor-pointer select-none py-4 pl-10 pr-4 ${option.id === value ? 'bg-gray-100' : ''}`}
+              className={`relative cursor-pointer select-none py-4 pl-10 pr-4 ${option.id === value ? 'bg-sunken' : ''}`}
               onClick={() => {
                 setValue(option.id);
                 setIsOpen(false);
               }}
             >
-              <span className={`block truncate ${option.id === value ? 'font-medium' : 'font-normal'} text-black font-kanit`}>
+              <span className={`block truncate ${option.id === value ? 'font-medium' : 'font-normal'} text-ink font-sans`}>
                 {option.caption}
               </span>
               {option.id === value && (
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-accent">
                   <FaCheck size="0.75rem" aria-hidden="true" />
                 </span>
               )}
@@ -173,7 +173,7 @@ interface Button2Props {
 function Button2({ content, onClick, active, disabled, className = '' }: Button2Props) {
   return (
     <button
-      className={`flex items-center justify-center px-4 py-2 rounded-full shadow-md hover:shadow-teal-500/50 transform transition-transform duration-300 hover:scale-105 font-kanit uppercase ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={`flex items-center justify-center px-4 py-2 rounded-full shadow-md transform transition-all duration-300 ease-calm hover:-translate-y-0.5 font-sans ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -205,9 +205,9 @@ function PaginationNav1({ gotoPage, canPreviousPage, canNextPage, pageCount, pag
         }
         onClick={() => gotoPage(pageIndex - 1)}
         disabled={!canPreviousPage}
-        className="bg-teal-500 text-white hover:bg-teal-600 text-sm"
+        className="bg-accent text-ink-invert hover:bg-accent-hover text-sm"
       />
-      <span className="text-sm text-gray-700 font-kanit whitespace-nowrap">
+      <span className="text-sm text-ink-soft font-sans whitespace-nowrap">
         {pageIndex + 1} / {pageCount}
       </span>
       <Button2
@@ -219,7 +219,7 @@ function PaginationNav1({ gotoPage, canPreviousPage, canNextPage, pageCount, pag
         }
         onClick={() => gotoPage(pageIndex + 1)}
         disabled={!canNextPage}
-        className="bg-teal-500 text-white hover:bg-teal-600 text-sm"
+        className="bg-accent text-ink-invert hover:bg-accent-hover text-sm"
       />
     </div>
   );
@@ -238,7 +238,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
         <a
           href={viewUrl}
           title="Voir"
-          className="p-2 rounded-lg text-teal-600 hover:bg-teal-50 transition-colors"
+          className="p-2 rounded-lg text-accent hover:bg-accent-soft transition-colors"
         >
           <FaEye className="w-4 h-4" />
         </a>
@@ -247,7 +247,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
         <a
           href={editUrl}
           title="Modifier"
-          className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 transition-colors"
+          className="p-2 rounded-lg text-info hover:bg-info-soft transition-colors"
         >
           <FaEdit className="w-4 h-4" />
         </a>
@@ -256,7 +256,7 @@ function ActionButtons({ viewUrl, editUrl, onDelete }: ActionButtonProps) {
         <button
           title="Supprimer"
           onClick={onDelete}
-          className="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
+          className="p-2 rounded-lg text-danger hover:bg-danger/10 transition-colors"
         >
           <FaTrash className="w-4 h-4" />
         </button>
@@ -307,7 +307,7 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
   };
 
   return (
-    <div className="mt-4 shadow-sm border rounded-xl overflow-hidden bg-white">
+    <div className="mt-4 shadow-sm border border-line rounded-2xl overflow-hidden bg-raised">
       <CustomModal
         visible={isDeleteModalVisible}
         onCancel={() => setDeleteModalVisible(false)}
@@ -322,29 +322,29 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
       {/* Vue tableau — masquée sur mobile */}
       <div className="hidden md:block overflow-x-auto">
         <table {...getTableProps()} className="w-full table-auto text-sm text-left">
-          <thead className="bg-gray-50 text-gray-600 font-medium border-b">
+          <thead className="bg-sunken text-ink-soft font-medium border-b border-line">
             {headerGroups.map((headerGroup: any) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
                 {headerGroup.headers.map((column: any) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="py-3 px-4 font-iceberg cursor-pointer whitespace-nowrap"
+                    className="py-3 px-4 font-sans font-medium cursor-pointer whitespace-nowrap"
                     style={{ width: column.width }}
                     key={column.id}
                   >
                     {column.render('Header')}
                   </th>
                 ))}
-                <th className="py-3 px-4 font-iceberg text-center whitespace-nowrap" key="actions">
+                <th className="py-3 px-4 font-sans font-medium text-center whitespace-nowrap" key="actions">
                   Actions
                 </th>
               </tr>
             ))}
           </thead>
-          <tbody {...getTableBodyProps()} className="text-gray-600 divide-y">
+          <tbody {...getTableBodyProps()} className="text-ink-soft divide-y divide-line">
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={999} className="px-4 py-8 text-center text-gray-400 font-kanit text-sm">
+                <td colSpan={999} className="px-4 py-8 text-center text-ink-muted font-sans text-sm">
                   Aucun résultat.
                 </td>
               </tr>
@@ -352,9 +352,9 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
               rows.map((row: any) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} key={row.id} className="hover:bg-gray-50">
+                  <tr {...row.getRowProps()} key={row.id} className="hover:bg-sunken">
                     {row.cells.map((cell: any) => (
-                      <td {...cell.getCellProps()} key={cell.id} className="px-4 py-3 font-kanit">
+                      <td {...cell.getCellProps()} key={cell.id} className="px-4 py-3 font-sans">
                         {cell.render('Cell')}
                       </td>
                     ))}
@@ -374,25 +374,25 @@ function TableComponent({ getTableProps, headerGroups, getTableBodyProps, rows, 
       </div>
 
       {/* Vue cartes — visible uniquement sur mobile */}
-      <div className="block md:hidden divide-y">
+      <div className="block md:hidden divide-y divide-line">
         {rows.length === 0 ? (
-          <p className="text-center text-gray-400 py-8 font-kanit text-sm">Aucun résultat.</p>
+          <p className="text-center text-ink-muted py-8 font-sans text-sm">Aucun résultat.</p>
         ) : (
           rows.map((row: any) => {
             prepareRow(row);
             return (
-              <div key={row.id} className="p-4 hover:bg-gray-50 transition-colors">
+              <div key={row.id} className="p-4 hover:bg-sunken transition-colors">
                 {row.cells.map((cell: any) => (
                   <div key={cell.column.id} className="flex justify-between items-start py-1.5 gap-3 min-w-0">
-                    <span className="text-gray-400 text-xs font-iceberg uppercase tracking-wider shrink-0">
+                    <span className="text-ink-muted text-xs font-sans uppercase tracking-[0.1em] shrink-0">
                       {cell.column.render('Header')}
                     </span>
-                    <div className="text-gray-700 font-kanit text-sm text-right min-w-0 max-w-[65%] break-words">
+                    <div className="text-ink-soft font-sans text-sm text-right min-w-0 max-w-[65%] break-words">
                       {cell.render('Cell')}
                     </div>
                   </div>
                 ))}
-                <div className="flex justify-end mt-3 pt-3 border-t border-gray-100">
+                <div className="flex justify-end mt-3 pt-3 border-t border-line">
                   <ActionButtons
                     viewUrl={`/${baseRoute}/${row.original.id}`}
                     editUrl={`/${baseRoute}/update?id=${row.original.id}`}
@@ -447,10 +447,10 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
   );
 
   return (
-    <div className="flex flex-col gap-4 font-kanit w-full">
+    <div className="flex flex-col gap-4 font-sans w-full">
       {/* Barre de contrôle */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h2 className="text-xl font-semibold font-iceberg">
+        <h2 className="text-xl font-serif font-medium text-ink">
           Liste des {itemType.charAt(0).toUpperCase() + itemType.slice(1)}s
         </h2>
         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
@@ -461,7 +461,7 @@ function Table({ data, columns, createButtonText, createUrl, onDelete, baseRoute
           />
           {createUrl && (
             <button
-              className="bg-teal-500 text-white px-4 py-2 rounded-full shadow-md hover:shadow-teal-500/50 transform transition-transform duration-300 hover:scale-105 font-kanit flex items-center justify-center gap-2 whitespace-nowrap"
+              className="bg-accent text-ink-invert px-4 py-2 rounded-full shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:bg-accent-hover font-sans flex items-center justify-center gap-2 whitespace-nowrap"
               onClick={() => window.location.href = createUrl}
             >
               <FaPlus /> {createButtonText}

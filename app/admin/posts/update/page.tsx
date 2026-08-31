@@ -185,9 +185,9 @@ const UpdatePost = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-kanit">
+    <div className="min-h-screen flex items-center justify-center bg-sunken p-4 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Mettre à jour le Post
         </h1>
 
@@ -196,44 +196,44 @@ const UpdatePost = () => {
           name="update_post"
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           <Form.Item
             name="title"
-            label={<span className="text-black font-kanit">Titre</span>}
+            label={<span className="text-ink-soft font-sans">Titre</span>}
             rules={[{ required: true, message: "Veuillez entrer le titre du post !" }]}
           >
             <Input
               placeholder="Titre du post"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
           <Form.Item
             name="intro"
-            label={<span className="text-black font-kanit">Introduction</span>}
+            label={<span className="text-ink-soft font-sans">Introduction</span>}
             rules={[{ required: true, message: "Veuillez entrer l'introduction du post !" }]}
           >
             <Input.TextArea
               placeholder="Introduction"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
-          <Form.Item name="subtitle" label={<span className="text-black font-kanit">Sous-titre</span>}>
+          <Form.Item name="subtitle" label={<span className="text-ink-soft font-sans">Sous-titre</span>}>
             <Input
               placeholder="Sous-titre du post"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
-          <Form.Item label={<span className="text-black font-kanit">Contenu</span>}>
+          <Form.Item label={<span className="text-ink-soft font-sans">Contenu</span>}>
             <ReactQuill value={contentValue} onChange={setContentValue} />
           </Form.Item>
 
           <Form.Item
             name="color"
-            label={<span className="text-black font-kanit">Couleur</span>}
+            label={<span className="text-ink-soft font-sans">Couleur</span>}
             rules={[
               { required: true, message: "Veuillez sélectionner une couleur !" }, // Validation requise
               { pattern: /^#([0-9A-F]{3}){1,2}$/i, message: "Veuillez sélectionner une couleur valide." }, // Validation de format
@@ -244,12 +244,12 @@ const UpdatePost = () => {
 
           <Form.Item
             name="type"
-            label={<span className="text-black font-kanit">Type</span>}
+            label={<span className="text-ink-soft font-sans">Type</span>}
             rules={[{ required: true, message: "Veuillez choisir un type !" }]}
           >
             <Select
               placeholder="Sélectionnez le type"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             >
               <Option value={PostType.SCIENCE}>Science</Option>
               <Option value={PostType.PHILO}>Philo</Option>
@@ -260,7 +260,7 @@ const UpdatePost = () => {
 
           <Form.Item
             name="isPublished"
-            label={<span className="text-black font-kanit">Publier</span>}
+            label={<span className="text-ink-soft font-sans">Publier</span>}
             valuePropName="checked"
           >
             <Switch />
@@ -268,21 +268,21 @@ const UpdatePost = () => {
 
           <Form.Item
             name="publishedAt"
-            label={<span className="text-black font-kanit">Date de publication (laisser vide pour publier immédiatement)</span>}
+            label={<span className="text-ink-soft font-sans">Date de publication (laisser vide pour publier immédiatement)</span>}
           >
             <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item
             name="classIds"
-            label={<span className="text-black font-kanit">Classe associée</span>}
+            label={<span className="text-ink-soft font-sans">Classe associée</span>}
           >
             <Select
               mode="multiple"
               placeholder="Sélectionnez une ou plusieurs classes"
               value={selectedClassIds}
               onChange={setSelectedClassIds}
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             >
               {classes.map((classe) => (
                 <Option key={classe.id} value={classe.id}>
@@ -293,7 +293,7 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Image de Profil */}
-          <Form.Item name="profileImage" label={<span className="text-black font-kanit">Image de profil</span>}>
+          <Form.Item name="profileImage" label={<span className="text-ink-soft font-sans">Image de profil</span>}>
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {post?.profileImage && (
@@ -325,7 +325,7 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Image Header */}
-          <Form.Item name="headerImage" label={<span className="text-black font-kanit">Image Header</span>}>
+          <Form.Item name="headerImage" label={<span className="text-ink-soft font-sans">Image Header</span>}>
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {post?.headerImage && (
@@ -357,7 +357,7 @@ const UpdatePost = () => {
           </Form.Item>
 
           {/* Image Footer */}
-          <Form.Item label={<span className="text-black font-kanit">Image de pied de page</span>}>
+          <Form.Item label={<span className="text-ink-soft font-sans">Image de pied de page</span>}>
             <Row gutter={16} align="middle">
               <Col xs={24} sm={12}>
                 {post?.footerImage && (
@@ -415,7 +415,7 @@ const UpdatePost = () => {
             )}
             <Form.Item
               name="gallery"
-              label={<span className="text-black font-kanit">Galerie</span>}
+              label={<span className="text-ink-soft font-sans">Galerie</span>}
               valuePropName="fileList"
               getValueFromEvent={normFile}
             >
@@ -438,7 +438,7 @@ const UpdatePost = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-teal-500 text-white font-kanit text-lg uppercase p-3 focus:ring-teal-500 focus:border-teal-500"
+              className="bg-accent text-ink-invert font-sans text-sm p-3 rounded-full"
               loading={loading}
             >
               Mettre à jour

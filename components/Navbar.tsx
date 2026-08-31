@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getAccessToken, logoutUser } from "@/lib/queries/AuthQueries";
@@ -10,52 +10,28 @@ import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { RegisterUserModel } from "@/lib/models/AuthModels";
 import Badge from "@/components/Badge";
 import { Dropdown, Menu } from "antd";
-import { FiLogOut, FiMenu, FiX, FiLogIn, FiUserPlus, FiHome } from "react-icons/fi"; // Import des icônes FiLogIn et FiUserPlus
-import { FaChevronDown } from "react-icons/fa"; // Utilisation de FaChevronDown
+import { FiLogOut, FiMenu, FiX, FiLogIn, FiUserPlus, FiHome } from "react-icons/fi";
+import { FaChevronDown } from "react-icons/fa";
 import { useNotification } from "@/components/notifications/NotificationProvider";
 import React from "react";
-import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
-// Fonction pour assombrir une couleur hexadécimale
-const shadeColor = (color: string, percent: number): string => {
-  let R = parseInt(color.substring(1, 3), 16);
-  let G = parseInt(color.substring(3, 5), 16);
-  let B = parseInt(color.substring(5, 7), 16);
-
-  R = Math.round((R * (100 + percent)) / 100);
-  G = Math.round((G * (100 + percent)) / 100);
-  B = Math.round((B * (100 + percent)) / 100);
-
-  R = R < 255 ? R : 255;
-  G = G < 255 ? G : 255;
-  B = B < 255 ? B : 255;
-
-  const RR = R.toString(16).padStart(2, '0');
-  const GG = G.toString(16).padStart(2, '0');
-  const BB = B.toString(16).padStart(2, '0');
-
-  return `#${RR}${GG}${BB}`;
-};
+const UNIVERS_LINKS = [
+  { href: "/tutoriels", label: "Tutoriels" },
+  { href: "/univers", label: "Univers" },
+  { href: "/encyclopedie", label: "Encyclopédie" },
+  { href: "/eveil", label: "Éveil" },
+];
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<RegisterUserModel | null>(null);
-  const [navbarBackground, setNavbarBackground] = useState("bg-transparent");
+  const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUniversOpen, setIsUniversOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0); // État pour la progression du scroll
+  const [scrollProgress, setScrollProgress] = useState(0);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { addNotification } = useNotification();
-  const { color } = useContext(ColorContext); // Consommer le contexte
-
-  // Mettre à jour la progression de la barre de scroll
-  const handleScroll = () => {
-    const scrollPosition = window.scrollY;
-    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = (scrollPosition / totalHeight) * 100;
-    setScrollProgress(scrollPercent);
-  };
 
   useEffect(() => {
     const token = getAccessToken();
@@ -66,31 +42,22 @@ export default function Navbar() {
           setUser({ ...userData });
           setIsLoggedIn(true);
         })
-        .catch(() => {
-          setIsLoggedIn(false);
-        });
+        .catch(() => setIsLoggedIn(false));
     } else {
       setIsLoggedIn(false);
     }
 
-    // Gestion du scroll pour l'arrière-plan de la navbar
-    const handleNavbarScroll = () => {
-      if (window.scrollY > 0) {
-        setNavbarBackground("bg-transparent bg-opacity-75 backdrop-blur-md");
-      } else {
-        setNavbarBackground("bg-transparent"); // Remplace bg-gray-700 par bg-transparent
-      }
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(totalHeight > 0 ? (scrollPosition / totalHeight) * 100 : 0);
+      setScrolled(scrollPosition > 8);
     };
 
-    window.addEventListener("scroll", handleNavbarScroll);
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
 
-    handleNavbarScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleNavbarScroll);
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -101,18 +68,16 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      // Rechargement complet pour que toute la page (Navbar comprise, qui ne
-      // relit l'état d'authentification qu'au montage) reflète la déconnexion.
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (error) {
       addNotification("critical", "Une erreur s'est produite lors de la déconnexion.");
     }
   };
 
   const menuItems = (
-    <Menu className="font-kanit">
+    <Menu>
       <Menu.Item key="1">
-        <Link href="/compte">Profile</Link>
+        <Link href="/compte">Profil</Link>
       </Menu.Item>
       {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
         <Menu.Item key="2">
@@ -121,7 +86,7 @@ export default function Navbar() {
       )}
       <Menu.Item key="3" onClick={handleLogout} danger>
         <div className="flex items-center space-x-2">
-          <FiLogOut className="w-5 h-5" />
+          <FiLogOut className="w-4 h-4" />
           <span>Déconnexion</span>
         </div>
       </Menu.Item>
@@ -133,142 +98,133 @@ export default function Navbar() {
       ? user.profileImage
       : null;
 
-  // Définition du sous-menu pour "Univers"
   const universSubMenu = (
-    <Menu className="font-kanit custom-submenu">
-      <Menu.Item key="1">
-        <Link href="/tutoriels">Tutoriels</Link>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <Link href="/univers">Univers</Link>
-      </Menu.Item>
-      <Menu.Item key="3">
-        <Link href="/encyclopedie">Encyclopédie</Link>
-      </Menu.Item>
-      <Menu.Item key="4">
-        <Link href="/eveil">Éveil</Link>
-      </Menu.Item>
+    <Menu>
+      {UNIVERS_LINKS.map((l) => (
+        <Menu.Item key={l.href}>
+          <Link href={l.href}>{l.label}</Link>
+        </Menu.Item>
+      ))}
     </Menu>
   );
 
+  // Au repos (haut de page) : nav transparente, texte clair sur l'imagerie du hero.
+  // Au scroll : voile ivoire feutré, texte encre.
+  const shellClass = isMenuOpen
+    ? "bg-page"
+    : scrolled
+    ? "bg-page/85 backdrop-blur-md border-b border-line shadow-sm"
+    : "bg-transparent border-b border-transparent";
+
+  const linkClass = `group relative text-sm font-sans tracking-wide transition-colors duration-200 ${
+    scrolled || isMenuOpen ? "text-ink hover:text-accent" : "text-white/90 hover:text-white text-shadow-sm"
+  }`;
+
+  const underline =
+    "pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-calm group-hover:scale-x-100";
+
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 py-6 px-3 ${isMenuOpen ? "bg-black" : navbarBackground}`}
-      style={{
-        "--neon-color": "#2ecc40", // Définir la variable CSS pour la couleur néon
-        "--button-bg-color": "#2ecc40", // Définir la variable CSS pour la couleur des boutons
-        "--button-hover-bg-color": shadeColor(color || "#2ecc40", -10), // Assombrir la couleur des boutons de 10%
-      } as React.CSSProperties}
-    >
-      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 flex items-center justify-between h-16">
+    <nav className={`fixed top-0 w-full z-50 transition-colors duration-300 py-5 px-3 ${shellClass}`}>
+      <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-4 flex items-center justify-between h-14">
         {/* Logo */}
         <div className="flex-shrink-0 p-1">
           <Link href="/">
             <div className={isLoggedIn ? "hidden md:block" : "hidden min-[1074px]:block"}>
               <Image
-                src="/logos/seranyaicon.png" // Utiliser le chemin correct vers votre logo
+                src="/logos/seranyaicon.png"
                 alt="Logo Seranya"
-                width={180} // Réduction de la largeur de 200 à 180
-                height={70} // Réduction de la hauteur de 80 à 70
-                className="object-contain max-h-16" // Réduction de max-h-20 à max-h-16 (4rem)
+                width={168}
+                height={64}
+                className={`object-contain max-h-14 transition-opacity ${
+                  scrolled || isMenuOpen ? "opacity-100" : "opacity-95"
+                }`}
               />
             </div>
             <div className={isLoggedIn ? "block md:hidden" : "block min-[1074px]:hidden"}>
               <Image
-                src="/logos/seranyaicon.png" // Assurez-vous que ce chemin est correct
+                src="/logos/seranyaicon.png"
                 alt="Logo Seranya"
-                width={50} // Réduction de la largeur de 60 à 50
-                height={50} // Réduction de la hauteur de 60 à 50
-                className="object-contain max-h-12" // Réduction de max-h-14 à max-h-12 (3rem)
+                width={46}
+                height={46}
+                className="object-contain max-h-11"
               />
             </div>
           </Link>
         </div>
 
-        {/* Menus de navigation (Univers, Extraits, Contact, Abonnement) */}
-        <div className={isLoggedIn ? "hidden md:flex space-x-6 items-center" : "hidden min-[1074px]:flex space-x-6 items-center"}>
-          {/* Accueil */}
-          <Link href="/" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center gap-2">
+        {/* Navigation desktop */}
+        <div className={isLoggedIn ? "hidden md:flex space-x-8 items-center" : "hidden min-[1074px]:flex space-x-8 items-center"}>
+          <Link href="/" className={`${linkClass} flex items-center gap-2`}>
             <FiHome className="w-4 h-4" />
-            <span className="shadow-text">Accueil</span>
+            <span>Accueil</span>
+            <span className={underline} />
           </Link>
 
-          {/* Extraits */}
-          <Link href="/posts" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
-            <span className="shadow-text">Blogs</span>
+          <Link href="/posts" className={linkClass}>
+            <span>Blog</span>
+            <span className={underline} />
           </Link>
 
-          {/* Dropdown pour Univers */}
-          <Dropdown
-            overlay={universSubMenu}
-            trigger={["hover"]}
-            placement="bottom"
-            overlayClassName="custom-submenu-dropdown"
-          >
-            <button className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200 flex items-center">
-              <span className="shadow-text">Univers</span>
-              <FaChevronDown className="ml-1" />
+          <Dropdown overlay={universSubMenu} trigger={["hover"]} placement="bottom">
+            <button className={`${linkClass} flex items-center gap-1`}>
+              <span>Univers</span>
+              <FaChevronDown className="w-3 h-3 opacity-70" />
+              <span className={underline} />
             </button>
           </Dropdown>
 
-          {/* Contact */}
-          <Link href="/contact" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
-            <span className="shadow-text">Contact</span>
+          <Link href="/contact" className={linkClass}>
+            <span>Contact</span>
+            <span className={underline} />
           </Link>
 
-          {/* Abonnement */}
-          <Link href="/subscription" className="relative font-bold group text-base font-iceberg uppercase text-white hover:text-green-500 transition-colors duration-200">
-            <span className="shadow-text">Abonnement</span>
+          <Link href="/subscription" className={linkClass}>
+            <span>Abonnement</span>
+            <span className={underline} />
           </Link>
         </div>
 
-        {/* Menu utilisateur pour grand écran */}
+        {/* Zone utilisateur desktop */}
         <div ref={userMenuRef} className={isLoggedIn ? "hidden md:flex items-center space-x-3" : "hidden min-[1074px]:flex items-center space-x-3"}>
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
-              <div className="flex items-center cursor-pointer group">
+              <div className="flex items-center cursor-pointer group gap-2">
                 {profileImageUrl ? (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-green-400">
-                    <Image
-                      src={profileImageUrl}
-                      alt="User Avatar"
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-full"
-                    />
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden ring-1 ring-line">
+                    <Image src={profileImageUrl} alt="Avatar" layout="fill" objectFit="cover" className="rounded-full" />
                   </div>
                 ) : (
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-300 bg-green-400 flex items-center justify-center">
-                    <span className="text-white text-lg font-iceberg">
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden bg-accent-soft flex items-center justify-center">
+                    <span className="text-accent text-sm font-serif">
                       {user.pseudo.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
-                <span className="ml-2 text-white font-iceberg shadow-text group-hover:text-green-500 transition-colors duration-200">
+                <span className={`font-sans text-sm transition-colors ${
+                  scrolled ? "text-ink group-hover:text-accent" : "text-white/90 group-hover:text-white text-shadow-sm"
+                }`}>
                   {user.pseudo}
                 </span>
-                {user.role && (
-                  <div className="ml-2">
-                    <Badge role={user.role} />
-                  </div>
-                )}
+                {user.role && <Badge role={user.role} />}
               </div>
             </Dropdown>
           ) : (
             <>
               <Link href="/auth/login">
                 <button
-                  className="flex items-center relative group bg-green-400 hover:bg-green-600 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 font-iceberg uppercase text-lg"
+                  className={`flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-sans transition-colors duration-200 ${
+                    scrolled
+                      ? "border-line text-ink hover:border-accent hover:text-accent"
+                      : "border-white/50 text-white hover:bg-white/10"
+                  }`}
                 >
-                  <FiLogIn className="mr-2 w-5 h-5" />
+                  <FiLogIn className="w-4 h-4" />
                   Connexion
                 </button>
               </Link>
               <Link href="/auth/register">
-                <button
-                  className="flex items-center relative group bg-green-400 hover:bg-green-600 text-white font-semibold py-1.5 px-5 rounded transition-all transform hover:scale-105 font-iceberg uppercase text-lg"
-                >
-                  <FiUserPlus className="mr-2 w-5 h-5" />
+                <button className="flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-sans text-ink-invert transition-colors duration-200 hover:bg-accent-hover">
+                  <FiUserPlus className="w-4 h-4" />
                   Inscription
                 </button>
               </Link>
@@ -276,10 +232,10 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Menu hamburger pour mobile */}
+        {/* Hamburger mobile */}
         <div className={isLoggedIn ? "md:hidden z-50" : "min-[1074px]:hidden z-50"}>
           <button
-            className="text-white focus:outline-none hover:text-green-500 transition-all"
+            className={`transition-colors ${scrolled || isMenuOpen ? "text-ink hover:text-accent" : "text-white hover:text-white/80"}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
@@ -288,94 +244,76 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Barre de progression fixe en bas */}
-      <div className={`fixed bottom-0 left-0 w-full h-1 bg-green-400 z-50 ${isMenuOpen ? "hidden" : ""}`}>
+      {/* Barre de progression de lecture */}
+      <div className={`fixed bottom-0 left-0 w-full h-px bg-line ${isMenuOpen ? "hidden" : ""}`}>
         <div
-          className="h-full neon-effect transition-all duration-500"
-          style={{
-            width: `${scrollProgress}%`,
-            // La couleur de fond est gérée par la variable CSS
-          }}
-        ></div>
+          className="h-full bg-accent/70 transition-all duration-500 ease-calm"
+          style={{ width: `${scrollProgress}%` }}
+        />
       </div>
 
-      {/* Menu mobile — panneau latéral */}
+      {/* Menu mobile */}
       {isMenuOpen && (
         <>
-          {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55]"
+            className="fixed inset-0 bg-ink/30 backdrop-blur-sm z-[55]"
             onClick={() => setIsMenuOpen(false)}
           />
 
-          {/* Panneau slide depuis la droite */}
-          <div className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-black border-l border-gray-800 z-[60] flex flex-col animate-slide-in-right">
-
-            {/* Header panneau */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+          <div className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-page border-l border-line z-[60] flex flex-col animate-slide-in-right">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-line">
               <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                <Image src="/logos/seranyaicon.png" alt="Seranya" width={110} height={40} className="object-contain" />
+                <Image src="/logos/seranyaicon.png" alt="Seranya" width={104} height={40} className="object-contain" />
               </Link>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-full border border-line text-ink-soft hover:text-accent hover:border-accent transition-colors"
                 aria-label="Fermer le menu"
               >
                 <FiX className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Navigation */}
             <nav className="flex-1 overflow-y-auto px-5 py-6">
               <ul className="space-y-1">
-
                 <li>
                   <Link
                     href="/"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                    className="flex items-center gap-2 py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
-                    <span className="flex items-center gap-2">
-                      <FiHome className="w-4 h-4" />
-                      Accueil
-                    </span>
+                    <FiHome className="w-4 h-4" />
+                    Accueil
                   </Link>
                 </li>
-
                 <li>
                   <Link
                     href="/posts"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                    className="block py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
-                    Blogs
+                    Blog
                   </Link>
                 </li>
 
-                {/* Univers — section dépliable */}
                 <li>
                   <button
                     onClick={() => setIsUniversOpen(!isUniversOpen)}
-                    className="w-full flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                    className="w-full flex items-center justify-between py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
                     Univers
-                    <FaChevronDown className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${isUniversOpen ? "rotate-180" : ""}`} />
+                    <FaChevronDown className={`w-3 h-3 text-ink-muted transition-transform duration-200 ${isUniversOpen ? "rotate-180" : ""}`} />
                   </button>
                   {isUniversOpen && (
-                    <ul className="mt-1 ml-3 pl-3 border-l border-green-500/30 space-y-0.5 mb-2">
-                      {[
-                        { href: "/tutoriels", label: "Tutoriels" },
-                        { href: "/univers", label: "Univers" },
-                        { href: "/encyclopedie", label: "Encyclopédie" },
-                        { href: "/eveil", label: "Éveil" },
-                      ].map((item) => (
+                    <ul className="mt-1 ml-3 pl-3 border-l border-accent/30 space-y-0.5 mb-2">
+                      {UNIVERS_LINKS.map((item) => (
                         <li key={item.href}>
                           <Link
                             href={item.href}
                             onClick={() => setIsMenuOpen(false)}
-                            className="flex items-center gap-2 py-2.5 px-2 font-kanit text-sm text-gray-400 hover:text-green-400 transition-colors"
+                            className="flex items-center gap-2 py-2.5 px-2 font-sans text-sm text-ink-soft hover:text-accent transition-colors"
                           >
-                            <span className="w-1 h-1 rounded-full bg-green-500/60 flex-shrink-0" />
+                            <span className="w-1 h-1 rounded-full bg-accent/60 flex-shrink-0" />
                             {item.label}
                           </Link>
                         </li>
@@ -388,42 +326,38 @@ export default function Navbar() {
                   <Link
                     href="/contact"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200 border-b border-gray-800/60"
+                    className="block py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
                     Contact
                   </Link>
                 </li>
-
                 <li>
                   <Link
                     href="/subscription"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-between py-3.5 px-3 rounded-lg font-iceberg uppercase text-gray-200 hover:text-green-400 hover:bg-green-500/5 transition-all duration-200"
+                    className="block py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200"
                   >
                     Abonnement
                   </Link>
                 </li>
-
               </ul>
             </nav>
 
-            {/* Zone utilisateur */}
-            <div className="px-5 py-5 border-t border-gray-800">
+            <div className="px-5 py-5 border-t border-line">
               {isLoggedIn && user ? (
                 <div className="space-y-3">
-                  {/* Infos utilisateur */}
                   <div className="flex items-center gap-3 px-1 mb-4">
                     {profileImageUrl ? (
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-green-400/60 flex-shrink-0">
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden ring-1 ring-line flex-shrink-0">
                         <Image src={profileImageUrl} alt="Avatar" layout="fill" objectFit="cover" className="rounded-full" />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-green-500/10 border border-green-400/40 flex items-center justify-center flex-shrink-0">
-                        <span className="text-green-400 font-iceberg text-lg">{user.pseudo.charAt(0).toUpperCase()}</span>
+                      <div className="w-10 h-10 rounded-full bg-accent-soft flex items-center justify-center flex-shrink-0">
+                        <span className="text-accent font-serif text-lg">{user.pseudo.charAt(0).toUpperCase()}</span>
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="text-white font-iceberg text-sm truncate">{user.pseudo}</p>
+                      <p className="text-ink font-sans text-sm truncate">{user.pseudo}</p>
                       {user.role && <Badge role={user.role} />}
                     </div>
                   </div>
@@ -432,7 +366,7 @@ export default function Navbar() {
                     <Link
                       href="/compte"
                       onClick={() => setIsMenuOpen(false)}
-                      className="flex-1 text-center py-2.5 text-xs font-iceberg uppercase text-gray-300 border border-gray-700 rounded-lg hover:border-green-500/50 hover:text-green-400 transition-all"
+                      className="flex-1 text-center py-2.5 text-xs font-sans text-ink-soft border border-line rounded-full hover:border-accent hover:text-accent transition-all"
                     >
                       Profil
                     </Link>
@@ -440,7 +374,7 @@ export default function Navbar() {
                       <Link
                         href="/admin"
                         onClick={() => setIsMenuOpen(false)}
-                        className="flex-1 text-center py-2.5 text-xs font-iceberg uppercase text-gray-300 border border-gray-700 rounded-lg hover:border-green-500/50 hover:text-green-400 transition-all"
+                        className="flex-1 text-center py-2.5 text-xs font-sans text-ink-soft border border-line rounded-full hover:border-accent hover:text-accent transition-all"
                       >
                         Admin
                       </Link>
@@ -449,7 +383,7 @@ export default function Navbar() {
 
                   <button
                     onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                    className="w-full py-2.5 text-xs font-iceberg uppercase text-red-400 border border-red-900/40 rounded-lg hover:bg-red-900/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-2.5 text-xs font-sans text-danger border border-danger/30 rounded-full hover:bg-danger/10 transition-all flex items-center justify-center gap-2"
                   >
                     <FiLogOut className="w-4 h-4" />
                     Déconnexion
@@ -460,7 +394,7 @@ export default function Navbar() {
                   <Link
                     href="/auth/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-iceberg uppercase text-white bg-green-500 hover:bg-green-400 rounded-lg transition-all"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-sans text-ink-invert bg-accent hover:bg-accent-hover rounded-full transition-all"
                   >
                     <FiLogIn className="w-4 h-4" />
                     Connexion
@@ -468,7 +402,7 @@ export default function Navbar() {
                   <Link
                     href="/auth/register"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-iceberg uppercase text-green-400 border border-green-500/40 hover:bg-green-500/10 rounded-lg transition-all"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-sans text-accent border border-accent/40 hover:bg-accent-soft rounded-full transition-all"
                   >
                     <FiUserPlus className="w-4 h-4" />
                     Inscription
@@ -476,37 +410,17 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-
           </div>
         </>
       )}
 
-      {/* Styles supplémentaires pour l'effet néon et les animations */}
       <style jsx>{`
         @keyframes slide-in-right {
           from { transform: translateX(100%); }
-          to   { transform: translateX(0); }
+          to { transform: translateX(0); }
         }
         .animate-slide-in-right {
-          animation: slide-in-right 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .shadow-text {
-          text-shadow: 1px 1px 0px #000000;
-        }
-        .group:hover .shadow-text,
-        .active .shadow-text {
-          color: #2ecc40;
-          text-shadow: 0 0 10px green, 0 0 20px green, 0 0 30px green;
-        }
-
-        .custom-submenu-dropdown .ant-dropdown-menu {
-          background-color: rgba(31, 41, 55, 0.75);
-          border: none;
-        }
-        .custom-submenu-dropdown .ant-dropdown-menu-item {
-          color: white;
-          transition: background-color 0.3s ease;
+          animation: slide-in-right 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
       `}</style>
     </nav>

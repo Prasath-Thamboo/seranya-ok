@@ -64,42 +64,40 @@ const PostsPage: React.FC = () => {
 
   if (loading || bgLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+      <div className="flex h-screen items-center justify-center bg-page">
+        <div className="h-9 w-9 animate-spin rounded-full border-2 border-accent border-t-transparent" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-red-500 text-xl">{error}</p>
+      <div className="flex h-screen items-center justify-center bg-page">
+        <p className="text-lg text-danger">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-page font-sans text-ink">
       <HeroSection
         backgroundImage={backgroundImage || '/images/backgrounds/bouddhisme.jpg'}
         title="Bienvenue dans"
-        titleColor="#ffffff" // Blanc
-        strongTitle="L'Univers Seranya"
-        strongTitleColor="#ffffff" // Blanc
-        content="Explorez les mystères de l'univers à travers des articles philosophiques et scientifiques."
-        contentColor="#ffffff" // Blanc
-        button1Text="Voir les Posts"
+        strongTitle="l'univers Seranya"
+        content="Explorez les enseignements du yoga et du bouddhisme à travers des articles pensés pour ralentir."
+        button1Text="Voir les articles"
         button1Url="#posts-section"
-        button1BgColor="#22c55e"
-        button2Text="Découvrir"
+        button2Text="Découvrir l'univers"
         button2Url="/univers"
-        button2BgColor="#374151"
       />
 
-      {/* Section des Posts */}
-      <div id="posts-section" className="relative z-10 py-16 px-5">
-        <h2 className="text-4xl font-bold text-center text-white mb-10 font-iceberg text-shadow-lg">
-          Exploration de l&apos;Univers
+      {/* Section des articles */}
+      <div id="posts-section" className="relative z-10 mx-auto max-w-6xl px-6 py-20">
+        <p className="mb-3 text-center text-xs font-sans uppercase tracking-[0.22em] text-accent">
+          Le blog
+        </p>
+        <h2 className="mb-12 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
+          Exploration de l&apos;univers
         </h2>
         <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {posts.map(post => (

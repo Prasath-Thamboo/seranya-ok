@@ -69,8 +69,8 @@ const EncyclopedieAdminPage = () => {
   );
 
   return (
-    <div className="font-kanit">
-      <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Encyclopédie</h1>
+    <div className="font-sans">
+      <h1 className="text-2xl font-serif font-medium text-ink mb-6">Encyclopédie</h1>
       <Table
         data={definitions}
         columns={columns}

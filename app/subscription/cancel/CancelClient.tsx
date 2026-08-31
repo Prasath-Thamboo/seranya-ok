@@ -1,25 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { FaTimesCircle } from "react-icons/fa";
+import { LuXCircle } from "react-icons/lu";
 
 export default function CancelClient() {
   return (
-    <main className="min-h-screen bg-black text-white font-kanit flex items-center justify-center px-6">
-      <div className="max-w-md w-full text-center">
-        <FaTimesCircle className="w-16 h-16 text-gray-500 mx-auto mb-6" />
+    <main className="flex min-h-screen items-center justify-center bg-page px-6 font-sans text-ink">
+      <div className="w-full max-w-md text-center">
+        <span className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-sunken text-ink-muted">
+          <LuXCircle className="h-8 w-8" />
+        </span>
 
-        <h1 className="text-3xl md:text-4xl font-iceberg uppercase tracking-wide text-white mb-4">
-          Paiement annulé
-        </h1>
+        <h1 className="mb-4 font-serif text-3xl font-medium text-ink md:text-4xl">Paiement annulé</h1>
 
-        <p className="text-gray-400 mb-10 leading-relaxed">
-          Vous n&apos;avez pas été débité. Vous pouvez réessayer à tout moment depuis la page d&apos;abonnement.
+        <p className="mb-10 leading-relaxed text-ink-soft">
+          Vous n&apos;avez pas été débité. Vous pouvez réessayer à tout moment depuis la page
+          d&apos;abonnement.
         </p>
 
         <Link
           href="/subscription"
-          className="inline-flex items-center justify-center gap-2 px-8 py-3 border border-green-500/50 text-green-400 font-iceberg uppercase tracking-widest text-sm rounded-lg hover:bg-green-500/10 transition-all duration-200"
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-accent/50 px-8 py-3 text-sm font-sans text-accent transition-all duration-200 hover:bg-accent-soft"
         >
           Retour aux plans
         </Link>

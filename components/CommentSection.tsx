@@ -85,46 +85,44 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
     });
 
   return (
-    <section className="mt-16 border-t border-gray-800 pt-10">
-      <div className="flex items-center gap-3 mb-8">
-        <FiMessageCircle className="w-5 h-5 text-green-400" />
-        <h2 className="text-xl font-iceberg uppercase tracking-widest text-white">
-          Discussions
+    <section className="mt-16 border-t border-line pt-10">
+      <div className="mb-8 flex items-center gap-3">
+        <FiMessageCircle className="h-5 w-5 text-accent" />
+        <h2 className="font-serif text-xl font-medium text-ink">
+          Échanges
           {comments.length > 0 && (
-            <span className="ml-2 text-sm text-gray-500 font-kanit normal-case tracking-normal">
-              ({comments.length})
-            </span>
+            <span className="ml-2 text-sm font-sans text-ink-muted">({comments.length})</span>
           )}
         </h2>
       </div>
 
       {/* Zone de saisie */}
       {isLoggedIn ? (
-        <div className="mb-8 bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+        <div className="mb-8 rounded-2xl border border-line bg-raised p-4 shadow-sm">
           <textarea
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            placeholder="Partagez votre avis..."
+            placeholder="Partagez votre ressenti…"
             rows={3}
-            className="w-full bg-transparent text-gray-200 font-kanit text-sm placeholder-gray-600 resize-none focus:outline-none"
+            className="w-full resize-none bg-transparent font-sans text-sm text-ink placeholder-ink-muted focus:outline-none"
             maxLength={2000}
           />
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-800">
-            <span className="text-gray-600 font-kanit text-xs">{newContent.length}/2000</span>
+          <div className="mt-3 flex items-center justify-between border-t border-line pt-3">
+            <span className="font-sans text-xs text-ink-muted">{newContent.length}/2000</span>
             <button
               onClick={handleSubmit}
               disabled={submitting || !newContent.trim()}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-400 disabled:opacity-40 text-white text-xs font-iceberg uppercase tracking-widest rounded-lg transition-all"
+              className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-sans text-ink-invert transition-all hover:bg-accent-hover disabled:opacity-40"
             >
-              <FiSend className="w-3.5 h-3.5" />
-              {submitting ? "Envoi..." : "Envoyer"}
+              <FiSend className="h-3.5 w-3.5" />
+              {submitting ? "Envoi…" : "Publier"}
             </button>
           </div>
         </div>
       ) : (
-        <div className="mb-8 bg-gray-900/30 border border-gray-800 rounded-xl p-5 text-center">
-          <p className="text-gray-500 font-kanit text-sm">
-            <a href="/auth/login" className="text-green-400 hover:text-green-300 transition-colors">
+        <div className="mb-8 rounded-2xl border border-line bg-sunken p-5 text-center">
+          <p className="font-sans text-sm text-ink-soft">
+            <a href="/auth/login" className="text-accent transition-colors hover:text-accent-hover">
               Connectez-vous
             </a>{" "}
             pour laisser un commentaire.
@@ -132,86 +130,80 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
         </div>
       )}
 
-      {/* Liste des commentaires */}
+      {/* Liste */}
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse bg-gray-900/40 rounded-xl h-20" />
+            <div key={i} className="h-20 animate-pulse rounded-2xl bg-sunken" />
           ))}
         </div>
       ) : comments.length === 0 ? (
-        <p className="text-gray-600 font-kanit text-sm text-center py-8">
-          Aucun commentaire pour le moment. Soyez le premier !
+        <p className="py-8 text-center font-sans text-sm text-ink-muted">
+          Aucun commentaire pour le moment. Soyez le premier.
         </p>
       ) : (
         <ul className="space-y-4">
           {comments.map((comment) => (
-            <li
-              key={comment.id}
-              className="bg-gray-900/40 border border-gray-800 rounded-xl p-4"
-            >
-              {/* Header commentaire */}
-              <div className="flex items-center justify-between mb-3">
+            <li key={comment.id} className="rounded-2xl border border-line bg-raised p-4 shadow-sm">
+              <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-400/30 flex items-center justify-center flex-shrink-0">
-                    <span className="text-green-400 font-iceberg text-sm">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-accent-soft">
+                    <span className="font-serif text-sm text-accent">
                       {comment.user.pseudo.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <span className="text-white font-iceberg text-sm">{comment.user.pseudo}</span>
-                    <p className="text-gray-600 font-kanit text-xs">{formatDate(comment.createdAt)}</p>
+                    <span className="font-sans text-sm text-ink">{comment.user.pseudo}</span>
+                    <p className="font-sans text-xs text-ink-muted">{formatDate(comment.createdAt)}</p>
                   </div>
                 </div>
 
-                {/* Actions (propriétaire) */}
                 {currentUserId === comment.userId && editingId !== comment.id && (
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }}
-                      className="p-1.5 text-gray-600 hover:text-green-400 transition-colors rounded-lg hover:bg-green-500/10"
+                      className="rounded-lg p-1.5 text-ink-muted transition-colors hover:bg-accent-soft hover:text-accent"
                       aria-label="Modifier le commentaire"
                     >
-                      <FiEdit2 className="w-3.5 h-3.5" />
+                      <FiEdit2 className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(comment.id)}
-                      className="p-1.5 text-gray-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                      className="rounded-lg p-1.5 text-ink-muted transition-colors hover:bg-danger/10 hover:text-danger"
                       aria-label="Supprimer le commentaire"
                     >
-                      <FiTrash2 className="w-3.5 h-3.5" />
+                      <FiTrash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 )}
               </div>
 
-              {/* Contenu / Edition */}
               {editingId === comment.id ? (
                 <div>
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     rows={3}
-                    className="w-full bg-gray-800/60 border border-gray-700 rounded-lg p-3 text-gray-200 font-kanit text-sm resize-none focus:outline-none focus:border-green-500/50"
+                    className="w-full resize-none rounded-lg border border-line bg-page p-3 font-sans text-sm text-ink focus:border-accent focus:outline-none"
                     maxLength={2000}
                   />
-                  <div className="flex gap-2 mt-2 justify-end">
+                  <div className="mt-2 flex justify-end gap-2">
                     <button
                       onClick={() => setEditingId(null)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-iceberg uppercase text-gray-400 border border-gray-700 rounded-lg hover:text-white transition-colors"
+                      className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-sans text-ink-soft transition-colors hover:text-ink"
                     >
-                      <FiX className="w-3 h-3" /> Annuler
+                      <FiX className="h-3 w-3" /> Annuler
                     </button>
                     <button
                       onClick={() => handleEdit(comment.id)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-iceberg uppercase text-green-400 border border-green-500/40 rounded-lg hover:bg-green-500/10 transition-colors"
+                      className="flex items-center gap-1.5 rounded-full border border-accent/40 px-3 py-1.5 text-xs font-sans text-accent transition-colors hover:bg-accent-soft"
                     >
-                      <FiCheck className="w-3 h-3" /> Sauvegarder
+                      <FiCheck className="h-3 w-3" /> Enregistrer
                     </button>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-300 font-kanit text-sm leading-relaxed whitespace-pre-wrap">
+                <p className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink-soft">
                   {comment.content}
                 </p>
               )}

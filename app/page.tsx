@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaCheck, FaArrowRight, FaLungs, FaBrain, FaHeartbeat } from "react-icons/fa";
+import { LuCheck, LuArrowRight, LuWind, LuBrain, LuActivity, LuLeaf, LuBookOpen, LuUsers } from "react-icons/lu";
 import Reveal from "@/components/home/Reveal";
 import StatsCounters from "@/components/home/StatsCounters";
 import JoinCTA from "@/components/home/JoinCTA";
@@ -15,6 +15,12 @@ import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 
 export const revalidate = 300;
 
+const Eyebrow = ({ children }: { children: React.ReactNode }) => (
+  <p className="mb-3 text-center text-xs font-sans uppercase tracking-[0.22em] text-accent">
+    {children}
+  </p>
+);
+
 export default async function Home() {
   const [fetchedUnits, fetchedPosts, fetchedTutorials, fetchedDefinitions, bgImage, secImages] =
     await Promise.allSettled([
@@ -28,9 +34,9 @@ export default async function Home() {
 
   const units: UnitModel[] =
     fetchedUnits.status === "fulfilled"
-      ? [...fetchedUnits.value].sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        ).slice(0, 3)
+      ? [...fetchedUnits.value]
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 3)
       : [];
 
   const postCount = fetchedPosts.status === "fulfilled" ? fetchedPosts.value.length : 0;
@@ -41,68 +47,67 @@ export default async function Home() {
   const sectionImages = secImages.status === "fulfilled" ? secImages.value.slice(0, 4) : [];
 
   return (
-    <main className="bg-black text-white font-kanit">
+    <main className="bg-page font-sans text-ink">
 
       {/* ── HERO ── */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-page">
         <Image
           src={backgroundImage}
           alt="Seranya"
           fill
           style={{ objectFit: "cover" }}
           priority
+          sizes="100vw"
           className="scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/65 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-page" />
 
-        <Reveal as="div" immediate className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+        <Reveal as="div" immediate className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <div className="mb-8">
             <Image
               src="/logos/seranyaicon.png"
               alt="Seranya"
-              width={160}
-              height={58}
-              className="mx-auto drop-shadow-2xl"
+              width={148}
+              height={54}
+              className="mx-auto drop-shadow"
             />
           </div>
 
-          <h1 className="font-iceberg uppercase text-5xl md:text-7xl font-bold tracking-widest mb-4 text-white text-shadow-sm">
+          <h1 className="mb-4 font-serif text-5xl font-medium leading-tight text-white md:text-7xl text-shadow-sm">
             Seranya
           </h1>
 
-          <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-xl mx-auto text-shadow-sm">
-            Un univers bouddhiste et yogique. Atteignez la paix intérieure et fusionnez avec votre être profond.
+          <p className="mx-auto mb-10 max-w-xl text-lg text-white/90 md:text-xl text-shadow-sm">
+            Un univers bouddhiste et yogique. Retrouvez la paix intérieure et fusionnez avec votre être profond.
           </p>
 
-          <div className="flex flex-wrap gap-4 justify-center">
+          <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/univers"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3.5 text-sm font-sans text-ink-invert shadow-md transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:bg-accent-hover"
             >
-              Explorer <FaArrowRight className="w-4 h-4" />
+              Explorer <LuArrowRight className="h-4 w-4" />
             </Link>
             <JoinCTA />
           </div>
         </Reveal>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center pt-1.5">
-            <div className="w-1.5 h-2.5 bg-white/60 rounded-full" />
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="flex h-10 w-6 items-start justify-center rounded-full border border-white/40 pt-1.5">
+            <div className="h-2.5 w-1.5 rounded-full bg-white/70 [animation:breathe_2.6s_ease-in-out_infinite]" />
           </div>
         </div>
       </section>
 
       {/* ── STATS ── */}
-      <Reveal className="relative z-10 py-20 px-6 overflow-hidden">
+      <Reveal className="relative z-10 overflow-hidden bg-page px-6 py-24">
         {sectionImages[0] && (
-          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
+          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="scale-110 opacity-[0.05]" />
         )}
-        <div className="relative z-10 max-w-5xl mx-auto">
-          <p className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
-            L&apos;univers en chiffres
-          </p>
-          <h2 className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-16">
+        <div className="relative z-10 mx-auto max-w-5xl">
+          <Eyebrow>L&apos;univers en chiffres</Eyebrow>
+          <h2 className="mb-16 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
             Ce que nous avons construit
           </h2>
 
@@ -114,176 +119,162 @@ export default async function Home() {
         </div>
       </Reveal>
 
-      {/* ── RECENT UNITS ── */}
+      {/* ── DERNIÈRES ENTITÉS ── */}
       {units.length > 0 && (
-        <Reveal className="relative py-20 px-6 overflow-hidden">
-          {sectionImages[1] && (
-            <Image src={sectionImages[1]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
-          )}
-          <div className="relative z-10 max-w-6xl mx-auto">
-            <p className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
-              Découverte
-            </p>
-            <h2 className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-4">
+        <Reveal className="relative overflow-hidden bg-sunken px-6 py-24">
+          <div className="relative z-10 mx-auto max-w-6xl">
+            <Eyebrow>Découverte</Eyebrow>
+            <h2 className="mb-4 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
               Dernières entités
             </h2>
-            <p className="text-gray-400 text-center mb-16 max-w-xl mx-auto">
+            <p className="mx-auto mb-16 max-w-xl text-center text-ink-soft">
               Plongez dans notre encyclopédie et découvrez les entités de l&apos;univers Seranya.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {units.map((unit, i) => (
                 <Link
                   key={unit.id}
                   href={`/univers/units/${unit.id}`}
-                  className="group block relative rounded-2xl overflow-hidden aspect-[3/4] border border-gray-800 hover:border-green-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-green-500/10"
+                  className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-line shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-calm group-hover:scale-105"
                     style={{ backgroundImage: `url(${unit.headerImage || "/images/backgrounds/placeholder.jpg"})` }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
 
                   {i === 0 && (
-                    <div className="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-xs font-iceberg uppercase tracking-widest rounded-full">
+                    <div className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1 text-xs font-sans uppercase tracking-[0.15em] text-ink-invert">
                       Nouveau
                     </div>
                   )}
 
-                  <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col items-center text-center">
+                  <div className="absolute inset-x-0 bottom-0 flex flex-col items-center p-5 text-center">
                     {unit.profileImage && (
                       <Image
                         src={unit.profileImage}
                         alt={unit.title}
                         width={64}
                         height={64}
-                        className="rounded-full ring-2 ring-green-400/50 mb-3 object-cover"
+                        className="mb-3 rounded-full object-cover ring-2 ring-white/60"
                       />
                     )}
-                    <h3 className="font-iceberg uppercase text-white font-bold text-lg">{unit.title}</h3>
-                    <p className="text-gray-400 text-sm mt-1 line-clamp-2">{unit.subtitle}</p>
+                    <h3 className="font-serif text-lg font-medium text-white">{unit.title}</h3>
+                    <p className="mt-1 text-sm text-white/80 line-clamp-2">{unit.subtitle}</p>
                   </div>
                 </Link>
               ))}
             </div>
 
-            <div className="text-center mt-12">
+            <div className="mt-12 text-center">
               <Link
                 href="/univers"
-                className="inline-flex items-center gap-2 px-8 py-3.5 border border-gray-700 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:border-green-400 hover:text-green-400 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-full border border-line-strong px-8 py-3.5 text-sm font-sans text-ink transition-all duration-200 hover:border-accent hover:text-accent"
               >
-                Voir tout l&apos;univers <FaArrowRight className="w-4 h-4" />
+                Voir tout l&apos;univers <LuArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
         </Reveal>
       )}
 
-      {/* ── FEATURES ── */}
-      <Reveal className="relative py-20 px-6 overflow-hidden">
-        {sectionImages[2] && (
-          <Image src={sectionImages[2]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
-        )}
-        <div className="relative z-10 max-w-5xl mx-auto">
-          <p className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
-            Pourquoi Seranya
-          </p>
-          <h2 className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-16">
+      {/* ── ENGAGEMENTS ── */}
+      <Reveal className="relative overflow-hidden bg-page px-6 py-24">
+        <div className="relative z-10 mx-auto max-w-5xl">
+          <Eyebrow>Pourquoi Seranya</Eyebrow>
+          <h2 className="mb-16 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
             Notre engagement
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[
               {
                 title: "Sérénité",
                 desc: "Un espace pensé pour la paix intérieure et le ressourcement, loin du bruit du monde.",
-                icon: "✦",
+                icon: <LuLeaf className="h-6 w-6" />,
                 href: "/univers",
               },
               {
                 title: "Connaissance",
                 desc: "Une encyclopédie vivante de l'univers bouddhiste et yogique, enrichie en permanence.",
-                icon: "◈",
+                icon: <LuBookOpen className="h-6 w-6" />,
                 href: "/encyclopedie",
               },
               {
                 title: "Communauté",
                 desc: "Des membres partageant les mêmes valeurs, unis par la quête du bonheur authentique.",
-                icon: "❋",
+                icon: <LuUsers className="h-6 w-6" />,
                 href: "/contact",
               },
             ].map((f) => (
               <Link
                 key={f.title}
                 href={f.href}
-                className="h-full flex flex-col p-6 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+                className="flex h-full flex-col rounded-2xl border border-line bg-raised p-7 shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
               >
-                <div className="text-green-400 text-2xl mb-4">{f.icon}</div>
-                <h3 className="font-iceberg uppercase text-white text-lg mb-3">{f.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+                <div className="mb-4 text-accent">{f.icon}</div>
+                <h3 className="mb-3 font-serif text-lg font-medium text-ink">{f.title}</h3>
+                <p className="text-sm leading-relaxed text-ink-soft">{f.desc}</p>
               </Link>
             ))}
           </div>
         </div>
       </Reveal>
 
-      {/* ── ÉVEIL (bienfaits du yoga) ── */}
-      <Reveal className="relative py-20 px-6 overflow-hidden border-t border-gray-900">
-        <div className="absolute inset-0 bg-gradient-to-b from-green-950/10 via-transparent to-transparent" />
-        <div className="relative z-10 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* ── ÉVEIL ── */}
+      <Reveal className="relative overflow-hidden border-t border-line bg-sunken px-6 py-24">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent-soft/60 via-transparent to-transparent" />
+        <div className="relative z-10 mx-auto grid max-w-5xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <div>
-            <p className="text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
+            <p className="mb-3 text-xs font-sans uppercase tracking-[0.22em] text-accent">
               Le pouvoir du yoga
             </p>
-            <h2 className="text-3xl md:text-4xl font-iceberg uppercase text-white mb-6">
-              Éveil
-            </h2>
-            <p className="text-gray-400 leading-relaxed mb-8">
-              Souplesse, force, respiration, sérénité intérieure : découvrez pourquoi
-              le yoga transforme durablement le corps et l&apos;esprit, et comment il
-              peut changer votre quotidien dès la première séance.
+            <h2 className="mb-6 font-serif text-3xl font-medium text-ink md:text-4xl">Éveil</h2>
+            <p className="mb-8 leading-relaxed text-ink-soft">
+              Souplesse, force, respiration, sérénité intérieure : découvrez pourquoi le yoga
+              transforme durablement le corps et l&apos;esprit, et comment il peut changer votre
+              quotidien dès la première séance.
             </p>
             <Link
               href="/eveil"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3.5 text-sm font-sans text-ink-invert shadow-md transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:bg-accent-hover"
             >
-              Découvrir Éveil <FaArrowRight className="w-4 h-4" />
+              Découvrir Éveil <LuArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             {[
-              { icon: <FaHeartbeat className="w-6 h-6" />, label: "Le corps" },
-              { icon: <FaBrain className="w-6 h-6" />, label: "L'esprit" },
-              { icon: <FaLungs className="w-6 h-6" />, label: "Le souffle" },
+              { icon: <LuActivity className="h-6 w-6" />, label: "Le corps" },
+              { icon: <LuBrain className="h-6 w-6" />, label: "L'esprit" },
+              { icon: <LuWind className="h-6 w-6" />, label: "Le souffle" },
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex flex-col items-center gap-3 p-6 rounded-2xl border border-gray-800 bg-gray-950 text-center"
+                className="flex flex-col items-center gap-3 rounded-2xl border border-line bg-raised p-6 text-center shadow-sm"
               >
-                <div className="text-green-400">{item.icon}</div>
-                <span className="text-gray-300 font-kanit uppercase text-xs tracking-widest">{item.label}</span>
+                <div className="text-accent">{item.icon}</div>
+                <span className="text-xs font-sans uppercase tracking-[0.15em] text-ink-soft">{item.label}</span>
               </div>
             ))}
           </div>
         </div>
       </Reveal>
 
-      {/* ── PRICING ── */}
+      {/* ── TARIFICATION ── */}
       <PricingGate>
-        <Reveal className="py-20 px-6">
-          <div className="max-w-3xl mx-auto">
-            <p className="text-center text-green-400 font-iceberg uppercase tracking-widest text-sm mb-2">
-              Accès
-            </p>
-            <h2 className="text-3xl md:text-4xl font-iceberg uppercase text-center text-white mb-16">
+        <Reveal className="bg-page px-6 py-24">
+          <div className="mx-auto max-w-3xl">
+            <Eyebrow>Accès</Eyebrow>
+            <h2 className="mb-16 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
               Une tarification simple
             </h2>
 
-            <div className="rounded-2xl border border-gray-800 bg-gray-950 overflow-hidden flex flex-col md:flex-row">
+            <div className="flex flex-col overflow-hidden rounded-3xl border border-line bg-raised shadow-md md:flex-row">
               <div className="flex-1 p-8 md:p-10">
-                <h3 className="font-iceberg uppercase text-xl text-white mb-4">Abonnement mensuel</h3>
-                <p className="text-gray-400 text-sm mb-8">
+                <h3 className="mb-4 font-serif text-xl font-medium text-ink">Abonnement mensuel</h3>
+                <p className="mb-8 text-sm text-ink-soft">
                   Accédez à l&apos;intégralité du contenu exclusif : articles, ressources membres, et plus encore.
                 </p>
                 <div className="space-y-3">
@@ -292,23 +283,23 @@ export default async function Home() {
                     "Ressources exclusives des membres",
                     "T-shirt officiel (bientôt)",
                   ].map((f) => (
-                    <div key={f} className="flex items-center gap-3 text-sm text-gray-300">
-                      <FaCheck className="text-green-400 flex-shrink-0" />
+                    <div key={f} className="flex items-center gap-3 text-sm text-ink-soft">
+                      <LuCheck className="flex-shrink-0 text-accent" />
                       <span>{f}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="flex flex-col items-center justify-center p-8 md:p-10 bg-gray-900 md:min-w-[220px]">
-                <span className="text-gray-400 text-sm font-kanit mb-2">Par mois</span>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-5xl font-bold font-iceberg text-white">5€</span>
-                  <span className="text-gray-400 text-sm">/mois</span>
+              <div className="flex flex-col items-center justify-center bg-sunken p-8 md:min-w-[220px] md:p-10">
+                <span className="mb-2 text-sm font-sans text-ink-muted">Par mois</span>
+                <div className="mb-6 flex items-baseline gap-1">
+                  <span className="font-serif text-5xl font-medium text-ink">5€</span>
+                  <span className="text-sm text-ink-muted">/mois</span>
                 </div>
                 <Link
                   href="/subscription"
-                  className="w-full text-center px-6 py-3 bg-green-500 text-white font-iceberg uppercase tracking-widest text-sm rounded-md hover:bg-green-400 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-200 active:scale-95"
+                  className="w-full rounded-full bg-accent px-6 py-3 text-center text-sm font-sans text-ink-invert transition-all duration-200 hover:bg-accent-hover"
                 >
                   Commencer
                 </Link>
@@ -319,11 +310,7 @@ export default async function Home() {
       </PricingGate>
 
       {/* ── CTA FINAL ── */}
-      <Reveal className="relative py-32 px-6 overflow-hidden">
-        {sectionImages[3] && (
-          <Image src={sectionImages[3]} alt="" fill style={{ objectFit: "cover" }} className="opacity-10 blur-sm scale-110" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
+      <Reveal className="relative overflow-hidden bg-sunken px-6 py-28">
         <FooterCTA />
       </Reveal>
 

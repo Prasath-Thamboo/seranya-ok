@@ -101,8 +101,8 @@ const UsersPage = () => {
   );
 
   return (
-    <div className="font-kanit">
-      <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Utilisateurs</h1>
+    <div className="font-sans">
+      <h1 className="text-2xl font-serif font-medium text-ink mb-6">Utilisateurs</h1>
       <Table 
         data={users} 
         columns={columns} 

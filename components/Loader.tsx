@@ -2,37 +2,20 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
+/** Chargement plein écran — respiration douce, fond ivoire. */
 const Loader = () => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
-      <div className="animate-pulse">
-        <img
-          src="/logos/favicon.ico" // Assure-toi que le chemin de l'image est correct
-          alt="Loading Logo"
-          width={150}
-          height={150}
-          className="object-contain"
-        />
-      </div>
-      <style jsx>{`
-
-        .animate-pulse {
-          animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-          0% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.1);
-          }
-          100% {
-            transform: scale(1);
-          }
-        }
-      `}</style>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-page">
+      <Image
+        src="/logos/seranyaicon.png"
+        alt="Chargement"
+        width={120}
+        height={120}
+        className="object-contain [animation:breathe_2.4s_ease-in-out_infinite]"
+        priority
+      />
     </div>
   );
 };

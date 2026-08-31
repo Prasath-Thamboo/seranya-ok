@@ -1,6 +1,6 @@
 "use client";
 
-import { Form, Input, Button } from "antd";
+import { Form, Input } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -77,97 +77,76 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row w-full">
-      <div className="relative w-full lg:w-2/3 h-64 lg:h-screen">
+    <div className="flex min-h-screen w-full flex-col bg-page font-sans text-ink lg:flex-row">
+      <div className="relative h-64 w-full lg:h-screen lg:w-2/3">
         {backgroundImage && (
-          <Image
-            src={backgroundImage}
-            alt="Background"
-            fill
-            style={{ objectFit: "cover" }}
-            className="lg:block"
-          />
+          <Image src={backgroundImage} alt="" fill style={{ objectFit: "cover" }} />
         )}
-        <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-white/90 to-transparent"></div>
+        <div className="absolute inset-y-0 right-0 hidden w-1/4 bg-gradient-to-l from-page to-transparent lg:block" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-page lg:hidden" />
       </div>
 
-      <div className="flex w-full lg:w-1/3 h-auto lg:h-screen justify-center items-center bg-white">
-        <div className="max-w-md w-full text-black p-8">
+      <div className="flex h-auto w-full items-center justify-center lg:h-screen lg:w-1/3">
+        <div className="w-full max-w-md p-8">
           <div className="mb-6">
             <Link href="/">
               <Image
                 src="/logos/seranyaicon.png"
-                alt="Seranya Logo"
-                width={180}
-                height={65}
-                className="mx-auto hover:opacity-80 transition-opacity cursor-pointer"
+                alt="Seranya"
+                width={172}
+                height={62}
+                className="mx-auto cursor-pointer transition-opacity hover:opacity-80"
               />
             </Link>
           </div>
-          <h1 className="text-4xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+          <h1 className="mb-8 text-center font-serif text-3xl font-medium text-ink">
             Réinitialiser le mot de passe
           </h1>
 
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            className="font-kanit"
-          >
+          <Form form={form} layout="vertical" onFinish={onFinish}>
             <Form.Item
-              label={<span className="text-black font-kanit">Nouveau mot de passe</span>}
+              label={<span className="font-sans text-sm text-ink-soft">Nouveau mot de passe</span>}
               name="newPassword"
-              rules={[
-                {
-                  required: true,
-                  message: "Veuillez entrer un nouveau mot de passe !",
-                },
-              ]}
+              rules={[{ required: true, message: "Veuillez entrer un nouveau mot de passe !" }]}
             >
               <Input.Password
                 placeholder="Nouveau mot de passe"
-                className="custom-input bg-white text-black font-kanit"
-                style={{ height: "3rem" }}
+                className="custom-input"
+                style={{ height: "3rem", borderRadius: "0.75rem" }}
               />
             </Form.Item>
 
             <Form.Item
-              label={<span className="text-black font-kanit">Confirmer le mot de passe</span>}
+              label={<span className="font-sans text-sm text-ink-soft">Confirmer le mot de passe</span>}
               name="confirmPassword"
               dependencies={["newPassword"]}
               rules={[
-                {
-                  required: true,
-                  message: "Veuillez confirmer votre mot de passe !",
-                },
+                { required: true, message: "Veuillez confirmer votre mot de passe !" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue("newPassword") === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(
-                      new Error("Les mots de passe ne correspondent pas !")
-                    );
+                    return Promise.reject(new Error("Les mots de passe ne correspondent pas !"));
                   },
                 }),
               ]}
             >
               <Input.Password
                 placeholder="Confirmer le mot de passe"
-                className="custom-input bg-white text-black font-kanit"
-                style={{ height: "3rem" }}
+                className="custom-input"
+                style={{ height: "3rem", borderRadius: "0.75rem" }}
               />
             </Form.Item>
 
             <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="w-full h-12 bg-black text-white font-kanit uppercase font-bold"
-                loading={loading}
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex h-12 w-full items-center justify-center rounded-full bg-accent text-sm font-sans text-ink-invert transition-all duration-200 hover:bg-accent-hover disabled:opacity-60"
               >
-                Réinitialiser le mot de passe
-              </Button>
+                {loading ? "Réinitialisation…" : "Réinitialiser le mot de passe"}
+              </button>
             </Form.Item>
           </Form>
         </div>

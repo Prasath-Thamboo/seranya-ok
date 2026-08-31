@@ -11,15 +11,8 @@ const backendUrl = process.env.NODE_ENV === 'production'
   ? process.env.NEXT_PUBLIC_API_URL_PROD
   : process.env.NEXT_PUBLIC_API_URL_LOCAL;
 
-const fetchRandomImage = async () => {
-  const res = await fetch("/api/getRandomImage");
-  const data = await res.json();
-  return data.imagePath;
-};
-
 // Composant pour gérer la confirmation avec Suspense
 function ConfirmationContent() {
-  const [backgroundImage, setBackgroundImage] = useState<string>("");
   const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -43,59 +36,32 @@ function ConfirmationContent() {
       }
     };
 
-    const loadBackgroundImage = async () => {
-      try {
-        const image = await fetchRandomImage();
-        setBackgroundImage(image);
-      } catch (error) {
-        console.error("Erreur lors du chargement de l'image de fond", error);
-      }
-    };
-
     confirmEmail();
-    loadBackgroundImage();
   }, [token]);
 
   return (
-    <div className="relative h-screen flex flex-col items-center justify-center font-kanit text-center bg-gray-100">
-      
-      {backgroundImage && (
-        <div className="fixed inset-0 z-0">
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${backgroundImage})`,
-              backgroundSize: 'cover', 
-              backgroundPosition: 'center',
-              filter: "brightness(70%)",
-              backgroundAttachment: "fixed",
-            }}
-          ></div>
-          <div className="absolute inset-0 bg-black opacity-70 z-10"></div>
-        </div>
-      )}
-
-      <div className="relative z-10">
+    <div className="relative flex h-screen flex-col items-center justify-center bg-page px-6 text-center font-sans text-ink">
+      <div className="relative z-10 max-w-md">
         {confirmationMessage ? (
           <>
-            <h1 className="text-4xl font-bold mb-8 uppercase text-white">Confirmation réussie !</h1>
-            <p className="text-lg mb-6 text-gray-200">{confirmationMessage}</p>
+            <h1 className="mb-6 font-serif text-3xl font-medium text-ink">Confirmation réussie</h1>
+            <p className="mb-8 text-ink-soft">{confirmationMessage}</p>
           </>
         ) : errorMessage ? (
           <>
-            <h1 className="text-4xl font-bold mb-8 uppercase text-red-600">Erreur de confirmation</h1>
-            <p className="text-lg mb-6 text-red-400">{errorMessage}</p>
+            <h1 className="mb-6 font-serif text-3xl font-medium text-danger">Erreur de confirmation</h1>
+            <p className="mb-8 text-ink-soft">{errorMessage}</p>
           </>
         ) : (
           <>
-            <h1 className="text-4xl font-bold mb-8 uppercase text-white">Inscription presque terminée !</h1>
-            <p className="text-lg mb-6 text-gray-200">
-              Nous traitons votre demande de confirmation. Veuillez patienter...
+            <h1 className="mb-6 font-serif text-3xl font-medium text-ink">Inscription presque terminée</h1>
+            <p className="mb-8 text-ink-soft">
+              Nous traitons votre demande de confirmation. Veuillez patienter…
             </p>
           </>
         )}
 
-        <Link href="/auth/login" className="text-blue-400 hover:underline">
+        <Link href="/auth/login" className="text-accent underline transition-colors hover:text-accent-hover">
           Retour à la page de connexion
         </Link>
       </div>

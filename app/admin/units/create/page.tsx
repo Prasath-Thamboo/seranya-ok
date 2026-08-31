@@ -131,7 +131,7 @@ const CreateUnit = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Créer une Unité
         </h1>
 
@@ -140,39 +140,39 @@ const CreateUnit = () => {
           initialValues={{ remember: true }}
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           <Form.Item
             name="title"
-            label={<span className="font-kanit text-black">Titre</span>}
+            label={<span className="font-sans text-ink-soft">Titre</span>}
             rules={[{ required: true, message: "Veuillez entrer le titre de l'unité!" }]}
           >
             <Input
               placeholder="Titre de l'unité"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "3rem" }}
             />
           </Form.Item>
 
           <Form.Item
             name="intro"
-            label={<span className="font-kanit text-black">Introduction</span>}
+            label={<span className="font-sans text-ink-soft">Introduction</span>}
             rules={[{ required: true, message: "Veuillez entrer l'introduction de l'unité!" }]}
           >
             <Input.TextArea
               placeholder="Introduction"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "6rem" }}
             />
           </Form.Item>
 
           <Form.Item
             name="subtitle"
-            label={<span className="font-kanit text-black">Sous-titre</span>}
+            label={<span className="font-sans text-ink-soft">Sous-titre</span>}
           >
             <Input
               placeholder="Sous-titre de l'unité"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "3rem" }}
             />
           </Form.Item>
@@ -180,7 +180,7 @@ const CreateUnit = () => {
           {/* Champ : Quote */}
           <Form.Item
             name="quote"
-            label={<span className="font-kanit text-black">Citation</span>}
+            label={<span className="font-sans text-ink-soft">Citation</span>}
             rules={[
               { required: true, message: "Veuillez entrer une citation pour l'unité!" },
               { max: 200, message: "La citation ne doit pas dépasser 200 caractères." },
@@ -188,14 +188,14 @@ const CreateUnit = () => {
           >
             <Input.TextArea
               placeholder="Citation de l'unité"
-              className="bg-white text-black font-kanit focus:ring-teal-500 focus:border-teal-500"
+              className="bg-raised text-ink font-sans focus:ring-teal-500 focus:border-teal-500"
             />
           </Form.Item>
 
           {/* Champ : Color Picker */}
           <Form.Item
             name="color"
-            label={<span className="font-kanit text-black">Couleur</span>}
+            label={<span className="font-sans text-ink-soft">Couleur</span>}
             rules={[
               { required: true, message: "Veuillez sélectionner une couleur!" },
               {
@@ -209,14 +209,14 @@ const CreateUnit = () => {
 
           <Form.Item
             name="story"
-            label={<span className="font-kanit text-black">Histoire</span>}
+            label={<span className="font-sans text-ink-soft">Histoire</span>}
           >
             <ReactQuill value={storyValue} onChange={setStoryValue} />
           </Form.Item>
 
           <Form.Item
             name="bio"
-            label={<span className="font-kanit text-black">Biographie</span>}
+            label={<span className="font-sans text-ink-soft">Biographie</span>}
           >
             <ReactQuill value={bioValue} onChange={setBioValue} />
           </Form.Item>
@@ -228,7 +228,7 @@ const CreateUnit = () => {
           >
             <Select
               placeholder="Sélectionnez le type"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
             >
               <Option value={UnitType.UNIT}>UNIT</Option>
               <Option value={UnitType.CHAMPION}>CHAMPION</Option>
@@ -238,7 +238,7 @@ const CreateUnit = () => {
           {/* Sélection des classes associées */}
           <Form.Item
             name="classIds"
-            label={<span className="font-kanit text-black">Classes associées</span>}
+            label={<span className="font-sans text-ink-soft">Classes associées</span>}
             rules={[{ required: true, message: "Veuillez sélectionner au moins une classe!" }]}
           >
             <Select
@@ -257,7 +257,7 @@ const CreateUnit = () => {
 
           <Form.Item
             name="profileImage"
-            label={<span className="font-kanit text-black">Image de profil</span>}
+            label={<span className="font-sans text-ink-soft">Image de profil</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
             rules={[
@@ -276,7 +276,7 @@ const CreateUnit = () => {
 
           <Form.Item
             name="headerImage"
-            label={<span className="font-kanit text-black">Image Header</span>}
+            label={<span className="font-sans text-ink-soft">Image Header</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
             rules={[
@@ -295,7 +295,7 @@ const CreateUnit = () => {
 
           <Form.Item
             name="footerImage"
-            label={<span className="font-kanit text-black">Image de pied de page</span>}
+            label={<span className="font-sans text-ink-soft">Image de pied de page</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
             rules={[
@@ -314,7 +314,7 @@ const CreateUnit = () => {
 
           <Form.Item
             name="gallery"
-            label={<span className="font-kanit text-black">Galerie</span>}
+            label={<span className="font-sans text-ink-soft">Galerie</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -335,7 +335,7 @@ const CreateUnit = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold"
+              className="bg-raised text-ink font-sans text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold"
               icon={<PlusOutlined className="mr-2" />}
               loading={loading}
             >

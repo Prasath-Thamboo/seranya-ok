@@ -39,10 +39,10 @@ const UserViewPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 sm:p-8">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-2xl font-kanit text-black relative">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-2xl font-sans text-ink-soft relative">
         <div className="absolute top-4 right-4 flex gap-2">
           <button
-            className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+            className="bg-accent text-ink-invert p-2 rounded-full flex items-center justify-center hover:bg-accent-hover transition-transform transform hover:scale-105"
             onClick={() => router.push(`/admin/users/update?id=${id}`)}
           >
             <FaEdit className="h-4 w-4" />
@@ -61,7 +61,7 @@ const UserViewPage = () => {
           />
           <DividersWithHeading
             text={user.pseudo}
-            customStyle="text-3xl text-black font-bold font-oxanium uppercase text-center"
+            customStyle="text-2xl text-ink font-medium text-center"
           />
           <div className="mt-2">
             <Badge role={user.role} />

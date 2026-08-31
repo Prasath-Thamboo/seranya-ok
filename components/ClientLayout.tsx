@@ -2,13 +2,12 @@
 
 "use client";
 
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { BackTop } from "antd"; // Importation de BackTop
 import { FaArrowUp } from "react-icons/fa"; // Importation de l'icône flèche vers le haut
-import { ColorContext } from "@/context/ColorContext"; // Importer le ColorContext
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -20,14 +19,12 @@ export default function ClientLayout({
   disableFooter = false, // Default to false
 }: ClientLayoutProps) {
   const pathname = usePathname();
-  const { color } = useContext(ColorContext); // Consommer le contexte
 
   // Define paths where the footer should not be shown
   const excludedFooterPaths = [
     "/auth/login",
     "/auth/register",
     "/admin",
-    "/univers/units", // Path for the unit detail pages
   ];
 
   // Determine if the current path should exclude the footer
@@ -45,99 +42,48 @@ export default function ClientLayout({
       <div>{children}</div>
       {shouldShowFooter && <Footer onLoad={handleImageLoad} />}
 
-      {/* Back to Top Button */}
+      {/* Bouton retour en haut de page */}
       <BackTop visibilityHeight={200}>
-        <div
-          className="back-to-top-button"
-          style={{
-            "--neon-color": color || "bg-white",
-          } as React.CSSProperties}
-        >
-          <FaArrowUp className="text-2xl" />
+        <div className="back-to-top-button">
+          <FaArrowUp className="text-lg" />
         </div>
       </BackTop>
 
-      {/* Custom Styles */}
+      {/* Styles — élévation douce, aucune pulsation/halo coloré */}
       <style jsx global>{`
-        /* Animation de fade-in */
         @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
-        /* Stylisation du bouton Back to Top */
         .back-to-top-button {
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 48px; /* Ajustez la taille selon vos besoins */
-          width: 48px;  /* Ajustez la taille selon vos besoins */
-          background-color: #000; /* Couleur de fond noire */
+          height: 48px;
+          width: 48px;
+          background-color: var(--surface-raised, #fffdf9);
+          border: 1px solid var(--border-subtle, #e4dacb);
           border-radius: 50%;
-          box-shadow: 0 0 10px var(--neon-color, #2ecc40),
-                      0 0 20px var(--neon-color, #2ecc40),
-                      0 0 30px var(--neon-color, #2ecc40);
-          animation: pulse-neon 2s infinite;
-          transition: opacity 0.3s;
+          box-shadow: 0 8px 30px rgba(43, 36, 29, 0.12);
+          transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
           cursor: pointer;
         }
 
-        /* Positionnement du bouton Back to Top */
         .ant-back-top {
-          right: 40px; /* Distance du bord droit */
-          bottom: 40px; /* Distance du bord inférieur */
+          right: 40px;
+          bottom: 40px;
         }
 
-        /* Hover effect pour le bouton */
         .back-to-top-button:hover {
-          opacity: 0.8;
+          opacity: 1;
+          transform: translateY(-2px);
+          box-shadow: 0 12px 40px rgba(43, 36, 29, 0.16);
         }
 
-        /* Effet pulsant néon pour le bouton Back to Top */
-        @keyframes pulse-neon {
-          0% {
-            box-shadow: 0 0 10px var(--neon-color, #2ecc40),
-                        0 0 20px var(--neon-color, #2ecc40),
-                        0 0 30px var(--neon-color, #2ecc40);
-          }
-          50% {
-            box-shadow: 0 0 20px var(--neon-color, #2ecc40),
-                        0 0 30px var(--neon-color, #2ecc40),
-                        0 0 40px var(--neon-color, #2ecc40);
-          }
-          100% {
-            box-shadow: 0 0 10px var(--neon-color, #2ecc40),
-                        0 0 20px var(--neon-color, #2ecc40),
-                        0 0 30px var(--neon-color, #2ecc40);
-          }
-        }
-
-        /* Stylisation du contenu du BackTop */
         .back-to-top-button > svg {
-          color: var(--neon-color, #2ecc40); /* Couleur de l'icône basée sur la couleur néon */
-          transition: color 0.3s;
-        }
-
-        /* Animation optionnelle pour l'icône */
-        @keyframes neon-pulse {
-          0% {
-            color: var(--neon-color, #2ecc40);
-          }
-          50% {
-            color: lighten(var(--neon-color, #2ecc40), 20%);
-          }
-          100% {
-            color: var(--neon-color, #2ecc40);
-          }
-        }
-
-        /* Appliquer l'animation à l'icône */
-        .back-to-top-button > svg {
-          animation: neon-pulse 2s infinite;
+          color: var(--accent, #7a8b6f);
+          transition: color 0.3s ease;
         }
       `}</style>
     </>

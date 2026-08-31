@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FaLock } from "react-icons/fa";
+import { FiLock } from "react-icons/fi";
 
 interface SubscriptionLockProps {
   message?: string;
@@ -9,8 +9,8 @@ interface SubscriptionLockProps {
   className?: string;
 }
 
-// Overlay "réservé aux abonnés" — même patron visuel que ClassDetailClient/UnitDetailClient.
-// Le parent doit être positionné en `relative` pour que l'overlay le recouvre.
+// Voile clair "verre dépoli chaud" — réservé aux abonnés.
+// Le parent doit être positionné en `relative`.
 const SubscriptionLock: React.FC<SubscriptionLockProps> = ({
   message = "Contenu réservé aux abonnés",
   minHeight = 200,
@@ -22,14 +22,16 @@ const SubscriptionLock: React.FC<SubscriptionLockProps> = ({
 
   return (
     <div
-      className={`absolute inset-0 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center z-20 rounded-lg ${className}`}
+      className={`absolute inset-0 z-20 flex flex-col items-center justify-center rounded-xl surface-overlay ${className}`}
       style={{ minHeight }}
     >
-      <FaLock className="text-5xl text-gray-400 mb-4" />
-      <p className="text-lg text-white mb-4 text-center px-4">{message}</p>
+      <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft text-accent">
+        <FiLock className="h-5 w-5" />
+      </span>
+      <p className="mb-5 max-w-xs px-4 text-center text-sm text-ink-soft">{message}</p>
       <button
         onClick={handleSubscriptionClick}
-        className="bg-indigo-600 text-white px-6 py-2.5 text-base rounded-lg hover:bg-indigo-500 transition-colors duration-200"
+        className="rounded-full bg-accent px-6 py-2.5 text-sm font-sans text-ink-invert transition-colors duration-200 hover:bg-accent-hover"
       >
         S&apos;abonner
       </button>

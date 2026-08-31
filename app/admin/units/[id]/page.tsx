@@ -49,17 +49,17 @@ const UnitViewPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 sm:p-8">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-4xl font-kanit text-black relative">
+      <div className="bg-raised p-6 sm:p-8 rounded-2xl shadow-sm border border-line w-full max-w-4xl font-sans text-ink relative">
         <div className="absolute top-4 right-4 flex gap-2">
           <button
-            className="bg-black text-white p-2 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-transform transform hover:scale-110 hover:border"
+            className="bg-accent text-ink-invert p-2 rounded-full flex items-center justify-center hover:bg-accent-hover transition-transform transform hover:scale-105"
             onClick={() => router.push(`/admin/units/update?id=${id}`)}
           >
             <FaEdit className="h-4 w-4" />
           </button>
         </div>
 
-        <Tabs defaultActiveKey="1" centered className="font-kanit text-black">
+        <Tabs defaultActiveKey="1" centered className="font-sans text-ink-soft">
           <TabPane tab="Général" key="1">
             <div className="flex flex-col items-center mb-8">
               <Image
@@ -72,7 +72,7 @@ const UnitViewPage = () => {
               <DividersWithHeading 
                 text={unit.title} 
                 badge={unit.type} 
-                customStyle="text-4xl text-black font-bold font-oxanium uppercase text-center text-black" 
+                customStyle="text-3xl text-ink font-medium text-center" 
               />
               {unit.subtitle && (
                 <p className="text-lg italic text-center text-gray-600 mb-4">{unit.subtitle}</p>
@@ -80,7 +80,7 @@ const UnitViewPage = () => {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-black font-oxanium mb-4">Introduction</h2>
+              <h2 className="text-xl font-serif font-medium text-ink mb-4">Introduction</h2>
               <p className="text-lg mb-4">{unit.intro}</p>
             </div>
 

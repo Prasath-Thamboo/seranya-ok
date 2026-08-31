@@ -35,7 +35,7 @@ const CreateTutoriel = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Créer un Tutoriel
         </h1>
 
@@ -43,12 +43,12 @@ const CreateTutoriel = () => {
           name="create_tutoriel"
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
           initialValues={{ isPublished: true }}
         >
           <Form.Item
             name="title"
-            label={<span className="font-kanit text-black">Titre</span>}
+            label={<span className="font-sans text-ink-soft">Titre</span>}
             rules={[{ required: true, message: 'Veuillez entrer le titre du tutoriel!' }]}
           >
             <Input placeholder="Titre du tutoriel" style={{ height: '3rem' }} />
@@ -56,14 +56,14 @@ const CreateTutoriel = () => {
 
           <Form.Item
             name="description"
-            label={<span className="font-kanit text-black">Description</span>}
+            label={<span className="font-sans text-ink-soft">Description</span>}
           >
             <Input.TextArea placeholder="Description du tutoriel" style={{ height: '6rem' }} />
           </Form.Item>
 
           <Form.Item
             name="videoUrl"
-            label={<span className="font-kanit text-black">URL YouTube</span>}
+            label={<span className="font-sans text-ink-soft">URL YouTube</span>}
             rules={[
               { required: true, message: "Veuillez entrer l'URL de la vidéo!" },
               { type: 'url', message: "L'URL n'est pas valide!" },
@@ -74,7 +74,7 @@ const CreateTutoriel = () => {
 
           <Form.Item
             name="isPublished"
-            label={<span className="font-kanit text-black">Publier</span>}
+            label={<span className="font-sans text-ink-soft">Publier</span>}
             valuePropName="checked"
           >
             <Switch />
@@ -82,7 +82,7 @@ const CreateTutoriel = () => {
 
           <Form.Item
             name="publishedAt"
-            label={<span className="font-kanit text-black">Date de publication (laisser vide pour publier immédiatement)</span>}
+            label={<span className="font-sans text-ink-soft">Date de publication (laisser vide pour publier immédiatement)</span>}
           >
             <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: '100%' }} />
           </Form.Item>
@@ -91,7 +91,7 @@ const CreateTutoriel = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-black text-white font-kanit text-lg py-3 px-10 flex items-center justify-center uppercase font-bold"
+              className="bg-accent text-ink-invert font-sans text-sm py-3 px-10 flex items-center justify-center rounded-full"
               icon={loading ? <LoadingOutlined className="mr-2" /> : <PlusOutlined className="mr-2" />}
               loading={loading}
               disabled={loading}

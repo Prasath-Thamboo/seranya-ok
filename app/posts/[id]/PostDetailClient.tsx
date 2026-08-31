@@ -11,7 +11,7 @@ import CommentSection from "@/components/CommentSection";
 import SubscriptionLock from "@/components/SubscriptionLock";
 import Masonry from "react-masonry-css";
 import Link from "next/link";
-import Image from 'next/image'; // Importez Next.js Image si vous l'utilisez
+import Image from "next/image";
 
 const PostDetailPage = () => {
   const params = useParams();
@@ -40,7 +40,6 @@ const PostDetailPage = () => {
       .finally(() => setLoadingUser(false));
   }, []);
 
-  // Un simple USER (non abonné) n'a accès qu'à l'aperçu — EDITOR/ADMIN et abonnés voient tout.
   const hasFullAccess = isPrivileged || isSubscribed;
 
   useEffect(() => {
@@ -57,7 +56,6 @@ const PostDetailPage = () => {
         }
       }
     };
-
     fetchPost();
   }, [id]);
 
@@ -66,10 +64,7 @@ const PostDetailPage = () => {
       if (post) {
         try {
           const fetchedPosts = await fetchPosts();
-          const filteredPosts = fetchedPosts.filter(
-            (p) => p.type === post.type && p.id !== post.id
-          );
-          setRelatedPosts(filteredPosts);
+          setRelatedPosts(fetchedPosts.filter((p) => p.type === post.type && p.id !== post.id));
         } catch (error) {
           console.error("Error fetching related posts:", error);
         } finally {
@@ -77,86 +72,61 @@ const PostDetailPage = () => {
         }
       }
     };
-
     fetchRelatedPosts();
   }, [post]);
 
   if (!loadingPost && notFound) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-white font-iceberg text-center px-4">
-        <p className="text-2xl mb-4">Contenu non disponible.</p>
-        <Link href="/posts" className="text-teal-400 hover:text-teal-300 underline">
-          Retour aux posts
+      <div className="flex min-h-screen flex-col items-center justify-center bg-page px-4 text-center font-sans text-ink">
+        <p className="mb-4 font-serif text-2xl">Contenu non disponible.</p>
+        <Link href="/posts" className="text-accent underline transition-colors hover:text-accent-hover">
+          Retour aux articles
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full min-h-screen text-white font-iceberg">
-      {/* Background Header Fixe */}
-      <div
-        className="fixed inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${post?.headerImage || ""})`,
-          backgroundAttachment: "fixed",
-          filter: "brightness(25%)",
-        }}
-      />
+    <div className="relative min-h-screen w-full bg-page font-sans text-ink">
+      {/* Bannière image */}
+      <div className="relative h-[46vh] min-h-[320px] w-full overflow-hidden bg-sunken">
+        {post?.headerImage && (
+          <Image src={post.headerImage} alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-b from-transparent to-page" />
+      </div>
 
-      <div className="relative z-10 mt-28"> {/* Ajout de mt-16 pour laisser l'espace de la navbar */}
-
-        {/* Header Section: Retiré pour éviter la duplication */}
-
-        {/* Main Content with Sidebar */}
-        <div className="lg:flex lg:items-start lg:justify-center lg:mt-12 px-4 sm:px-6 lg:px-8">
-          {/* Left Column: Sidebar avec l'image header normale et les posts similaires */}
-          <div className="lg:w-2/5 p-4">
-            {/* Image Header Normale dans la Sidebar */}
-            <div className="mb-6">
+      <div className="relative z-10 mx-auto -mt-24 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="lg:flex lg:items-start lg:gap-10">
+          {/* Colonne gauche */}
+          <aside className="lg:w-2/5">
+            <div className="mb-6 overflow-hidden rounded-2xl border border-line bg-raised shadow-md">
               {loadingPost ? (
-                <Skeleton.Image style={{ width: '100%', height: 300 }} active />
-              ) : (
-                post?.headerImage ? (
-                  <div className="w-full rounded-lg overflow-hidden shadow-lg">
-                    {/* Utilisez Next.js Image pour une meilleure optimisation */}
-                    <Image
-                      src={post.headerImage}
-                      alt={`${post.title} Header Image`} // Ajustez selon vos besoins
-                      width={768}
-                      height={600}
-                      sizes="(max-width: 1024px) 100vw, 40vw"
-                      className="w-full h-auto object-cover"
-                    />
-                    {/* Si vous préférez utiliser AntImage, utilisez ce code à la place :
-                    <AntImage
-                      src={post.headerImage}
-                      alt={`${post.title} Header Image`}
-                      width={768}
-                      height={400}
-                      className="w-full max-w-3xl h-auto rounded-lg shadow-lg mx-auto object-cover"
-                    />
-                    */}
-                  </div>
-                ) : (
-                  <p className="text-gray-400 italic">Aucune image d&apos;en-tête disponible.</p>
-                )
-              )}
+                <Skeleton.Image style={{ width: "100%", height: 260 }} active />
+              ) : post?.headerImage ? (
+                <Image
+                  src={post.headerImage}
+                  alt={`${post.title}`}
+                  width={768}
+                  height={520}
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="h-auto w-full object-cover"
+                />
+              ) : null}
             </div>
 
-            {/* Posts Similaires */}
-            <div className="bg-black p-6 rounded-lg shadow-lg w-full">
-              <h2 className="text-xl font-iceberg text-white mb-4">Posts similaires</h2>
-
+            <div className="rounded-2xl border border-line bg-raised p-6 shadow-sm">
+              <h2 className="mb-4 font-serif text-lg font-medium text-ink">Articles similaires</h2>
               {loadingRelatedPosts ? (
                 <Skeleton active paragraph={{ rows: 3 }} />
               ) : relatedPosts.length > 0 ? (
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {relatedPosts.map((relatedPost) => (
                     <li key={relatedPost.id}>
                       <Link
                         href={`/posts/${relatedPost.id}`}
-                        className="block text-lg text-white hover:text-blue-400 transition-colors duration-200"
+                        className="block text-sm text-ink-soft transition-colors hover:text-accent"
                       >
                         {relatedPost.title}
                       </Link>
@@ -164,75 +134,70 @@ const PostDetailPage = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="italic text-gray-400">Aucune informations disponibles.</p>
+                <p className="text-sm italic text-ink-muted">Aucun article similaire.</p>
               )}
             </div>
-          </div>
+          </aside>
 
-          {/* Right Column: Content */}
-          <div className="lg:w-3/5 p-6">
+          {/* Colonne contenu */}
+          <div className="mt-8 lg:mt-0 lg:w-3/5">
             {loadingPost ? (
-              <Skeleton active paragraph={{ rows: 5 }} />
+              <Skeleton active paragraph={{ rows: 6 }} />
             ) : (
-              <div className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto">
-                {/* Titre et Sous-titre */}
-                <div className="mb-6 text-center lg:text-left">
-                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-iceberg uppercase text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                    {post?.title || <Skeleton active title={false} paragraph={{ rows: 1 }} />}
+              <article className="mx-auto max-w-2xl">
+                <header className="mb-8 text-center lg:text-left">
+                  <h1 className="font-serif text-3xl font-medium leading-tight text-ink sm:text-4xl md:text-5xl">
+                    {post?.title}
                   </h1>
-                  <div className="flex justify-center lg:justify-start mt-2 gap-2">
+                  <div className="mt-3 flex justify-center gap-2 lg:justify-start">
                     <Badge role={post?.type || "DEFAULT"} />
                     {isPrivileged && post?.publishedAt && new Date(post.publishedAt) > new Date() && (
-                      <Badge type={`Publication prévue le ${new Date(post.publishedAt).toLocaleDateString("fr-FR")}`} />
+                      <Badge type={`Prévu le ${new Date(post.publishedAt).toLocaleDateString("fr-FR")}`} />
                     )}
                   </div>
                   {post?.subtitle && (
-                    <p className="mt-4 text-xl sm:text-2xl md:text-3xl font-iceberg text-gray-300 drop-shadow-lg">
-                      {post.subtitle}
-                    </p>
+                    <p className="mt-4 font-serif text-xl text-ink-soft sm:text-2xl">{post.subtitle}</p>
                   )}
-                </div>
-                {/* Contenu du post */}
+                </header>
+
                 {loadingUser ? (
                   <Skeleton active paragraph={{ rows: 5 }} />
                 ) : hasFullAccess ? (
                   <div
-                    className="prose prose-lg sm:prose-xl md:prose-2xl text-gray-300"
+                    className="text-base leading-relaxed text-ink-soft [&_a]:text-accent [&_h2]:mt-8 [&_h2]:font-serif [&_h2]:text-ink [&_h3]:mt-6 [&_h3]:font-serif [&_h3]:text-ink [&_p]:mb-4"
                     dangerouslySetInnerHTML={{ __html: post?.content || "Contenu non disponible." }}
                   />
                 ) : (
                   <div className="relative min-h-[300px]">
                     {post?.intro && (
-                      <p className="text-gray-300 blur-[2px] select-none">{post.intro}</p>
+                      <p className="select-none text-ink-soft blur-[2px]">{post.intro}</p>
                     )}
                     <SubscriptionLock message="L'article complet est réservé aux abonnés" />
                   </div>
                 )}
-                  {/* Gallery Section */}
-            {post?.gallery && post.gallery.length > 0 && (
-              <div className="mt-12">
-                <h2 className="text-3xl font-bold font-iceberg text-white mb-8">Galerie</h2>
-                <Masonry
-                  breakpointCols={{ default: 3, 1100: 2, 700: 1 }}
-                  className="flex -ml-4 w-auto"
-                  columnClassName="pl-4"
-                >
-                  {post.gallery.map((imgUrl, index) => (
-                    <div key={index} className="relative mb-4">
-                      <AntImage
-                        src={imgUrl}
-                        alt={`${post.title} Gallery Image ${index + 1}`}
-                        className="w-full h-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-                        style={{ objectFit: "cover", aspectRatio: "16/9" }}
-                      />
-                    </div>
-                  ))}
-                </Masonry>
-              </div>
-            )}
-              </div>
 
-              
+                {post?.gallery && post.gallery.length > 0 && (
+                  <div className="mt-12">
+                    <h2 className="mb-8 font-serif text-2xl font-medium text-ink">Galerie</h2>
+                    <Masonry
+                      breakpointCols={{ default: 3, 1100: 2, 700: 1 }}
+                      className="-ml-4 flex w-auto"
+                      columnClassName="pl-4"
+                    >
+                      {post.gallery.map((imgUrl, index) => (
+                        <div key={index} className="relative mb-4">
+                          <AntImage
+                            src={imgUrl}
+                            alt={`${post.title} — image ${index + 1}`}
+                            className="w-full rounded-xl shadow-sm transition-transform duration-300 hover:scale-[1.02]"
+                            style={{ objectFit: "cover", aspectRatio: "16/9" }}
+                          />
+                        </div>
+                      ))}
+                    </Masonry>
+                  </div>
+                )}
+              </article>
             )}
             {post && <CommentSection postId={post.id} />}
           </div>

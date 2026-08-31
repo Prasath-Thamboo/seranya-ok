@@ -1,18 +1,18 @@
 // seranyanext/components/MiniLoader.tsx
 
-import Image from 'next/image';
+import Image from "next/image";
 
+/** Chargement inline — même respiration douce que <Loader />, en petit. */
 export default function MiniLoader() {
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="animate-pulse">
-        <Image
-          src="/logos/seranyaicon.png" // Assure-toi que le chemin est correct
-          alt="Loading..."
-          width={50}
-          height={50}
-        />
-      </div>
+    <div className="flex h-full items-center justify-center">
+      <Image
+        src="/logos/seranyaicon.png"
+        alt="Chargement"
+        width={44}
+        height={44}
+        className="[animation:breathe_2.4s_ease-in-out_infinite]"
+      />
     </div>
   );
 }

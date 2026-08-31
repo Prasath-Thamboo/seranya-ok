@@ -279,39 +279,37 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
     ?? '/images/backgrounds/placeholder.jpg';
 
   const roleStyles: Record<string, string> = {
-    ADMIN:  'text-green-400 bg-green-400/10 border-green-400/30',
-    EDITOR: 'text-blue-400  bg-blue-400/10  border-blue-400/30',
-    USER:   'text-gray-400  bg-gray-400/10  border-gray-400/30',
+    ADMIN:  'text-info bg-info-soft border-info/30',
+    EDITOR: 'text-accent bg-accent-soft border-accent/30',
+    USER:   'text-ink-soft bg-sand-100 border-line',
   };
 
   const pseudoStatusUI: Record<PseudoStatus, { color: string; icon: React.ReactNode }> = {
-    idle:      { color: 'border-gray-700',        icon: null },
-    checking:  { color: 'border-yellow-500/50',   icon: <div className="w-3.5 h-3.5 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin" /> },
-    available: { color: 'border-green-500/60',    icon: <FiCheck className="w-3.5 h-3.5 text-green-400" /> },
-    taken:     { color: 'border-red-500/60',      icon: <FiX className="w-3.5 h-3.5 text-red-400" /> },
-    invalid:   { color: 'border-red-500/60',      icon: <FiX className="w-3.5 h-3.5 text-red-400" /> },
+    idle:      { color: 'border-line',        icon: null },
+    checking:  { color: 'border-warning/50',   icon: <div className="w-3.5 h-3.5 border-2 border-warning border-t-transparent rounded-full animate-spin" /> },
+    available: { color: 'border-accent/60',    icon: <FiCheck className="w-3.5 h-3.5 text-accent" /> },
+    taken:     { color: 'border-danger/60',      icon: <FiX className="w-3.5 h-3.5 text-danger" /> },
+    invalid:   { color: 'border-danger/60',      icon: <FiX className="w-3.5 h-3.5 text-danger" /> },
   };
   const pseudoUI = pseudoStatusUI[pseudoStatus];
 
   const canSubmit = pseudoStatus !== 'taken' && pseudoStatus !== 'invalid' && pseudoStatus !== 'checking';
 
   return (
-    <div className="min-h-screen bg-black text-white font-kanit">
+    <div className="min-h-screen bg-page text-ink font-sans">
       <div className={`max-w-2xl mx-auto px-4 sm:px-0 ${withNavbarOffset ? 'pt-24 pb-6' : 'py-6'}`}>
 
         {/* Carte hero */}
-        <div className="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
-          <div className="h-20 bg-gradient-to-r from-green-900/40 via-gray-900 to-transparent relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(74,222,128,0.12),transparent_60%)]" />
-            <div className="absolute top-3 right-4 w-24 h-24 rounded-full bg-green-400/5 blur-2xl" />
-          </div>
+        <div className="bg-raised rounded-2xl border border-line overflow-hidden shadow-sm">
+          <div className="h-20 bg-gradient-to-r from-accent-soft via-sunken to-transparent" />
+
 
           <div className="px-5 pb-5 -mt-12">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               {/* Avatar cliquable */}
               <div className="relative group w-24 h-24 shrink-0">
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                <img src={avatarSrc} alt="Avatar" className="w-24 h-24 rounded-2xl object-cover border-2 border-gray-700 shadow-2xl" />
+                <img src={avatarSrc} alt="Avatar" className="w-24 h-24 rounded-2xl object-cover border-2 border-line shadow-2xl" />
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={imageLoading}
@@ -319,23 +317,23 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   className="absolute inset-0 rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
                 >
                   {imageLoading
-                    ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ? <div className="w-5 h-5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                     : <FiCamera className="w-6 h-6 text-white" />}
                 </button>
-                <span className="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded-full bg-green-400 border-2 border-gray-900 flex items-center justify-center pointer-events-none">
-                  <FiCamera className="w-2.5 h-2.5 text-gray-900" />
+                <span className="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded-full bg-accent border-2 border-raised flex items-center justify-center pointer-events-none">
+                  <FiCamera className="w-2.5 h-2.5 text-ink-invert" />
                 </span>
               </div>
 
               {/* Identité */}
               <div className="sm:pb-1 min-w-0">
-                <h1 className="text-2xl font-iceberg uppercase tracking-widest text-white truncate">{user.pseudo}</h1>
+                <h1 className="text-2xl font-serif font-medium text-ink truncate">{user.pseudo}</h1>
                 <div className="flex flex-wrap items-center gap-2 mt-1.5">
-                  <span className={`text-xs font-iceberg uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${roleStyles[user.role ?? 'USER']}`}>
+                  <span className={`text-xs font-sans px-2.5 py-0.5 rounded-full border ${roleStyles[user.role ?? 'USER']}`}>
                     {user.role}
                   </span>
                   {!isAdmin && (
-                    <span className={`text-xs px-2.5 py-0.5 rounded-full border ${user.isSubscribed ? 'text-teal-400 bg-teal-400/10 border-teal-400/30' : 'text-gray-500 bg-gray-800 border-gray-700'}`}>
+                    <span className={`text-xs px-2.5 py-0.5 rounded-full border ${user.isSubscribed ? 'text-accent bg-accent-soft border-accent/30' : 'text-ink-muted bg-sunken border-line'}`}>
                       {user.isSubscribed ? 'Abonné' : 'Non abonné'}
                     </span>
                   )}
@@ -343,7 +341,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mt-4 text-gray-400 text-sm">
+            <div className="flex items-center gap-2 mt-4 text-ink-soft text-sm">
               <FiMail className="w-4 h-4 text-green-400 shrink-0" />
               <span>{user.email}</span>
             </div>
@@ -351,15 +349,15 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
         </div>
 
         {/* Onglets */}
-        <div className="flex mt-6 border-b border-gray-800">
+        <div className="flex mt-6 border-b border-line">
           {(['info', 'edit'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-5 py-2.5 text-sm font-iceberg uppercase tracking-widest transition-colors ${
+              className={`px-5 py-2.5 text-sm font-sans transition-colors ${
                 activeTab === tab
                   ? 'text-green-400 border-b-2 border-green-400 -mb-px'
-                  : 'text-gray-500 hover:text-gray-300'
+                  : 'text-ink-muted hover:text-ink-soft'
               }`}
             >
               {tab === 'info' ? 'Informations' : 'Modifier'}
@@ -370,16 +368,16 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
         {/* Onglet Informations */}
         {activeTab === 'info' && (
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-              <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500 mb-3">Informations personnelles</p>
+            <div className="bg-raised rounded-xl border border-line p-4">
+              <p className="text-xs font-sans text-ink-muted mb-3">Informations personnelles</p>
               <div className="space-y-3.5">
                 <InfoRow icon={<FiAtSign />} label="Pseudo"         value={user.pseudo || '—'} />
                 <InfoRow icon={<FiUser />}   label="Prénom"         value={user.name || '—'} />
                 <InfoRow icon={<FiUser />}   label="Nom de famille" value={user.lastName || '—'} />
               </div>
             </div>
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-              <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500 mb-3">Détails du compte</p>
+            <div className="bg-raised rounded-xl border border-line p-4">
+              <p className="text-xs font-sans text-ink-muted mb-3">Détails du compte</p>
               <div className="space-y-3.5">
                 <InfoRow icon={<FiShield />}   label="Statut"        value={user.status || '—'} />
                 <InfoRow icon={<FiCalendar />} label="Membre depuis" value={new Date(user.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })} />
@@ -391,15 +389,15 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
         {/* Onglet Modifier */}
         {activeTab === 'edit' && (
-          <form onSubmit={handleProfileUpdate} className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-5 space-y-4">
+          <form onSubmit={handleProfileUpdate} className="mt-4 bg-raised rounded-xl border border-line p-5 space-y-4">
 
             {/* Pseudo — champ spécial avec feedback */}
             <div className="sm:col-span-2">
-              <label htmlFor="account-pseudo" className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+              <label htmlFor="account-pseudo" className="block text-[10px] font-sans text-ink-muted mb-1.5">
                 Nom d&apos;utilisateur
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted">
                   <FiAtSign className="w-4 h-4" />
                 </span>
                 <input
@@ -409,7 +407,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   onChange={(e) => handlePseudoChange(e.target.value, user.pseudo)}
                   placeholder={user.pseudo}
                   maxLength={20}
-                  className={`w-full bg-gray-800 border rounded-lg pl-9 pr-10 py-2 text-sm text-white placeholder-gray-600 focus:outline-none transition-colors ${pseudoUI.color}`}
+                  className={`w-full bg-sunken border rounded-lg pl-9 pr-10 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none transition-colors ${pseudoUI.color}`}
                 />
                 {pseudoUI.icon && (
                   <span className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -418,10 +416,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 )}
               </div>
               <div className="flex justify-between items-center mt-1 gap-2">
-                <p className={`text-xs min-w-0 ${pseudoStatus === 'available' ? 'text-green-400' : pseudoStatus === 'taken' || pseudoStatus === 'invalid' ? 'text-red-400' : 'text-gray-600'}`}>
+                <p className={`text-xs min-w-0 ${pseudoStatus === 'available' ? 'text-accent' : pseudoStatus === 'taken' || pseudoStatus === 'invalid' ? 'text-danger' : 'text-ink-muted'}`}>
                   {pseudoMsg || 'Lettres, chiffres, _ et - uniquement. 3–20 caractères.'}
                 </p>
-                <p className="text-xs text-gray-600 shrink-0">{editValues.pseudo.length}/20</p>
+                <p className="text-xs text-ink-muted shrink-0">{editValues.pseudo.length}/20</p>
               </div>
             </div>
 
@@ -435,10 +433,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
               <button
                 type="submit"
                 disabled={editLoading || !canSubmit}
-                className="flex items-center gap-2 px-5 py-2 rounded-full bg-green-500 text-black text-sm font-iceberg uppercase tracking-widest hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2 rounded-full bg-accent text-ink-invert text-sm font-sans hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {editLoading
-                  ? <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  ? <div className="w-4 h-4 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                   : <FiEdit3 className="w-4 h-4" />}
                 Enregistrer
               </button>
@@ -448,24 +446,24 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
         {/* Sécurité : email et mot de passe (changements soumis à confirmation par email) */}
         {activeTab === 'edit' && (
-          <div className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-5 space-y-5">
-            <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500">Sécurité du compte</p>
+          <div className="mt-4 bg-raised rounded-xl border border-line p-5 space-y-5">
+            <p className="text-xs font-sans text-ink-muted">Sécurité du compte</p>
 
             {/* Email */}
             <div>
-              <label htmlFor="account-email" className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+              <label htmlFor="account-email" className="block text-[10px] font-sans text-ink-muted mb-1.5">
                 Adresse email
               </label>
               {!emailEditing ? (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-300 min-w-0">
+                  <div className="flex items-center gap-2 text-sm text-ink-soft min-w-0">
                     <FiMail className="w-4 h-4 text-green-400 shrink-0" />
                     <span className="truncate">{user.email}</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => { setEmailEditing(true); setNewEmail(''); setEmailSent(false); }}
-                    className="text-xs font-iceberg uppercase tracking-widest text-green-400 hover:text-green-300 shrink-0 self-start sm:self-auto"
+                    className="text-xs font-sans text-green-400 hover:text-green-300 shrink-0 self-start sm:self-auto"
                   >
                     Changer
                   </button>
@@ -478,31 +476,31 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     placeholder="Nouvelle adresse email"
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-green-500/50 transition-colors"
+                    className="w-full bg-page border border-line rounded-lg px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-accent transition-colors"
                   />
                   <div className="flex flex-wrap gap-2">
                     <button
                       type="button"
                       onClick={handleRequestEmailChange}
                       disabled={emailLoading || !newEmail}
-                      className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-black text-xs font-iceberg uppercase tracking-widest hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent text-ink-invert text-xs font-sans hover:bg-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       {emailLoading
-                        ? <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        ? <div className="w-3.5 h-3.5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                         : <FiSend className="w-3.5 h-3.5" />}
                       Envoyer
                     </button>
                     <button
                       type="button"
                       onClick={() => setEmailEditing(false)}
-                      className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-xs font-iceberg uppercase tracking-widest hover:text-gray-200 transition-colors"
+                      className="px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:text-ink transition-colors"
                     >
                       Annuler
                     </button>
                   </div>
                 </div>
               )}
-              <p className="text-xs text-gray-600 mt-1.5">
+              <p className="text-xs text-ink-muted mt-1.5">
                 {emailSent
                   ? 'Un email de confirmation a été envoyé à la nouvelle adresse. Le changement prendra effet une fois le lien cliqué.'
                   : "Un email de confirmation sera envoyé à la nouvelle adresse ; le changement ne prend effet qu'après validation du lien."}
@@ -510,12 +508,12 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
             </div>
 
             {/* Mot de passe */}
-            <div className="pt-4 border-t border-gray-800">
-              <label className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">
+            <div className="pt-4 border-t border-line">
+              <label className="block text-[10px] font-sans text-ink-muted mb-1.5">
                 Mot de passe
               </label>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-sm text-gray-300">
+                <div className="flex items-center gap-2 text-sm text-ink-soft">
                   <FiLock className="w-4 h-4 text-green-400 shrink-0" />
                   <span>••••••••</span>
                 </div>
@@ -523,7 +521,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   type="button"
                   onClick={handleRequestPasswordReset}
                   disabled={passwordLoading}
-                  className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-xs font-iceberg uppercase tracking-widest text-gray-300 hover:border-green-400 hover:text-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-auto"
+                  className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-line text-xs font-sans text-ink-soft hover:border-green-400 hover:text-green-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-auto"
                 >
                   {passwordLoading
                     ? <div className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
@@ -531,7 +529,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   Changer le mot de passe
                 </button>
               </div>
-              <p className="text-xs text-gray-600 mt-1.5">
+              <p className="text-xs text-ink-muted mt-1.5">
                 {passwordSent
                   ? 'Un email vous a été envoyé avec un lien pour définir un nouveau mot de passe.'
                   : "Un email contenant un lien de réinitialisation vous sera envoyé à l'adresse actuelle."}
@@ -542,14 +540,14 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
         {/* Gestion de l'abonnement : réservée aux éditeurs (statut obtenu via l'abonnement premium) */}
         {activeTab === 'edit' && user.role === UserRole.EDITOR && (
-          <div className="mt-4 bg-gray-900 rounded-xl border border-gray-800 p-5 space-y-4">
-            <p className="text-xs font-iceberg uppercase tracking-widest text-gray-500 flex items-center gap-2">
+          <div className="mt-4 bg-raised rounded-xl border border-line p-5 space-y-4">
+            <p className="text-xs font-sans text-ink-muted flex items-center gap-2">
               <FiCreditCard className="w-3.5 h-3.5 text-green-400" />
               Gestion de l&apos;abonnement
             </p>
 
             {subscriptionLoading ? (
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-ink-muted">
                 <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
                 Chargement des informations d&apos;abonnement…
               </div>
@@ -577,9 +575,9 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   )}
                 </div>
 
-                <div className="pt-2 border-t border-gray-800">
+                <div className="pt-2 border-t border-line">
                   {subscription.cancelAtPeriodEnd ? (
-                    <p className="text-sm text-amber-300 bg-amber-950/20 border border-amber-900/40 rounded-lg p-3">
+                    <p className="text-sm text-warning bg-warning/10 border border-warning/30 rounded-lg p-3">
                       Ton abonnement est résilié et ne sera pas reconduit. Tu conserves le statut
                       éditeur et l&apos;accès au contenu premium jusqu&apos;au{' '}
                       {subscription.currentPeriodEnd
@@ -590,14 +588,14 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     <button
                       type="button"
                       onClick={() => setCancelConfirming(true)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 text-gray-300 text-xs font-iceberg uppercase tracking-widest hover:border-red-500/50 hover:text-red-400 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:border-danger/50 hover:text-danger transition-colors"
                     >
                       <FiXCircle className="w-3.5 h-3.5" />
                       Résilier l&apos;abonnement
                     </button>
                   ) : (
-                    <div className="border border-red-900/50 rounded-lg p-4 space-y-3 bg-red-950/10">
-                      <p className="text-sm text-red-300">
+                    <div className="border border-danger/40 rounded-lg p-4 space-y-3 bg-danger/5">
+                      <p className="text-sm text-danger">
                         Tu conserveras le statut éditeur et l&apos;accès au contenu premium
                         jusqu&apos;à la fin de la période déjà payée{subscription.currentPeriodEnd
                           ? ` (${new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })})`
@@ -608,10 +606,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                           type="button"
                           onClick={handleCancelSubscription}
                           disabled={cancelLoading}
-                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-iceberg uppercase tracking-widest hover:bg-red-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-danger text-ink-invert text-xs font-sans hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           {cancelLoading
-                            ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            ? <div className="w-3.5 h-3.5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                             : <FiXCircle className="w-3.5 h-3.5" />}
                           Confirmer la résiliation
                         </button>
@@ -619,7 +617,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                           type="button"
                           onClick={() => setCancelConfirming(false)}
                           disabled={cancelLoading}
-                          className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-xs font-iceberg uppercase tracking-widest hover:text-gray-200 transition-colors"
+                          className="px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:text-ink transition-colors"
                         >
                           Annuler
                         </button>
@@ -629,19 +627,19 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 </div>
               </>
             ) : (
-              <p className="text-xs text-gray-500">Aucun abonnement actif trouvé.</p>
+              <p className="text-xs text-ink-muted">Aucun abonnement actif trouvé.</p>
             )}
           </div>
         )}
 
         {/* Zone dangereuse : suppression définitive du compte et des données liées */}
         {activeTab === 'edit' && (
-          <div className="mt-4 bg-gray-900 rounded-xl border border-red-900/40 p-5 space-y-3">
-            <p className="text-xs font-iceberg uppercase tracking-widest text-red-400 flex items-center gap-2">
+          <div className="mt-4 bg-raised rounded-xl border border-danger/30 p-5 space-y-3">
+            <p className="text-xs font-sans text-danger flex items-center gap-2">
               <FiAlertTriangle className="w-3.5 h-3.5" />
               Zone dangereuse
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-ink-muted">
               Supprime définitivement votre compte, vos commentaires, votre accès aux contenus premium
               et résilie votre abonnement en cours le cas échéant. Cette action est irréversible.
             </p>
@@ -650,14 +648,14 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
               <button
                 type="button"
                 onClick={() => setDeleteConfirming(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-900/50 text-red-400 text-xs font-iceberg uppercase tracking-widest hover:bg-red-900/20 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-danger/40 text-danger text-xs font-sans hover:bg-danger/10 transition-colors"
               >
                 <FiTrash2 className="w-3.5 h-3.5" />
                 Supprimer mon compte
               </button>
             ) : (
-              <div className="border border-red-900/50 rounded-lg p-4 space-y-3 bg-red-950/10">
-                <p className="text-sm text-red-300">
+              <div className="border border-danger/40 rounded-lg p-4 space-y-3 bg-danger/5">
+                <p className="text-sm text-danger">
                   Es-tu sûr(e) ? Ton compte et toutes les données associées seront supprimés
                   définitivement et ne pourront pas être récupérés.
                 </p>
@@ -666,10 +664,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     type="button"
                     onClick={handleDeleteAccount}
                     disabled={deleteLoading}
-                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-iceberg uppercase tracking-widest hover:bg-red-500 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-danger text-ink-invert text-xs font-sans hover:opacity-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {deleteLoading
-                      ? <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ? <div className="w-3.5 h-3.5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                       : <FiTrash2 className="w-3.5 h-3.5" />}
                     Confirmer la suppression définitive
                   </button>
@@ -677,7 +675,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     type="button"
                     onClick={() => setDeleteConfirming(false)}
                     disabled={deleteLoading}
-                    className="px-4 py-2 rounded-lg border border-gray-700 text-gray-400 text-xs font-iceberg uppercase tracking-widest hover:text-gray-200 transition-colors"
+                    className="px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:text-ink transition-colors"
                   >
                     Annuler
                   </button>
@@ -696,8 +694,8 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
     <div className="flex items-start gap-3">
       <span className="text-green-400 mt-0.5 shrink-0 w-4">{icon}</span>
       <div className="min-w-0">
-        <p className="text-[10px] font-iceberg uppercase tracking-wider text-gray-500">{label}</p>
-        <p className="text-sm text-gray-200 mt-0.5 break-words">{value}</p>
+        <p className="text-[10px] font-sans text-ink-muted">{label}</p>
+        <p className="text-sm text-ink mt-0.5 break-words">{value}</p>
       </div>
     </div>
   );
@@ -709,14 +707,14 @@ function FormField({ label, value, onChange, placeholder }: {
   const id = useId();
   return (
     <div>
-      <label htmlFor={id} className="block text-[10px] font-iceberg uppercase tracking-widest text-gray-500 mb-1.5">{label}</label>
+      <label htmlFor={id} className="block text-[10px] font-sans text-ink-muted mb-1.5">{label}</label>
       <input
         id={id}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-green-500/50 transition-colors"
+        className="w-full bg-page border border-line rounded-lg px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-accent transition-colors"
       />
     </div>
   );

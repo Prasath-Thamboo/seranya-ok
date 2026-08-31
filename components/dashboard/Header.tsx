@@ -28,7 +28,7 @@ export default function Header() {
   }, []);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div className="h-[57px] border-b border-line bg-raised" />;
   }
 
   // Vérification stricte que profileImage est une chaîne valide
@@ -38,24 +38,23 @@ export default function Header() {
       : '/images/backgrounds/placeholder.jpg';
 
   return (
-    <header className="z-10 py-3 bg-white border-b border-gray-200 shadow-sm font-kanit flex-shrink-0">
-      <div className="flex items-center justify-end h-full px-6 mx-auto text-black gap-4">
-        {/* Right side: notification + user */}
+    <header className="z-10 flex-shrink-0 border-b border-line bg-raised py-3 font-sans">
+      <div className="mx-auto flex h-full items-center justify-end gap-4 px-6 text-ink">
         <div className="flex items-center gap-4">
           <NotificationBell />
 
-          <div className="h-6 w-px bg-gray-200"></div>
+          <div className="h-6 w-px bg-line" />
 
-          <Link href={`/admin/me`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link href={`/admin/me`} className="flex items-center gap-3 transition-opacity hover:opacity-80">
             <Image
               alt={user.pseudo}
               src={profileImageUrl}
               width={36}
               height={36}
-              className="h-9 w-9 rounded-full object-cover ring-2 ring-gray-200"
+              className="h-9 w-9 rounded-full object-cover ring-1 ring-line"
             />
-            <div className="hidden sm:flex flex-col">
-              <span className="text-sm font-iceberg font-bold text-gray-900 leading-tight">
+            <div className="hidden flex-col sm:flex">
+              <span className="text-sm font-serif font-medium leading-tight text-ink">
                 {user.pseudo}
               </span>
               <Badge role={user.role || UserRole.USER} />

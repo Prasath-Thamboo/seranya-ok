@@ -99,9 +99,9 @@ const UpdateUser = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 font-kanit">
+    <div className="min-h-screen flex items-center justify-center bg-sunken p-4 font-sans">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Mettre à jour l&apos;utilisateur
         </h1>
 
@@ -110,54 +110,54 @@ const UpdateUser = () => {
           name="update_user"
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
             <Form.Item
               name="name"
-              label={<span className="text-black font-kanit">Prénom</span>}
+              label={<span className="text-ink-soft font-sans">Prénom</span>}
             >
-              <Input placeholder="Prénom" className="bg-white text-black font-kanit" />
+              <Input placeholder="Prénom" className="bg-raised text-ink font-sans" />
             </Form.Item>
 
             <Form.Item
               name="lastName"
-              label={<span className="text-black font-kanit">Nom de famille</span>}
+              label={<span className="text-ink-soft font-sans">Nom de famille</span>}
             >
-              <Input placeholder="Nom de famille" className="bg-white text-black font-kanit" />
+              <Input placeholder="Nom de famille" className="bg-raised text-ink font-sans" />
             </Form.Item>
           </div>
 
           <Form.Item
             name="pseudo"
-            label={<span className="text-black font-kanit">Pseudo</span>}
+            label={<span className="text-ink-soft font-sans">Pseudo</span>}
             rules={[{ required: true, message: "Veuillez entrer le pseudo!" }]}
           >
-            <Input placeholder="Pseudo" className="bg-white text-black font-kanit" />
+            <Input placeholder="Pseudo" className="bg-raised text-ink font-sans" />
           </Form.Item>
 
           <Form.Item
             name="email"
-            label={<span className="text-black font-kanit">Email</span>}
+            label={<span className="text-ink-soft font-sans">Email</span>}
             rules={[{ required: true, type: 'email', message: "Veuillez entrer un email valide!" }]}
           >
-            <Input placeholder="Email" className="bg-white text-black font-kanit" />
+            <Input placeholder="Email" className="bg-raised text-ink font-sans" />
           </Form.Item>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-            <Form.Item name="phone" label={<span className="text-black font-kanit">Téléphone</span>}>
-              <Input placeholder="Téléphone" className="bg-white text-black font-kanit" />
+            <Form.Item name="phone" label={<span className="text-ink-soft font-sans">Téléphone</span>}>
+              <Input placeholder="Téléphone" className="bg-raised text-ink font-sans" />
             </Form.Item>
 
-            <Form.Item name="address" label={<span className="text-black font-kanit">Adresse</span>}>
-              <Input placeholder="Adresse" className="bg-white text-black font-kanit" />
+            <Form.Item name="address" label={<span className="text-ink-soft font-sans">Adresse</span>}>
+              <Input placeholder="Adresse" className="bg-raised text-ink font-sans" />
             </Form.Item>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
             <Form.Item
               name="role"
-              label={<span className="text-black font-kanit">Rôle</span>}
+              label={<span className="text-ink-soft font-sans">Rôle</span>}
               rules={[{ required: true, message: "Veuillez sélectionner un rôle!" }]}
             >
               <Select placeholder="Sélectionner un rôle">
@@ -169,16 +169,16 @@ const UpdateUser = () => {
 
             <Form.Item
               name="status"
-              label={<span className="text-black font-kanit">Statut</span>}
+              label={<span className="text-ink-soft font-sans">Statut</span>}
               rules={[{ required: true, message: "Veuillez entrer le statut!" }]}
             >
-              <Input placeholder="Statut" className="bg-white text-black font-kanit" />
+              <Input placeholder="Statut" className="bg-raised text-ink font-sans" />
             </Form.Item>
           </div>
 
           <Form.Item
             name="isSubscribed"
-            label={<span className="text-black font-kanit">Abonné</span>}
+            label={<span className="text-ink-soft font-sans">Abonné</span>}
             valuePropName="checked"
             extra={
               <span className="text-gray-400">
@@ -191,16 +191,16 @@ const UpdateUser = () => {
 
           <Form.Item
             name="password"
-            label={<span className="text-black font-kanit">Nouveau mot de passe</span>}
+            label={<span className="text-ink-soft font-sans">Nouveau mot de passe</span>}
             extra={<span className="text-gray-400">Laisser vide pour ne pas changer le mot de passe.</span>}
           >
-            <Input.Password placeholder="Nouveau mot de passe" className="bg-white text-black font-kanit" />
+            <Input.Password placeholder="Nouveau mot de passe" className="bg-raised text-ink font-sans" />
           </Form.Item>
 
           <div className="flex items-center gap-4 mb-4">
             <Form.Item
               name="profileImage"
-              label={<span className="text-black font-kanit">Photo de profil</span>}
+              label={<span className="text-ink-soft font-sans">Photo de profil</span>}
               valuePropName="fileList"
               getValueFromEvent={normFile}
               className="flex-1"
@@ -220,11 +220,11 @@ const UpdateUser = () => {
             )}
           </div>
 
-          <Form.Item className="flex justify-center font-kanit">
+          <Form.Item className="flex justify-center font-sans">
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-black text-white font-kanit font-lg uppercase p-3"
+              className="bg-accent text-ink-invert font-sans p-3 rounded-full"
               icon={loading ? <LoadingOutlined /> : <SaveOutlined />}
               loading={loading}
               disabled={loading}

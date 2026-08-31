@@ -5,47 +5,58 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FiBookOpen, FiChevronRight } from 'react-icons/fi';
-import { PostModel } from '@/lib/models/PostModels'; // Import du modèle de post
+import { FiBookOpen, FiArrowRight } from 'react-icons/fi';
+import { PostModel } from '@/lib/models/PostModels';
 import Badge from '@/components/Badge';
 
 interface PostCardProps {
-  post: PostModel; // Utilisation de PostModel directement
+  post: PostModel;
   isPrivileged?: boolean;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, isPrivileged }) => {
-  const isScheduled = isPrivileged && post.publishedAt && new Date(post.publishedAt) > new Date();
+  const isScheduled =
+    isPrivileged && post.publishedAt && new Date(post.publishedAt) > new Date();
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 font-kanit">
-      {isScheduled && (
-        <div className="p-2">
-          <Badge type={`Publication prévue le ${new Date(post.publishedAt as string).toLocaleDateString('fr-FR')}`} />
-        </div>
-      )}
-      {post.headerImage ? (
-        <Image
-          src={post.headerImage}
-          alt={post.title}
-          width={400}
-          height={200}
-          className="object-cover w-full h-48"
-        />
-      ) : (
-        <div className="w-full h-48 bg-gray-300 flex items-center justify-center">
-          <FiBookOpen className="text-6xl text-gray-500" />
-        </div>
-      )}
-      <div className="p-6">
-        <h2 className="text-2xl font-iceberg font-semibold text-gray-800 mb-2">{post.title}</h2>
-        <p className="text-gray-600 mb-4">{post.intro}</p> {/* Utilisation de 'intro' */}
-        <Link href={`/posts/${post.id}`} className="inline-flex items-center text-teal-500 hover:text-teal-700 font-semibold">
-          Lire Plus
-          <FiChevronRight className="ml-2" />
-        </Link>
+    <Link
+      href={`/posts/${post.id}`}
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-raised shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <div className="relative h-48 w-full overflow-hidden bg-sunken">
+        {post.headerImage ? (
+          <Image
+            src={post.headerImage}
+            alt={post.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500 ease-calm group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <FiBookOpen className="text-5xl text-ink-muted" />
+          </div>
+        )}
       </div>
-    </div>
+
+      <div className="flex flex-1 flex-col p-6">
+        {isScheduled && (
+          <div className="mb-3">
+            <Badge
+              type={`Prévu le ${new Date(post.publishedAt as string).toLocaleDateString('fr-FR')}`}
+            />
+          </div>
+        )}
+        <h2 className="mb-2 font-serif text-xl font-medium text-ink">{post.title}</h2>
+        <p className="mb-5 flex-1 text-sm leading-relaxed text-ink-soft line-clamp-3">
+          {post.intro}
+        </p>
+        <span className="inline-flex items-center gap-1.5 text-sm font-sans text-accent transition-colors group-hover:text-accent-hover">
+          Lire l&apos;article
+          <FiArrowRight className="transition-transform duration-300 ease-calm group-hover:translate-x-0.5" />
+        </span>
+      </div>
+    </Link>
   );
 };
 

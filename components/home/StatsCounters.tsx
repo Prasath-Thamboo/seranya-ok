@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { HiOutlineBookOpen, HiOutlineUsers, HiOutlineSparkles } from "react-icons/hi2";
+import { LuBookOpen, LuSparkles, LuLibrary } from "react-icons/lu";
 import Counter from "@/components/home/Counter";
 import { fetchPosts } from "@/lib/queries/PostQueries";
 import { fetchPublishedTutorials } from "@/lib/queries/TutorialQueries";
@@ -42,9 +42,9 @@ export default function StatsCounters({
   }, []);
 
   const stats = [
-    { icon: <HiOutlineBookOpen className="w-7 h-7" />, label: "Articles de blog", value: postCount, href: "/posts" },
-    { icon: <HiOutlineSparkles className="w-7 h-7" />, label: "Tuto", value: tutorialCount, href: "/tutoriels" },
-    { icon: <HiOutlineUsers className="w-7 h-7" />, label: "Définitions", value: definitionCount, href: "/encyclopedie" },
+    { icon: <LuBookOpen className="w-6 h-6" />, label: "Articles de blog", value: postCount, href: "/posts" },
+    { icon: <LuSparkles className="w-6 h-6" />, label: "Tutoriels", value: tutorialCount, href: "/tutoriels" },
+    { icon: <LuLibrary className="w-6 h-6" />, label: "Définitions", value: definitionCount, href: "/encyclopedie" },
   ];
 
   return (
@@ -53,13 +53,13 @@ export default function StatsCounters({
         <Link
           key={stat.label}
           href={stat.href}
-          className="flex flex-col items-center gap-3 p-8 rounded-2xl border border-gray-800 bg-gray-950 hover:border-green-400/40 transition-colors"
+          className="flex flex-col items-center gap-3 p-8 rounded-2xl border border-line bg-raised shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
         >
-          <div className="text-green-400">{stat.icon}</div>
-          <span className="text-5xl font-bold font-iceberg text-white">
+          <div className="text-accent">{stat.icon}</div>
+          <span className="text-5xl font-serif font-medium text-ink">
             <Counter value={stat.value} />
           </span>
-          <span className="text-gray-400 font-kanit uppercase text-xs tracking-widest">{stat.label}</span>
+          <span className="text-ink-muted font-sans uppercase text-xs tracking-[0.18em]">{stat.label}</span>
         </Link>
       ))}
     </div>

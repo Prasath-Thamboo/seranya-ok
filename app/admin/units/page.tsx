@@ -73,8 +73,8 @@ const UnitsPage = () => {
   );
 
   return (
-    <div className="p-6 font-kanit relative">
-      <h1 className="text-2xl font-bold text-black mb-6 font-oxanium uppercase">Units</h1>
+    <div className="p-6 font-sans relative">
+      <h1 className="text-2xl font-serif font-medium text-ink mb-6">Units</h1>
       <Table
         data={units}
         columns={columns}

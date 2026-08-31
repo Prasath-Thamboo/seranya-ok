@@ -26,11 +26,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
   const getIcon = () => {
     switch (iconType) {
       case 'warning':
-        return <FaExclamationTriangle className="w-12 h-12 fill-current text-yellow-500" />;
+        return <FaExclamationTriangle className="w-11 h-11 fill-current text-warning" />;
       case 'delete':
-        return <FaTrash className="w-12 h-12 fill-current text-red-500" />;
+        return <FaTrash className="w-10 h-10 fill-current text-danger" />;
       case 'confirm':
-        return <FaCheckCircle className="w-12 h-12 fill-current text-green-500" />;
+        return <FaCheckCircle className="w-11 h-11 fill-current text-success" />;
       default:
         return null;
     }
@@ -39,26 +39,25 @@ const CustomModal: React.FC<CustomModalProps> = ({
   const getBgColor = () => {
     switch (iconType) {
       case 'warning':
-        return 'bg-yellow-50';
+        return 'bg-warning-soft';
       case 'delete':
-        return 'bg-red-50';
+        return 'bg-danger-soft';
       case 'confirm':
-        return 'bg-green-50';
+        return 'bg-success-soft';
       default:
-        return 'bg-gray-50';
+        return 'bg-sunken';
     }
   };
 
   const getButtonColor = () => {
     switch (iconType) {
-      case 'warning':
-        return 'bg-yellow-500 hover:bg-yellow-600';
       case 'delete':
-        return 'bg-red-500 hover:bg-red-600';
+        return 'bg-danger hover:opacity-90';
       case 'confirm':
-        return 'bg-green-500 hover:bg-green-600';
+        return 'bg-success hover:opacity-90';
+      case 'warning':
       default:
-        return 'bg-gray-500 hover:bg-gray-600';
+        return 'bg-accent hover:bg-accent-hover';
     }
   };
 
@@ -68,19 +67,17 @@ const CustomModal: React.FC<CustomModalProps> = ({
       footer={null}
       onCancel={onCancel}
       centered
-      className="font-kanit"
+      className="font-sans"
     >
-      <div className={`flex flex-col items-center text-center p-5 rounded-lg ${getBgColor()}`}>
-        <div className="inline-block p-4 rounded-full">
-          {getIcon()}
-        </div>
-        <h2 className="mt-2 font-semibold text-gray-800">{title}</h2>
-        <p className="mt-2 text-sm text-gray-600 leading-relaxed">{subtitle}</p>
-        <div className="flex items-center mt-3 w-full">
-          <Button className="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md" onClick={onCancel}>
+      <div className={`flex flex-col items-center rounded-2xl p-6 text-center ${getBgColor()}`}>
+        <div className="inline-block p-3">{getIcon()}</div>
+        <h2 className="mt-2 font-serif text-lg font-medium text-ink">{title}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-ink-soft">{subtitle}</p>
+        <div className="mt-4 flex w-full items-center gap-2">
+          <Button className="flex-1 rounded-full border border-line bg-raised px-4 py-2 text-sm font-medium text-ink-soft hover:text-ink" onClick={onCancel}>
             {cancelText}
           </Button>
-          <Button className={`flex-1 px-4 py-2 ml-2 text-white text-sm font-medium rounded-md ${getButtonColor()}`} onClick={onConfirm}>
+          <Button className={`flex-1 rounded-full px-4 py-2 text-sm font-medium text-ink-invert ${getButtonColor()}`} onClick={onConfirm}>
             {confirmText}
           </Button>
         </div>

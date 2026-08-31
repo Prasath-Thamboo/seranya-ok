@@ -36,25 +36,25 @@ function ConfirmEmailChangeContent() {
   }, [token]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center font-kanit text-center bg-black text-white px-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-page px-6 text-center font-sans text-ink">
       {confirmationMessage ? (
         <>
-          <h1 className="text-4xl font-bold mb-8 uppercase">Confirmation réussie !</h1>
-          <p className="text-lg mb-6 text-gray-300">{confirmationMessage}</p>
+          <h1 className="mb-6 font-serif text-3xl font-medium text-ink">Confirmation réussie</h1>
+          <p className="mb-8 text-ink-soft">{confirmationMessage}</p>
         </>
       ) : errorMessage ? (
         <>
-          <h1 className="text-4xl font-bold mb-8 uppercase text-red-500">Erreur de confirmation</h1>
-          <p className="text-lg mb-6 text-red-400">{errorMessage}</p>
+          <h1 className="mb-6 font-serif text-3xl font-medium text-danger">Erreur de confirmation</h1>
+          <p className="mb-8 text-ink-soft">{errorMessage}</p>
         </>
       ) : (
         <>
-          <h1 className="text-4xl font-bold mb-8 uppercase">Confirmation en cours…</h1>
-          <p className="text-lg mb-6 text-gray-300">Veuillez patienter.</p>
+          <h1 className="mb-6 font-serif text-3xl font-medium text-ink">Confirmation en cours…</h1>
+          <p className="mb-8 text-ink-soft">Veuillez patienter.</p>
         </>
       )}
 
-      <Link href="/admin/me" className="text-green-400 hover:underline">
+      <Link href="/admin/me" className="text-accent underline transition-colors hover:text-accent-hover">
         Retour à mon profil
       </Link>
     </div>
@@ -63,7 +63,7 @@ function ConfirmEmailChangeContent() {
 
 export default function ConfirmEmailChangePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+    <Suspense fallback={<div className="min-h-screen bg-page" />}>
       <ConfirmEmailChangeContent />
     </Suspense>
   );

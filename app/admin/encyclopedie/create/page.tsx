@@ -39,7 +39,7 @@ const CreateDefinition = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Ajouter une Définition
         </h1>
 
@@ -47,12 +47,12 @@ const CreateDefinition = () => {
           name="create_definition"
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
           initialValues={{ isPublished: true }}
         >
           <Form.Item
             name="term"
-            label={<span className="font-kanit text-black">Terme</span>}
+            label={<span className="font-sans text-ink-soft">Terme</span>}
             rules={[{ required: true, message: 'Veuillez entrer le terme!' }]}
           >
             <Input placeholder="Ex: Ahimsa, Nirvana, Pranayama..." style={{ height: '3rem' }} />
@@ -60,7 +60,7 @@ const CreateDefinition = () => {
 
           <Form.Item
             name="definition"
-            label={<span className="font-kanit text-black">Définition</span>}
+            label={<span className="font-sans text-ink-soft">Définition</span>}
             rules={[{ required: true, message: 'Veuillez entrer la définition!' }]}
           >
             <Input.TextArea placeholder="Définition du terme..." style={{ minHeight: '8rem' }} />
@@ -68,7 +68,7 @@ const CreateDefinition = () => {
 
           <Form.Item
             name="category"
-            label={<span className="font-kanit text-black">Catégorie</span>}
+            label={<span className="font-sans text-ink-soft">Catégorie</span>}
           >
             <Select placeholder="Sélectionnez une catégorie" allowClear>
               {CATEGORIES.map((cat) => (
@@ -79,7 +79,7 @@ const CreateDefinition = () => {
 
           <Form.Item
             name="isPublished"
-            label={<span className="font-kanit text-black">Publier</span>}
+            label={<span className="font-sans text-ink-soft">Publier</span>}
             valuePropName="checked"
           >
             <Switch />
@@ -87,7 +87,7 @@ const CreateDefinition = () => {
 
           <Form.Item
             name="publishedAt"
-            label={<span className="font-kanit text-black">Date de publication (laisser vide pour publier immédiatement)</span>}
+            label={<span className="font-sans text-ink-soft">Date de publication (laisser vide pour publier immédiatement)</span>}
           >
             <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: '100%' }} />
           </Form.Item>
@@ -96,7 +96,7 @@ const CreateDefinition = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-black text-white font-kanit text-lg py-3 px-10 flex items-center justify-center uppercase font-bold"
+              className="bg-accent text-ink-invert font-sans text-sm py-3 px-10 flex items-center justify-center rounded-full"
               icon={loading ? <LoadingOutlined className="mr-2" /> : <PlusOutlined className="mr-2" />}
               loading={loading}
               disabled={loading}

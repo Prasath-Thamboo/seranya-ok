@@ -6,92 +6,81 @@ import Image from "next/image";
 interface HeroSectionProps {
   backgroundImage: string;
   title: string;
-  titleColor: string;
+  titleColor?: string;
   strongTitle: string;
-  strongTitleColor: string;
+  strongTitleColor?: string;
   content: string;
-  contentColor: string;
+  contentColor?: string;
   button1Text: string;
   button1Url: string;
-  button1BgColor: string;
+  button1BgColor?: string;
   button2Text: string;
   button2Url: string;
-  button2BgColor: string;
+  button2BgColor?: string;
 }
 
+/**
+ * Hero unifié — imagerie traitée en lumière douce, fondu élégant vers la
+ * couleur de page en bas, titrage serif en casse normale, CTA pilule.
+ * Les props de couleur héritées sont désormais optionnelles et ignorées :
+ * le hero suit la charte.
+ */
 const HeroSection: React.FC<HeroSectionProps> = ({
   backgroundImage,
   title,
-  titleColor,
   strongTitle,
-  strongTitleColor,
   content,
-  contentColor,
   button1Text,
   button1Url,
-  button1BgColor,
   button2Text,
   button2Url,
-  button2BgColor,
 }) => {
   return (
-    <section className="relative h-[80vh] min-h-[560px] flex items-center justify-center overflow-hidden">
+    <section className="relative flex h-[82vh] min-h-[560px] items-center justify-center overflow-hidden bg-page">
       <Image
         src={backgroundImage}
         alt=""
         fill
         priority
+        sizes="100vw"
         style={{ objectFit: "cover" }}
         className="scale-105"
       />
 
-      {/* Dégradé qui fond dans le noir en bas pour une transition douce vers le contenu */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black" />
+      {/* Voile clair léger pour la lisibilité + fondu vers la page en bas */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/20 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-page" />
 
       <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
-        <h1
-          className="text-3xl font-extrabold sm:text-5xl font-iceberg uppercase tracking-widest text-shadow-sm"
-          style={{ color: titleColor }}
-        >
+        <h1 className="font-serif text-4xl font-medium leading-tight text-white sm:text-6xl text-shadow-sm">
           {title}
-          <strong
-            className="block mt-2 font-extrabold font-iceberg text-shadow-sm"
-            style={{ color: strongTitleColor }}
-          >
-            {strongTitle}
-          </strong>
+          <span className="mt-2 block text-white/95">{strongTitle}</span>
         </h1>
 
-        <p
-          className="mt-6 max-w-lg mx-auto sm:text-xl/relaxed font-kanit text-shadow-sm"
-          style={{ color: contentColor }}
-        >
+        <p className="mx-auto mt-6 max-w-lg font-sans text-base leading-relaxed text-white/90 sm:text-lg text-shadow-sm">
           {content}
         </p>
 
-        <div className="mt-10 flex flex-wrap gap-4 justify-center">
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
           <a
             href={button1Url}
-            className="block w-full rounded px-12 py-3 text-sm font-medium text-white shadow-lg focus:outline-none focus:ring sm:w-auto transform transition-all duration-300 hover:scale-105 font-kanit"
-            style={{ backgroundColor: button1BgColor }}
+            className="rounded-full bg-accent px-8 py-3 text-sm font-sans text-ink-invert shadow-md transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:bg-accent-hover"
           >
             {button1Text}
           </a>
-
           <a
             href={button2Url}
-            className="block w-full rounded px-12 py-3 text-sm font-medium text-white shadow-lg focus:outline-none focus:ring sm:w-auto transform transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black hover:border-black hover:shadow-neon font-kanit"
-            style={{ backgroundColor: button2BgColor }}
+            className="rounded-full border border-white/60 px-8 py-3 text-sm font-sans text-white transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:bg-white/10"
           >
             {button2Text}
           </a>
         </div>
       </div>
 
-      {/* Indicateur de scroll, cohérent avec le hero de la page d'accueil */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center pt-1.5">
-          <div className="w-1.5 h-2.5 bg-white/60 rounded-full" />
+      {/* Indicateur de scroll — mouvement lent façon respiration */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <div className="flex h-10 w-6 items-start justify-center rounded-full border border-white/40 pt-1.5">
+          <div className="h-2.5 w-1.5 rounded-full bg-white/70 [animation:breathe_2.6s_ease-in-out_infinite]" />
         </div>
       </div>
     </section>

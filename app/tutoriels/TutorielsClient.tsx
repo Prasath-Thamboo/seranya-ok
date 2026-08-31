@@ -49,50 +49,48 @@ const TutorielsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+      <div className="flex h-screen items-center justify-center bg-page">
+        <div className="h-9 w-9 animate-spin rounded-full border-2 border-accent border-t-transparent" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-page font-sans text-ink">
       <HeroSection
         backgroundImage={backgroundImage || '/images/backgrounds/bouddhisme.jpg'}
         title="Tutoriels"
-        titleColor="#ffffff"
-        strongTitle="Yoga & Bouddhisme"
-        strongTitleColor="#4ade80"
+        strongTitle="Yoga & bouddhisme"
         content="Découvrez nos vidéos pour pratiquer le yoga et la méditation bouddhiste."
-        contentColor="#e5e7eb"
         button1Text="Voir les tutoriels"
         button1Url="#tutoriels-section"
-        button1BgColor="#22c55e"
         button2Text="S'abonner"
         button2Url="/subscription"
-        button2BgColor="#374151"
       />
 
-      <div id="tutoriels-section" className="relative z-10 py-16 px-6 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center text-white mb-12 font-iceberg uppercase">
-          Nos Tutoriels
+      <div id="tutoriels-section" className="relative z-10 mx-auto max-w-7xl px-6 py-20">
+        <p className="mb-3 text-center text-xs font-sans uppercase tracking-[0.22em] text-accent">
+          Pratique guidée
+        </p>
+        <h2 className="mb-12 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
+          Nos tutoriels
         </h2>
 
         {tutorials.length === 0 ? (
-          <p className="text-center text-gray-300 font-kanit text-xl">
+          <p className="text-center font-sans text-lg text-ink-muted">
             Aucun tutoriel disponible pour le moment.
           </p>
         ) : (
-          <div className="grid gap-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {tutorials.map((tutorial) => (
               <div
                 key={tutorial.id}
-                className="bg-black/60 rounded-xl overflow-hidden shadow-lg border border-gray-700 flex flex-col"
+                className="flex flex-col overflow-hidden rounded-2xl border border-line bg-raised shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
               >
-                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                <div className="relative w-full bg-sunken" style={{ paddingBottom: '56.25%' }}>
                   {hasFullAccess && tutorial.videoUrl ? (
                     <iframe
-                      className="absolute inset-0 w-full h-full"
+                      className="absolute inset-0 h-full w-full"
                       src={getYouTubeEmbedUrl(tutorial.videoUrl)}
                       title={tutorial.title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -102,14 +100,10 @@ const TutorielsPage: React.FC = () => {
                     <SubscriptionLock message="Vidéo réservée aux abonnés" className="rounded-none" />
                   )}
                 </div>
-                <div className="p-5 flex flex-col flex-grow">
-                  <h3 className="text-xl font-bold text-white font-iceberg uppercase mb-2">
-                    {tutorial.title}
-                  </h3>
+                <div className="flex flex-grow flex-col p-5">
+                  <h3 className="mb-2 font-serif text-lg font-medium text-ink">{tutorial.title}</h3>
                   {tutorial.description && (
-                    <p className="text-gray-300 font-kanit text-sm flex-grow">
-                      {tutorial.description}
-                    </p>
+                    <p className="flex-grow text-sm leading-relaxed text-ink-soft">{tutorial.description}</p>
                   )}
                 </div>
               </div>

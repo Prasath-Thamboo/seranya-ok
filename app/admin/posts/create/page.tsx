@@ -140,7 +140,7 @@ const CreatePost = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
-        <h1 className="text-2xl font-bold mb-8 text-center font-oxanium uppercase text-black">
+        <h1 className="text-2xl font-serif font-medium mb-8 text-center text-ink">
           Créer un Post
         </h1>
 
@@ -149,46 +149,46 @@ const CreatePost = () => {
           initialValues={{ remember: true, isPublished: false }}
           onFinish={handleSubmit}
           layout="vertical"
-          className="text-black font-kanit"
+          className="text-ink-soft font-sans"
         >
           <Form.Item
             name="title"
-            label={<span className="font-kanit text-black">Titre</span>}
+            label={<span className="font-sans text-ink-soft">Titre</span>}
             rules={[{ required: true, message: "Veuillez entrer le titre du post!" }]}
           >
             <Input
               placeholder="Titre du post"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "3rem" }}
             />
           </Form.Item>
 
           <Form.Item
             name="intro"
-            label={<span className="font-kanit text-black">Introduction</span>}
+            label={<span className="font-sans text-ink-soft">Introduction</span>}
             rules={[{ required: true, message: "Veuillez entrer l'introduction du post!" }]}
           >
             <Input.TextArea
               placeholder="Introduction"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "6rem" }}
             />
           </Form.Item>
 
           <Form.Item
             name="subtitle"
-            label={<span className="font-kanit text-black">Sous-titre</span>}
+            label={<span className="font-sans text-ink-soft">Sous-titre</span>}
           >
             <Input
               placeholder="Sous-titre du post"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
               style={{ height: "3rem" }}
             />
           </Form.Item>
 
           <Form.Item
             name="content"
-            label={<span className="font-kanit text-black">Contenu</span>}
+            label={<span className="font-sans text-ink-soft">Contenu</span>}
           >
             <ReactQuill value={contentValue} onChange={setContentValue} />
           </Form.Item>
@@ -200,7 +200,7 @@ const CreatePost = () => {
           >
             <Select
               placeholder="Sélectionnez le type"
-              className="bg-white text-black font-kanit"
+              className="bg-raised text-ink font-sans"
             >
               <Option value="SCIENCE">SCIENCE</Option>
               <Option value="PHILO">PHILO</Option>
@@ -211,7 +211,7 @@ const CreatePost = () => {
 
           <Form.Item
             name="isPublished"
-            label={<span className="font-kanit text-black">Publier</span>}
+            label={<span className="font-sans text-ink-soft">Publier</span>}
             valuePropName="checked"
           >
             <Switch />
@@ -219,7 +219,7 @@ const CreatePost = () => {
 
           <Form.Item
             name="publishedAt"
-            label={<span className="font-kanit text-black">Date de publication (laisser vide pour publier immédiatement)</span>}
+            label={<span className="font-sans text-ink-soft">Date de publication (laisser vide pour publier immédiatement)</span>}
           >
             <DatePicker showTime format="DD/MM/YYYY HH:mm" style={{ width: "100%" }} />
           </Form.Item>
@@ -227,7 +227,7 @@ const CreatePost = () => {
           {/* Sélection des classes associées */}
           <Form.Item
             name="classIds"
-            label={<span className="font-kanit text-black">Classes associées</span>}
+            label={<span className="font-sans text-ink-soft">Classes associées</span>}
           >
             <Select
               mode="multiple"
@@ -246,7 +246,7 @@ const CreatePost = () => {
           {/* Sélection des unités associées */}
           <Form.Item
             name="unitIds"
-            label={<span className="font-kanit text-black">Unités associées</span>}
+            label={<span className="font-sans text-ink-soft">Unités associées</span>}
           >
             <Select
               mode="multiple"
@@ -264,7 +264,7 @@ const CreatePost = () => {
 
           <Form.Item
             name="profileImage"
-            label={<span className="font-kanit text-black">Image de profil</span>}
+            label={<span className="font-sans text-ink-soft">Image de profil</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -280,7 +280,7 @@ const CreatePost = () => {
 
           <Form.Item
             name="headerImage"
-            label={<span className="font-kanit text-black">Image Header</span>}
+            label={<span className="font-sans text-ink-soft">Image Header</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -296,7 +296,7 @@ const CreatePost = () => {
 
           <Form.Item
             name="footerImage"
-            label={<span className="font-kanit text-black">Image de pied de page</span>}
+            label={<span className="font-sans text-ink-soft">Image de pied de page</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -312,7 +312,7 @@ const CreatePost = () => {
 
           <Form.Item
             name="gallery"
-            label={<span className="font-kanit text-black">Galerie</span>}
+            label={<span className="font-sans text-ink-soft">Galerie</span>}
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
@@ -333,7 +333,7 @@ const CreatePost = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-white text-black font-kanit text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold"
+              className="bg-raised text-ink font-sans text-lg py-3 px-10 flex items-center justify-center border border-white uppercase font-bold"
               icon={!loading ? <PlusOutlined className="mr-2" /> : <LoadingOutlined className="mr-2" />}
               loading={loading}
               disabled={loading}
