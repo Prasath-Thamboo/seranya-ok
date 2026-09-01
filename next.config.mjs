@@ -36,6 +36,15 @@ const nextConfig = {
     ],
   },
   async headers() {
+    // En dev, Next sert les chunks /_next/static/* sur des URL stables (sans
+    // hash) : un Cache-Control "immutable" les fige dans le cache du
+    // navigateur → le code modifié ne se recharge jamais, même après
+    // redémarrage. On ne pose donc ce header qu'en production.
+    const longCache =
+      process.env.NODE_ENV === 'production'
+        ? [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+        : [];
+
     return [
       {
         source: '/:path*',
@@ -47,15 +56,11 @@ const nextConfig = {
       },
       {
         source: '/_next/static/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
+        headers: longCache,
       },
       {
         source: '/logos/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
+        headers: longCache,
       },
     ];
   },

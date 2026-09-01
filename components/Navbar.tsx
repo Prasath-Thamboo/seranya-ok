@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { getAccessToken, logoutUser } from "@/lib/queries/AuthQueries";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { RegisterUserModel } from "@/lib/models/AuthModels";
@@ -32,6 +33,15 @@ export default function Navbar() {
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const { addNotification } = useNotification();
+  const pathname = usePathname();
+
+  // Pages dont le haut est déjà clair (pas de hero sombre) : la navbar doit y
+  // afficher un texte encre même sans scroll, sinon les libellés blancs
+  // disparaissent sur le fond ivoire.
+  const LIGHT_TOP_ROUTES = ["/contact"];
+  const forceInk = LIGHT_TOP_ROUTES.some(
+    (r) => pathname === r || pathname?.startsWith(`${r}/`)
+  );
 
   useEffect(() => {
     const token = getAccessToken();
@@ -110,15 +120,25 @@ export default function Navbar() {
 
   // Au repos (haut de page) : nav transparente, texte clair sur l'imagerie du hero.
   // Au scroll : voile ivoire feutré, texte encre.
+  const solid = scrolled || isMenuOpen || forceInk;
+
   const shellClass = isMenuOpen
     ? "bg-page"
-    : scrolled
+    : solid
     ? "bg-page/85 backdrop-blur-md border-b border-line shadow-sm"
     : "bg-transparent border-b border-transparent";
 
   const linkClass = `group relative text-sm font-sans tracking-wide transition-colors duration-200 ${
-    scrolled || isMenuOpen ? "text-ink hover:text-accent" : "text-white/90 hover:text-white text-shadow-sm"
+    solid ? "text-ink hover:text-accent" : "text-white/90 hover:text-white text-shadow-sm"
   }`;
+
+  // Logo : blanc sur le hero transparent, vert sur le voile ivoire (scroll /
+  // menu ouvert), noir sur les pages à fond clair (ex. contact).
+  const logoSrc = forceInk
+    ? "/logos/iconblack.png"
+    : solid
+    ? "/logos/icongreen.png"
+    : "/logos/iconwhite.png";
 
   const underline =
     "pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-calm group-hover:scale-x-100";
@@ -131,18 +151,18 @@ export default function Navbar() {
           <Link href="/">
             <div className={isLoggedIn ? "hidden md:block" : "hidden min-[1074px]:block"}>
               <Image
-                src="/logos/seranyaicon.png"
+                src={logoSrc}
                 alt="Logo Seranya"
                 width={168}
                 height={64}
                 className={`object-contain max-h-14 transition-opacity ${
-                  scrolled || isMenuOpen ? "opacity-100" : "opacity-95"
+                  solid ? "opacity-100" : "opacity-95"
                 }`}
               />
             </div>
             <div className={isLoggedIn ? "block md:hidden" : "block min-[1074px]:hidden"}>
               <Image
-                src="/logos/seranyaicon.png"
+                src={logoSrc}
                 alt="Logo Seranya"
                 width={46}
                 height={46}
@@ -201,7 +221,7 @@ export default function Navbar() {
                   </div>
                 )}
                 <span className={`font-sans text-sm transition-colors ${
-                  scrolled ? "text-ink group-hover:text-accent" : "text-white/90 group-hover:text-white text-shadow-sm"
+                  solid ? "text-ink group-hover:text-accent" : "text-white/90 group-hover:text-white text-shadow-sm"
                 }`}>
                   {user.pseudo}
                 </span>
@@ -213,7 +233,7 @@ export default function Navbar() {
               <Link href="/auth/login">
                 <button
                   className={`flex items-center gap-2 rounded-full border px-5 py-2 text-sm font-sans transition-colors duration-200 ${
-                    scrolled
+                    solid
                       ? "border-line text-ink hover:border-accent hover:text-accent"
                       : "border-white/50 text-white hover:bg-white/10"
                   }`}
@@ -235,7 +255,7 @@ export default function Navbar() {
         {/* Hamburger mobile */}
         <div className={isLoggedIn ? "md:hidden z-50" : "min-[1074px]:hidden z-50"}>
           <button
-            className={`transition-colors ${scrolled || isMenuOpen ? "text-ink hover:text-accent" : "text-white hover:text-white/80"}`}
+            className={`transition-colors ${solid ? "text-ink hover:text-accent" : "text-white hover:text-white/80"}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
@@ -260,10 +280,10 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen(false)}
           />
 
-          <div className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-page border-l border-line z-[60] flex flex-col animate-slide-in-right">
+          <div className="fixed inset-y-0 right-0 h-full w-full bg-page z-[60] flex flex-col animate-slide-in-right">
             <div className="flex items-center justify-between px-5 py-4 border-b border-line">
               <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                <Image src="/logos/seranyaicon.png" alt="Seranya" width={104} height={40} className="object-contain" />
+                <Image src={logoSrc} alt="Seranya" width={104} height={40} className="object-contain" />
               </Link>
               <button
                 onClick={() => setIsMenuOpen(false)}
@@ -274,7 +294,7 @@ export default function Navbar() {
               </button>
             </div>
 
-            <nav className="flex-1 overflow-y-auto px-5 py-6">
+            <nav className="menu-scroll flex-1 overflow-y-auto px-5 py-6">
               <ul className="space-y-1">
                 <li>
                   <Link
@@ -421,6 +441,18 @@ export default function Navbar() {
         }
         .animate-slide-in-right {
           animation: slide-in-right 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        /* Zone de liens du menu mobile : défilement conservé mais barre
+           masquée — sinon la barre grise épaisse de Windows apparaît comme
+           un "trait" le long du bord droit du menu. */
+        .menu-scroll {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .menu-scroll::-webkit-scrollbar {
+          width: 0;
+          height: 0;
+          display: none;
         }
       `}</style>
     </nav>
