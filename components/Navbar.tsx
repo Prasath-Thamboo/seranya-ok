@@ -38,11 +38,17 @@ export default function Navbar() {
   const { addNotification } = useNotification();
   const pathname = usePathname();
 
-  // Pages dont le haut est déjà clair (pas de hero sombre) : la navbar doit y
-  // afficher un texte encre même sans scroll, sinon les libellés blancs
-  // disparaissent sur le fond ivoire.
-  const LIGHT_TOP_ROUTES = ["/contact"];
-  const forceInk = LIGHT_TOP_ROUTES.some(
+  // Pages sans hero sombre (fond ivoire clair dès le haut) : le verre dépoli
+  // de la navbar au repos doit y être nettement plus opaque, sinon les
+  // libellés blancs deviennent illisibles tout en haut.
+  const DARK_TOP_ROUTES = [
+    "/contact",
+    "/mentions",
+    "/confidentialite",
+    "/cookies",
+    "/rgpd",
+  ];
+  const darkTop = DARK_TOP_ROUTES.some(
     (r) => pathname === r || pathname?.startsWith(`${r}/`)
   );
 
@@ -121,27 +127,30 @@ export default function Navbar() {
     </Menu>
   );
 
-  // Au repos (haut de page) : nav transparente, texte clair sur l'imagerie du hero.
+  // Au repos (haut de page) : verre dépoli, texte clair sur l'imagerie du hero.
   // Au scroll : voile ivoire feutré, texte encre.
-  const solid = scrolled || isMenuOpen || forceInk;
+  const solid = scrolled || isMenuOpen;
+
+  // Au repos (haut de page) : verre dépoli légèrement sombre façon iOS —
+  // voile encre discret + fort flou + saturation, hairline lumineux.
+  const glassTop =
+    "bg-ink/40 backdrop-blur-xl backdrop-saturate-150 border-b border-white/10 shadow-sm";
 
   const shellClass = isMenuOpen
     ? "bg-page"
     : solid
     ? "bg-page/85 backdrop-blur-md border-b border-line shadow-sm"
-    : "bg-transparent border-b border-transparent";
+    : darkTop
+    ? "bg-ink/80 backdrop-blur-xl backdrop-saturate-150 border-b border-white/10 shadow-sm"
+    : glassTop;
 
   const linkClass = `group relative text-sm font-sans tracking-wide transition-colors duration-200 ${
     solid ? "text-ink hover:text-accent" : "text-white/90 hover:text-white text-shadow-sm"
   }`;
 
-  // Logo : blanc sur le hero transparent, vert sur le voile ivoire (scroll /
-  // menu ouvert), noir sur les pages à fond clair (ex. contact).
-  const logoSrc = forceInk
-    ? "/logos/iconblack.png"
-    : solid
-    ? "/logos/icongreen.png"
-    : "/logos/iconwhite.png";
+  // Logo : blanc sur le verre dépoli au repos, vert sur le voile ivoire
+  // (scroll / menu ouvert).
+  const logoSrc = solid ? "/logos/icongreen.png" : "/logos/iconwhite.png";
 
   const underline =
     "pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-calm group-hover:scale-x-100";

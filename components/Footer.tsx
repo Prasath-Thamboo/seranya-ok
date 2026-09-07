@@ -30,7 +30,7 @@ const Footer: React.FC<{ onLoad?: () => void }> = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <Link href="/" className="flex-shrink-0 opacity-90 hover:opacity-100 transition-opacity">
             <Image
-              src="/logos/seranyaicon.png"
+              src="/logos/icongreen.png"
               alt="Logo Seranya"
               width={116}
               height={44}

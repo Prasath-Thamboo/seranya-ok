@@ -84,11 +84,11 @@ export default function AboutPage() {
               height={56}
               className="mx-auto mb-8 drop-shadow"
             />
-            <h1 className="mb-6 font-serif text-5xl font-medium text-white text-shadow-sm lg:text-6xl">
+            <h1 className="mb-6 font-serif text-5xl font-medium text-ink lg:text-6xl">
               À propos
             </h1>
-            <div className="mx-auto mb-8 h-px w-20 bg-white/50" />
-            <p className="mx-auto max-w-2xl text-xl leading-relaxed text-white/90 text-shadow-sm">
+            <div className="mx-auto mb-8 h-px w-20 bg-ink/30" />
+            <p className="mx-auto max-w-2xl text-xl leading-relaxed text-ink">
               Seranya est un espace de paix numérique dédié au yoga, à la méditation et à la
               philosophie bouddhiste — pour ceux qui cherchent à cultiver leur équilibre intérieur.
             </p>
