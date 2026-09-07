@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, useId } from 'react';
-import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import axios from 'axios';
 import { fetchCurrentUser, generateResetToken, deleteUserAccount, getAccessToken } from '@/lib/queries/AuthQueries';
 import { fetchSubscriptionInfo, cancelSubscription as cancelSubscriptionRequest, SubscriptionInfo } from '@/lib/queries/PaymentQueries';
@@ -30,16 +31,17 @@ function normalizePseudo(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
+/** Renvoie une clé i18n sous `account.validation.*`, ou null si le pseudo est valide. */
 function validatePseudoClient(pseudo: string): string | null {
-  if (pseudo.length < 3)  return 'Minimum 3 caractères.';
-  if (pseudo.length > 20) return 'Maximum 20 caractères.';
-  if (!/^[a-zA-Z0-9]/.test(pseudo)) return 'Doit commencer par une lettre ou un chiffre.';
+  if (pseudo.length < 3)  return 'pseudoMin';
+  if (pseudo.length > 20) return 'pseudoMax';
+  if (!/^[a-zA-Z0-9]/.test(pseudo)) return 'pseudoStart';
   if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$/.test(pseudo) && pseudo.length > 1)
-    return 'Seuls lettres, chiffres, _ et - sont autorisés.';
-  if (/__|--/.test(pseudo)) return 'Pas de _ ou - consécutifs.';
+    return 'pseudoChars';
+  if (/__|--/.test(pseudo)) return 'pseudoConsecutive';
   const n = normalizePseudo(pseudo);
   if (BLOCKED_WORDS.some((w) => n.includes(normalizePseudo(w))))
-    return 'Ce pseudo contient un terme non autorisé.';
+    return 'pseudoBlocked';
   return null;
 }
 
@@ -71,6 +73,11 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
   const debounceRef                     = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router                          = useRouter();
   const { addNotification }             = useNotification();
+  const t                               = useTranslations('account');
+  const locale                          = useLocale();
+  const dateLocale                      = locale === 'en' ? 'en-GB' : 'fr-FR';
+  const fmtDate = (d: string | number | Date) =>
+    new Date(d).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' });
 
   useEffect(() => {
     fetchCurrentUser()
@@ -99,10 +106,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
     // Validation client immédiate
     const clientError = validatePseudoClient(value);
-    if (clientError) { setPseudoStatus('invalid'); setPseudoMsg(clientError); return; }
+    if (clientError) { setPseudoStatus('invalid'); setPseudoMsg(t(`validation.${clientError}`)); return; }
 
     setPseudoStatus('checking');
-    setPseudoMsg('Vérification…');
+    setPseudoMsg(t('pseudoChecking'));
 
     debounceRef.current = setTimeout(async () => {
       try {
@@ -113,17 +120,17 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
         });
         if (data.available) {
           setPseudoStatus('available');
-          setPseudoMsg('Disponible !');
+          setPseudoMsg(t('pseudoAvailable'));
         } else {
           setPseudoStatus('taken');
-          setPseudoMsg(data.reason || 'Ce pseudo est déjà pris.');
+          setPseudoMsg(data.reason || t('pseudoTaken'));
         }
       } catch {
         setPseudoStatus('idle');
         setPseudoMsg('');
       }
     }, 500);
-  }, []);
+  }, [t]);
 
   const handlePseudoChange = (value: string, currentPseudo: string) => {
     setEditValues((p) => ({ ...p, pseudo: value }));
@@ -148,10 +155,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       const updated = await fetchCurrentUser();
       setUser(updated);
       setPreviewSrc(null);
-      addNotification('success', 'Photo de profil mise à jour.');
+      addNotification('success', t('notifications.photoUpdated'));
     } catch {
       setPreviewSrc(null);
-      addNotification('critical', 'Erreur lors du changement de photo.');
+      addNotification('critical', t('notifications.photoError'));
     } finally {
       setImageLoading(false);
       e.target.value = '';
@@ -162,7 +169,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (pseudoStatus === 'taken' || pseudoStatus === 'invalid') return;
-    if (pseudoStatus === 'checking') { addNotification('critical', 'Attends la fin de la vérification du pseudo.'); return; }
+    if (pseudoStatus === 'checking') { addNotification('critical', t('waitPseudoCheck')); return; }
 
     setEditLoading(true);
     try {
@@ -179,9 +186,9 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       const updated = await fetchCurrentUser();
       setUser(updated);
       setPseudoStatus('idle');
-      addNotification('success', 'Profil mis à jour avec succès.');
+      addNotification('success', t('notifications.profileUpdated'));
     } catch (err: any) {
-      const msg = err?.response?.data?.message || 'Erreur lors de la mise à jour du profil.';
+      const msg = err?.response?.data?.message || t('notifications.profileError');
       addNotification('critical', msg);
     } finally {
       setEditLoading(false);
@@ -201,9 +208,9 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       );
       setEmailSent(true);
       setEmailEditing(false);
-      addNotification('success', 'Un email de confirmation a été envoyé à la nouvelle adresse.');
+      addNotification('success', t('notifications.emailChangeSent'));
     } catch (err: any) {
-      const msg = err?.response?.data?.message || "Erreur lors de la demande de changement d'email.";
+      const msg = err?.response?.data?.message || t('notifications.emailChangeError');
       addNotification('critical', msg);
     } finally {
       setEmailLoading(false);
@@ -217,9 +224,9 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
     try {
       await generateResetToken(user.email);
       setPasswordSent(true);
-      addNotification('success', 'Un email vous a été envoyé pour réinitialiser votre mot de passe.');
+      addNotification('success', t('notifications.passwordResetSent'));
     } catch {
-      addNotification('critical', "Erreur lors de l'envoi de l'email de réinitialisation.");
+      addNotification('critical', t('notifications.passwordResetError'));
     } finally {
       setPasswordLoading(false);
     }
@@ -237,7 +244,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       // la déconnexion.
       window.location.href = '/';
     } catch (err: any) {
-      const msg = err?.response?.data?.message || 'Erreur lors de la suppression du compte.';
+      const msg = err?.response?.data?.message || t('notifications.deleteError');
       addNotification('critical', msg);
       setDeleteLoading(false);
     }
@@ -254,11 +261,13 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
       addNotification(
         'success',
         updatedSubscription.currentPeriodEnd
-          ? `Ton abonnement a été résilié. Tu conserves l'accès jusqu'au ${new Date(updatedSubscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}.`
-          : "Ton abonnement a été résilié. Tu conserves l'accès jusqu'à la fin de la période en cours.",
+          ? t('notifications.cancelSuccessWithDate', {
+              date: fmtDate(updatedSubscription.currentPeriodEnd * 1000),
+            })
+          : t('notifications.cancelSuccessNoDate'),
       );
     } catch (err: any) {
-      const msg = err?.response?.data?.message || "Erreur lors de la résiliation de l'abonnement.";
+      const msg = err?.response?.data?.message || t('notifications.cancelError');
       addNotification('critical', msg);
     } finally {
       setCancelLoading(false);
@@ -313,7 +322,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={imageLoading}
-                  title="Changer la photo"
+                  title={t('changePhotoTitle')}
                   className="absolute inset-0 rounded-2xl bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
                 >
                   {imageLoading
@@ -334,7 +343,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   </span>
                   {!isAdmin && (
                     <span className={`text-xs px-2.5 py-0.5 rounded-full border ${user.isSubscribed ? 'text-accent bg-accent-soft border-accent/30' : 'text-ink-muted bg-sunken border-line'}`}>
-                      {user.isSubscribed ? 'Abonné' : 'Non abonné'}
+                      {user.isSubscribed ? t('subscribed') : t('notSubscribed')}
                     </span>
                   )}
                 </div>
@@ -360,7 +369,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   : 'text-ink-muted hover:text-ink-soft'
               }`}
             >
-              {tab === 'info' ? 'Informations' : 'Modifier'}
+              {tab === 'info' ? t('tabInfo') : t('tabEdit')}
             </button>
           ))}
         </div>
@@ -369,19 +378,19 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
         {activeTab === 'info' && (
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-raised rounded-xl border border-line p-4">
-              <p className="text-xs font-sans text-ink-muted mb-3">Informations personnelles</p>
+              <p className="text-xs font-sans text-ink-muted mb-3">{t('personalInfo')}</p>
               <div className="space-y-3.5">
-                <InfoRow icon={<FiAtSign />} label="Pseudo"         value={user.pseudo || '—'} />
-                <InfoRow icon={<FiUser />}   label="Prénom"         value={user.name || '—'} />
-                <InfoRow icon={<FiUser />}   label="Nom de famille" value={user.lastName || '—'} />
+                <InfoRow icon={<FiAtSign />} label={t('labelPseudo')}    value={user.pseudo || '—'} />
+                <InfoRow icon={<FiUser />}   label={t('labelFirstName')} value={user.name || '—'} />
+                <InfoRow icon={<FiUser />}   label={t('labelLastName')}  value={user.lastName || '—'} />
               </div>
             </div>
             <div className="bg-raised rounded-xl border border-line p-4">
-              <p className="text-xs font-sans text-ink-muted mb-3">Détails du compte</p>
+              <p className="text-xs font-sans text-ink-muted mb-3">{t('accountDetails')}</p>
               <div className="space-y-3.5">
-                <InfoRow icon={<FiShield />}   label="Statut"        value={user.status || '—'} />
-                <InfoRow icon={<FiCalendar />} label="Membre depuis" value={new Date(user.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })} />
-                <InfoRow icon={<FiCalendar />} label="Mis à jour le" value={new Date(user.updatedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })} />
+                <InfoRow icon={<FiShield />}   label={t('labelStatus')}  value={user.status || '—'} />
+                <InfoRow icon={<FiCalendar />} label={t('memberSince')}  value={fmtDate(user.createdAt)} />
+                <InfoRow icon={<FiCalendar />} label={t('updatedOn')}    value={fmtDate(user.updatedAt)} />
               </div>
             </div>
           </div>
@@ -394,7 +403,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
             {/* Pseudo — champ spécial avec feedback */}
             <div className="sm:col-span-2">
               <label htmlFor="account-pseudo" className="block text-[10px] font-sans text-ink-muted mb-1.5">
-                Nom d&apos;utilisateur
+                {t('usernameLabel')}
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted">
@@ -417,7 +426,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
               </div>
               <div className="flex justify-between items-center mt-1 gap-2">
                 <p className={`text-xs min-w-0 ${pseudoStatus === 'available' ? 'text-accent' : pseudoStatus === 'taken' || pseudoStatus === 'invalid' ? 'text-danger' : 'text-ink-muted'}`}>
-                  {pseudoMsg || 'Lettres, chiffres, _ et - uniquement. 3–20 caractères.'}
+                  {pseudoMsg || t('pseudoHint')}
                 </p>
                 <p className="text-xs text-ink-muted shrink-0">{editValues.pseudo.length}/20</p>
               </div>
@@ -425,8 +434,8 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
 
             {/* Autres champs */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField label="Prénom"         value={editValues.name}     onChange={(v) => setEditValues(p => ({ ...p, name: v }))}     placeholder="Votre prénom" />
-              <FormField label="Nom de famille" value={editValues.lastName} onChange={(v) => setEditValues(p => ({ ...p, lastName: v }))} placeholder="Votre nom de famille" />
+              <FormField label={t('labelFirstName')} value={editValues.name}     onChange={(v) => setEditValues(p => ({ ...p, name: v }))}     placeholder={t('firstNamePlaceholder')} />
+              <FormField label={t('labelLastName')}  value={editValues.lastName} onChange={(v) => setEditValues(p => ({ ...p, lastName: v }))} placeholder={t('lastNamePlaceholder')} />
             </div>
 
             <div className="flex justify-end pt-2">
@@ -438,7 +447,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 {editLoading
                   ? <div className="w-4 h-4 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                   : <FiEdit3 className="w-4 h-4" />}
-                Enregistrer
+                {t('save')}
               </button>
             </div>
           </form>
@@ -447,12 +456,12 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
         {/* Sécurité : email et mot de passe (changements soumis à confirmation par email) */}
         {activeTab === 'edit' && (
           <div className="mt-4 bg-raised rounded-xl border border-line p-5 space-y-5">
-            <p className="text-xs font-sans text-ink-muted">Sécurité du compte</p>
+            <p className="text-xs font-sans text-ink-muted">{t('accountSecurity')}</p>
 
             {/* Email */}
             <div>
               <label htmlFor="account-email" className="block text-[10px] font-sans text-ink-muted mb-1.5">
-                Adresse email
+                {t('emailLabel')}
               </label>
               {!emailEditing ? (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -465,7 +474,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     onClick={() => { setEmailEditing(true); setNewEmail(''); setEmailSent(false); }}
                     className="text-xs font-sans text-green-400 hover:text-green-300 shrink-0 self-start sm:self-auto"
                   >
-                    Changer
+                    {t('change')}
                   </button>
                 </div>
               ) : (
@@ -475,7 +484,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     type="email"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
-                    placeholder="Nouvelle adresse email"
+                    placeholder={t('newEmailPlaceholder')}
                     className="w-full bg-page border border-line rounded-lg px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none focus:border-accent transition-colors"
                   />
                   <div className="flex flex-wrap gap-2">
@@ -488,29 +497,27 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                       {emailLoading
                         ? <div className="w-3.5 h-3.5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                         : <FiSend className="w-3.5 h-3.5" />}
-                      Envoyer
+                      {t('send')}
                     </button>
                     <button
                       type="button"
                       onClick={() => setEmailEditing(false)}
                       className="px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:text-ink transition-colors"
                     >
-                      Annuler
+                      {t('cancel')}
                     </button>
                   </div>
                 </div>
               )}
               <p className="text-xs text-ink-muted mt-1.5">
-                {emailSent
-                  ? 'Un email de confirmation a été envoyé à la nouvelle adresse. Le changement prendra effet une fois le lien cliqué.'
-                  : "Un email de confirmation sera envoyé à la nouvelle adresse ; le changement ne prend effet qu'après validation du lien."}
+                {emailSent ? t('emailHintSent') : t('emailHintDefault')}
               </p>
             </div>
 
             {/* Mot de passe */}
             <div className="pt-4 border-t border-line">
               <label className="block text-[10px] font-sans text-ink-muted mb-1.5">
-                Mot de passe
+                {t('passwordLabel')}
               </label>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-sm text-ink-soft">
@@ -526,13 +533,11 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                   {passwordLoading
                     ? <div className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
                     : <FiSend className="w-3.5 h-3.5" />}
-                  Changer le mot de passe
+                  {t('changePassword')}
                 </button>
               </div>
               <p className="text-xs text-ink-muted mt-1.5">
-                {passwordSent
-                  ? 'Un email vous a été envoyé avec un lien pour définir un nouveau mot de passe.'
-                  : "Un email contenant un lien de réinitialisation vous sera envoyé à l'adresse actuelle."}
+                {passwordSent ? t('passwordHintSent') : t('passwordHintDefault')}
               </p>
             </div>
           </div>
@@ -543,34 +548,38 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
           <div className="mt-4 bg-raised rounded-xl border border-line p-5 space-y-4">
             <p className="text-xs font-sans text-ink-muted flex items-center gap-2">
               <FiCreditCard className="w-3.5 h-3.5 text-green-400" />
-              Gestion de l&apos;abonnement
+              {t('subscriptionManagement')}
             </p>
 
             {subscriptionLoading ? (
               <div className="flex items-center gap-2 text-sm text-ink-muted">
                 <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
-                Chargement des informations d&apos;abonnement…
+                {t('subscriptionLoading')}
               </div>
             ) : subscription?.subscribed ? (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <InfoRow
                     icon={<FiShield />}
-                    label="Statut"
-                    value={subscription.status === 'active' ? 'Actif' : subscription.status || '—'}
+                    label={t('labelStatus')}
+                    value={subscription.status === 'active' ? t('statusActive') : subscription.status || '—'}
                   />
                   {subscription.amount != null && subscription.currency && (
                     <InfoRow
                       icon={<FiCreditCard />}
-                      label="Tarif"
-                      value={`${(subscription.amount / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2 })} ${subscription.currency.toUpperCase()} / ${subscription.interval === 'month' ? 'mois' : subscription.interval}`}
+                      label={t('labelPrice')}
+                      value={t('priceValue', {
+                        amount: (subscription.amount / 100).toLocaleString(dateLocale, { minimumFractionDigits: 2 }),
+                        currency: subscription.currency.toUpperCase(),
+                        interval: subscription.interval === 'month' ? t('intervalMonth') : subscription.interval ?? '',
+                      })}
                     />
                   )}
                   {subscription.currentPeriodEnd && (
                     <InfoRow
                       icon={<FiCalendar />}
-                      label={subscription.cancelAtPeriodEnd ? 'Accès jusqu\'au' : 'Prochain renouvellement'}
-                      value={new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      label={subscription.cancelAtPeriodEnd ? t('accessUntil') : t('nextRenewal')}
+                      value={fmtDate(subscription.currentPeriodEnd * 1000)}
                     />
                   )}
                 </div>
@@ -578,11 +587,11 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 <div className="pt-2 border-t border-line">
                   {subscription.cancelAtPeriodEnd ? (
                     <p className="text-sm text-warning bg-warning/10 border border-warning/30 rounded-lg p-3">
-                      Ton abonnement est résilié et ne sera pas reconduit. Tu conserves le statut
-                      éditeur et l&apos;accès au contenu premium jusqu&apos;au{' '}
-                      {subscription.currentPeriodEnd
-                        ? new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-                        : 'terme de la période en cours'}.
+                      {t('cancelledNotice', {
+                        date: subscription.currentPeriodEnd
+                          ? fmtDate(subscription.currentPeriodEnd * 1000)
+                          : t('periodEndFallback'),
+                      })}
                     </p>
                   ) : !cancelConfirming ? (
                     <button
@@ -591,15 +600,16 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                       className="flex items-center gap-2 px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:border-danger/50 hover:text-danger transition-colors"
                     >
                       <FiXCircle className="w-3.5 h-3.5" />
-                      Résilier l&apos;abonnement
+                      {t('cancelSubscription')}
                     </button>
                   ) : (
                     <div className="border border-danger/40 rounded-lg p-4 space-y-3 bg-danger/5">
                       <p className="text-sm text-danger">
-                        Tu conserveras le statut éditeur et l&apos;accès au contenu premium
-                        jusqu&apos;à la fin de la période déjà payée{subscription.currentPeriodEnd
-                          ? ` (${new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })})`
-                          : ''}. L&apos;abonnement ne sera ensuite pas reconduit.
+                        {t('cancelConfirmText', {
+                          dateSuffix: subscription.currentPeriodEnd
+                            ? ` (${fmtDate(subscription.currentPeriodEnd * 1000)})`
+                            : '',
+                        })}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         <button
@@ -611,7 +621,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                           {cancelLoading
                             ? <div className="w-3.5 h-3.5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                             : <FiXCircle className="w-3.5 h-3.5" />}
-                          Confirmer la résiliation
+                          {t('confirmCancel')}
                         </button>
                         <button
                           type="button"
@@ -619,7 +629,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                           disabled={cancelLoading}
                           className="px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:text-ink transition-colors"
                         >
-                          Annuler
+                          {t('cancel')}
                         </button>
                       </div>
                     </div>
@@ -627,7 +637,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 </div>
               </>
             ) : (
-              <p className="text-xs text-ink-muted">Aucun abonnement actif trouvé.</p>
+              <p className="text-xs text-ink-muted">{t('noActiveSubscription')}</p>
             )}
           </div>
         )}
@@ -637,11 +647,10 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
           <div className="mt-4 bg-raised rounded-xl border border-danger/30 p-5 space-y-3">
             <p className="text-xs font-sans text-danger flex items-center gap-2">
               <FiAlertTriangle className="w-3.5 h-3.5" />
-              Zone dangereuse
+              {t('dangerZone')}
             </p>
             <p className="text-xs text-ink-muted">
-              Supprime définitivement votre compte, vos commentaires, votre accès aux contenus premium
-              et résilie votre abonnement en cours le cas échéant. Cette action est irréversible.
+              {t('dangerDescription')}
             </p>
 
             {!deleteConfirming ? (
@@ -651,13 +660,12 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                 className="flex items-center gap-2 px-4 py-2 rounded-lg border border-danger/40 text-danger text-xs font-sans hover:bg-danger/10 transition-colors"
               >
                 <FiTrash2 className="w-3.5 h-3.5" />
-                Supprimer mon compte
+                {t('deleteAccount')}
               </button>
             ) : (
               <div className="border border-danger/40 rounded-lg p-4 space-y-3 bg-danger/5">
                 <p className="text-sm text-danger">
-                  Es-tu sûr(e) ? Ton compte et toutes les données associées seront supprimés
-                  définitivement et ne pourront pas être récupérés.
+                  {t('deleteConfirmText')}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -669,7 +677,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     {deleteLoading
                       ? <div className="w-3.5 h-3.5 border-2 border-ink-invert border-t-transparent rounded-full animate-spin" />
                       : <FiTrash2 className="w-3.5 h-3.5" />}
-                    Confirmer la suppression définitive
+                    {t('confirmDelete')}
                   </button>
                   <button
                     type="button"
@@ -677,7 +685,7 @@ export default function AccountSettings({ withNavbarOffset = false }: { withNavb
                     disabled={deleteLoading}
                     className="px-4 py-2 rounded-lg border border-line text-ink-soft text-xs font-sans hover:text-ink transition-colors"
                   >
-                    Annuler
+                    {t('cancel')}
                   </button>
                 </div>
               </div>

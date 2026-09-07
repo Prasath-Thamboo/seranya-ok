@@ -3,7 +3,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/i18n/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { BackTop } from "antd"; // Importation de BackTop

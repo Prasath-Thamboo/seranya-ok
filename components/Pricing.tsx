@@ -4,7 +4,8 @@ import { useNotification } from '@/components/notifications/NotificationProvider
 import { fetchCurrentUser, getAccessToken } from "@/lib/queries/AuthQueries";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link, useRouter } from "@/i18n/navigation";
 import { LuCheck, LuX, LuLeaf, LuStar, LuShieldCheck, LuInfinity, LuSparkles } from "react-icons/lu";
 
 const BASE_URL =
@@ -21,32 +22,35 @@ const fadeUp = {
   }),
 };
 
-const FREE_FEATURES = [
-  { label: "Accès aux articles publics", included: true },
-  { label: "Présentation du yoga bouddhiste", included: true },
-  { label: "Création de profil", included: true },
-  { label: "Édition de posts", included: false },
-  { label: "Statut d'éditeur", included: false },
-  { label: "Ressources exclusives", included: false },
-];
+const FREE_FEATURE_KEYS = [
+  { key: "publicArticles", included: true },
+  { key: "yogaIntro", included: true },
+  { key: "profile", included: true },
+  { key: "editPosts", included: false },
+  { key: "editorStatus", included: false },
+  { key: "exclusiveResources", included: false },
+] as const;
 
-const PREMIUM_FEATURES = [
-  { label: "Accès à tous les articles", included: true },
-  { label: "Présentation du yoga bouddhiste", included: true },
-  { label: "Création de profil", included: true },
-  { label: "Édition de posts", included: true },
-  { label: "Statut d'éditeur", included: true },
-  { label: "Ressources exclusives membres", included: true },
-];
+const PREMIUM_FEATURE_KEYS = [
+  "allArticles",
+  "yogaIntro",
+  "profile",
+  "editPosts",
+  "editorStatus",
+  "exclusiveResources",
+] as const;
 
-const BENEFITS = [
-  { icon: <LuLeaf className="h-6 w-6 text-accent" />, title: "Contenu curé", desc: "Articles, guides et pratiques issus des traditions du yoga et de la méditation bouddhiste." },
-  { icon: <LuSparkles className="h-6 w-6 text-accent" />, title: "Éditeur actif", desc: "Rédigez et publiez vos propres articles pour partager votre expérience avec la communauté." },
-  { icon: <LuShieldCheck className="h-6 w-6 text-accent" />, title: "Sans engagement", desc: "Résiliez à tout moment. Aucune condition cachée, aucune surprise." },
-  { icon: <LuInfinity className="h-6 w-6 text-accent" />, title: "Accès illimité", desc: "Tout le contenu, tout le temps, depuis n'importe quel appareil." },
-];
+const BENEFIT_KEYS = [
+  { key: "curated", icon: <LuLeaf className="h-6 w-6 text-accent" /> },
+  { key: "editor", icon: <LuSparkles className="h-6 w-6 text-accent" /> },
+  { key: "noCommitment", icon: <LuShieldCheck className="h-6 w-6 text-accent" /> },
+  { key: "unlimited", icon: <LuInfinity className="h-6 w-6 text-accent" /> },
+] as const;
 
 export const Pricing = () => {
+  const t = useTranslations("pricing");
+  const tc = useTranslations("common");
+  const router = useRouter();
   const { addNotification } = useNotification();
   const [userId, setUserId] = useState<number | null>(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -65,10 +69,10 @@ export const Pricing = () => {
 
   const handleSubscription = async () => {
     if (!userId) {
-      addNotification("critical", "Vous devez d'abord créer un compte pour continuer.", {
-        primaryButtonLabel: "Créer un compte",
-        secondaryButtonLabel: "Annuler",
-        onPrimaryButtonClick: () => { window.location.href = "/auth/register"; },
+      addNotification("critical", t("notifications.accountRequired"), {
+        primaryButtonLabel: t("notifications.createAccount"),
+        secondaryButtonLabel: tc("cancel"),
+        onPrimaryButtonClick: () => { router.push("/auth/register"); },
         onSecondaryButtonClick: () => {},
       });
       return;
@@ -86,10 +90,10 @@ export const Pricing = () => {
       if (data.sessionUrl) {
         window.open(data.sessionUrl, "_blank");
       } else {
-        addNotification("critical", "Une erreur s'est produite. Réessayez.");
+        addNotification("critical", tc("retryError"));
       }
     } catch {
-      addNotification("critical", "Erreur lors de la création de l'abonnement.");
+      addNotification("critical", t("notifications.subscriptionError"));
     } finally {
       setLoading(false);
     }
@@ -101,11 +105,11 @@ export const Pricing = () => {
       <div className="mx-auto max-w-5xl px-6 py-20">
         <motion.div className="mb-16 text-center" initial="hidden" animate="visible" custom={0} variants={fadeUp}>
           <span className="mb-4 inline-block rounded-full bg-accent-soft px-4 py-1.5 text-xs font-sans uppercase tracking-[0.2em] text-accent">
-            Tarification
+            {t("eyebrow")}
           </span>
-          <h2 className="mb-4 font-serif text-4xl font-medium text-ink md:text-5xl">Choisissez votre voie</h2>
+          <h2 className="mb-4 font-serif text-4xl font-medium text-ink md:text-5xl">{t("heading")}</h2>
           <p className="mx-auto max-w-xl text-lg text-ink-soft">
-            Commencez gratuitement, évoluez quand vous le souhaitez.
+            {t("subtitle")}
           </p>
         </motion.div>
 
@@ -119,21 +123,23 @@ export const Pricing = () => {
             className="flex flex-col rounded-3xl border border-line bg-raised p-8 shadow-sm"
           >
             <div className="mb-8">
-              <p className="mb-3 text-xs font-sans uppercase tracking-[0.2em] text-ink-muted">Plan Gratuit</p>
+              <p className="mb-3 text-xs font-sans uppercase tracking-[0.2em] text-ink-muted">{t("free.name")}</p>
               <div className="mb-6 flex items-baseline gap-2">
-                <span className="font-serif text-5xl font-medium text-ink">0€</span>
-                <span className="text-sm text-ink-muted">/mois</span>
+                <span className="font-serif text-5xl font-medium text-ink">{t("free.price")}</span>
+                <span className="text-sm text-ink-muted">{t("perMonth")}</span>
               </div>
-              <p className="text-sm text-ink-soft">Idéal pour découvrir l&apos;univers Seranya à votre rythme.</p>
+              <p className="text-sm text-ink-soft">{t("free.description")}</p>
             </div>
 
             <ul className="mb-10 flex-1 space-y-3">
-              {FREE_FEATURES.map((f) => (
-                <li key={f.label} className="flex items-center gap-3 text-sm">
+              {FREE_FEATURE_KEYS.map((f) => (
+                <li key={f.key} className="flex items-center gap-3 text-sm">
                   {f.included
                     ? <LuCheck className="h-4 w-4 flex-shrink-0 text-accent" />
                     : <LuX className="h-4 w-4 flex-shrink-0 text-ink-muted/50" />}
-                  <span className={f.included ? "text-ink-soft" : "text-ink-muted/70"}>{f.label}</span>
+                  <span className={f.included ? "text-ink-soft" : "text-ink-muted/70"}>
+                    {t(`free.features.${f.key}`)}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -142,7 +148,7 @@ export const Pricing = () => {
               disabled
               className="h-12 w-full cursor-not-allowed rounded-full border border-line text-sm font-sans text-ink-muted"
             >
-              Plan actuel
+              {t("free.currentPlan")}
             </button>
           </motion.div>
 
@@ -158,23 +164,23 @@ export const Pricing = () => {
 
             <div className="relative mb-8">
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-sans uppercase tracking-[0.2em] text-accent">Plan Premium</p>
+                <p className="text-xs font-sans uppercase tracking-[0.2em] text-accent">{t("premium.name")}</p>
                 <span className="inline-flex items-center gap-1 rounded-full bg-gilt px-3 py-1 text-xs font-sans uppercase tracking-[0.12em] text-ink-invert">
-                  <LuStar className="h-3 w-3" /> Populaire
+                  <LuStar className="h-3 w-3" /> {t("premium.badge")}
                 </span>
               </div>
               <div className="mb-6 flex items-baseline gap-2">
-                <span className="font-serif text-5xl font-medium text-ink">5€</span>
-                <span className="text-sm text-ink-muted">/mois</span>
+                <span className="font-serif text-5xl font-medium text-ink">{t("premium.price")}</span>
+                <span className="text-sm text-ink-muted">{t("perMonth")}</span>
               </div>
-              <p className="text-sm text-ink-soft">Accès complet à tout le contenu et statut d&apos;éditeur actif.</p>
+              <p className="text-sm text-ink-soft">{t("premium.description")}</p>
             </div>
 
             <ul className="relative mb-10 flex-1 space-y-3">
-              {PREMIUM_FEATURES.map((f) => (
-                <li key={f.label} className="flex items-center gap-3 text-sm">
+              {PREMIUM_FEATURE_KEYS.map((key) => (
+                <li key={key} className="flex items-center gap-3 text-sm">
                   <LuCheck className="h-4 w-4 flex-shrink-0 text-accent" />
-                  <span className="text-ink-soft">{f.label}</span>
+                  <span className="text-ink-soft">{t(`premium.features.${key}`)}</span>
                 </li>
               ))}
             </ul>
@@ -188,11 +194,11 @@ export const Pricing = () => {
                   : "bg-accent text-ink-invert hover:bg-accent-hover"
               }`}
             >
-              {isSubscribed ? "Déjà abonné ✓" : loading ? "Chargement…" : "Commencer maintenant →"}
+              {isSubscribed ? t("premium.alreadySubscribed") : loading ? tc("loading") : t("premium.cta")}
             </button>
 
             {!isSubscribed && (
-              <p className="mt-3 text-center text-xs text-ink-muted">Sans engagement · Résiliable à tout moment</p>
+              <p className="mt-3 text-center text-xs text-ink-muted">{t("premium.noCommitment")}</p>
             )}
           </motion.div>
         </div>
@@ -208,12 +214,12 @@ export const Pricing = () => {
             transition={{ duration: 0.7 }}
             className="mb-12 text-center font-serif text-2xl font-medium text-ink"
           >
-            Pourquoi rejoindre la communauté ?
+            {t("benefits.heading")}
           </motion.h3>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {BENEFITS.map((b, i) => (
+            {BENEFIT_KEYS.map((b, i) => (
               <motion.div
-                key={b.title}
+                key={b.key}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -222,8 +228,8 @@ export const Pricing = () => {
                 className="rounded-2xl border border-line bg-raised p-6 shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
               >
                 <div className="mb-4">{b.icon}</div>
-                <h4 className="mb-2 font-serif text-base font-medium text-ink">{b.title}</h4>
-                <p className="text-xs leading-relaxed text-ink-soft">{b.desc}</p>
+                <h4 className="mb-2 font-serif text-base font-medium text-ink">{t(`benefits.${b.key}.title`)}</h4>
+                <p className="text-xs leading-relaxed text-ink-soft">{t(`benefits.${b.key}.desc`)}</p>
               </motion.div>
             ))}
           </div>
@@ -238,12 +244,12 @@ export const Pricing = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <p className="mb-3 text-base text-ink-soft">Des questions avant de vous lancer ?</p>
+          <p className="mb-3 text-base text-ink-soft">{t("finalCta.question")}</p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 font-sans text-sm text-accent transition-colors hover:text-accent-hover"
           >
-            Contactez-nous →
+            {t("finalCta.link")}
           </Link>
         </motion.div>
       </div>

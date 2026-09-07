@@ -1,0 +1,511 @@
+{
+  "metadata": {
+    "title": "Seranya - Découvrez un Univers Fascinant",
+    "description": "Plongez dans le monde fascinant de Seranya, une expérience immersive inédite.",
+    "keywords": "Seranya, Fantasy, Expérience immersive, Aventure, Découverte, Univers interactif",
+    "twitterDescription": "Votre aventure commence ici avec des expériences immersives fascinantes."
+  },
+  "languageSwitcher": {
+    "label": "Langue",
+    "french": "Français",
+    "english": "English",
+    "switchToEnglish": "Switch to English",
+    "switchToFrench": "Passer en français"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "retryError": "Une erreur s'est produite. Réessayez."
+  },
+  "comments": {
+    "heading": "Échanges",
+    "placeholder": "Partagez votre ressenti…",
+    "counter": "{count}/{max}",
+    "submit": "Publier",
+    "submitting": "Envoi…",
+    "loginPrompt": "<link>Connectez-vous</link> pour laisser un commentaire.",
+    "empty": "Aucun commentaire pour le moment. Soyez le premier.",
+    "editAria": "Modifier le commentaire",
+    "deleteAria": "Supprimer le commentaire",
+    "loadError": "Erreur lors du chargement des commentaires.",
+    "createError": "Erreur lors de l'envoi du commentaire.",
+    "updateError": "Erreur lors de la modification.",
+    "deleteError": "Erreur lors de la suppression."
+  },
+  "home": {
+    "hero": {
+      "subtitle": "Un univers bouddhiste et yogique. Retrouvez la paix intérieure et fusionnez avec votre être profond.",
+      "explore": "Explorer",
+      "join": "Rejoindre"
+    },
+    "stats": {
+      "eyebrow": "L'univers en chiffres",
+      "title": "Ce que nous avons construit",
+      "posts": "Articles de blog",
+      "tutorials": "Tutoriels",
+      "definitions": "Définitions"
+    },
+    "latest": {
+      "eyebrow": "Découverte",
+      "title": "Dernières entités",
+      "subtitle": "Plongez dans notre encyclopédie et découvrez les entités de l'univers Seranya.",
+      "new": "Nouveau",
+      "seeAll": "Voir tout l'univers"
+    },
+    "commitment": {
+      "eyebrow": "Pourquoi Seranya",
+      "title": "Notre engagement",
+      "serenity": {
+        "title": "Sérénité",
+        "desc": "Un espace pensé pour la paix intérieure et le ressourcement, loin du bruit du monde."
+      },
+      "knowledge": {
+        "title": "Connaissance",
+        "desc": "Une encyclopédie vivante de l'univers bouddhiste et yogique, enrichie en permanence."
+      },
+      "community": {
+        "title": "Communauté",
+        "desc": "Des membres partageant les mêmes valeurs, unis par la quête du bonheur authentique."
+      }
+    },
+    "awakening": {
+      "eyebrow": "Le pouvoir du yoga",
+      "title": "Éveil",
+      "desc": "Souplesse, force, respiration, sérénité intérieure : découvrez pourquoi le yoga transforme durablement le corps et l'esprit, et comment il peut changer votre quotidien dès la première séance.",
+      "cta": "Découvrir Éveil",
+      "body": "Le corps",
+      "mind": "L'esprit",
+      "breath": "Le souffle"
+    },
+    "pricing": {
+      "eyebrow": "Accès",
+      "title": "Une tarification simple",
+      "planName": "Abonnement mensuel",
+      "planDesc": "Accédez à l'intégralité du contenu exclusif : articles, ressources membres, et plus encore.",
+      "feature1": "Accès à tous les articles",
+      "feature2": "Ressources exclusives des membres",
+      "feature3": "T-shirt officiel (bientôt)",
+      "perMonthLabel": "Par mois",
+      "price": "5€",
+      "perMonth": "/mois",
+      "cta": "Commencer"
+    },
+    "footerCta": {
+      "titleLoggedIn": "Continuez l'exploration",
+      "titleGuest": "Prêt à commencer ?",
+      "subSubscribed": "Merci pour votre soutien. Profitez de tout le contenu exclusif Seranya.",
+      "subDefault": "Rejoignez la communauté Seranya et entamez votre voyage vers la paix intérieure.",
+      "createAccount": "Créer un compte",
+      "subscribe": "S'abonner",
+      "explore": "Explorer l'univers",
+      "contact": "Nous contacter"
+    }
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Parlons-nous",
+    "intro": "Un problème technique, une question sur l'univers Seranya, ou simplement une idée à partager ? Nous vous répondrons dans les plus brefs délais.",
+    "emailInfoLabel": "Email",
+    "responseLabel": "Réponse",
+    "responseValue": "Sous 24 heures",
+    "formTitle": "Envoyer un message",
+    "emailLabel": "Email",
+    "emailPlaceholder": "votre@email.com",
+    "subjectLabel": "Sujet",
+    "subjectPlaceholder": "De quoi s'agit-il ?",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Décrivez votre question ou votre message…",
+    "required": "Requis",
+    "emailInvalid": "Email invalide",
+    "submit": "Envoyer",
+    "submitting": "Envoi…",
+    "success": "Votre message a été envoyé avec succès !",
+    "error": "Erreur lors de l'envoi du message."
+  },
+  "tutorials": {
+    "heroTitle": "Tutoriels",
+    "heroStrongTitle": "Yoga & bouddhisme",
+    "heroContent": "Découvrez nos vidéos pour pratiquer le yoga et la méditation bouddhiste.",
+    "heroButton1": "Voir les tutoriels",
+    "heroButton2": "S'abonner",
+    "eyebrow": "Pratique guidée",
+    "sectionTitle": "Nos tutoriels",
+    "empty": "Aucun tutoriel disponible pour le moment.",
+    "lockedVideo": "Vidéo réservée aux abonnés"
+  },
+  "posts": {
+    "heroTitle": "Bienvenue dans",
+    "heroStrongTitle": "l'univers Seranya",
+    "heroContent": "Explorez les enseignements du yoga et du bouddhisme à travers des articles pensés pour ralentir.",
+    "heroButton1": "Voir les articles",
+    "heroButton2": "Découvrir l'univers",
+    "eyebrow": "Le blog",
+    "sectionTitle": "Exploration de l'univers",
+    "unknownError": "Erreur inconnue."
+  },
+  "encyclopedie": {
+    "heroTitle": "Encyclopédie",
+    "heroStrongTitle": "Yoga & bouddhisme",
+    "heroContent": "Retrouvez les définitions essentielles du yoga et de la philosophie bouddhiste.",
+    "heroButton1": "Explorer",
+    "heroButton2": "S'abonner",
+    "searchPlaceholder": "Rechercher un terme…",
+    "searchAria": "Rechercher un terme",
+    "all": "Tous",
+    "empty": "Aucune définition trouvée.",
+    "categories": {
+      "Yoga": "Yoga",
+      "Bouddhisme": "Bouddhisme",
+      "Méditation": "Méditation",
+      "Philosophie": "Philosophie"
+    }
+  },
+  "eveil": {
+    "eyebrow": "Le pouvoir du yoga",
+    "heroTitle": "Éveil",
+    "heroContent": "Pourquoi le yoga transforme durablement le corps et l'esprit — et comment il peut changer votre quotidien, dès la première respiration.",
+    "introTitle": "Pourquoi pratiquer le yoga ?",
+    "introP1": "Le yoga n'est pas qu'une simple discipline physique : c'est un art de vivre millénaire qui unit le corps, le souffle et l'esprit. Chaque posture, chaque respiration est une invitation à ralentir et à se reconnecter à soi-même.",
+    "introP2": "Accessible à tous, quel que soit l'âge ou le niveau, le yoga s'adapte à chacun. Il ne s'agit pas de performance, mais d'une pratique progressive dont les effets se ressentent dès les premières séances — et s'approfondissent avec le temps.",
+    "introP3": "Que vous cherchiez à soulager des tensions physiques, à apaiser un mental agité ou simplement à vous offrir un moment rien qu'à vous, le yoga a quelque chose à vous apporter.",
+    "benefitsTitle": "Les bienfaits du yoga",
+    "benefitsSubtitle": "Une pratique complète, aux effets ressentis à tous les niveaux.",
+    "benefits": [
+      {
+        "title": "Le corps",
+        "description": "Une pratique régulière assouplit les muscles et les articulations, renforce le dos et la posture, et améliore l'équilibre au fil des séances.",
+        "points": ["Souplesse et mobilité", "Renforcement musculaire", "Meilleure posture"]
+      },
+      {
+        "title": "L'esprit",
+        "description": "Le yoga apaise le mental : il aide à relâcher les tensions accumulées, à réduire le stress et l'anxiété, et à retrouver une véritable clarté d'esprit.",
+        "points": ["Réduction du stress", "Meilleure concentration", "Sommeil plus réparateur"]
+      },
+      {
+        "title": "Le souffle",
+        "description": "Le travail de la respiration (pranayama) est au cœur du yoga : il apprend à ralentir, à mieux oxygéner le corps et à calmer le système nerveux.",
+        "points": ["Respiration consciente", "Système nerveux apaisé", "Ancrage dans l'instant présent"]
+      },
+      {
+        "title": "Le quotidien",
+        "description": "Sur le tapis comme en dehors, le yoga cultive une meilleure écoute de soi : plus d'énergie, plus de calme face aux imprévus, plus de présence aux autres.",
+        "points": ["Plus d'énergie au quotidien", "Meilleure gestion des émotions", "Une présence plus sereine"]
+      }
+    ],
+    "quote": "« Le yoga ne consiste pas à toucher ses orteils, il consiste à ce que l'on apprend en chemin. »",
+    "ctaTitle": "Prêt à commencer ?",
+    "ctaText": "Découvrez nos tutoriels vidéo pour débuter votre pratique du yoga, quel que soit votre niveau.",
+    "ctaButton1": "Voir les tutoriels",
+    "ctaButton2": "Créer un compte"
+  },
+  "subscription": {
+    "badge": "Rejoignez la communauté",
+    "title": "Votre voie,",
+    "titleItalic": "votre rythme",
+    "subtitle": "Accédez à l'intégralité du contenu Seranya, devenez éditeur actif et rejoignez une communauté passionnée.",
+    "statMonthly": "par mois",
+    "statUnlimited": "contenu illimité",
+    "statCommitment": "engagement",
+    "viewPlans": "Voir les plans ↓"
+  },
+  "rgpd": {
+    "eyebrow": "Données personnelles",
+    "title": "Exercer vos droits",
+    "intro": "Conformément au RGPD, vous pouvez à tout moment demander l'accès, la rectification, la suppression, la portabilité de vos données ou vous opposer à leur traitement. Nous nous engageons à répondre dans un délai maximum d'un mois.",
+    "responseTimeLabel": "Délai de réponse",
+    "responseTimeValue": "1 mois maximum",
+    "dpoContactLabel": "Contact DPO",
+    "cnilNotice": "Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la CNIL (<cnil>cnil.fr</cnil>). Voir aussi notre <privacy>politique de confidentialité</privacy> et nos <legal>mentions légales</legal>.",
+    "formTitle": "Formulaire de demande",
+    "nameLabel": "Nom complet",
+    "namePlaceholder": "Votre nom et prénom",
+    "emailLabel": "Email associé à votre compte",
+    "emailPlaceholder": "votre@email.com",
+    "requestTypeLabel": "Type de demande",
+    "requestTypePlaceholder": "Choisissez le droit que vous souhaitez exercer",
+    "messageLabel": "Détails de votre demande",
+    "messagePlaceholder": "Précisez votre demande (données concernées, contexte…)",
+    "required": "Requis",
+    "emailInvalid": "Email invalide",
+    "submit": "Envoyer ma demande",
+    "submitting": "Envoi…",
+    "success": "Votre demande a été envoyée avec succès ! Un email de confirmation vous a été adressé.",
+    "error": "Erreur lors de l'envoi de votre demande.",
+    "types": {
+      "access": "Accès à mes données",
+      "rectification": "Rectification de mes données",
+      "deletion": "Suppression de mes données",
+      "objection": "Opposition au traitement",
+      "portability": "Portabilité de mes données"
+    }
+  },
+  "nav": {
+    "home": "Accueil",
+    "blog": "Blog",
+    "universe": "Univers",
+    "contact": "Contact",
+    "subscription": "Abonnement",
+    "tutorials": "Tutoriels",
+    "encyclopedia": "Encyclopédie",
+    "awakening": "Éveil",
+    "profile": "Profil",
+    "administration": "Administration",
+    "adminShort": "Admin",
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "register": "Inscription",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "logoutError": "Une erreur s'est produite lors de la déconnexion."
+  },
+  "footer": {
+    "home": "Accueil",
+    "about": "À propos",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "cookies": "Cookies",
+    "myData": "Mes données",
+    "rights": "© {year} Seranya. Tous droits réservés.",
+    "tagline": "Un espace pour respirer."
+  },
+  "cookieConsent": {
+    "title": "Consentement aux cookies",
+    "decline": "Refuser",
+    "accept": "Accepter",
+    "body": "Nous utilisons des cookies pour améliorer votre expérience sur notre site et pour collecter des données à des fins statistiques. En acceptant, vous consentez à une utilisation des cookies, y compris ceux de Google Analytics. Vous pouvez consulter notre <privacy>politique de confidentialité</privacy> et notre <cookies>politique de cookies</cookies> pour en savoir plus."
+  },
+  "postCard": {
+    "scheduledFor": "Prévu le {date}",
+    "readArticle": "Lire l'article"
+  },
+  "subscriptionLock": {
+    "defaultMessage": "Contenu réservé aux abonnés",
+    "subscribe": "S'abonner"
+  },
+  "pricing": {
+    "eyebrow": "Tarification",
+    "heading": "Choisissez votre voie",
+    "subtitle": "Commencez gratuitement, évoluez quand vous le souhaitez.",
+    "perMonth": "/mois",
+    "free": {
+      "name": "Plan Gratuit",
+      "price": "0€",
+      "description": "Idéal pour découvrir l'univers Seranya à votre rythme.",
+      "currentPlan": "Plan actuel",
+      "features": {
+        "publicArticles": "Accès aux articles publics",
+        "yogaIntro": "Présentation du yoga bouddhiste",
+        "profile": "Création de profil",
+        "editPosts": "Édition de posts",
+        "editorStatus": "Statut d'éditeur",
+        "exclusiveResources": "Ressources exclusives"
+      }
+    },
+    "premium": {
+      "name": "Plan Premium",
+      "price": "5€",
+      "badge": "Populaire",
+      "description": "Accès complet à tout le contenu et statut d'éditeur actif.",
+      "alreadySubscribed": "Déjà abonné ✓",
+      "cta": "Commencer maintenant →",
+      "noCommitment": "Sans engagement · Résiliable à tout moment",
+      "features": {
+        "allArticles": "Accès à tous les articles",
+        "yogaIntro": "Présentation du yoga bouddhiste",
+        "profile": "Création de profil",
+        "editPosts": "Édition de posts",
+        "editorStatus": "Statut d'éditeur",
+        "exclusiveResources": "Ressources exclusives membres"
+      }
+    },
+    "benefits": {
+      "heading": "Pourquoi rejoindre la communauté ?",
+      "curated": {
+        "title": "Contenu curé",
+        "desc": "Articles, guides et pratiques issus des traditions du yoga et de la méditation bouddhiste."
+      },
+      "editor": {
+        "title": "Éditeur actif",
+        "desc": "Rédigez et publiez vos propres articles pour partager votre expérience avec la communauté."
+      },
+      "noCommitment": {
+        "title": "Sans engagement",
+        "desc": "Résiliez à tout moment. Aucune condition cachée, aucune surprise."
+      },
+      "unlimited": {
+        "title": "Accès illimité",
+        "desc": "Tout le contenu, tout le temps, depuis n'importe quel appareil."
+      }
+    },
+    "finalCta": {
+      "question": "Des questions avant de vous lancer ?",
+      "link": "Contactez-nous →"
+    },
+    "notifications": {
+      "accountRequired": "Vous devez d'abord créer un compte pour continuer.",
+      "createAccount": "Créer un compte",
+      "subscriptionError": "Erreur lors de la création de l'abonnement."
+    }
+  },
+  "auth": {
+    "fields": {
+      "email": "Email",
+      "password": "Mot de passe",
+      "pseudo": "Pseudo",
+      "pseudoPlaceholder": "VotrePseudo"
+    },
+    "backToLogin": "Retour à la connexion",
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Bienvenue dans votre espace",
+      "emailRequired": "Veuillez entrer votre email !",
+      "passwordRequired": "Veuillez entrer votre mot de passe !",
+      "rememberMe": "Se souvenir de moi",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Connexion",
+      "submitting": "Connexion…",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte",
+      "success": "Connexion réussie !",
+      "error": "Erreur lors de la connexion. Veuillez vérifier vos identifiants."
+    },
+    "register": {
+      "title": "Inscription",
+      "subtitle": "Créez votre espace Seranya",
+      "required": "Requis",
+      "passwordRequired": "Le mot de passe est requis.",
+      "passwordMin": "Le mot de passe doit contenir au moins 8 caractères.",
+      "genericError": "Inscription échouée. Veuillez réessayer.",
+      "submit": "S'inscrire",
+      "submitting": "Inscription…",
+      "alreadyRegistered": "Déjà inscrit ?",
+      "signIn": "Se connecter",
+      "successTitle": "Inscription réussie",
+      "successBody": "Un email de confirmation vous a été envoyé. Cliquez sur le lien pour activer votre compte.",
+      "successCta": "Se connecter"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Indiquez votre email pour recevoir un lien de réinitialisation.",
+      "emailRequired": "Veuillez entrer votre email !",
+      "emailInvalid": "Email invalide.",
+      "submit": "Envoyer le lien",
+      "submitting": "Envoi…",
+      "sendError": "Erreur lors de l'envoi. Veuillez réessayer.",
+      "sentTitle": "Email envoyé",
+      "sentBody": "Si cet email est enregistré, un lien de réinitialisation vient de lui être envoyé. Vérifiez votre boîte de réception (et vos spams)."
+    },
+    "resetPassword": {
+      "title": "Réinitialiser le mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "newPasswordRequired": "Veuillez entrer un nouveau mot de passe !",
+      "confirmPasswordRequired": "Veuillez confirmer votre mot de passe !",
+      "mismatch": "Les mots de passe ne correspondent pas !",
+      "submit": "Réinitialiser le mot de passe",
+      "submitting": "Réinitialisation…",
+      "missingToken": "Token de réinitialisation manquant",
+      "mismatchNotification": "Les mots de passe ne correspondent pas.",
+      "success": "Mot de passe réinitialisé avec succès !",
+      "error": "Erreur lors de la réinitialisation. Veuillez réessayer."
+    },
+    "confirmEmail": {
+      "successTitle": "Confirmation réussie",
+      "successBody": "Votre compte a été confirmé avec succès.",
+      "errorTitle": "Erreur de confirmation",
+      "errorBody": "La confirmation de votre email a échoué. Le lien est peut-être expiré ou invalide.",
+      "missingToken": "Token non trouvé. Veuillez vérifier votre lien de confirmation.",
+      "pendingTitle": "Inscription presque terminée",
+      "pendingBody": "Nous traitons votre demande de confirmation. Veuillez patienter…",
+      "backToLogin": "Retour à la page de connexion"
+    },
+    "confirmEmailChange": {
+      "successTitle": "Confirmation réussie",
+      "successBody": "Votre nouvelle adresse email a été confirmée avec succès.",
+      "errorTitle": "Erreur de confirmation",
+      "errorBody": "La confirmation a échoué. Le lien est peut-être expiré ou invalide.",
+      "missingToken": "Token non trouvé. Veuillez vérifier votre lien de confirmation.",
+      "pendingTitle": "Confirmation en cours…",
+      "pendingBody": "Veuillez patienter.",
+      "backToProfile": "Retour à mon profil"
+    }
+  },
+  "account": {
+    "changePhotoTitle": "Changer la photo",
+    "subscribed": "Abonné",
+    "notSubscribed": "Non abonné",
+    "tabInfo": "Informations",
+    "tabEdit": "Modifier",
+    "personalInfo": "Informations personnelles",
+    "accountDetails": "Détails du compte",
+    "labelPseudo": "Pseudo",
+    "labelFirstName": "Prénom",
+    "labelLastName": "Nom de famille",
+    "labelStatus": "Statut",
+    "memberSince": "Membre depuis",
+    "updatedOn": "Mis à jour le",
+    "usernameLabel": "Nom d'utilisateur",
+    "pseudoHint": "Lettres, chiffres, _ et - uniquement. 3–20 caractères.",
+    "firstNamePlaceholder": "Votre prénom",
+    "lastNamePlaceholder": "Votre nom de famille",
+    "save": "Enregistrer",
+    "accountSecurity": "Sécurité du compte",
+    "emailLabel": "Adresse email",
+    "change": "Changer",
+    "newEmailPlaceholder": "Nouvelle adresse email",
+    "send": "Envoyer",
+    "cancel": "Annuler",
+    "emailHintSent": "Un email de confirmation a été envoyé à la nouvelle adresse. Le changement prendra effet une fois le lien cliqué.",
+    "emailHintDefault": "Un email de confirmation sera envoyé à la nouvelle adresse ; le changement ne prend effet qu'après validation du lien.",
+    "passwordLabel": "Mot de passe",
+    "changePassword": "Changer le mot de passe",
+    "passwordHintSent": "Un email vous a été envoyé avec un lien pour définir un nouveau mot de passe.",
+    "passwordHintDefault": "Un email contenant un lien de réinitialisation vous sera envoyé à l'adresse actuelle.",
+    "subscriptionManagement": "Gestion de l'abonnement",
+    "subscriptionLoading": "Chargement des informations d'abonnement…",
+    "statusActive": "Actif",
+    "labelPrice": "Tarif",
+    "priceValue": "{amount} {currency} / {interval}",
+    "intervalMonth": "mois",
+    "accessUntil": "Accès jusqu'au",
+    "nextRenewal": "Prochain renouvellement",
+    "cancelledNotice": "Ton abonnement est résilié et ne sera pas reconduit. Tu conserves le statut éditeur et l'accès au contenu premium jusqu'au {date}.",
+    "periodEndFallback": "terme de la période en cours",
+    "cancelSubscription": "Résilier l'abonnement",
+    "cancelConfirmText": "Tu conserveras le statut éditeur et l'accès au contenu premium jusqu'à la fin de la période déjà payée{dateSuffix}. L'abonnement ne sera ensuite pas reconduit.",
+    "confirmCancel": "Confirmer la résiliation",
+    "noActiveSubscription": "Aucun abonnement actif trouvé.",
+    "dangerZone": "Zone dangereuse",
+    "dangerDescription": "Supprime définitivement votre compte, vos commentaires, votre accès aux contenus premium et résilie votre abonnement en cours le cas échéant. Cette action est irréversible.",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteConfirmText": "Es-tu sûr(e) ? Ton compte et toutes les données associées seront supprimés définitivement et ne pourront pas être récupérés.",
+    "confirmDelete": "Confirmer la suppression définitive",
+    "pseudoChecking": "Vérification…",
+    "pseudoAvailable": "Disponible !",
+    "pseudoTaken": "Ce pseudo est déjà pris.",
+    "waitPseudoCheck": "Attends la fin de la vérification du pseudo.",
+    "validation": {
+      "pseudoMin": "Minimum 3 caractères.",
+      "pseudoMax": "Maximum 20 caractères.",
+      "pseudoStart": "Doit commencer par une lettre ou un chiffre.",
+      "pseudoChars": "Seuls lettres, chiffres, _ et - sont autorisés.",
+      "pseudoConsecutive": "Pas de _ ou - consécutifs.",
+      "pseudoBlocked": "Ce pseudo contient un terme non autorisé."
+    },
+    "notifications": {
+      "photoUpdated": "Photo de profil mise à jour.",
+      "photoError": "Erreur lors du changement de photo.",
+      "profileUpdated": "Profil mis à jour avec succès.",
+      "profileError": "Erreur lors de la mise à jour du profil.",
+      "emailChangeSent": "Un email de confirmation a été envoyé à la nouvelle adresse.",
+      "emailChangeError": "Erreur lors de la demande de changement d'email.",
+      "passwordResetSent": "Un email vous a été envoyé pour réinitialiser votre mot de passe.",
+      "passwordResetError": "Erreur lors de l'envoi de l'email de réinitialisation.",
+      "deleteError": "Erreur lors de la suppression du compte.",
+      "cancelSuccessWithDate": "Ton abonnement a été résilié. Tu conserves l'accès jusqu'au {date}.",
+      "cancelSuccessNoDate": "Ton abonnement a été résilié. Tu conserves l'accès jusqu'à la fin de la période en cours.",
+      "cancelError": "Erreur lors de la résiliation de l'abonnement."
+    }
+  }
+}

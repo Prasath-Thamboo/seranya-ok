@@ -18,20 +18,29 @@ const authHeaders = (): Record<string, string> => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+// `?lang=fr|en` : le backend résout title/intro/subtitle/content dans la bonne
+// langue (repli FR) et retire les colonnes `*En`. Sans `lang`, la ligne brute
+// (avec les `*En`) est renvoyée — réservé à l'admin.
+const langQuery = (lang?: string) => (lang ? `?lang=${lang}` : '');
+
 // Fonction pour récupérer tous les posts
-export const fetchPosts = async (): Promise<PostModel[]> => {
-  console.log('fetchPosts called');
-  const response = await axios.get<PostModel[]>(`${BASE_URL}/posts`, {
-    headers: authHeaders(),
-  });
+export const fetchPosts = async (lang?: string): Promise<PostModel[]> => {
+  const response = await axios.get<PostModel[]>(
+    `${BASE_URL}/posts${langQuery(lang)}`,
+    { headers: authHeaders() },
+  );
   return response.data;
 };
 
 // Fonction pour récupérer un post par ID
-export const fetchPostById = async (id: number): Promise<PostModel> => {
-  const response = await axios.get<PostModel>(`${BASE_URL}/posts/${id}`, {
-    headers: authHeaders(),
-  });
+export const fetchPostById = async (
+  id: number,
+  lang?: string,
+): Promise<PostModel> => {
+  const response = await axios.get<PostModel>(
+    `${BASE_URL}/posts/${id}${langQuery(lang)}`,
+    { headers: authHeaders() },
+  );
   return response.data;
 };
 
@@ -43,6 +52,10 @@ export const createPost = async (data: CreatePostModel, token: string): Promise<
   formData.append('intro', data.intro);
   if (data.subtitle) formData.append('subtitle', data.subtitle);
   if (data.content) formData.append('content', data.content);
+  if (data.titleEn) formData.append('titleEn', data.titleEn);
+  if (data.introEn) formData.append('introEn', data.introEn);
+  if (data.subtitleEn) formData.append('subtitleEn', data.subtitleEn);
+  if (data.contentEn) formData.append('contentEn', data.contentEn);
   if (data.isPublished !== undefined) formData.append('isPublished', String(data.isPublished));
   if (data.publishedAt) formData.append('publishedAt', data.publishedAt);
   formData.append('type', data.type);
@@ -96,6 +109,10 @@ export const updatePost = async (
   if (data.intro) formData.append('intro', data.intro);
   if (data.subtitle) formData.append('subtitle', data.subtitle);
   if (data.content) formData.append('content', data.content);
+  if (data.titleEn !== undefined) formData.append('titleEn', data.titleEn);
+  if (data.introEn !== undefined) formData.append('introEn', data.introEn);
+  if (data.subtitleEn !== undefined) formData.append('subtitleEn', data.subtitleEn);
+  if (data.contentEn !== undefined) formData.append('contentEn', data.contentEn);
   if (data.isPublished !== undefined) formData.append('isPublished', String(data.isPublished));
   if (data.publishedAt) formData.append('publishedAt', data.publishedAt);
   if (data.type) formData.append('type', data.type);

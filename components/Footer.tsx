@@ -1,18 +1,10 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
-
-const LINKS = [
-  { label: "Accueil", href: "/" },
-  { label: "À propos", href: "/about" },
-  { label: "Mentions légales", href: "/mentions" },
-  { label: "Confidentialité", href: "/confidentialite" },
-  { label: "Cookies", href: "/cookies" },
-  { label: "Mes données", href: "/rgpd" },
-];
 
 const SOCIALS = [
   { icon: <FaFacebookF className="w-3.5 h-3.5" />, href: "https://facebook.com", label: "Facebook" },
@@ -21,6 +13,17 @@ const SOCIALS = [
 ];
 
 const Footer: React.FC<{ onLoad?: () => void }> = () => {
+  const t = useTranslations("footer");
+
+  const LINKS = [
+    { label: t("home"), href: "/" },
+    { label: t("about"), href: "/about" },
+    { label: t("legal"), href: "/mentions" },
+    { label: t("privacy"), href: "/confidentialite" },
+    { label: t("cookies"), href: "/cookies" },
+    { label: t("myData"), href: "/rgpd" },
+  ];
+
   return (
     <footer className="relative z-10 bg-sunken border-t border-line font-sans">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -65,11 +68,9 @@ const Footer: React.FC<{ onLoad?: () => void }> = () => {
 
         <div className="mt-8 pt-6 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-ink-muted">
-            © {new Date().getFullYear()} Seranya. Tous droits réservés.
+            {t("rights", { year: new Date().getFullYear() })}
           </p>
-          <p className="text-xs text-ink-muted">
-            Un espace pour respirer.
-          </p>
+          <p className="text-xs text-ink-muted">{t("tagline")}</p>
         </div>
       </div>
     </footer>

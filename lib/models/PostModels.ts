@@ -47,6 +47,12 @@ export interface PostModel {
   intro: string; // Utilisé au lieu de 'description'
   subtitle?: string;
   content?: string;
+  // Colonnes miroir EN. Présentes uniquement sur les réponses admin (sans ?lang) ;
+  // sur le site public le backend a déjà résolu title/intro/... selon la locale.
+  titleEn?: string;
+  introEn?: string;
+  subtitleEn?: string;
+  contentEn?: string;
   isPublished: boolean;
   publishedAt?: string | null;
   color?: string;
@@ -70,6 +76,10 @@ export interface CreatePostModel {
   intro: string;
   subtitle?: string;
   content?: string;
+  titleEn?: string;
+  introEn?: string;
+  subtitleEn?: string;
+  contentEn?: string;
   color?: string;
   isPublished?: boolean;
   publishedAt?: string | null;
@@ -88,6 +98,10 @@ export interface UpdatePostModel {
   intro?: string;
   subtitle?: string;
   content?: string;
+  titleEn?: string;
+  introEn?: string;
+  subtitleEn?: string;
+  contentEn?: string;
   color?: string;
   isPublished?: boolean;
   publishedAt?: string | null;

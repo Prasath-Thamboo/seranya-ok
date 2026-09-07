@@ -3,9 +3,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { getAccessToken, logoutUser } from "@/lib/queries/AuthQueries";
 import { fetchCurrentUser } from "@/lib/queries/AuthQueries";
 import { RegisterUserModel } from "@/lib/models/AuthModels";
@@ -14,16 +13,20 @@ import { Dropdown, Menu } from "antd";
 import { FiLogOut, FiMenu, FiX, FiLogIn, FiUserPlus, FiHome } from "react-icons/fi";
 import { FaChevronDown } from "react-icons/fa";
 import { useNotification } from "@/components/notifications/NotificationProvider";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useTranslations } from "next-intl";
 import React from "react";
 
-const UNIVERS_LINKS = [
-  { href: "/tutoriels", label: "Tutoriels" },
-  { href: "/univers", label: "Univers" },
-  { href: "/encyclopedie", label: "Encyclopédie" },
-  { href: "/eveil", label: "Éveil" },
-];
-
 export default function Navbar() {
+  const t = useTranslations("nav");
+
+  const UNIVERS_LINKS = [
+    { href: "/tutoriels", label: t("tutorials") },
+    { href: "/univers", label: t("universe") },
+    { href: "/encyclopedie", label: t("encyclopedia") },
+    { href: "/eveil", label: t("awakening") },
+  ];
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<RegisterUserModel | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -80,24 +83,24 @@ export default function Navbar() {
       await logoutUser();
       window.location.href = "/";
     } catch (error) {
-      addNotification("critical", "Une erreur s'est produite lors de la déconnexion.");
+      addNotification("critical", t("logoutError"));
     }
   };
 
   const menuItems = (
     <Menu>
       <Menu.Item key="1">
-        <Link href="/compte">Profil</Link>
+        <Link href="/compte">{t("profile")}</Link>
       </Menu.Item>
       {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
         <Menu.Item key="2">
-          <Link href="/admin">Administration</Link>
+          <Link href="/admin">{t("administration")}</Link>
         </Menu.Item>
       )}
       <Menu.Item key="3" onClick={handleLogout} danger>
         <div className="flex items-center space-x-2">
           <FiLogOut className="w-4 h-4" />
-          <span>Déconnexion</span>
+          <span>{t("logout")}</span>
         </div>
       </Menu.Item>
     </Menu>
@@ -176,36 +179,37 @@ export default function Navbar() {
         <div className={isLoggedIn ? "hidden md:flex space-x-8 items-center" : "hidden min-[1074px]:flex space-x-8 items-center"}>
           <Link href="/" className={`${linkClass} flex items-center gap-2`}>
             <FiHome className="w-4 h-4" />
-            <span>Accueil</span>
+            <span>{t("home")}</span>
             <span className={underline} />
           </Link>
 
           <Link href="/posts" className={linkClass}>
-            <span>Blog</span>
+            <span>{t("blog")}</span>
             <span className={underline} />
           </Link>
 
           <Dropdown overlay={universSubMenu} trigger={["hover"]} placement="bottom">
             <button className={`${linkClass} flex items-center gap-1`}>
-              <span>Univers</span>
+              <span>{t("universe")}</span>
               <FaChevronDown className="w-3 h-3 opacity-70" />
               <span className={underline} />
             </button>
           </Dropdown>
 
           <Link href="/contact" className={linkClass}>
-            <span>Contact</span>
+            <span>{t("contact")}</span>
             <span className={underline} />
           </Link>
 
           <Link href="/subscription" className={linkClass}>
-            <span>Abonnement</span>
+            <span>{t("subscription")}</span>
             <span className={underline} />
           </Link>
         </div>
 
         {/* Zone utilisateur desktop */}
         <div ref={userMenuRef} className={isLoggedIn ? "hidden md:flex items-center space-x-3" : "hidden min-[1074px]:flex items-center space-x-3"}>
+          <LanguageSwitcher solid={solid} />
           {isLoggedIn && user ? (
             <Dropdown overlay={menuItems} trigger={["click"]}>
               <div className="flex items-center cursor-pointer group gap-2">
@@ -239,13 +243,13 @@ export default function Navbar() {
                   }`}
                 >
                   <FiLogIn className="w-4 h-4" />
-                  Connexion
+                  {t("login")}
                 </button>
               </Link>
               <Link href="/auth/register">
                 <button className="flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-sans text-ink-invert transition-colors duration-200 hover:bg-accent-hover">
                   <FiUserPlus className="w-4 h-4" />
-                  Inscription
+                  {t("register")}
                 </button>
               </Link>
             </>
@@ -257,7 +261,7 @@ export default function Navbar() {
           <button
             className={`transition-colors ${solid ? "text-ink hover:text-accent" : "text-white hover:text-white/80"}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
           >
             {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
           </button>
@@ -288,7 +292,7 @@ export default function Navbar() {
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="w-9 h-9 flex items-center justify-center rounded-full border border-line text-ink-soft hover:text-accent hover:border-accent transition-colors"
-                aria-label="Fermer le menu"
+                aria-label={t("closeMenu")}
               >
                 <FiX className="w-5 h-5" />
               </button>
@@ -303,7 +307,7 @@ export default function Navbar() {
                     className="flex items-center gap-2 py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
                     <FiHome className="w-4 h-4" />
-                    Accueil
+                    {t("home")}
                   </Link>
                 </li>
                 <li>
@@ -312,7 +316,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className="block py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
-                    Blog
+                    {t("blog")}
                   </Link>
                 </li>
 
@@ -321,7 +325,7 @@ export default function Navbar() {
                     onClick={() => setIsUniversOpen(!isUniversOpen)}
                     className="w-full flex items-center justify-between py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
-                    Univers
+                    {t("universe")}
                     <FaChevronDown className={`w-3 h-3 text-ink-muted transition-transform duration-200 ${isUniversOpen ? "rotate-180" : ""}`} />
                   </button>
                   {isUniversOpen && (
@@ -348,7 +352,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className="block py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200 border-b border-line/70"
                   >
-                    Contact
+                    {t("contact")}
                   </Link>
                 </li>
                 <li>
@@ -357,8 +361,14 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className="block py-3.5 px-3 rounded-lg font-sans text-ink hover:text-accent hover:bg-accent-soft transition-all duration-200"
                   >
-                    Abonnement
+                    {t("subscription")}
                   </Link>
+                </li>
+                <li className="pt-3">
+                  <LanguageSwitcher
+                    variant="mobile"
+                    onSwitch={() => setIsMenuOpen(false)}
+                  />
                 </li>
               </ul>
             </nav>
@@ -388,7 +398,7 @@ export default function Navbar() {
                       onClick={() => setIsMenuOpen(false)}
                       className="flex-1 text-center py-2.5 text-xs font-sans text-ink-soft border border-line rounded-full hover:border-accent hover:text-accent transition-all"
                     >
-                      Profil
+                      {t("profile")}
                     </Link>
                     {(user.role === "ADMIN" || user.role === "EDITOR") && (
                       <Link
@@ -396,7 +406,7 @@ export default function Navbar() {
                         onClick={() => setIsMenuOpen(false)}
                         className="flex-1 text-center py-2.5 text-xs font-sans text-ink-soft border border-line rounded-full hover:border-accent hover:text-accent transition-all"
                       >
-                        Admin
+                        {t("adminShort")}
                       </Link>
                     )}
                   </div>
@@ -406,7 +416,7 @@ export default function Navbar() {
                     className="w-full py-2.5 text-xs font-sans text-danger border border-danger/30 rounded-full hover:bg-danger/10 transition-all flex items-center justify-center gap-2"
                   >
                     <FiLogOut className="w-4 h-4" />
-                    Déconnexion
+                    {t("logout")}
                   </button>
                 </div>
               ) : (
@@ -417,7 +427,7 @@ export default function Navbar() {
                     className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-sans text-ink-invert bg-accent hover:bg-accent-hover rounded-full transition-all"
                   >
                     <FiLogIn className="w-4 h-4" />
-                    Connexion
+                    {t("login")}
                   </Link>
                   <Link
                     href="/auth/register"
@@ -425,7 +435,7 @@ export default function Navbar() {
                     className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-sans text-accent border border-accent/40 hover:bg-accent-soft rounded-full transition-all"
                   >
                     <FiUserPlus className="w-4 h-4" />
-                    Inscription
+                    {t("register")}
                   </Link>
                 </div>
               )}

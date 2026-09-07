@@ -1,4 +1,7 @@
 import withBundleAnalyzer from '@next/bundle-analyzer';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -54,14 +57,20 @@ const nextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],
       },
-      {
-        source: '/_next/static/:path*',
-        headers: longCache,
-      },
-      {
-        source: '/logos/:path*',
-        headers: longCache,
-      },
+      // Next refuse une route dont le tableau `headers` est vide : on n'ajoute
+      // ces entrées qu'en production, quand `longCache` est réellement rempli.
+      ...(longCache.length > 0
+        ? [
+            {
+              source: '/_next/static/:path*',
+              headers: longCache,
+            },
+            {
+              source: '/logos/:path*',
+              headers: longCache,
+            },
+          ]
+        : []),
     ];
   },
 };
@@ -71,4 +80,4 @@ const bundleAnalyzerConfig = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })(nextConfig);
 
-export default bundleAnalyzerConfig;
+export default withNextIntl(bundleAnalyzerConfig);

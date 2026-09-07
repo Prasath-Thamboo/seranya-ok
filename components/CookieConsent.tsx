@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Modal, Button } from "antd";
+import { useTranslations } from "next-intl";
 
 export default function CookieConsent() {
+  const t = useTranslations("cookieConsent");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isClient, setIsClient] = useState(false); // Assurer le rendu uniquement côté client
 
@@ -41,32 +43,32 @@ export default function CookieConsent() {
 
   return (
     <Modal
-      title="Consentement aux cookies"
+      title={t("title")}
       open={isModalVisible} // Utilisation de "open" pour Ant Design v5+
       footer={[
         <Button key="decline" danger onClick={handleDeclineCookies}>
-          Refuser
+          {t("decline")}
         </Button>,
         <Button key="accept" type="primary" onClick={handleAcceptCookies}>
-          Accepter
+          {t("accept")}
         </Button>,
       ]}
       closable={false} // Empêche de fermer la modale sans interaction
       centered // Centrer la modale
     >
       <p>
-        Nous utilisons des cookies pour améliorer votre expérience sur notre
-        site et pour collecter des données à des fins statistiques. En acceptant,
-        vous consentez à une utilisation des cookies, y compris ceux de Google
-        Analytics. Vous pouvez consulter notre{" "}
-        <a href="/confidentialite" target="_blank" rel="noopener noreferrer">
-          politique de confidentialité
-        </a>{" "}
-        et notre{" "}
-        <a href="/cookies" target="_blank" rel="noopener noreferrer">
-          politique de cookies
-        </a>{" "}
-        pour en savoir plus.
+        {t.rich("body", {
+          privacy: (chunks) => (
+            <a href="/confidentialite" target="_blank" rel="noopener noreferrer">
+              {chunks}
+            </a>
+          ),
+          cookies: (chunks) => (
+            <a href="/cookies" target="_blank" rel="noopener noreferrer">
+              {chunks}
+            </a>
+          ),
+        })}
       </p>
     </Modal>
   );

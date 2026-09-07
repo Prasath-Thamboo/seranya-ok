@@ -4,7 +4,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { FiBookOpen, FiArrowRight } from 'react-icons/fi';
 import { PostModel } from '@/lib/models/PostModels';
 import Badge from '@/components/Badge';
@@ -15,6 +16,8 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post, isPrivileged }) => {
+  const t = useTranslations('postCard');
+  const locale = useLocale();
   const isScheduled =
     isPrivileged && post.publishedAt && new Date(post.publishedAt) > new Date();
 
@@ -43,7 +46,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, isPrivileged }) => {
         {isScheduled && (
           <div className="mb-3">
             <Badge
-              type={`Prévu le ${new Date(post.publishedAt as string).toLocaleDateString('fr-FR')}`}
+              type={t('scheduledFor', {
+                date: new Date(post.publishedAt as string).toLocaleDateString(
+                  locale === 'en' ? 'en-GB' : 'fr-FR',
+                ),
+              })}
             />
           </div>
         )}
@@ -52,7 +59,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, isPrivileged }) => {
           {post.intro}
         </p>
         <span className="inline-flex items-center gap-1.5 text-sm font-sans text-accent transition-colors group-hover:text-accent-hover">
-          Lire l&apos;article
+          {t('readArticle')}
           <FiArrowRight className="transition-transform duration-300 ease-calm group-hover:translate-x-0.5" />
         </span>
       </div>

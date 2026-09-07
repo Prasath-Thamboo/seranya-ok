@@ -1,17 +1,24 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
-import ContactPage from '@/app/contact/ContactClient';
+import { NextIntlClientProvider } from 'next-intl';
+import ContactPage from '@/app/[locale]/contact/ContactClient';
 import { NotificationProvider } from '@/components/notifications/NotificationProvider';
+// `as any` : les fichiers de messages contiennent désormais des tableaux
+// (ex. `eveil.benefits`), que le type `AbstractIntlMessages` de next-intl ne
+// modélise pas, alors que le runtime les gère via `t.raw()`.
+import messages from '@/messages/fr.json';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 const renderContactPage = () =>
   render(
-    <NotificationProvider>
-      <ContactPage />
-    </NotificationProvider>,
+    <NextIntlClientProvider locale="fr" messages={messages as any}>
+      <NotificationProvider>
+        <ContactPage />
+      </NotificationProvider>
+    </NextIntlClientProvider>,
   );
 
 describe('ContactPage', () => {

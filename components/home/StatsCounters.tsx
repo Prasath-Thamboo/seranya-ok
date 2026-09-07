@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { LuBookOpen, LuSparkles, LuLibrary } from "react-icons/lu";
 import Counter from "@/components/home/Counter";
 import { fetchPosts } from "@/lib/queries/PostQueries";
@@ -23,6 +24,7 @@ export default function StatsCounters({
   const [postCount, setPostCount] = useState(initialPostCount);
   const [tutorialCount, setTutorialCount] = useState(initialTutorialCount);
   const [definitionCount, setDefinitionCount] = useState(initialDefinitionCount);
+  const t = useTranslations("home.stats");
 
   useEffect(() => {
     // Le rendu serveur (ISR, page partagée entre visiteurs) ne peut renvoyer que les
@@ -42,9 +44,9 @@ export default function StatsCounters({
   }, []);
 
   const stats = [
-    { icon: <LuBookOpen className="w-6 h-6" />, label: "Articles de blog", value: postCount, href: "/posts" },
-    { icon: <LuSparkles className="w-6 h-6" />, label: "Tutoriels", value: tutorialCount, href: "/tutoriels" },
-    { icon: <LuLibrary className="w-6 h-6" />, label: "Définitions", value: definitionCount, href: "/encyclopedie" },
+    { icon: <LuBookOpen className="w-6 h-6" />, label: t("posts"), value: postCount, href: "/posts" },
+    { icon: <LuSparkles className="w-6 h-6" />, label: t("tutorials"), value: tutorialCount, href: "/tutoriels" },
+    { icon: <LuLibrary className="w-6 h-6" />, label: t("definitions"), value: definitionCount, href: "/encyclopedie" },
   ];
 
   return (

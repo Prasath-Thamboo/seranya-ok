@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { FiSend, FiEdit2, FiTrash2, FiX, FiCheck, FiMessageCircle } from "react-icons/fi";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { CommentModel } from "@/lib/models/CommentModels";
 import {
   fetchComments,
@@ -30,6 +32,9 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
   const [editContent, setEditContent] = useState("");
   const [loading, setLoading] = useState(true);
   const { addNotification } = useNotification();
+  const t = useTranslations("comments");
+  const tc = useTranslations("common");
+  const locale = useLocale();
 
   useEffect(() => {
     const token = getAccessToken();
@@ -41,7 +46,7 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
 
     fetchComments({ postId, unitId, classId, tutorialId })
       .then(setComments)
-      .catch(() => addNotification("critical", "Erreur lors du chargement des commentaires."))
+      .catch(() => addNotification("critical", t("loadError")))
       .finally(() => setLoading(false));
   }, [postId, unitId, classId, tutorialId]);
 
@@ -53,7 +58,7 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
       setComments((prev) => [created, ...prev]);
       setNewContent("");
     } catch {
-      addNotification("critical", "Erreur lors de l'envoi du commentaire.");
+      addNotification("critical", t("createError"));
     } finally {
       setSubmitting(false);
     }
@@ -66,7 +71,7 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
       setComments((prev) => prev.map((c) => (c.id === id ? updated : c)));
       setEditingId(null);
     } catch {
-      addNotification("critical", "Erreur lors de la modification.");
+      addNotification("critical", t("updateError"));
     }
   };
 
@@ -75,12 +80,12 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
       await deleteComment(id);
       setComments((prev) => prev.filter((c) => c.id !== id));
     } catch {
-      addNotification("critical", "Erreur lors de la suppression.");
+      addNotification("critical", t("deleteError"));
     }
   };
 
   const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString("fr-FR", {
+    new Date(dateStr).toLocaleDateString(locale === "en" ? "en-GB" : "fr-FR", {
       day: "numeric", month: "long", year: "numeric",
     });
 
@@ -89,7 +94,7 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
       <div className="mb-8 flex items-center gap-3">
         <FiMessageCircle className="h-5 w-5 text-accent" />
         <h2 className="font-serif text-xl font-medium text-ink">
-          Échanges
+          {t("heading")}
           {comments.length > 0 && (
             <span className="ml-2 text-sm font-sans text-ink-muted">({comments.length})</span>
           )}
@@ -102,7 +107,7 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
           <textarea
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            placeholder="Partagez votre ressenti…"
+            placeholder={t("placeholder")}
             rows={3}
             className="w-full resize-none bg-transparent font-sans text-sm text-ink placeholder-ink-muted focus:outline-none"
             maxLength={2000}
@@ -115,17 +120,23 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
               className="flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-sans text-ink-invert transition-all hover:bg-accent-hover disabled:opacity-40"
             >
               <FiSend className="h-3.5 w-3.5" />
-              {submitting ? "Envoi…" : "Publier"}
+              {submitting ? t("submitting") : t("submit")}
             </button>
           </div>
         </div>
       ) : (
         <div className="mb-8 rounded-2xl border border-line bg-sunken p-5 text-center">
           <p className="font-sans text-sm text-ink-soft">
-            <a href="/auth/login" className="text-accent transition-colors hover:text-accent-hover">
-              Connectez-vous
-            </a>{" "}
-            pour laisser un commentaire.
+            {t.rich("loginPrompt", {
+              link: (chunks) => (
+                <Link
+                  href="/auth/login"
+                  className="text-accent transition-colors hover:text-accent-hover"
+                >
+                  {chunks}
+                </Link>
+              ),
+            })}
           </p>
         </div>
       )}
@@ -139,7 +150,7 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
         </div>
       ) : comments.length === 0 ? (
         <p className="py-8 text-center font-sans text-sm text-ink-muted">
-          Aucun commentaire pour le moment. Soyez le premier.
+          {t("empty")}
         </p>
       ) : (
         <ul className="space-y-4">
@@ -163,14 +174,14 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
                     <button
                       onClick={() => { setEditingId(comment.id); setEditContent(comment.content); }}
                       className="rounded-lg p-1.5 text-ink-muted transition-colors hover:bg-accent-soft hover:text-accent"
-                      aria-label="Modifier le commentaire"
+                      aria-label={t("editAria")}
                     >
                       <FiEdit2 className="h-3.5 w-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(comment.id)}
                       className="rounded-lg p-1.5 text-ink-muted transition-colors hover:bg-danger/10 hover:text-danger"
-                      aria-label="Supprimer le commentaire"
+                      aria-label={t("deleteAria")}
                     >
                       <FiTrash2 className="h-3.5 w-3.5" />
                     </button>
@@ -192,13 +203,13 @@ export default function CommentSection({ postId, unitId, classId, tutorialId }: 
                       onClick={() => setEditingId(null)}
                       className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs font-sans text-ink-soft transition-colors hover:text-ink"
                     >
-                      <FiX className="h-3 w-3" /> Annuler
+                      <FiX className="h-3 w-3" /> {tc("cancel")}
                     </button>
                     <button
                       onClick={() => handleEdit(comment.id)}
                       className="flex items-center gap-1.5 rounded-full border border-accent/40 px-3 py-1.5 text-xs font-sans text-accent transition-colors hover:bg-accent-soft"
                     >
-                      <FiCheck className="h-3 w-3" /> Enregistrer
+                      <FiCheck className="h-3 w-3" /> {tc("save")}
                     </button>
                   </div>
                 </div>

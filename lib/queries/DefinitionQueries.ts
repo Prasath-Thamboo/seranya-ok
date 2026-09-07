@@ -6,11 +6,16 @@ const BASE_URL =
     ? process.env.NEXT_PUBLIC_API_URL_PROD
     : process.env.NEXT_PUBLIC_API_URL_LOCAL || 'http://localhost:5000';
 
-export const fetchPublishedDefinitions = async (): Promise<DefinitionModel[]> => {
+// `?lang=fr|en` : le backend résout term/definition/category (repli FR) et
+// retire les colonnes `*En`. Sans `lang`, la ligne brute est renvoyée (admin).
+export const fetchPublishedDefinitions = async (
+  lang?: string,
+): Promise<DefinitionModel[]> => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-  const response = await axios.get<DefinitionModel[]>(`${BASE_URL}/definitions/published`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
+  const response = await axios.get<DefinitionModel[]>(
+    `${BASE_URL}/definitions/published${lang ? `?lang=${lang}` : ''}`,
+    { headers: token ? { Authorization: `Bearer ${token}` } : {} },
+  );
   return response.data;
 };
 
