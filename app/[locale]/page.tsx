@@ -85,7 +85,7 @@ export default async function Home({
       <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-page">
         <Image
           src={backgroundImage}
-          alt="Seranya"
+          alt=""
           fill
           style={{ objectFit: "cover" }}
           priority
@@ -99,7 +99,7 @@ export default async function Home({
           <div className="mb-8">
             <Image
               src="/logos/seranyaicon.png"
-              alt="Seranya"
+              alt=""
               width={148}
               height={54}
               className="mx-auto drop-shadow"
@@ -127,7 +127,7 @@ export default async function Home({
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
           <div className="flex h-10 w-6 items-start justify-center rounded-full border border-white/40 pt-1.5">
-            <div className="h-2.5 w-1.5 rounded-full bg-white/70 [animation:breathe_2.6s_ease-in-out_infinite]" />
+            <div className="h-2.5 w-1.5 rounded-full bg-white/70 motion-safe:[animation:breathe_2.6s_ease-in-out_infinite]" />
           </div>
         </div>
       </section>
@@ -227,7 +227,7 @@ export default async function Home({
                     {unit.profileImage && (
                       <Image
                         src={unit.profileImage}
-                        alt={unit.title}
+                        alt=""
                         width={64}
                         height={64}
                         className="mb-3 rounded-full object-cover ring-2 ring-white/60"
@@ -363,10 +363,10 @@ export default async function Home({
               </div>
 
               <div className="flex flex-col items-center justify-center bg-sunken p-8 md:min-w-[220px] md:p-10">
-                <span className="mb-2 text-sm font-sans text-ink-muted">{t("pricing.perMonthLabel")}</span>
+                <span className="mb-2 text-sm font-sans text-ink-soft">{t("pricing.perMonthLabel")}</span>
                 <div className="mb-6 flex items-baseline gap-1">
                   <span className="font-serif text-5xl font-medium text-ink">{t("pricing.price")}</span>
-                  <span className="text-sm text-ink-muted">{t("pricing.perMonth")}</span>
+                  <span className="text-sm text-ink-soft">{t("pricing.perMonth")}</span>
                 </div>
                 <Link
                   href="/subscription"

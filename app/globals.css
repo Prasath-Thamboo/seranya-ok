@@ -24,11 +24,13 @@
   --border-subtle: #e4dacb;
   --border-strong: #d3c6b2;
 
-  /* Accent signature — sauge profonde */
-  --accent: #7a8b6f;
-  --accent-hover: #6b7a61;
+  /* Accent signature — sauge profonde.
+     Assombri (ex #7a8b6f, 3.42:1) pour passer AA : texte ivoire sur bouton 5.3:1,
+     texte sauge sur fond sable 4.6:1. */
+  --accent: #5c6b52;
+  --accent-hover: #4e5a47;
   --accent-soft: #e9ede4;
-  --accent-ring: rgba(122, 139, 111, 0.28);
+  --accent-ring: rgba(92, 107, 82, 0.3);
 
   /* Accent chaud secondaire — terracotta doux */
   --warm: #a9553d;
@@ -46,9 +48,9 @@
 
   /* Compat : anciennes variables encore éventuellement référencées */
   --color-primary: #2b241d;
-  --color-accent: #7a8b6f;
-  --color-accent-dark: #6b7a61;
-  --color-accent-teal: #7a8b6f;
+  --color-accent: #5c6b52;
+  --color-accent-dark: #4e5a47;
+  --color-accent-teal: #5c6b52;
   --color-surface: #fffdf9;
   --color-surface-muted: #faf7f2;
   --color-border: #e4dacb;
@@ -146,6 +148,18 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* Focus clavier visible partout (les clics souris n'affichent rien). */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Apparition du hero en CSS pur : ne dépend pas du chargement du JS. */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
 /* Respiration douce — remplace les pulsations néon des loaders. */
 @keyframes breathe {
   0%, 100% { opacity: 0.55; transform: scale(0.96); }
