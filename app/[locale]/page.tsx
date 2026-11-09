@@ -8,13 +8,19 @@ import JoinCTA from "@/components/home/JoinCTA";
 import PricingGate from "@/components/home/PricingGate";
 import FooterCTA from "@/components/home/FooterCTA";
 import { fetchUnits } from "@/lib/queries/UnitQueries";
-import { fetchRandomBackground, fetchRandomBackgrounds } from "@/lib/queries/RandomBackgroundQuery";
+import { fetchRandomBackground } from "@/lib/queries/RandomBackgroundQuery";
 import { UnitModel } from "@/lib/models/UnitModels";
 import { fetchPosts } from "@/lib/queries/PostQueries";
 import { fetchPublishedTutorials } from "@/lib/queries/TutorialQueries";
 import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 
 export const revalidate = 300;
+
+const RECENT_MS = 30 * 24 * 60 * 60 * 1000;
+// Le badge « Nouveau » ne s'affiche que pour une unité publiée il y a moins de 30 jours.
+function isRecent(date: Date | string): boolean {
+  return Date.now() - new Date(date).getTime() < RECENT_MS;
+}
 
 // Extrait la valeur d'un résultat allSettled ; en cas d'échec, journalise l'erreur
 // (visible dans les logs Vercel) au lieu de l'avaler silencieusement.
@@ -44,14 +50,13 @@ export default async function Home({
   setRequestLocale(locale);
   const t = await getTranslations("home");
 
-  const [fetchedUnits, fetchedPosts, fetchedTutorials, fetchedDefinitions, bgImage, secImages] =
+  const [fetchedUnits, fetchedPosts, fetchedTutorials, fetchedDefinitions, bgImage] =
     await Promise.allSettled([
       fetchUnits(),
       fetchPosts(locale),
       fetchPublishedTutorials(locale),
       fetchPublishedDefinitions(locale),
       fetchRandomBackground(),
-      fetchRandomBackgrounds(4),
     ]);
 
   const unitList = valueOrNull(fetchedUnits, "units");
@@ -69,7 +74,6 @@ export default async function Home({
 
   const backgroundImage =
     valueOrNull(bgImage, "background") ?? "/images/backgrounds/placeholder.jpg";
-  const sectionImages = valueOrNull(secImages, "section backgrounds")?.slice(0, 4) ?? [];
 
   // Portes d'entrée statiques affichées si l'API des unités ne répond pas ou est vide.
   const fallbackDoors = [
@@ -82,7 +86,7 @@ export default async function Home({
     <main className="bg-page font-sans text-ink">
 
       {/* ── HERO ── */}
-      <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-page">
+      <section className="relative flex h-screen h-[100svh] flex-col items-center justify-center overflow-hidden bg-page">
         <Image
           src={backgroundImage}
           alt=""
@@ -92,7 +96,7 @@ export default async function Home({
           sizes="100vw"
           className="scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/25 to-black/5" />
         <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-page" />
 
         <Reveal as="div" immediate className="relative z-10 mx-auto max-w-3xl px-6 text-center">
@@ -170,9 +174,6 @@ export default async function Home({
       {/* ── STATS (masqué si aucune donnée fiable) ── */}
       {hasStats && (
       <Reveal className="relative z-10 overflow-hidden bg-page px-6 py-24">
-        {sectionImages[0] && (
-          <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="scale-110 opacity-[0.05]" />
-        )}
         <div className="relative z-10 mx-auto max-w-5xl">
           <Eyebrow>{t("stats.eyebrow")}</Eyebrow>
           <h2 className="mb-16 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
@@ -252,7 +253,7 @@ export default async function Home({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
 
-                  {i === 0 && (
+                  {i === 0 && isRecent(unit.createdAt) && (
                     <div className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1 text-xs font-sans uppercase tracking-[0.15em] text-ink-invert">
                       {t("latest.new")}
                     </div>
@@ -358,10 +359,10 @@ export default async function Home({
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex flex-col items-center gap-3 rounded-2xl border border-line bg-raised p-6 text-center shadow-sm"
+                className="flex flex-col items-center gap-3 rounded-2xl bg-raised/60 px-2 py-5 text-center sm:p-6"
               >
                 <div className="text-accent">{item.icon}</div>
-                <span className="text-xs font-sans uppercase tracking-[0.15em] text-ink-soft">{item.label}</span>
+                <span className="text-[11px] font-sans uppercase tracking-[0.12em] text-ink-soft sm:text-xs sm:tracking-[0.15em]">{item.label}</span>
               </div>
             ))}
           </div>

@@ -98,8 +98,9 @@ const config: Config = {
         sunken: sand[200],
         ink: {
           DEFAULT: sand[900],
-          soft: sand[600],
-          muted: sand[500],
+          // Assombris pour le contraste AA (muted ≥ 4.5:1 même sur fond sable).
+          soft: '#5E5347',
+          muted: '#706457',
           invert: sand[50],
         },
         line: {

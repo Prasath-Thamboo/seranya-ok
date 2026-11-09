@@ -16,8 +16,8 @@
 
   /* Texte */
   --text-primary: #2b241d;   /* brun très foncé chaud (pas de noir pur) */
-  --text-secondary: #6e6255;
-  --text-muted: #9a8e7d;
+  --text-secondary: #5e5347;
+  --text-muted: #706457; /* AA : 4.7:1 sur sable, 5.4:1 sur ivoire */
   --text-on-accent: #faf7f2;
 
   /* Lignes */
@@ -55,7 +55,7 @@
   --color-surface-muted: #faf7f2;
   --color-border: #e4dacb;
   --color-text: #2b241d;
-  --color-text-muted: #6e6255;
+  --color-text-muted: #5e5347;
   --foreground-rgb: 43, 36, 29;
   --background-rgb: 250, 247, 242;
 }
@@ -148,6 +148,11 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+/* Évite un mot seul en dernière ligne de paragraphe (Chrome, Safari). */
+p {
+  text-wrap: pretty;
+}
+
 /* Focus clavier visible partout (les clics souris n'affichent rien). */
 :focus-visible {
   outline: 2px solid var(--accent);
