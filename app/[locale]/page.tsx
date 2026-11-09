@@ -16,6 +16,19 @@ import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 
 export const revalidate = 300;
 
+// Extrait la valeur d'un résultat allSettled ; en cas d'échec, journalise l'erreur
+// (visible dans les logs Vercel) au lieu de l'avaler silencieusement.
+function valueOrNull<T>(result: PromiseSettledResult<T>, label: string): T | null {
+  if (result.status === "fulfilled") return result.value;
+  const reason = result.reason as { message?: string; response?: { status?: number } };
+  console.error(
+    `[home] fetch "${label}" failed`,
+    reason?.response?.status ?? "",
+    reason?.message ?? reason,
+  );
+  return null;
+}
+
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   <p className="mb-3 text-center text-xs font-sans uppercase tracking-[0.22em] text-accent">
     {children}
@@ -41,19 +54,29 @@ export default async function Home({
       fetchRandomBackgrounds(4),
     ]);
 
-  const units: UnitModel[] =
-    fetchedUnits.status === "fulfilled"
-      ? [...fetchedUnits.value]
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          .slice(0, 3)
-      : [];
+  const unitList = valueOrNull(fetchedUnits, "units");
+  const units: UnitModel[] = unitList
+    ? [...unitList]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 3)
+    : [];
 
-  const postCount = fetchedPosts.status === "fulfilled" ? fetchedPosts.value.length : 0;
-  const tutorialCount = fetchedTutorials.status === "fulfilled" ? fetchedTutorials.value.length : 0;
-  const definitionCount = fetchedDefinitions.status === "fulfilled" ? fetchedDefinitions.value.length : 0;
+  // null = requête échouée : on ne montre jamais un compteur à 0 faute de données.
+  const postCount = valueOrNull(fetchedPosts, "posts")?.length ?? null;
+  const tutorialCount = valueOrNull(fetchedTutorials, "tutorials")?.length ?? null;
+  const definitionCount = valueOrNull(fetchedDefinitions, "definitions")?.length ?? null;
+  const hasStats = [postCount, tutorialCount, definitionCount].some((c) => (c ?? 0) > 0);
+
   const backgroundImage =
-    bgImage.status === "fulfilled" ? bgImage.value : "/images/backgrounds/placeholder.jpg";
-  const sectionImages = secImages.status === "fulfilled" ? secImages.value.slice(0, 4) : [];
+    valueOrNull(bgImage, "background") ?? "/images/backgrounds/placeholder.jpg";
+  const sectionImages = valueOrNull(secImages, "section backgrounds")?.slice(0, 4) ?? [];
+
+  // Portes d'entrée statiques affichées si l'API des unités ne répond pas ou est vide.
+  const fallbackDoors = [
+    { key: "universe", href: "/univers", image: "/images/backgrounds/bouddhisme.jpg" },
+    { key: "tutorials", href: "/tutoriels", image: "/images/backgrounds/yoga.jpg" },
+    { key: "encyclopedia", href: "/encyclopedie", image: "/images/backgrounds/monk.jpg" },
+  ] as const;
 
   return (
     <main className="bg-page font-sans text-ink">
@@ -109,7 +132,8 @@ export default async function Home({
         </div>
       </section>
 
-      {/* ── STATS ── */}
+      {/* ── STATS (masqué si aucune donnée fiable) ── */}
+      {hasStats && (
       <Reveal className="relative z-10 overflow-hidden bg-page px-6 py-24">
         {sectionImages[0] && (
           <Image src={sectionImages[0]} alt="" fill style={{ objectFit: "cover" }} className="scale-110 opacity-[0.05]" />
@@ -127,9 +151,49 @@ export default async function Home({
           />
         </div>
       </Reveal>
+      )}
 
       {/* ── DERNIÈRES ENTITÉS ── */}
-      {units.length > 0 && (
+      {units.length === 0 ? (
+        <Reveal className="relative overflow-hidden bg-sunken px-6 py-24">
+          <div className="relative z-10 mx-auto max-w-6xl">
+            <Eyebrow>{t("latest.eyebrow")}</Eyebrow>
+            <h2 className="mb-4 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
+              {t("latest.fallback.title")}
+            </h2>
+            <p className="mx-auto mb-16 max-w-xl text-center text-ink-soft">
+              {t("latest.fallback.subtitle")}
+            </p>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {fallbackDoors.map((door) => (
+                <Link
+                  key={door.key}
+                  href={door.href}
+                  className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-line shadow-sm transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <Image
+                    src={door.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-500 ease-calm group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 flex flex-col items-center p-5 text-center">
+                    <h3 className="font-serif text-lg font-medium text-white">
+                      {t(`latest.fallback.${door.key}.title`)}
+                    </h3>
+                    <p className="mt-1 text-sm text-white/80 line-clamp-2">
+                      {t(`latest.fallback.${door.key}.desc`)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      ) : (
         <Reveal className="relative overflow-hidden bg-sunken px-6 py-24">
           <div className="relative z-10 mx-auto max-w-6xl">
             <Eyebrow>{t("latest.eyebrow")}</Eyebrow>

@@ -51,7 +51,23 @@
       "title": "Dernières entités",
       "subtitle": "Plongez dans notre encyclopédie et découvrez les entités de l'univers Seranya.",
       "new": "Nouveau",
-      "seeAll": "Voir tout l'univers"
+      "seeAll": "Voir tout l'univers",
+      "fallback": {
+        "title": "Entrez dans l'univers",
+        "subtitle": "Trois portes pour commencer votre voyage, à votre rythme.",
+        "universe": {
+          "title": "L'univers Seranya",
+          "desc": "Rencontrez les unités et les classes qui guident chaque pratique."
+        },
+        "tutorials": {
+          "title": "Les tutoriels",
+          "desc": "Apprenez les postures pas à pas, en vidéo."
+        },
+        "encyclopedia": {
+          "title": "L'encyclopédie",
+          "desc": "Comprenez les mots et les notions du yoga et de la méditation."
+        }
+      }
     },
     "commitment": {
       "eyebrow": "Pourquoi Seranya",
