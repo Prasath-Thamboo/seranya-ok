@@ -35,21 +35,37 @@
   },
   "home": {
     "hero": {
-      "subtitle": "A Buddhist and yogic universe. Find inner peace and merge with your deeper self.",
-      "explore": "Explore",
-      "join": "Join"
+      "subtitle": "Yoga and meditation for beginners, in a universe that makes you want to practice. No experience needed: we take it step by step, together.",
+      "join": "Create my free account",
+      "start": "Start gently"
+    },
+    "how": {
+      "eyebrow": "Getting started",
+      "title": "How it works",
+      "step1": {
+        "title": "Discover the universe",
+        "desc": "Every unit and class in Seranya embodies a posture or a practice. Let the story guide you, no need to know everything."
+      },
+      "step2": {
+        "title": "Practice on video",
+        "desc": "Step-by-step tutorials to learn the postures at home, at your own pace."
+      },
+      "step3": {
+        "title": "Understand what you do",
+        "desc": "The encyclopedia explains every word and idea of yoga and meditation in plain terms."
+      }
     },
     "stats": {
-      "eyebrow": "The universe in numbers",
-      "title": "What we have built",
-      "posts": "Blog articles",
-      "tutorials": "Tutorials",
+      "eyebrow": "Seranya today",
+      "title": "Plenty to practice right now",
+      "posts": "Articles",
+      "tutorials": "Video tutorials",
       "definitions": "Definitions"
     },
     "latest": {
-      "eyebrow": "Discovery",
-      "title": "Latest entities",
-      "subtitle": "Dive into our encyclopedia and discover the entities of the Seranya universe.",
+      "eyebrow": "The universe",
+      "title": "Latest units",
+      "subtitle": "Each unit introduces you to a practice. Start with the one that draws you in.",
       "new": "New",
       "seeAll": "See the whole universe",
       "fallback": {
@@ -71,47 +87,47 @@
     },
     "commitment": {
       "eyebrow": "Why Seranya",
-      "title": "Our commitment",
+      "title": "Welcoming yoga, no pressure",
       "serenity": {
-        "title": "Serenity",
-        "desc": "A space designed for inner peace and renewal, far from the noise of the world."
+        "title": "Calm",
+        "desc": "A space without noise or competition, to practice at your own pace."
       },
       "knowledge": {
-        "title": "Knowledge",
-        "desc": "A living encyclopedia of the Buddhist and yogic universe, continuously enriched."
+        "title": "Understand",
+        "desc": "An encyclopedia that explains the words of yoga and Buddhism simply, regularly expanded."
       },
       "community": {
-        "title": "Community",
-        "desc": "Members who share the same values, united by the quest for authentic happiness."
+        "title": "Together",
+        "desc": "Talk with other practitioners in the comments, or write to us directly."
       }
     },
     "awakening": {
       "eyebrow": "The power of yoga",
       "title": "Awakening",
-      "desc": "Flexibility, strength, breathing, inner serenity: discover why yoga lastingly transforms body and mind, and how it can change your daily life from the very first session.",
-      "cta": "Discover Awakening",
+      "desc": "More flexibility, more strength, calmer breathing: discover what yoga changes in body and mind, from your very first sessions.",
+      "cta": "Understand the benefits",
       "body": "The body",
       "mind": "The mind",
       "breath": "The breath"
     },
     "pricing": {
       "eyebrow": "Access",
-      "title": "Simple pricing",
+      "title": "One subscription, everything included",
       "planName": "Monthly subscription",
-      "planDesc": "Get access to all the exclusive content: articles, member resources, and more.",
+      "planDesc": "Access every article and all member-only resources.",
       "feature1": "Access to all articles",
       "feature2": "Exclusive member resources",
       "feature3": "Official t-shirt (soon)",
       "perMonthLabel": "Per month",
       "price": "€5",
       "perMonth": "/month",
-      "cta": "Get started"
+      "cta": "Subscribe"
     },
     "footerCta": {
       "titleLoggedIn": "Keep exploring",
-      "titleGuest": "Ready to start?",
+      "titleGuest": "Ready to take the first step?",
       "subSubscribed": "Thank you for your support. Enjoy all of Seranya's exclusive content.",
-      "subDefault": "Join the Seranya community and begin your journey toward inner peace.",
+      "subDefault": "Create your free account and start at your own pace, no pressure.",
       "createAccount": "Create an account",
       "subscribe": "Subscribe",
       "explore": "Explore the universe",
@@ -191,22 +207,38 @@
       {
         "title": "The body",
         "description": "A regular practice loosens muscles and joints, strengthens the back and posture, and improves balance session after session.",
-        "points": ["Flexibility and mobility", "Muscle strengthening", "Better posture"]
+        "points": [
+          "Flexibility and mobility",
+          "Muscle strengthening",
+          "Better posture"
+        ]
       },
       {
         "title": "The mind",
         "description": "Yoga soothes the mind: it helps release built-up tension, reduce stress and anxiety, and regain real mental clarity.",
-        "points": ["Stress reduction", "Better focus", "More restorative sleep"]
+        "points": [
+          "Stress reduction",
+          "Better focus",
+          "More restorative sleep"
+        ]
       },
       {
         "title": "The breath",
         "description": "Breath work (pranayama) is at the heart of yoga: it teaches you to slow down, oxygenate the body better and calm the nervous system.",
-        "points": ["Conscious breathing", "A calmer nervous system", "Grounding in the present moment"]
+        "points": [
+          "Conscious breathing",
+          "A calmer nervous system",
+          "Grounding in the present moment"
+        ]
       },
       {
         "title": "Daily life",
         "description": "On the mat and beyond, yoga cultivates a better attunement to yourself: more energy, more calm in the face of the unexpected, more presence with others.",
-        "points": ["More energy day to day", "Better emotional balance", "A more serene presence"]
+        "points": [
+          "More energy day to day",
+          "Better emotional balance",
+          "A more serene presence"
+        ]
       }
     ],
     "quote": "“Yoga is not about touching your toes, it is about what you learn on the way down.”",

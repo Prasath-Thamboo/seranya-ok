@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { LuCheck, LuArrowRight, LuWind, LuBrain, LuActivity, LuLeaf, LuBookOpen, LuUsers } from "react-icons/lu";
+import { LuCheck, LuArrowRight, LuWind, LuBrain, LuActivity, LuLeaf, LuBookOpen, LuUsers, LuCompass, LuPlayCircle } from "react-icons/lu";
 import Reveal from "@/components/home/Reveal";
 import StatsCounters from "@/components/home/StatsCounters";
 import JoinCTA from "@/components/home/JoinCTA";
@@ -116,10 +116,10 @@ export default async function Home({
 
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href="/univers"
+              href="/eveil"
               className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3.5 text-sm font-sans text-ink-invert shadow-md transition-all duration-300 ease-calm hover:-translate-y-0.5 hover:bg-accent-hover"
             >
-              {t("hero.explore")} <LuArrowRight className="h-4 w-4" />
+              {t("hero.start")} <LuArrowRight className="h-4 w-4" />
             </Link>
             <JoinCTA />
           </div>
@@ -131,6 +131,41 @@ export default async function Home({
           </div>
         </div>
       </section>
+
+      {/* ── COMMENT ÇA MARCHE (parcours débutant) ── */}
+      <Reveal className="relative z-10 bg-page px-6 py-24">
+        <div className="mx-auto max-w-5xl">
+          <Eyebrow>{t("how.eyebrow")}</Eyebrow>
+          <h2 className="mb-16 text-center font-serif text-3xl font-medium text-ink md:text-4xl">
+            {t("how.title")}
+          </h2>
+
+          <ol className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
+            {[
+              { key: "step1", href: "/univers", icon: <LuCompass className="h-6 w-6" /> },
+              { key: "step2", href: "/tutoriels", icon: <LuPlayCircle className="h-6 w-6" /> },
+              { key: "step3", href: "/encyclopedie", icon: <LuBookOpen className="h-6 w-6" /> },
+            ].map((step, i) => (
+              <li key={step.key} className="text-center">
+                <Link href={step.href} className="group flex flex-col items-center rounded-2xl p-2">
+                  <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-accent transition-transform duration-300 ease-calm group-hover:-translate-y-0.5">
+                    {step.icon}
+                  </span>
+                  <span className="mb-2 text-xs font-sans uppercase tracking-[0.18em] text-ink-soft">
+                    {i + 1}
+                  </span>
+                  <h3 className="mb-3 font-serif text-xl font-medium text-ink group-hover:text-accent">
+                    {t(`how.${step.key}.title`)}
+                  </h3>
+                  <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
+                    {t(`how.${step.key}.desc`)}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </Reveal>
 
       {/* ── STATS (masqué si aucune donnée fiable) ── */}
       {hasStats && (
