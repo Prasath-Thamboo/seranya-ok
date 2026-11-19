@@ -98,8 +98,9 @@ const config: Config = {
         sunken: sand[200],
         ink: {
           DEFAULT: sand[900],
-          soft: sand[600],
-          muted: sand[500],
+          // Assombris pour le contraste AA (muted ≥ 4.5:1 même sur fond sable).
+          soft: '#5E5347',
+          muted: '#706457',
           invert: sand[50],
         },
         line: {
@@ -107,8 +108,9 @@ const config: Config = {
           strong: sand[400],
         },
         accent: {
-          DEFAULT: sage[500],
-          hover: sage[600],
+          // sage[700]/[800] proches : #5C6B52 / #4E5A47 garantissent le contraste AA.
+          DEFAULT: '#5C6B52',
+          hover: '#4E5A47',
           soft: sage[100],
           contrast: sand[50],
         },

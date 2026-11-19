@@ -11,9 +11,10 @@ import { fetchPublishedDefinitions } from "@/lib/queries/DefinitionQueries";
 import { getAccessToken } from "@/lib/queries/AuthQueries";
 
 interface StatsCountersProps {
-  initialPostCount: number;
-  initialTutorialCount: number;
-  initialDefinitionCount: number;
+  // null = donnée indisponible (requête échouée) : le compteur n'est pas affiché.
+  initialPostCount: number | null;
+  initialTutorialCount: number | null;
+  initialDefinitionCount: number | null;
 }
 
 export default function StatsCounters({
@@ -43,14 +44,21 @@ export default function StatsCounters({
     });
   }, []);
 
-  const stats = [
+  const allStats = [
     { icon: <LuBookOpen className="w-6 h-6" />, label: t("posts"), value: postCount, href: "/posts" },
     { icon: <LuSparkles className="w-6 h-6" />, label: t("tutorials"), value: tutorialCount, href: "/tutoriels" },
     { icon: <LuLibrary className="w-6 h-6" />, label: t("definitions"), value: definitionCount, href: "/encyclopedie" },
   ];
+  // Jamais de compteur à 0 ou indisponible : ça donne l'impression d'un site vide.
+  const stats = allStats.filter((s) => (s.value ?? 0) > 0);
+  if (stats.length === 0) return null;
+
+  const cols = { 1: "md:grid-cols-1 max-w-sm mx-auto", 2: "md:grid-cols-2 max-w-3xl mx-auto", 3: "md:grid-cols-3" }[
+    stats.length as 1 | 2 | 3
+  ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className={`grid grid-cols-1 gap-6 ${cols}`}>
       {stats.map((stat) => (
         <Link
           key={stat.label}
@@ -59,7 +67,7 @@ export default function StatsCounters({
         >
           <div className="text-accent">{stat.icon}</div>
           <span className="text-5xl font-serif font-medium text-ink">
-            <Counter value={stat.value} />
+            <Counter value={stat.value ?? 0} />
           </span>
           <span className="text-ink-muted font-sans uppercase text-xs tracking-[0.18em]">{stat.label}</span>
         </Link>

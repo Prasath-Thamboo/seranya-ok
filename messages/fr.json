@@ -35,67 +35,99 @@
   },
   "home": {
     "hero": {
-      "subtitle": "Un univers bouddhiste et yogique. Retrouvez la paix intérieure et fusionnez avec votre être profond.",
-      "explore": "Explorer",
-      "join": "Rejoindre"
+      "subtitle": "Le yoga et la méditation pour débutants, dans un univers qui donne envie de pratiquer. Aucune expérience requise : on avance ensemble, pas à pas.",
+      "join": "Créer mon compte gratuit",
+      "start": "Commencer en douceur"
+    },
+    "how": {
+      "eyebrow": "Pour bien démarrer",
+      "title": "Comment ça marche",
+      "step1": {
+        "title": "Découvrez l'univers",
+        "desc": "Chaque unité et chaque classe de Seranya incarne une posture ou une pratique. Laissez-vous guider par l'histoire, inutile de tout connaître."
+      },
+      "step2": {
+        "title": "Pratiquez en vidéo",
+        "desc": "Des tutoriels pas à pas pour apprendre les postures chez vous, à votre rythme."
+      },
+      "step3": {
+        "title": "Comprenez ce que vous faites",
+        "desc": "L'encyclopédie explique simplement chaque mot et chaque notion du yoga et de la méditation."
+      }
     },
     "stats": {
-      "eyebrow": "L'univers en chiffres",
-      "title": "Ce que nous avons construit",
-      "posts": "Articles de blog",
-      "tutorials": "Tutoriels",
+      "eyebrow": "Seranya aujourd'hui",
+      "title": "De quoi pratiquer dès maintenant",
+      "posts": "Articles",
+      "tutorials": "Tutoriels vidéo",
       "definitions": "Définitions"
     },
     "latest": {
-      "eyebrow": "Découverte",
-      "title": "Dernières entités",
-      "subtitle": "Plongez dans notre encyclopédie et découvrez les entités de l'univers Seranya.",
+      "eyebrow": "L'univers",
+      "title": "Les dernières unités",
+      "subtitle": "Chaque unité vous fait découvrir une pratique. Commencez par celle qui vous attire.",
       "new": "Nouveau",
-      "seeAll": "Voir tout l'univers"
+      "seeAll": "Voir tout l'univers",
+      "fallback": {
+        "title": "Entrez dans l'univers",
+        "subtitle": "Trois portes pour commencer votre voyage, à votre rythme.",
+        "universe": {
+          "title": "L'univers Seranya",
+          "desc": "Rencontrez les unités et les classes qui guident chaque pratique."
+        },
+        "tutorials": {
+          "title": "Les tutoriels",
+          "desc": "Apprenez les postures pas à pas, en vidéo."
+        },
+        "encyclopedia": {
+          "title": "L'encyclopédie",
+          "desc": "Comprenez les mots et les notions du yoga et de la méditation."
+        }
+      }
     },
     "commitment": {
       "eyebrow": "Pourquoi Seranya",
-      "title": "Notre engagement",
+      "title": "Un yoga accueillant, sans pression",
       "serenity": {
-        "title": "Sérénité",
-        "desc": "Un espace pensé pour la paix intérieure et le ressourcement, loin du bruit du monde."
+        "title": "Le calme",
+        "desc": "Un espace sans bruit ni compétition, pour pratiquer à votre rythme."
       },
       "knowledge": {
-        "title": "Connaissance",
-        "desc": "Une encyclopédie vivante de l'univers bouddhiste et yogique, enrichie en permanence."
+        "title": "Comprendre",
+        "desc": "Une encyclopédie qui explique simplement les mots du yoga et du bouddhisme, enrichie régulièrement."
       },
       "community": {
-        "title": "Communauté",
-        "desc": "Des membres partageant les mêmes valeurs, unis par la quête du bonheur authentique."
+        "title": "Ensemble",
+        "desc": "Échangez avec d'autres pratiquants dans les commentaires, ou écrivez-nous directement."
       }
     },
     "awakening": {
       "eyebrow": "Le pouvoir du yoga",
       "title": "Éveil",
-      "desc": "Souplesse, force, respiration, sérénité intérieure : découvrez pourquoi le yoga transforme durablement le corps et l'esprit, et comment il peut changer votre quotidien dès la première séance.",
-      "cta": "Découvrir Éveil",
+      "desc": "Plus de souplesse, plus de force, une respiration plus calme : découvrez ce que le yoga change dans le corps et l'esprit, dès les premières séances.",
+      "cta": "Comprendre les bienfaits",
       "body": "Le corps",
       "mind": "L'esprit",
       "breath": "Le souffle"
     },
     "pricing": {
       "eyebrow": "Accès",
-      "title": "Une tarification simple",
+      "title": "Un seul abonnement, tout compris",
       "planName": "Abonnement mensuel",
-      "planDesc": "Accédez à l'intégralité du contenu exclusif : articles, ressources membres, et plus encore.",
+      "planDesc": "Accédez à tous les articles et aux ressources réservées aux membres.",
       "feature1": "Accès à tous les articles",
       "feature2": "Ressources exclusives des membres",
       "feature3": "T-shirt officiel (bientôt)",
       "perMonthLabel": "Par mois",
       "price": "5€",
       "perMonth": "/mois",
-      "cta": "Commencer"
+      "cta": "S'abonner"
     },
     "footerCta": {
       "titleLoggedIn": "Continuez l'exploration",
-      "titleGuest": "Prêt à commencer ?",
+      "titleGuest": "Prêt à faire le premier pas ?",
       "subSubscribed": "Merci pour votre soutien. Profitez de tout le contenu exclusif Seranya.",
-      "subDefault": "Rejoignez la communauté Seranya et entamez votre voyage vers la paix intérieure.",
+      "subDefault": "Créez votre compte gratuitement et commencez à votre rythme, sans pression.",
       "createAccount": "Créer un compte",
       "subscribe": "S'abonner",
       "explore": "Explorer l'univers",
@@ -175,22 +207,38 @@
       {
         "title": "Le corps",
         "description": "Une pratique régulière assouplit les muscles et les articulations, renforce le dos et la posture, et améliore l'équilibre au fil des séances.",
-        "points": ["Souplesse et mobilité", "Renforcement musculaire", "Meilleure posture"]
+        "points": [
+          "Souplesse et mobilité",
+          "Renforcement musculaire",
+          "Meilleure posture"
+        ]
       },
       {
         "title": "L'esprit",
         "description": "Le yoga apaise le mental : il aide à relâcher les tensions accumulées, à réduire le stress et l'anxiété, et à retrouver une véritable clarté d'esprit.",
-        "points": ["Réduction du stress", "Meilleure concentration", "Sommeil plus réparateur"]
+        "points": [
+          "Réduction du stress",
+          "Meilleure concentration",
+          "Sommeil plus réparateur"
+        ]
       },
       {
         "title": "Le souffle",
         "description": "Le travail de la respiration (pranayama) est au cœur du yoga : il apprend à ralentir, à mieux oxygéner le corps et à calmer le système nerveux.",
-        "points": ["Respiration consciente", "Système nerveux apaisé", "Ancrage dans l'instant présent"]
+        "points": [
+          "Respiration consciente",
+          "Système nerveux apaisé",
+          "Ancrage dans l'instant présent"
+        ]
       },
       {
         "title": "Le quotidien",
         "description": "Sur le tapis comme en dehors, le yoga cultive une meilleure écoute de soi : plus d'énergie, plus de calme face aux imprévus, plus de présence aux autres.",
-        "points": ["Plus d'énergie au quotidien", "Meilleure gestion des émotions", "Une présence plus sereine"]
+        "points": [
+          "Plus d'énergie au quotidien",
+          "Meilleure gestion des émotions",
+          "Une présence plus sereine"
+        ]
       }
     ],
     "quote": "« Le yoga ne consiste pas à toucher ses orteils, il consiste à ce que l'on apprend en chemin. »",
